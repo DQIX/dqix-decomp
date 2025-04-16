@@ -9,42 +9,22 @@ The primary focus is on the USA version of the game, with the goal of making it 
 ## ⚙️ Setup
 
 ### 🛠️ Prerequisites
-#### Installing `make`
-- **Windows**:  
-  - Install `make` by using [MSYS2](https://www.msys2.org/).
-  - Alternatively, if you develop Homebrew applications, it comes bundled with DevkitPro installation.
- 
-- **macOS**:  
-  - Install Xcode Command Line Tools, which include `make`:
-    ```bash
-    xcode-select --install
-    ```
-  - Alternatively, if you use Homebrew:
-    ```bash
-    brew install make
-    ```
+#### Programs
+[Python 3.11 or newer](https://www.python.org/downloads/)
+GCC 9+ (available through installers like MINGW on windows, usually included on linux)
+[Ninja build system](https://github.com/ninja-build/ninja/releases)
 
-- **Linux**:
-  - `make` is usually pre-installed. If not, install it using your package manager:
-    - Debian/Ubuntu-based systems:
-      ```bash
-      sudo apt update && sudo apt install make
-      ```
-    - Red Hat-based systems (Fedora, CentOS):
-      ```bash
-      sudo dnf install make
-      ```
-    - Arch-based systems:
-      ```bash
-      sudo pacman -S make
-      ```
-
-#### Compiler
-- Download the compiler [**mwccarm.zip**](http://decomp.aetias.com/files/mwccarm.zip).
-- Extract its contents to a folder named `tools` in the root directory of the project.
-
-#### ROM Setup
-*(TODO: The `Makefile` currently only produces the executable, not the ROM)*
+#### Setup
+Place a clean ROM of the original game in the 'extract' folder and name it <dqix_(region).nds>, with (region) being the appropriate region identifier. ex: dqix_usa.nds
+(Note: currently only the usa rom is supported)
+Install the Python dependencies with pip
+```shell
+python -m pip install -r tools/requirements.txt
+```
+Run the script to configure Ninja
+```shell
+python tools/configure.py usa
+```
 
 ---
 
@@ -53,7 +33,7 @@ Once everything is set up:
 1. Open the command line in the root folder of the repository.
 2. Run the following command:
    ```bash
-   make
+   ninja
    ```
 This will initiate the compilation process.
 
@@ -64,18 +44,15 @@ This will initiate the compilation process.
 ### 📤 Submitting Contributions
 
 > [!Important]
-> Ensure the decompiled code you submit produces the **same binary** as the original release game.  
-*(TODO: Implement a hashing mechanism to verify this.)*
+> Ensure the decompiled code you submit produces the **same binary** as the original release game. The build script should throw errors should your code not match.
 
-#### Known Issue
-- The binary currently doesn't match the original game due to unresolved issues with `.bss` sections. *(Help fix this!)*
+### Decompiling code
+See [Decompiling.md](Decompiling.md)
 
 ---
 
 ### 🧑‍💻 Current Goals
-The immediate objective is to **fix the `.bss` sections** in the disassembly:
-- At the end of `main.s`, there are numerous labels meant for a `.bss` section.
-- These labels need to be matched with their correct memory positions, either in `main.s` or the relevant overlay files.
+Disassemble and decompile accessible functions to begin mapping out the games code.
 
 ---
 
@@ -96,4 +73,4 @@ The immediate objective is to **fix the `.bss` sections** in the disassembly:
 ---
 
 ### ✨ Notes
-This project is a work in progress. Community contributions and feedback are welcome to help improve accuracy and functionality!
+This project is a work in progress. Community contributions and feedback are welcome to help improve functionality!
