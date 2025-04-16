@@ -11,7 +11,8 @@ so you can reference it. The types may need inferencing, and the function name c
 
 ## Creating new files
 Once you've decompiled a function and it matches up, it's time to add it to the game. If a file hasn't already been created for this, or it needs tweaking, you need to open the delinks.txt file for the binary you're decompiling part of (ie. ARM9 main, ITCM, or an overlay) and add the file with the start and end address for the file to be inserted into. Example:
-```src/BasicAttackCalculation.cpp:
+```
+src/BasicAttackCalculation.cpp:
     complete
     .text start:0x020744c0 end:0x020745ec
 ```
