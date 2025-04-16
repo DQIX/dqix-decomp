@@ -11,7 +11,9 @@ The primary focus is on the USA version of the game, with the goal of making it 
 ### 🛠️ Prerequisites
 #### Programs
 [Python 3.11 or newer](https://www.python.org/downloads/)
+
 GCC 9+ (available through installers like MINGW on windows, usually included on linux)
+
 [Ninja build system](https://github.com/ninja-build/ninja/releases)
 
 #### Setup
