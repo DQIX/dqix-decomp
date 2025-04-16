@@ -23,10 +23,11 @@ Install the Python dependencies with pip
 ```shell
 python -m pip install -r tools/requirements.txt
 ```
-Run the script to configure Ninja
+Run the script to configure Ninja (Do this any time a file is added or removed)
 ```shell
 python tools/configure.py usa
 ```
+Lastly, if you want the final ROM to be perfectly byte accurate you need to dump the ARM7 BIOS from your DS and place them in the root folder, under the name arm7_bios.bin
 
 ---
 
