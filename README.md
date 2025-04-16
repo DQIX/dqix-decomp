@@ -59,6 +59,8 @@ See [Decompiling.md](Decompiling.md)
 ### 🧑‍💻 Current Goals
 Disassemble and decompile accessible functions to begin mapping out the games code.
 
+Get to the point where the strange function calls referenced on lines 26-28 of ARM9 main relocs.txt and lines 2695-2697 of overlay 1 relocs.txt can be understood
+
 ---
 
 ### 🔧 Useful Tools
