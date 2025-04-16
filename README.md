@@ -20,6 +20,7 @@ GCC 9+ (available through installers like MINGW on windows, usually included on 
 Place a clean ROM of the original game in the 'extract' folder and name it <baserom_dqix_(region).nds>, with (region) being the appropriate region identifier. ex: baserom_dqix_usa.nds
 
 (Note: currently only the usa rom is supported)
+
 Install the Python dependencies with pip
 ```shell
 python -m pip install -r tools/requirements.txt
