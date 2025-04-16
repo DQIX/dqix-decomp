@@ -1,7 +1,8 @@
+#include <globaldefs.h>
 extern float func_02074388(int,float,float);
 extern int data_02108ddc;
 // properly decompiled variant
-_Pragma("thumb off") float CalculatePhysicalDamage(int attack, int defense, int variance) {
+ARM float CalculatePhysicalDamage(int attack, int defense, int variance) {
     float atkAsFloat;
     float defAsFloat;
     float varAmnt;
