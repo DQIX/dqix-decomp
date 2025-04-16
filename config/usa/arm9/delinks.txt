@@ -1,0 +1,10 @@
+    .text       start:0x02000000 end:0x020e5920 kind:code align:32
+    .init       start:0x020e5920 end:0x020e692c kind:code align:4
+    .rodata     start:0x020e692c end:0x020eeb18 kind:rodata align:4
+    .ctor       start:0x020eeb18 end:0x020eebc4 kind:rodata align:4
+    .data       start:0x020eebe0 end:0x020f2e60 kind:data align:32
+    .bss        start:0x020f2e60 end:0x021536e0 kind:bss align:32
+
+src/BasicAttackCalculation.cpp:
+    complete
+    .text start:0x020744c0 end:0x020745ec

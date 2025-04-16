@@ -1,0 +1,32 @@
+BasedOnStyle: LLVM
+IndentWidth: 4
+ColumnLimit: 127
+
+AllowShortFunctionsOnASingleLine: Empty
+AllowShortIfStatementsOnASingleLine: WithoutElse
+AllowShortCaseLabelsOnASingleLine: true
+AllowShortEnumsOnASingleLine: false
+
+IndentCaseLabels: true
+IndentExternBlock: NoIndent
+IndentPPDirectives: BeforeHash
+NamespaceIndentation: All
+IndentAccessModifiers: false
+AccessModifierOffset: -4
+
+AlignConsecutiveAssignments: Consecutive
+AlignEscapedNewlines: DontAlign
+AlignTrailingComments: Leave
+
+BreakConstructorInitializers: AfterColon
+
+PackConstructorInitializers: Never
+
+SpaceAfterCStyleCast: true
+SpaceBeforeParens: Custom
+SpaceBeforeParensOptions:
+  AfterPlacementOperator: false
+
+BreakBeforeBraces: Custom
+BraceWrapping:
+  AfterControlStatement: MultiLine
