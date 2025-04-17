@@ -1,0 +1,8 @@
+data_ov032_02200960 kind:bss addr:0x02200960
+data_ov032_02210fdc kind:bss addr:0x02210fdc
+data_ov032_0221f024 kind:bss addr:0x0221f024
+data_ov032_02257960 kind:bss addr:0x02257960 ambiguous
+data_ov032_02270227 kind:bss addr:0x02270227 ambiguous
+data_ov032_02270fdb kind:bss addr:0x02270fdb ambiguous
+data_ov032_0227f025 kind:bss addr:0x0227f025 ambiguous
+data_ov032_02293100 kind:bss addr:0x02293100

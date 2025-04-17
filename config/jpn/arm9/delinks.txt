@@ -1,0 +1,14 @@
+    .text       start:0x02000000 end:0x020e61fc kind:code align:32
+    .init       start:0x020e61fc end:0x020e71d4 kind:code align:4
+    .rodata     start:0x020e71d4 end:0x020eea98 kind:rodata align:4
+    .ctor       start:0x020eea98 end:0x020eeb40 kind:rodata align:4
+    .data       start:0x020eeb40 end:0x020f2e60 kind:data align:32
+    .bss        start:0x020f2e60 end:0x02154e60 kind:bss align:32
+
+src/BasicAttackCalculation.c:
+	complete
+	.text start:0x0207564C end:0x02075778
+
+src/CritRateCalculation.c:
+	complete
+	.text start:0x02075930 end:0x020759c4

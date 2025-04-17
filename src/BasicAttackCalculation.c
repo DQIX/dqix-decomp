@@ -1,5 +1,12 @@
 #include <globaldefs.h>
+#ifdef usa
 extern float func_02074388(int,float,float);
+#endif
+#ifdef jpn
+extern float func_02075514(int,float,float);
+#define func_02074388 func_02075514
+#define data_02108ddc data_02108d20
+#endif
 extern int data_02108ddc;
 // properly decompiled variant
 ARM float CalculatePhysicalDamage(int attack, int defense, int* variance) {
