@@ -2,7 +2,7 @@
 
 ## 📖 About
 This project aims to create a **1:1 disassembly and decompilation** of *Dragon Quest IX: Sentinels of the Starry Skies* for the Nintendo DS.  
-The primary focus is on the USA version of the game, with the goal of making it fully recompilable.
+The primary focus is on the USA and Japanese versions of the game, with the goal of making it fully recompilable.
 
 ---
 
@@ -27,7 +27,7 @@ python -m pip install -r tools/requirements.txt
 ```
 Run the script to configure Ninja (Do this any time a file is added or removed)
 ```shell
-python tools/configure.py usa
+python tools/configure.py <usa|jpn>
 ```
 Lastly, if you want the final ROM to be perfectly byte accurate you need to dump the ARM7 BIOS from your DS and place them in the root folder, under the name arm7_bios.bin
 
