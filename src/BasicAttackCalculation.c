@@ -16,9 +16,9 @@ ARM float CalculatePhysicalDamage(int attack, int defense, int* variance) {
     if (atkAsFloat <= 0) {
         atkAsFloat = 0;
     } else {
-        defAsFloat = attack;
-        defAsFloat /= 16.0f;
-        if (atkAsFloat <= defAsFloat) {
+        float minimumDamage = attack;
+        minimumDamage /= 16.0f;
+        if (atkAsFloat <= minimumDamage) {
             atkAsFloat = attack;
             atkAsFloat /= 16.0f;
             atkAsFloat = func_02074388(variance, 0.0f, atkAsFloat);
