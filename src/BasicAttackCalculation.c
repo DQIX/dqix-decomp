@@ -2,10 +2,9 @@
 extern float func_02074388(int,float,float);
 extern int data_02108ddc;
 // properly decompiled variant
-ARM float CalculatePhysicalDamage(int attack, int defense, int variance) {
+ARM float CalculatePhysicalDamage(int attack, int defense, int* variance) {
     float atkAsFloat;
     float defAsFloat;
-    float varAmnt;
 	if (!variance) {
 		variance = &data_02108ddc;
 	}
@@ -25,13 +24,16 @@ ARM float CalculatePhysicalDamage(int attack, int defense, int variance) {
             atkAsFloat = func_02074388(variance, 0.0f, atkAsFloat);
 
         } else {
-            defAsFloat = atkAsFloat / 16.0f;
-            defAsFloat = 0.0f - defAsFloat;
-            varAmnt = atkAsFloat / 16.0f;
-            defAsFloat = func_02074388(variance, defAsFloat, varAmnt);
-            varAmnt = func_02074388(variance, -1.0f, 1.0f);
-            atkAsFloat += defAsFloat;
-            atkAsFloat += varAmnt;
+            float flatVariance;
+            float percentageVarianceMaximum;
+            float percentageVariance;
+            float percentageVarianceMinimum = atkAsFloat / 16.0f;
+            percentageVarianceMinimum = 0.0f - percentageVarianceMinimum;
+            percentageVarianceMaximum = atkAsFloat / 16.0f;
+            percentageVariance = func_02074388(variance, percentageVarianceMinimum, percentageVarianceMaximum);
+            flatVariance = func_02074388(variance, -1.0f, 1.0f);
+            atkAsFloat += percentageVariance;
+            atkAsFloat += flatVariance;
         }
     }
     if (atkAsFloat < 0) {
