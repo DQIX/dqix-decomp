@@ -17,3 +17,5 @@ src/BasicAttackCalculation.cpp:
     .text start:0x020744c0 end:0x020745ec
 ```
 Add the 'complete' qualifier to indicate the code is finished, or else it won't be included in the build.
+
+Additionally, be sure to rename any symbols in symbols.txt to match the names you gave functions or data in the decompiled file.
