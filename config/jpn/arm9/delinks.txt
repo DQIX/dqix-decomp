@@ -5,10 +5,14 @@
     .data       start:0x020eeb40 end:0x020f2e60 kind:data align:32
     .bss        start:0x020f2e60 end:0x02154e60 kind:bss align:32
 
-src/BasicAttackCalculation.c:
+src/Combat/Main/BasicAttackCalculation.c:
 	complete
 	.text start:0x0207564C end:0x02075778
 
-src/CritRateCalculation.c:
+src/Combat/Main/TensionBonusCalculation.c:
+	complete
+	.text start:0x020758f0 end:0x02075930
+
+src/Combat/Main/CritRateCalculation.c:
 	complete
 	.text start:0x02075930 end:0x020759c4
