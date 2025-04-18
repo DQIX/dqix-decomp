@@ -1,4 +1,4 @@
-func_ov000_021536e0 kind:function(arm,size=0x18) addr:0x021536e0
+GetCombatantByID kind:function(arm,size=0x18) addr:0x021536e0
 func_ov000_021536f8 kind:function(arm,size=0x18) addr:0x021536f8
 func_ov000_02153710 kind:function(arm,size=0x48) addr:0x02153710
 func_ov000_02153758 kind:function(arm,size=0x60) addr:0x02153758

@@ -7,7 +7,7 @@
 
 src/Combat/Main/BasicAttackCalculation.c:
     complete
-    .text start:0x020744c0 end:0x020745ec
+    .text start:0x020744a8 end:0x020745ec
 
 src/Combat/Main/TensionBonusCalculation.c:
 	complete
@@ -16,3 +16,11 @@ src/Combat/Main/TensionBonusCalculation.c:
 src/Combat/Main/CritRateCalculation.c:
 	complete
 	.text start:0x020747a4 end:0x02074838
+
+src/Combat/Main/GetBattleList.c:
+	complete
+	.text start:0x0200f398 end:0x0200f3a4
+
+src/Combat/Main/GetCombatantFromList.c:
+	complete
+	.text start:0x0200FE68 end:0x0200FEA4

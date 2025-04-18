@@ -10,3 +10,8 @@ func_ov029_021d9698 kind:function(arm,size=0x58) addr:0x021d9698
 data_ov029_021d96f0 kind:data(any) addr:0x021d96f0
 data_ov029_021d9a50 kind:data(any) addr:0x021d9a50
 data_ov029_021da080 kind:data(any) addr:0x021da080
+data_ov029_021d9d20_fake kind:data(any) addr:0x021d9d20
+data_ov029_021d9ee0_fake kind:data(any) addr:0x021d9ee0
+data_ov029_021d9c40_fake kind:data(any) addr:0x021d9c40
+data_ov029_0216398c_fake kind:data(any) addr:0x021d9e00
+data_ov029_0216399c_fake kind:data(any) addr:0x021d9fb0

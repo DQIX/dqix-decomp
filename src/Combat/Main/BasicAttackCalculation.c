@@ -8,7 +8,9 @@ extern float func_02075514(int,float,float);
 #define data_02108ddc data_02108d20
 #endif
 extern int data_02108ddc;
-// properly decompiled variant
+ARM int RoundAttack(float attack) {
+	return 0.5f + attack;
+}
 ARM float CalculatePhysicalDamage(int attack, int defense, int* variance) {
     float atkAsFloat;
     float defAsFloat;

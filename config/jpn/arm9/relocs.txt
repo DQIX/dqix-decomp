@@ -24,8 +24,8 @@ from:0x02000ccc kind:arm_call to:0x020a2984 module:main
 from:0x02000cd0 kind:arm_call to:0x020a35b0 module:main
 from:0x02000cd8 kind:arm_call to:0x020a36b8 module:main
 from:0x02000ce0 kind:arm_call to:0x021d9b60 module:overlay(30)
-from:0x02000cf0 kind:arm_call to:0x021d9d20 module:none
-from:0x02000d00 kind:arm_call to:0x021d9ee0 module:none
+from:0x02000cf0 kind:arm_call to:0x021d9d20 module:overlay(29)
+from:0x02000d00 kind:arm_call to:0x021d9ee0 module:overlay(29)
 from:0x02000d0c kind:arm_call to:0x0202f308 module:main
 from:0x02000d1c kind:arm_call to:0x020a36b8 module:main
 from:0x02000d2c kind:arm_call to:0x022a2960 module:overlays(33,34)

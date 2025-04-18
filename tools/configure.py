@@ -29,7 +29,7 @@ OBJDIFF_VERSION = 'v2.7.1'
 MWCC_VERSION = "2.0/sp1p5"
 DECOMP_ME_COMPILER = "mwcc_30_131"
 CC_FLAGS = " ".join([
-    "-O4",                # Optimize maximally, omit p: it optimizes out things that the game doesn't normally
+    "-O4",                  # Optimize maximally, omit p: it optimizes out things that the game doesn't normally
     "-enum int",            # Use int-sized enums
     "-char signed",         # Char type is signed
     "-str noreuse",         # Equivalent strings are different objects
