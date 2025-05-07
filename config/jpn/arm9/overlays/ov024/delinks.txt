@@ -4,3 +4,5 @@
     .data       start:0x021ff9c0 end:0x02200920 kind:data align:32
     .bss        start:0x02200920 end:0x02200940 kind:bss align:32
 
+src/Combat/Overlay_24/GetAttackBaseDamage.c:
+	.text start:0x021e8458 end:0x021e897c

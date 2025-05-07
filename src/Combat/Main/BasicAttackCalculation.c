@@ -8,7 +8,7 @@ extern float func_02075514(int,float,float);
 #define data_02108ddc data_02108d20
 #endif
 extern int data_02108ddc;
-ARM int RoundAttack(float attack) {
+ARM int RoundUp(float attack) {
 	return 0.5f + attack;
 }
 ARM float CalculatePhysicalDamage(int attack, int defense, int* variance) {
@@ -49,4 +49,22 @@ ARM float CalculatePhysicalDamage(int attack, int defense, int* variance) {
         atkAsFloat = 0;
     }
 	return atkAsFloat;
+}
+ARM float CalculateAttackBuffMultiplier(int buffLevel) {
+    float buffFloat = 0.25f * buffLevel;
+    return buffFloat + 1.0f;
+}
+
+ARM float CalculateDefenseBuffMultiplier(int buffLevel) {
+    float levelFloat;
+    float multiplier;
+    if (buffLevel >= 0) {
+        levelFloat = buffLevel;
+        multiplier = levelFloat * 0.5f;
+        return 1.0f + multiplier;
+    }
+    levelFloat = buffLevel+1;
+    multiplier = levelFloat * 0.25f;
+    multiplier = multiplier - 0.5f;
+    return 1.0f + multiplier;
 }
