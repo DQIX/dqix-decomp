@@ -50,11 +50,11 @@ ARM float CalculatePhysicalDamage(int attack, int defense, int* variance) {
     }
 	return atkAsFloat;
 }
-ARM float CalculateAttackBuffMultiplier(int buffLevel) {
+ARM float CalculateAttackBuffMultiplier(signed char buffLevel) {
     return 1.0f + 0.25f * buffLevel;
 }
 
-ARM float CalculateDefenseBuffMultiplier(int buffLevel) {
+ARM float CalculateDefenseBuffMultiplier(signed char buffLevel) {
     // increases defense by 50% for each positive level; for -1 do 50% defense reducation, for -2 do 75% defense reduction.
     float levelFloat;
     float multiplier;
@@ -69,7 +69,7 @@ ARM float CalculateDefenseBuffMultiplier(int buffLevel) {
     return 1.0f + multiplier;
 }
 
-ARM float CalculateAgilityBuffMultiplier(int buffLevel) {
+ARM float CalculateAgilityBuffMultiplier(signed char buffLevel) {
     // increases defense by 50% for each positive level; for -1 do 50% defense reducation, for -2 do 75% defense reduction. Identical to defense
     float levelFloat;
     float multiplier;
@@ -84,14 +84,14 @@ ARM float CalculateAgilityBuffMultiplier(int buffLevel) {
     return 1.0f + multiplier;
 }
 
-ARM float CalculateCharmBuffMultiplier(int buffLevel) {
+ARM float CalculateCharmBuffMultiplier(signed char buffLevel) {
     return (buffLevel < 0) ? 1.0f : 1.0f + 0.5f * buffLevel;
 }
 
-ARM float CalculateMagicalMightBuffMultiplier(int buffLevel) {
+ARM float CalculateMagicalMightBuffMultiplier(signed char buffLevel) {
     return 1.0f + 0.5f * buffLevel;
 }
 
-ARM float CalculateMagicalMendingBuffMultiplier(int buffLevel) {
+ARM float CalculateMagicalMendingBuffMultiplier(signed char buffLevel) {
     return 1.0f + 0.5f * buffLevel;
 }

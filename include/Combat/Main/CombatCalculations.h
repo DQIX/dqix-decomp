@@ -2,9 +2,9 @@
 
 int RoundUp(float value);
 float CalculatePhysicalDamage(int attack, int defense, int* variance);
-float CalculateAttackBuffMultiplier(int buffLevel);
-float CalculateDefenseBuffMultiplier(int buffLevel);
-float CalculateAgilityBuffMultiplier(int buffLevel);
-float CalculateCharmBuffMultiplier(int buffLevel);
-float CalculateMagicalMightBuffMultiplier(int buffLevel);
-float CalculateMagicalMendingBuffMultiplier(int buffLevel);
+float CalculateAttackBuffMultiplier(signed char buffLevel);
+float CalculateDefenseBuffMultiplier(signed char buffLevel);
+float CalculateAgilityBuffMultiplier(signed char buffLevel);
+float CalculateCharmBuffMultiplier(signed char buffLevel);
+float CalculateMagicalMightBuffMultiplier(signed char buffLevel);
+float CalculateMagicalMendingBuffMultiplier(signed char buffLevel);

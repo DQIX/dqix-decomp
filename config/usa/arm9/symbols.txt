@@ -141,7 +141,7 @@ _fdiv kind:function(arm,size=0x3b8) addr:0x0200c1c0
 .L_0200c274 kind:data(byte[256]) addr:0x0200c274
 func_0200c578 kind:function(arm,size=0x84) addr:0x0200c578
 _ffix kind:function(arm,size=0x34) addr:0x0200c5fc
-func_0200c630 kind:function(arm,size=0x40) addr:0x0200c630
+_ffixu kind:function(arm,size=0x40) addr:0x0200c630
 _fflt kind:function(arm,size=0x48) addr:0x0200c670
 _ffltu kind:function(arm,size=0x48) addr:0x0200c6b8
 func_0200c700 kind:function(arm,size=0x6c) addr:0x0200c700

@@ -8,3 +8,7 @@
 src/Combat/Overlay_0/GetCombatantByID.c:
 	complete
 	.text start:0x02154e60 end:0x02154e78
+
+src/Combat/Overlay_0/UpdateCombatantBuffs.c:
+	complete
+	.text start:0x021571d0 end:0x02157614

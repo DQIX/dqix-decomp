@@ -14,11 +14,11 @@ ARM int GetAttackBaseDamage(int* param_1, int attackerId, int defenderId, int* p
         }
         //defendersDefense = defender->baseStats->defense; // needs struct fleshed out
         if ((param_4[4] & 0x200) != 0) {
-            defendersDefense = defender->currentStats->defense;
+            defendersDefense = defender->currentStats->primaryStats.defense;
         }
         defendersDefense *= ((float*)param_1)[7];
         defendersDefense = RoundUp(defendersDefense);
-        return CalculatePhysicalDamage(defendersDefense, attacker->currentStats->attack, (int*)param_1[4]);
+        return CalculatePhysicalDamage(defendersDefense, attacker->currentStats->primaryStats.attack, (int*)param_1[4]);
     } else {
         // depends on param_5, don't know what it is
     }
