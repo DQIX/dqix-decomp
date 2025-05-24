@@ -21,10 +21,8 @@ void UpdateCombatantAttack(int unused, int combatantId) {
     if (combatantIsPlayer != 0) {
         maxAttack = 999;
     }
-    attackBuff = combatant->currentStats->buffPack;
+    attackBuff = combatant->currentStats->attackBuff;
     attack = combatant->baseStats->primaryStats.attack;
-    attackBuff <<= BUFF_BITS_ATTACK;
-    attackBuff >>= BUFF_BITS_START;
     buffMultiplier = CalculateAttackBuffMultiplier(attackBuff);
     buffedAttack = buffMultiplier * attack;
     if (maxAttack < buffedAttack) {
@@ -53,10 +51,8 @@ void UpdateCombatantDefense(int unused, int combatantId) {
     if (combatantIsPlayer != 0) {
         maxDefense = 999;
     }
-    defenseBuff = combatant->currentStats->buffPack;
+    defenseBuff = combatant->currentStats->defenseBuff;
     defense = combatant->baseStats->primaryStats.defense;
-    defenseBuff <<= BUFF_BITS_DEFENSE;
-    defenseBuff >>= BUFF_BITS_START;
     buffMultiplier = CalculateDefenseBuffMultiplier(defenseBuff);
     buffedDefense = buffMultiplier * defense;
     if (maxDefense < buffedDefense) {
@@ -79,7 +75,7 @@ void UpdateCombatantAgility(int unused, int combatantId) {
         return;
     }
     agility = combatant->baseStats->primaryStats.agility;
-    agilityMultiplier = CalculateAgilityBuffMultiplier((combatant->currentStats->buffPack << BUFF_BITS_AGILITY) >> BUFF_BITS_START);
+    agilityMultiplier = CalculateAgilityBuffMultiplier(combatant->currentStats->agilityBuff);
     agilityBuffed = agilityMultiplier * agility;
     if (maxAgility < agilityBuffed) {
         combatant->currentStats->primaryStats.agility = 999;
@@ -99,14 +95,14 @@ void UpdateCombatantCharm(int unused, int combatantId) {
     if (combatant == NULL) {
         return;
     }
-    charmBuffValue = (combatant->currentStats->buffPack << BUFF_BITS_CHARM) >> BUFF_BITS_START;
-    charm = (unsigned int)(combatant->baseStats->primaryStats.packedStats << STAT_BITS_CHARM) >> STAT_BITS_START;
+    charmBuffValue = combatant->currentStats->charmBuff;
+    charm = combatant->baseStats->primaryStats.charm;
     charmMultiplier = CalculateCharmBuffMultiplier(charmBuffValue);
     charmBuffed = charmMultiplier * charm;
     if (maxCharm < charmBuffed) {
-        combatant->currentStats->primaryStats.packedStats = (combatant->currentStats->primaryStats.packedStats & 0xFFFFFC00) | maxCharm;
+        combatant->currentStats->primaryStats.charm = maxCharm;
     } else {
-        combatant->currentStats->primaryStats.packedStats = (combatant->currentStats->primaryStats.packedStats & 0xFFFFFC00) | (charmBuffed & STAT_MASK_CHARM);
+        combatant->currentStats->primaryStats.charm = charmBuffed;
     }
 }
 
@@ -121,19 +117,19 @@ void UpdateCombatantMagicalMight(int unused, int combatantId) {
     if (combatant == NULL) {
         return;
     }
-    magicalMightBuff = (combatant->currentStats->buffPack << BUFF_BITS_MAGICAL_MIGHT) >> BUFF_BITS_START;
-    magicalMight = (unsigned int)(combatant->baseStats->primaryStats.packedStats << STAT_BITS_MAGICAL_MIGHT) >> STAT_BITS_START;
+    magicalMightBuff = combatant->currentStats->magicalMightBuff;
+    magicalMight = combatant->baseStats->primaryStats.magicalMight;
     buffMultiplier = CalculateMagicalMightBuffMultiplier(magicalMightBuff);
     magicalMightBuffed = buffMultiplier * magicalMight;
     if (maxMagicalMight < magicalMightBuffed) {
-        combatant->currentStats->primaryStats.packedStats = (combatant->currentStats->primaryStats.packedStats & 0xFFF003FF) | (maxMagicalMight << STAT_BITS_PER_STAT);
+        combatant->currentStats->primaryStats.magicalMight = maxMagicalMight;
     } else {
-        combatant->currentStats->primaryStats.packedStats = (combatant->currentStats->primaryStats.packedStats & 0xFFF003FF) | ((unsigned int)(magicalMightBuffed << STAT_BITS_START) >> STAT_BITS_MAGICAL_MIGHT);
+        combatant->currentStats->primaryStats.magicalMight = magicalMightBuffed;
     }
 }
 
 void UpdateCombatantMagicalMending(int unused, int combatantId) {
-        unsigned short magicalMending;
+    unsigned short magicalMending;
     unsigned int magicalMendingBuff;
     unsigned short magicalMendingBuffed;
     const short maxMagicalMending = 999;
@@ -143,14 +139,14 @@ void UpdateCombatantMagicalMending(int unused, int combatantId) {
     if (combatant == NULL) {
         return;
     }
-    magicalMendingBuff = (combatant->currentStats->buffPack << BUFF_BITS_MAGICAL_MENDING) >> BUFF_BITS_START;
-    magicalMending = (unsigned int)(combatant->baseStats->primaryStats.packedStats << STAT_BITS_MAGICAL_MENDING) >> STAT_BITS_START;
+    magicalMendingBuff = combatant->currentStats->magicalMendingBuff;
+    magicalMending = combatant->baseStats->primaryStats.magicalMending;
     buffMultiplier = CalculateMagicalMendingBuffMultiplier(magicalMendingBuff);
     magicalMendingBuffed = buffMultiplier * magicalMending;
     if (maxMagicalMending < magicalMendingBuffed) {
-        combatant->currentStats->primaryStats.packedStats = (combatant->currentStats->primaryStats.packedStats & 0xc00ffffF) | (maxMagicalMending << (STAT_BITS_PER_STAT*2));
+        combatant->currentStats->primaryStats.magicalMending = maxMagicalMending;
     } else {
-        combatant->currentStats->primaryStats.packedStats = (combatant->currentStats->primaryStats.packedStats & 0xc00ffffF) | ((unsigned int)(magicalMendingBuffed << STAT_BITS_START) >> STAT_BITS_MAGICAL_MENDING);
+        combatant->currentStats->primaryStats.magicalMending = magicalMendingBuffed;
     }
 }
 
