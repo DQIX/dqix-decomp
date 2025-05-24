@@ -1,21 +1,22 @@
 #include <globaldefs.h>
-#ifdef usa
-extern float func_02074388(int,float,float);
-#endif
+
+#include "System/Random.h"
+
 #ifdef jpn
-extern float func_02075514(int,float,float);
-#define func_02074388 func_02075514
 #define data_02108ddc data_02108d20
 #endif
-extern int data_02108ddc;
+
+extern struct Random data_02108ddc;
+
 ARM int RoundUp(float attack) {
 	return 0.5f + attack;
 }
-ARM float CalculatePhysicalDamage(int attack, int defense, int* variance) {
+
+ARM float CalculatePhysicalDamage(int attack, int defense, struct Random* random) {
     float atkAsFloat;
     float defAsFloat;
-	if (!variance) {
-		variance = &data_02108ddc;
+    if (random == NULL) {
+        random = &data_02108ddc;
 	}
     atkAsFloat = attack;
     defAsFloat = defense;
@@ -30,8 +31,7 @@ ARM float CalculatePhysicalDamage(int attack, int defense, int* variance) {
         if (atkAsFloat <= minimumDamage) {
             atkAsFloat = attack;
             atkAsFloat /= 16.0f;
-            atkAsFloat = func_02074388(variance, 0.0f, atkAsFloat);
-
+            atkAsFloat = NextRandomFloatBetween(random, 0.0f, atkAsFloat);
         } else {
             float flatVariance;
             float percentageVarianceMaximum;
@@ -39,8 +39,8 @@ ARM float CalculatePhysicalDamage(int attack, int defense, int* variance) {
             float percentageVarianceMinimum = atkAsFloat / 16.0f;
             percentageVarianceMinimum = 0.0f - percentageVarianceMinimum;
             percentageVarianceMaximum = atkAsFloat / 16.0f;
-            percentageVariance = func_02074388(variance, percentageVarianceMinimum, percentageVarianceMaximum);
-            flatVariance = func_02074388(variance, -1.0f, 1.0f);
+            percentageVariance = NextRandomFloatBetween(random, percentageVarianceMinimum, percentageVarianceMaximum);
+            flatVariance = NextRandomFloatBetween(random, -1.0f, 1.0f);
             atkAsFloat += percentageVariance;
             atkAsFloat += flatVariance;
         }
