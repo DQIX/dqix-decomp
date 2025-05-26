@@ -36,7 +36,7 @@ CC_FLAGS = " ".join([
     "-proc arm946e",        # Target processor
     "-gccext,on",           # Enable GCC extensions
     "-fp soft",             # Compute float operations in software
-    "-inline noauto",       # Inline only functions marked with 'inline'
+    "-inline off",          # Do not inline
     "-lang=c++",            # Set language to C++
     "-Cpp_exceptions off",  # Disable C++ exceptions
     "-RTTI off",            # Disable runtime type information
@@ -449,7 +449,7 @@ def get_c_cpp_files(dirs: list[Path]):
 
 
 def is_cpp(name: str):
-    return Path(name).suffix in [".cpp"]
+    return Path(name).suffix in [".cpp", ".cc"]
 
 
 def is_c(name: str):
