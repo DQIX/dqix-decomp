@@ -1,13 +1,13 @@
 #include "System/Random.h"
 
-unsigned int NextRandom(struct Random* random) {
+ARM unsigned int NextRandom(struct Random* random) {
     /* <https://en.wikipedia.org/wiki/Linear_congruential_generator> */
 
     random->lcg_state = random->lcg_multiplier * random->lcg_state + random->lcg_increment;
     return random->lcg_state >> 32u;
 }
 
-int NextRandomMax(struct Random* random, int maximum) {
+ARM int NextRandomMax(struct Random* random, int maximum) {
     unsigned char saved_unk_1C;
     int result;
 
@@ -29,7 +29,7 @@ int NextRandomMax(struct Random* random, int maximum) {
     return result;
 }
 
-float NextRandomFloat01(struct Random* random) {
+ARM float NextRandomFloat01(struct Random* random) {
     float result;
 
     unsigned char saved_unk_1C = random->unk_1C;
@@ -42,7 +42,7 @@ float NextRandomFloat01(struct Random* random) {
     return result;
 }
 
-float NextRandomFloatBetween(struct Random* random, float minimum, float maximum) {
+ARM float NextRandomFloatBetween(struct Random* random, float minimum, float maximum) {
     unsigned char saved_unk_1C;
     float result;
 
@@ -56,7 +56,7 @@ float NextRandomFloatBetween(struct Random* random, float minimum, float maximum
     return result;
 }
 
-float NextRandomFloatScaled(struct Random* random, float minimum, float maximum, int digits) {
+ARM float NextRandomFloatScaled(struct Random* random, float minimum, float maximum, int digits) {
     unsigned char saved_unk_1C;
     int scale;
     int minimum_int;
@@ -85,7 +85,7 @@ float NextRandomFloatScaled(struct Random* random, float minimum, float maximum,
     return result;
 }
 
-int NextRandomBetween(struct Random* random, int minimum, int maximum) {
+ARM int NextRandomBetween(struct Random* random, int minimum, int maximum) {
     unsigned char saved_unk_1C;
     int result;
 

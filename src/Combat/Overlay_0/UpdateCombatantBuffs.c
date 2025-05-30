@@ -2,7 +2,7 @@
 #include "Combat/Main/BattleList.h"
 #include "Combat/Main/CombatCalculations.h"
 
-void UpdateCombatantAttack(int unused, int combatantId) {
+ARM void UpdateCombatantAttack(int unused, int combatantId) {
     int maxAttack;
     struct BattleStruct* battleStruct;
     struct CombatantStruct* combatant;
@@ -32,7 +32,7 @@ void UpdateCombatantAttack(int unused, int combatantId) {
     }
 }
 
-void UpdateCombatantDefense(int unused, int combatantId) {
+ARM void UpdateCombatantDefense(int unused, int combatantId) {
     int maxDefense;
     struct BattleStruct* battleStruct;
     struct CombatantStruct* combatant;
@@ -62,7 +62,7 @@ void UpdateCombatantDefense(int unused, int combatantId) {
     }
 }
 
-void UpdateCombatantAgility(int unused, int combatantId) {
+ARM void UpdateCombatantAgility(int unused, int combatantId) {
     struct BattleStruct* battleStruct;
     struct CombatantStruct* combatant;
     unsigned int agility;
@@ -84,7 +84,7 @@ void UpdateCombatantAgility(int unused, int combatantId) {
     }
 }
 
-void UpdateCombatantCharm(int unused, int combatantId) {
+ARM void UpdateCombatantCharm(int unused, int combatantId) {
     struct BattleStruct *battleStruct = GetBattleStruct();
     struct CombatantStruct *combatant = GetCombatantFromList(battleStruct, combatantId);
     float charmMultiplier;
@@ -106,7 +106,7 @@ void UpdateCombatantCharm(int unused, int combatantId) {
     }
 }
 
-void UpdateCombatantMagicalMight(int unused, int combatantId) {
+ARM void UpdateCombatantMagicalMight(int unused, int combatantId) {
     unsigned short magicalMight;
     unsigned int magicalMightBuff;
     unsigned short magicalMightBuffed;
@@ -128,7 +128,7 @@ void UpdateCombatantMagicalMight(int unused, int combatantId) {
     }
 }
 
-void UpdateCombatantMagicalMending(int unused, int combatantId) {
+ARM void UpdateCombatantMagicalMending(int unused, int combatantId) {
     unsigned short magicalMending;
     unsigned int magicalMendingBuff;
     unsigned short magicalMendingBuffed;
@@ -150,7 +150,7 @@ void UpdateCombatantMagicalMending(int unused, int combatantId) {
     }
 }
 
-void ApplyCombatantBuffs(int unused, int combatantId) {
+ARM void ApplyCombatantBuffs(int unused, int combatantId) {
     UpdateCombatantAttack(unused, combatantId);
     UpdateCombatantDefense(unused, combatantId);
     UpdateCombatantAgility(unused, combatantId);
