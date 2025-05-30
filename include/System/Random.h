@@ -8,11 +8,6 @@ struct Random {
     /* +1C */ unsigned char unk_1C;
 };
 
-#ifdef jpn
-// TODO: all jpn aliases
-    #define NextRandomFloatBetween func_02075514
-#endif
-
 /* generate a random unsigned integer between 0 and 0xFFFFFFFFu (inclusive). */
 unsigned int NextRandom(struct Random* random);
 

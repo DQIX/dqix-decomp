@@ -5,6 +5,10 @@
     .data       start:0x020eeb40 end:0x020f2e60 kind:data align:32
     .bss        start:0x020f2e60 end:0x02154e60 kind:bss align:32
 
+src/System/Random.c:
+	complete
+	.text start:0x0207544c end:0x02075634
+
 src/Combat/Main/BasicAttackCalculation.c:
 	complete
 	.text start:0x02075634 end:0x020758c4

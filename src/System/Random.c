@@ -1,3 +1,4 @@
+#include <globaldefs.h>
 #include "System/Random.h"
 
 ARM unsigned int NextRandom(struct Random* random) {
