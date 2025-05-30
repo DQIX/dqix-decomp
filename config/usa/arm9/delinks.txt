@@ -24,3 +24,7 @@ src/Combat/Main/GetBattleList.c:
 src/Combat/Main/GetCombatantFromList.c:
 	complete
 	.text start:0x0200FE68 end:0x0200FEA4
+
+src/System/Random.c:
+	complete
+	.text start:0x020742c0 end:0x020744a8
