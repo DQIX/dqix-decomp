@@ -449,7 +449,7 @@ def get_c_cpp_files(dirs: list[Path]):
 
 
 def is_cpp(name: str):
-    return Path(name).suffix in [".cpp", ".cc"]
+    return Path(name).suffix in [".cpp"]
 
 
 def is_c(name: str):

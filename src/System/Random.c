@@ -1,22 +1,21 @@
 #include <globaldefs.h>
 #include "System/Random.h"
 
-#include <globaldefs.h>
-
 extern char const data_020f0d5c[]; // "(no-name)"
-extern struct Random data_02108ddc;
 
-struct Random* GetBTRandom(void) {
+extern struct Random data_02108ddc; /* note: initialized by usa:func_020e60c0, in .init */
+
+ARM struct Random* GetBTRandom(void) {
     return &data_02108ddc;
 }
 
-struct Random* CreateRandom(struct Random* random, char const* name, unsigned char unk_1C) {
+ARM struct Random* CreateRandom(struct Random* random, char const* name, unsigned char unk_1C) {
     /* NOTE: if this were C++, this would be a constructor */
     InitRandom(random, 0uLL, name, unk_1C);
     return random;
 }
 
-void InitRandom(struct Random* random, unsigned long long lcg_state, char const* name, unsigned char unk_1C) {
+ARM void InitRandom(struct Random* random, unsigned long long lcg_state, char const* name, unsigned char unk_1C) {
     if (name == NULL) {
         name = data_020f0d5c;
     }
@@ -27,11 +26,11 @@ void InitRandom(struct Random* random, unsigned long long lcg_state, char const*
     SeedRandom(random, lcg_state);
 }
 
-void SeedRandom64(struct Random* random, unsigned long long lcg_state) {
+ARM void SeedRandom64(struct Random* random, unsigned long long lcg_state) {
     SeedRandom(random, lcg_state);
 }
 
-void SeedRandom(struct Random* random, unsigned long long lcg_state) {
+ARM void SeedRandom(struct Random* random, unsigned long long lcg_state) {
     unsigned long long multiplier = 0x5D588B656C078965uLL;
     unsigned long long increment = 0x0000000000269EC3uLL;
 
@@ -40,16 +39,16 @@ void SeedRandom(struct Random* random, unsigned long long lcg_state) {
     random->lcg_increment = increment;
 }
 
-void SeedRandom32(struct Random* random, unsigned int stateHi, unsigned int stateLo) {
-    /* ugly! */
+ARM void SeedRandom32(struct Random* random, unsigned int stateHi, unsigned int stateLo) {
+    /* a bit ugly... */
     SeedRandom(random, (((unsigned long long) stateHi << 32u) & 0xFFFFFFFF00000000uLL) | (stateLo & 0xFFFFFFFFull));
 }
 
-unsigned int GetRandomStateHi(struct Random* random) {
+ARM unsigned int GetRandomStateHi(struct Random* random) {
     return (random->lcg_state >> 32u) & 0xFFFFFFFFu;
 }
 
-unsigned int GetRandomStateLo(struct Random* random) {
+ARM unsigned int GetRandomStateLo(struct Random* random) {
     return random->lcg_state & 0xFFFFFFFFu;
 }
 
