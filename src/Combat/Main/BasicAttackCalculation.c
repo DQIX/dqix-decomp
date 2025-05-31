@@ -2,12 +2,6 @@
 
 #include "System/Random.h"
 
-#ifdef jpn
-#define data_02108ddc data_02108d20
-#endif
-
-extern struct Random data_02108ddc;
-
 ARM int RoundUp(float attack) {
 	return 0.5f + attack;
 }

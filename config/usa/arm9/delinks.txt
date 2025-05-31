@@ -27,4 +27,4 @@ src/Combat/Main/GetCombatantFromList.c:
 
 src/System/Random.c:
 	complete
-	.text start:0x020742c0 end:0x020744a8
+	.text start:0x020741d0 end:0x020744a8
