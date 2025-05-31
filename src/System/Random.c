@@ -32,8 +32,8 @@ void SeedRandom64(struct Random* random, unsigned long long lcg_state) {
 }
 
 void SeedRandom(struct Random* random, unsigned long long lcg_state) {
-    static const unsigned long long multiplier = 0x5D588B656C078965uLL;
-    static const unsigned long long increment = 0x0000000000269EC3uLL;
+    unsigned long long multiplier = 0x5D588B656C078965uLL;
+    unsigned long long increment = 0x0000000000269EC3uLL;
 
     random->lcg_state = lcg_state;
     random->lcg_multiplier = multiplier;
