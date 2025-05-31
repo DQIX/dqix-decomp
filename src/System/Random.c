@@ -3,7 +3,8 @@
 
 extern char const data_020f0d5c[]; // "(no-name)"
 
-extern struct Random data_02108ddc; /* note: initialized by usa:func_020e60c0, in .init */
+/* note: initialized by usa:func_020e60c0, in .init */
+extern struct Random data_02108ddc;
 
 ARM struct Random* GetBTRandom(void) {
     return &data_02108ddc;

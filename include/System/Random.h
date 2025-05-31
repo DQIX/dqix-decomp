@@ -8,6 +8,12 @@ struct Random {
     /* +1C */ unsigned char unk_1C;
 };
 
+#ifdef jpn
+#define data_02108ddc data_02108d20
+#endif
+
+extern struct Random data_02108ddc;
+
 /* get instance of the global "BT" ("Hoimi table") random */
 struct Random* GetBTRandom(void);
 
