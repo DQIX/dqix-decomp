@@ -1,6 +1,10 @@
 #include <globaldefs.h>
 #include "System/Random.h"
 
+#ifdef jpn
+#define data_020f0d5c data_020f0e54
+#endif
+
 extern char const data_020f0d5c[]; // "(no-name)"
 
 /* note: initialized by usa:func_020e60c0, in .init */
