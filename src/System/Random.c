@@ -1,6 +1,58 @@
 #include <globaldefs.h>
 #include "System/Random.h"
 
+extern char const data_020f0d5c[]; // "(no-name)"
+
+/* note: initialized by usa:func_020e60c0, in .init */
+extern struct Random data_02108ddc;
+
+ARM struct Random* GetBTRandom(void) {
+    return &data_02108ddc;
+}
+
+ARM struct Random* CreateRandom(struct Random* random, char const* name, unsigned char unk_1C) {
+    /* NOTE: if this were C++, this would be a constructor */
+    InitRandom(random, 0uLL, name, unk_1C);
+    return random;
+}
+
+ARM void InitRandom(struct Random* random, unsigned long long lcg_state, char const* name, unsigned char unk_1C) {
+    if (name == NULL) {
+        name = data_020f0d5c;
+    }
+
+    random->unk_1C = unk_1C;
+    random->name = name;
+
+    SeedRandom(random, lcg_state);
+}
+
+ARM void SeedRandom64(struct Random* random, unsigned long long lcg_state) {
+    SeedRandom(random, lcg_state);
+}
+
+ARM void SeedRandom(struct Random* random, unsigned long long lcg_state) {
+    unsigned long long multiplier = 0x5D588B656C078965uLL;
+    unsigned long long increment = 0x0000000000269EC3uLL;
+
+    random->lcg_state = lcg_state;
+    random->lcg_multiplier = multiplier;
+    random->lcg_increment = increment;
+}
+
+ARM void SeedRandom32(struct Random* random, unsigned int stateHi, unsigned int stateLo) {
+    /* a bit ugly... */
+    SeedRandom(random, (((unsigned long long) stateHi << 32u) & 0xFFFFFFFF00000000uLL) | (stateLo & 0xFFFFFFFFull));
+}
+
+ARM unsigned int GetRandomStateHi(struct Random* random) {
+    return (random->lcg_state >> 32u) & 0xFFFFFFFFu;
+}
+
+ARM unsigned int GetRandomStateLo(struct Random* random) {
+    return random->lcg_state & 0xFFFFFFFFu;
+}
+
 ARM unsigned int NextRandom(struct Random* random) {
     /* <https://en.wikipedia.org/wiki/Linear_congruential_generator> */
 
