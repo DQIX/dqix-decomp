@@ -66,7 +66,7 @@ Get to the point where the strange function calls referenced on lines 26-28 of A
 ### 🔧 Useful Tools
 1. **Ghidra** (with the NTRGhidra plugin):  
    - A powerful reverse engineering tool for DS games and code.  
-   - [Download Ghidra](https://github.com/NationalSecurityAgency/ghidra/releases)  
+   - [Download Ghidra](https://github.com/NationalSecurityAgency/ghidra/releases/tag/Ghidra_11.2.1_build) 
    - [Get dsd-ghidra Plugin (note: at current, ensure you use v0.2.1: 0.3.0 seems to be broken with the game)](https://github.com/AetiasHax/dsd-ghidra/releases/tag/v0.2.1)
    
 2. **Desmume**:  
