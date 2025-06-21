@@ -80,6 +80,11 @@ Get to the point where the strange function calls referenced on lines 26-28 of A
    - Another popular DS emulator for debugging, though less user-friendly.  
    - [Download No$GBA](https://problemkaputt.de/gba.htm)
 
+4. **Decomp.me**:
+   - A powerful website designed to aid decompilation of games on different platforms. Select the DS platform and input the assembly of the function you want to decompile, and it will show you how closely the code you write matches the output assembly.
+   - Additionally, it's great for collaboration, as you can share a "scratch" of the function you're working on with others and they can seamlessly fork it and contribute.
+   - [Check it out here](https://decomp.me)
+
 ---
 
 ### ✨ Notes
