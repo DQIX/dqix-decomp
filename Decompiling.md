@@ -1,4 +1,9 @@
 # Decompiling
+## Setting up Ghidra
+If you haven't already, set up the version of ghidra and the plugin linked in [the primary Readme.](Readme.md) Once you've done that, load the game in Ghidra using the plugin by opening the .nds file in a new project. Open it, and don't auto-analyze it; just close the auto-analyze window, and open the script window. The button for it should look like a green circle with an arrow inside it. Search for SyncDsd inside here, and add tick the "Add to tool" box next to it. Now you can close the script window and press the DS button at the top of the primary window for the game, and you will be asked to load the config.yaml for the game. Open the proper one for your version of the game (config/usa/arm9/config.yaml for USA, config/jpn/arm9/config.yaml for JPN) and it will sync symbols from the decompilation into ghidra, helping with decompilation efforts.
+
+If you are receiving an error when trying to load the config.yaml, make sure you're using the correct version of the plugin as well as have made a successful build with ninja at least once.
+
 ## The basics
 Decide on a piece of code you want to decompile; either from looking at already decompiled code and wishing to decompile functions it references, or through other means such as debugging. Once you have it, Ghidra can be an excellent base for understanding what the code is trying to achieve, and decomp.me can ensure the code you write matches the assembly.
 
