@@ -30,7 +30,7 @@ Run the script to configure Ninja (Do this any time a file is added or removed)
 python tools/configure.py <usa|jpn>
 ```
 
-If using ghidra, be sure to create a successful build using ninja (see: [Building the Project](-building-the-project)) at least once before loading the game's config.yaml with ghidra. (For more information see See [Decompiling.md](Decompiling.md))
+If using ghidra, be sure to create a successful build using ninja (see: [Building the Project](#-building-the-project)) at least once before loading the game's config.yaml with ghidra. (For more information see See [Decompiling.md](Decompiling.md))
 
 Lastly, if you want the final ROM to be perfectly byte accurate you need to dump the ARM7 BIOS from your DS and place them in the root folder, under the name arm7_bios.bin
 
