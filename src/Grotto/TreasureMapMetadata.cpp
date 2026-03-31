@@ -3,6 +3,7 @@
 #include "Combat/Main/BattleList.h"
 #include <globaldefs.h>
 
+
 extern "C"
 {
 // Looks like an implementation of memset (including some optimisations to
