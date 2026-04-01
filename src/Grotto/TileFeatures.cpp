@@ -2,11 +2,18 @@
 #include "std_library_functions.h"
 //#include "padsection.h"
 
+#ifdef jpn
+#define data_020e7010 data_020e78b4
+#define func_02012fe4 func_02012dac
+#define data_020e700c data_020e78b0
+#endif
+
 extern unsigned char const data_020e7010[];
 extern "C" int func_02012fe4(void);
-
 extern unsigned char const data_020e700c[];
 
+// USA: func_0201ea54
+// JPN: func_0201e7e0
 int ChooseTileFeaturePosition(const TileFeaturePlacementData* data)
 {
     unsigned char validArray[12];
@@ -39,6 +46,8 @@ int ChooseTileFeaturePosition(const TileFeaturePlacementData* data)
     return (int)(char)validArray[rand() % validCount];
 }
 
+// USA: func_0201ead0
+// JPN: func_0201e85c
 int ChooseTileFeatureOrientation(const TileFeaturePlacementData* data,
     int direction, bool preferFaceDown)
 {

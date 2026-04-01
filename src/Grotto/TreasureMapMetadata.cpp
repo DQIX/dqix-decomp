@@ -3,6 +3,14 @@
 #include "Combat/Main/BattleList.h"
 #include <globaldefs.h>
 
+#ifdef jpn
+#define func_020ca594 func_020cc060
+#define func_020a3ec0 func_020a5bfc
+#define func_020100a8 func_0200ff04
+#define func_0200ff1c func_0200fd78
+#define func_02012fe4 func_02012dac
+#define func_02011738 func_020114a8
+#endif
 
 extern "C"
 {
@@ -30,7 +38,8 @@ int func_02012fe4(void);
 unsigned char* func_02011738(BattleStruct*);
 }
 
-// func_020a5cb8
+// USA: func_020a5cb8
+// JPN: func_020a7a5c
 unsigned short GenerateNewMapQuality()
 {
     BattleStruct* battle = GetBattleStruct();
@@ -38,6 +47,12 @@ unsigned short GenerateNewMapQuality()
     // Another pointless function call
     func_02012fe4();
     unsigned char* maybeGrottoDataPtr = func_02011738(battle);
+
+#ifdef jpn
+    #define MAIN_CHAR_DATA_PTR_OFFSET 0x144
+#else
+    #define MAIN_CHAR_DATA_PTR_OFFSET 0x150
+#endif
 
     unsigned short maxCharLevel = 0;
     unsigned short maxNumRevocs = 0;
@@ -60,8 +75,8 @@ unsigned short GenerateNewMapQuality()
         // inner->levels[j] and inner->revocs[j] and it still works. 
         unsigned char j = i;
         // beware pointer trickery, this is really offset 0x16c + 2*j
-        unsigned short level = *(*(unsigned short**)(maybeMainCharDataPtr + 0x150) + 0xb6 + j);  
-        unsigned short revocCount = *(*(unsigned char**)(maybeMainCharDataPtr + 0x150) + 0x186 + j);
+        unsigned short level = *(*(unsigned short**)(maybeMainCharDataPtr + MAIN_CHAR_DATA_PTR_OFFSET) + 0xb6 + j);  
+        unsigned short revocCount = *(*(unsigned char**)(maybeMainCharDataPtr + MAIN_CHAR_DATA_PTR_OFFSET) + 0x186 + j);
         if (level > maxCharLevel)
             maxCharLevel = level;
         if (revocCount > maxNumRevocs)
@@ -95,7 +110,8 @@ unsigned short GenerateNewMapQuality()
     return quality;
 }
 
-// func_020a5e10
+// USA: func_020a5e10
+// JPN: func_020a7bb4
 unsigned short GenerateMapLocation(unsigned int quality)
 {
     if (quality >= 81 && quality <= 248)
@@ -105,7 +121,8 @@ unsigned short GenerateMapLocation(unsigned int quality)
     return func_020a3ec0(1, 47);
 }
 
-// func_020a5e7c
+// USA: func_020a5e7c
+// JPN: func_020a7c20
 ARM void TreasureMapMetadata::InitialiseAsNonLegacyMap(unsigned int quality, int seed)
 {
     func_020ca594(this, 0, 28);
@@ -132,7 +149,8 @@ ARM void TreasureMapMetadata::InitialiseAsNonLegacyMap(unsigned int quality, int
     Location = (unsigned char)GenerateMapLocation(QualityOrLegacyBossID);
 }
 
-// func_020a5efc
+// USA: func_020a5efc
+// JPN: func_020a7ca0
 ARM void TreasureMapMetadata::InitialiseAsLegacyBossMap(unsigned int bossID, unsigned int level)
 {
     func_020ca594(this, 0, 28);
@@ -165,7 +183,8 @@ ARM void TreasureMapMetadata::InitialiseAsLegacyBossMap(unsigned int bossID, uns
     Location = (unsigned char)GenerateMapLocation(finalQuality);
 }
 
-// func_020a5f88
+// USA: func_020a5f88
+// JPN: func_020a7d2c
 ARM void TreasureMapMetadata::SetDiscoveryState(int state)
 {
     DiscoveryStateAndMapTypeAndUnknown &= 0xF8;
@@ -183,7 +202,8 @@ ARM void TreasureMapMetadata::SetDiscoveryState(int state)
     }
 }
 
-// func_020a5fd0
+// USA: func_020a5fd0
+// JPN: func_020a7d74
 ARM int TreasureMapMetadata::GetDiscoveryState() const
 {
     if (DiscoveryStateAndMapTypeAndUnknown & 0x01)
@@ -195,7 +215,8 @@ ARM int TreasureMapMetadata::GetDiscoveryState() const
     return 0;
 }
 
-// func_020a5ffc
+// USA: func_020a5ffc
+// JPN: func_020a7da0
 ARM void TreasureMapMetadata::SetMapType(int type)
 {
     DiscoveryStateAndMapTypeAndUnknown &= 0xe7;
@@ -209,7 +230,8 @@ ARM void TreasureMapMetadata::SetMapType(int type)
     }
 }
 
-// func_020a6030
+// USA: func_020a6030
+// JPN: func_020a7dd4
 ARM int TreasureMapMetadata::GetMapType() const
 {
     if (DiscoveryStateAndMapTypeAndUnknown & 0x08)
@@ -219,19 +241,22 @@ ARM int TreasureMapMetadata::GetMapType() const
     return 0;
 }
 
-// func_020a6050
+// USA: func_020a6050
+// JPN: func_020a7df4
 ARM void TreasureMapMetadata::SetInitialByteUnknownBit()
 {
     DiscoveryStateAndMapTypeAndUnknown |= 0x20;
 }
 
-// func_020a6060
+// USA: func_020a6060
+// JPN: func_020a7e04
 ARM void TreasureMapMetadata::ClearInitialByteUnknownBit()
 {
     DiscoveryStateAndMapTypeAndUnknown &= 0xdf;
 }
 
-// func_020a6070
+// USA: func_020a6070
+// JPN: func_020a7e14
 ARM bool TreasureMapMetadata::GetInitialByteUnknownBit() const
 {
     return DiscoveryStateAndMapTypeAndUnknown & 0x20;
