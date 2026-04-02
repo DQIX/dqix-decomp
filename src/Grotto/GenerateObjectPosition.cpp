@@ -1,7 +1,6 @@
 #include <globaldefs.h>
 #include "Grotto/TileFeatures.h"
-
-extern "C" char* strstr(const char*, const char*);
+#include "std_library_functions.h"
 
 #ifdef jpn
 #define data_020e6f00 data_020e77a4
