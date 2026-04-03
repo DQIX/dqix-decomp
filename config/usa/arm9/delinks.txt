@@ -5,6 +5,10 @@
     .data       start:0x020eebe0 end:0x020f2e60 kind:data align:32
     .bss        start:0x020f2e60 end:0x021536e0 kind:bss align:32
 
+src/Grotto/RandATRangeModular.c:
+    complete
+    .text start:0x020a3ec0 end:0x020a3ee4
+
 src/Grotto/TileFeatures.c:
     complete
     .text start:0x0201ea54 end:0x0201ebc4

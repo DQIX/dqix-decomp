@@ -1,11 +1,11 @@
 #include "Grotto/TreasureMapMetadata.h"
+#include "Grotto/RandATRangeModular.h"
+#include "System/Memory.h"
 #include "std_library_functions.h"
 #include "Combat/Main/BattleList.h"
 #include <globaldefs.h>
 
 #ifdef jpn
-#define func_020ca594 func_020cc060
-#define func_020a3ec0 func_020a5bfc
 #define func_020100a8 func_0200ff04
 #define func_0200ff1c func_0200fd78
 #define func_02012fe4 func_02012dac
@@ -14,13 +14,6 @@
 
 extern "C"
 {
-// Looks like an implementation of memset (including some optimisations to
-// do 4 bytes at a time based on alignment). 
-void func_020ca594(void* ptr, int value, unsigned int length);
-
-// Seems to just get a rand() output and force it into range [min, max].
-int func_020a3ec0(int minimum, int maximum);
-
 // Seems to return a u32 whose address is just past the end of the BattleStruct.
 // Maybe BattleStruct is just the beginning of some larger struct?
 unsigned int func_020100a8(BattleStruct*);
@@ -115,17 +108,17 @@ unsigned short GenerateNewMapQuality()
 unsigned short GenerateMapLocation(unsigned int quality)
 {
     if (quality >= 81 && quality <= 248)
-        return func_020a3ec0(1, 150);
+        return RandATRangeModular(1, 150);
     if (quality >= 51 && quality <= 80)
-        return func_020a3ec0(1, 131);
-    return func_020a3ec0(1, 47);
+        return RandATRangeModular(1, 131);
+    return RandATRangeModular(1, 47);
 }
 
 // USA: func_020a5e7c
 // JPN: func_020a7c20
 ARM void TreasureMapMetadata::InitialiseAsNonLegacyMap(unsigned int quality, int seed)
 {
-    func_020ca594(this, 0, 28);
+    VectorizedMemset(this, 0, 28);
     SetDiscoveryState(1);
     SetMapType(1);
     if (quality >= 2 && quality <= 248)
@@ -153,7 +146,7 @@ ARM void TreasureMapMetadata::InitialiseAsNonLegacyMap(unsigned int quality, int
 // JPN: func_020a7ca0
 ARM void TreasureMapMetadata::InitialiseAsLegacyBossMap(unsigned int bossID, unsigned int level)
 {
-    func_020ca594(this, 0, 28);
+    VectorizedMemset(this, 0, 28);
     SetDiscoveryState(1);
     SetMapType(2);
     if (bossID == 0 || bossID > 13)
