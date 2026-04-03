@@ -3,13 +3,13 @@
 #include "System/Memory.h"
 #include "std_library_functions.h"
 #include "Combat/Main/BattleList.h"
+#include "Grotto/GrottoStruct.h"
 #include <globaldefs.h>
 
 #ifdef jpn
 #define func_020100a8 func_0200ff04
 #define func_0200ff1c func_0200fd78
 #define func_02012fe4 func_02012dac
-#define func_02011738 func_020114a8
 #endif
 
 extern "C"
@@ -25,10 +25,6 @@ char* func_0200ff1c(BattleStruct*, unsigned int);
 // This just returns some data. It's also being spam-called in TileFeatures.cpp,
 // discarding the return value.
 int func_02012fe4(void);
-
-// Just applies an offset. Empirically, this offset from the BattleStruct
-// has some data about the currently active grotto.
-unsigned char* func_02011738(BattleStruct*);
 }
 
 // USA: func_020a5cb8
@@ -39,7 +35,7 @@ unsigned short GenerateNewMapQuality()
     char* maybeMainCharDataPtr = func_0200ff1c(battle, func_020100a8(battle));
     // Another pointless function call
     func_02012fe4();
-    unsigned char* maybeGrottoDataPtr = func_02011738(battle);
+    GrottoStruct* maybeGrottoDataPtr = GetGrottoStruct(battle);
 
 #ifdef jpn
     #define MAIN_CHAR_DATA_PTR_OFFSET 0x144
@@ -84,15 +80,15 @@ unsigned short GenerateNewMapQuality()
 
     unsigned short quality;
     // Probably checking if regular map or legacy boss map?
-    if (maybeGrottoDataPtr[9] == 2)
+    if (maybeGrottoDataPtr->unknown[9] == 2)
     {
-        quality = maxCharLevel + maxNumRevocs * 5 + maybeGrottoDataPtr[7];
+        quality = maxCharLevel + maxNumRevocs * 5 + maybeGrottoDataPtr->unknown[7];
     }
     else
     {
         quality = (unsigned short)(1.5f * (float)maxCharLevel + 5.0f * (float)maxNumRevocs);
     }
-    maybeGrottoDataPtr[9] = 0;
+    maybeGrottoDataPtr->unknown[9] = 0;
     float tenth = 0.1f * (float)quality;
     int quotient = 2 * (int)tenth + 1;
     quality += (int)((float)(rand() % quotient) - tenth);
