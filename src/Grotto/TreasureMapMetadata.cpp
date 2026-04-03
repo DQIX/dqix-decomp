@@ -115,8 +115,8 @@ unsigned short GenerateMapLocation(unsigned int quality)
 ARM void TreasureMapMetadata::InitialiseAsNonLegacyMap(unsigned int quality, int seed)
 {
     VectorizedMemset(this, 0, 28);
-    SetDiscoveryState(1);
-    SetMapType(1);
+    SetDiscoveryState(DiscoveryState_Undiscovered);
+    SetMapType(TreasureMapType_Regular);
     if (quality >= 2 && quality <= 248)
     {
         QualityOrLegacyBossID = (unsigned char)quality;
@@ -143,8 +143,8 @@ ARM void TreasureMapMetadata::InitialiseAsNonLegacyMap(unsigned int quality, int
 ARM void TreasureMapMetadata::InitialiseAsLegacyBossMap(unsigned int bossID, unsigned int level)
 {
     VectorizedMemset(this, 0, 28);
-    SetDiscoveryState(1);
-    SetMapType(2);
+    SetDiscoveryState(DiscoveryState_Undiscovered);
+    SetMapType(TreasureMapType_Legacy);
     if (bossID == 0 || bossID > 13)
     {
         QualityOrLegacyBossID = 1;
@@ -174,7 +174,7 @@ ARM void TreasureMapMetadata::InitialiseAsLegacyBossMap(unsigned int bossID, uns
 
 // USA: func_020a5f88
 // JPN: func_020a7d2c
-ARM void TreasureMapMetadata::SetDiscoveryState(int state)
+ARM void TreasureMapMetadata::SetDiscoveryState(eDiscoveryState state)
 {
     DiscoveryStateAndMapTypeAndUnknown &= 0xF8;
     if (state == 1)
@@ -193,27 +193,27 @@ ARM void TreasureMapMetadata::SetDiscoveryState(int state)
 
 // USA: func_020a5fd0
 // JPN: func_020a7d74
-ARM int TreasureMapMetadata::GetDiscoveryState() const
+ARM eDiscoveryState TreasureMapMetadata::GetDiscoveryState() const
 {
     if (DiscoveryStateAndMapTypeAndUnknown & 0x01)
-        return 1;
+        return DiscoveryState_Undiscovered;
     if (DiscoveryStateAndMapTypeAndUnknown & 0x02)
-        return 2;
+        return DiscoveryState_Discovered;
     if (DiscoveryStateAndMapTypeAndUnknown & 0x04)
-        return 3;
-    return 0;
+        return DiscoveryState_Cleared;
+    return DiscoveryState_Invalid;
 }
 
 // USA: func_020a5ffc
 // JPN: func_020a7da0
-ARM void TreasureMapMetadata::SetMapType(int type)
+ARM void TreasureMapMetadata::SetMapType(eTreasureMapType type)
 {
     DiscoveryStateAndMapTypeAndUnknown &= 0xe7;
-    if (type == 1)
+    if (type == TreasureMapType_Regular)
     {
         DiscoveryStateAndMapTypeAndUnknown |= 0x08;
     }
-    else if (type == 2)
+    else if (type == TreasureMapType_Legacy)
     {
         DiscoveryStateAndMapTypeAndUnknown |= 0x10;
     }
@@ -221,13 +221,13 @@ ARM void TreasureMapMetadata::SetMapType(int type)
 
 // USA: func_020a6030
 // JPN: func_020a7dd4
-ARM int TreasureMapMetadata::GetMapType() const
+ARM eTreasureMapType TreasureMapMetadata::GetMapType() const
 {
     if (DiscoveryStateAndMapTypeAndUnknown & 0x08)
-        return 1;
+        return TreasureMapType_Regular;
     if (DiscoveryStateAndMapTypeAndUnknown & 0x10)
-        return 2;
-    return 0;
+        return TreasureMapType_Legacy;
+    return TreasureMapType_Invalid;
 }
 
 // USA: func_020a6050
