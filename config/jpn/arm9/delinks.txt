@@ -5,23 +5,27 @@
     .data       start:0x020eeb40 end:0x020f2e60 kind:data align:32
     .bss        start:0x020f2e60 end:0x02154e60 kind:bss align:32
 
-src/Grotto/GrottoStruct.c:
+src/Grotto/Main/GrottoStruct.c:
     complete
     .text start:0x020114a8 end:0x020114b4
 
-src/Grotto/RandATRangeModular.c:
+src/Grotto/Main/ActiveGrottoSeed.c:
+    complete
+    .text start:0x02090b88 end:0x02090bb0
+
+src/Grotto/Main/RandATRangeModular.c:
     complete
     .text start:0x020a5bfc end:0x020a5c20
 
-src/Grotto/TileFeatures.c:
+src/Grotto/Main/TileFeatures.c:
 	complete
 	.text start:0x0201e7e0 end:0x0201e950
 
-src/Grotto/GenerateObjectPosition.c:
+src/Grotto/Main/GenerateObjectPosition.c:
 	complete
 	.text start:0x02019f28 end:0x0201a0a0
 
-src/Grotto/TreasureMapMetadata.c:
+src/Grotto/Main/TreasureMapMetadata.c:
 	complete
 	.text start:0x020a7a5c end:0x020a7e28
 

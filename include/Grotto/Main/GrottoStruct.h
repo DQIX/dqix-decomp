@@ -6,9 +6,14 @@ struct GrottoStruct
 {
     unsigned char unknown1[7];
     unsigned char activeMapLevel;
+
+#ifdef jpn
+    unsigned char unknown2[0x44];
+#else
     unsigned char unknown2[0x64];
+#endif
     TreasureMapMetadata activeMapData;
-    char unknown3[0x7c];
+    char unknown3[0x7c]; // not sure about this part for jpn version
     unsigned char numMaps;
     char padding[1];
     TreasureMapMetadata maps[99];
