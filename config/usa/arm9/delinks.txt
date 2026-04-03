@@ -13,6 +13,10 @@ src/Grotto/Main/ActiveGrottoSeed.c:
     complete
     .text start:0x02090268 end:0x02090290
 
+src/Grotto/Main/FloorMapGenerator.c:
+    complete
+    .text start:0x020925b8 end:0x02092644
+
 src/Grotto/Main/RandATRangeModular.c:
     complete
     .text start:0x020a3ec0 end:0x020a3ee4

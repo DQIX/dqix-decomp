@@ -11,6 +11,7 @@ void srand(int seed);
 // string.h
 void* memcpy(void* dst, void* src, unsigned int length);
 void* memmove(void* dst, void* src, unsigned int length);
+void* memset(void* dst, int value, unsigned int length);
 
 unsigned int strlen(const char* str);
 // The implementation for this is vectorized (when dst % 4 == src % 4),
