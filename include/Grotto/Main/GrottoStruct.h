@@ -4,9 +4,11 @@
 
 struct GrottoStruct
 {
-    unsigned char unknown[0x6c];
+    unsigned char unknown1[7];
+    unsigned char activeMapLevel;
+    unsigned char unknown2[0x64];
     TreasureMapMetadata activeMapData;
-    char unknown2[0x7c];
+    char unknown3[0x7c];
     unsigned char numMaps;
     char padding[1];
     TreasureMapMetadata maps[99];

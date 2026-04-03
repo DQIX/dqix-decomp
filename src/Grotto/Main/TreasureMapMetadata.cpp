@@ -1,9 +1,9 @@
-#include "Grotto/TreasureMapMetadata.h"
-#include "Grotto/RandATRangeModular.h"
+#include "Grotto/Main/TreasureMapMetadata.h"
+#include "Grotto/Main/RandATRangeModular.h"
 #include "System/Memory.h"
 #include "std_library_functions.h"
 #include "Combat/Main/BattleList.h"
-#include "Grotto/GrottoStruct.h"
+#include "Grotto/Main/GrottoStruct.h"
 #include <globaldefs.h>
 
 #ifdef jpn
@@ -35,7 +35,7 @@ unsigned short GenerateNewMapQuality()
     char* maybeMainCharDataPtr = func_0200ff1c(battle, func_020100a8(battle));
     // Another pointless function call
     func_02012fe4();
-    GrottoStruct* maybeGrottoDataPtr = GetGrottoStruct(battle);
+    GrottoStruct* grotto = GetGrottoStruct(battle);
 
 #ifdef jpn
     #define MAIN_CHAR_DATA_PTR_OFFSET 0x144
@@ -80,15 +80,15 @@ unsigned short GenerateNewMapQuality()
 
     unsigned short quality;
     // Probably checking if regular map or legacy boss map?
-    if (maybeGrottoDataPtr->unknown[9] == 2)
+    if (grotto->unknown2[1] == 2)
     {
-        quality = maxCharLevel + maxNumRevocs * 5 + maybeGrottoDataPtr->unknown[7];
+        quality = maxCharLevel + maxNumRevocs * 5 + grotto->activeMapLevel;
     }
     else
     {
         quality = (unsigned short)(1.5f * (float)maxCharLevel + 5.0f * (float)maxNumRevocs);
     }
-    maybeGrottoDataPtr->unknown[9] = 0;
+    grotto->unknown2[1] = 0;
     float tenth = 0.1f * (float)quality;
     int quotient = 2 * (int)tenth + 1;
     quality += (int)((float)(rand() % quotient) - tenth);

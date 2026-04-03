@@ -1,4 +1,4 @@
-#include "Grotto/GrottoStruct.h"
+#include "Grotto/Main/GrottoStruct.h"
 #include "Combat/Main/BattleList.h"
 
 // USA: func_02011738

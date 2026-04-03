@@ -1,6 +1,6 @@
 #include <globaldefs.h>
 #include "std_library_functions.h"
-#include "Grotto/RandATRangeModular.h"
+#include "Grotto/Main/RandATRangeModular.h"
 
 // USA: func_020a3ec0
 // JPN: func_020a5bfc

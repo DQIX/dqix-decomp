@@ -1,5 +1,5 @@
 #include <globaldefs.h>
-#include "Grotto/TileFeatures.h"
+#include "Grotto/Main/TileFeatures.h"
 #include "std_library_functions.h"
 
 #ifdef jpn
