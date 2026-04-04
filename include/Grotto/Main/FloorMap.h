@@ -24,15 +24,16 @@ public:
 
     char unknown[104];
 
-    char unknownBuffer[10];
+    GrottoTilePoint chests[5]; // may be wrong number but memset clears 10 bytes here
     char padding[2];
-    int unknownInt; // maybe number of chests?
+    int chestCount;
 
 public:
     bool Initialize(int width, int height);
     void InitBuffers();
 
     bool ComputeAdjacencyData();
+    // This might be (related to?) the routineI function in the save editor
     void ComputeSingleAdjacencyDataPoint(int x, int y, unsigned char* outData);
 
     void WriteTile(int x, int y, unsigned char value);

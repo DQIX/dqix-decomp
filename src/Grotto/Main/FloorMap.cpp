@@ -215,10 +215,10 @@ ARM void FloorMap::Clear()
     stairsDown.x = 0;
     stairsDown.y = 0;
 
-    unknownInt = 0;
+    chestCount = 0;
     pMapData = NULL;
     pMapAdjacencyData = NULL;
-    memset(unknownBuffer, 0, 10);
+    memset(chests, 0, 10);
 }
 
 ARM void FloorMap::Clear2()

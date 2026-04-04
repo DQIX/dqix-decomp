@@ -60,6 +60,8 @@ public:
     bool mainRoomAssigned;
 
 public:
+    bool RoutineK();
+    void RoutineD(Room& room);
 
     void Initialize();
     int RandRange(int minimum, int maximum) const;
