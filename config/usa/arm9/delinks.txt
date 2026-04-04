@@ -17,6 +17,10 @@ src/Grotto/Main/FloorMapGenerator.c:
     complete
     .text start:0x020925b8 end:0x02092644
 
+src/Grotto/Main/FloorMap.c:
+    complete
+    .text start:0x02092644 end:0x02092a74
+
 src/Grotto/Main/RandATRangeModular.c:
     complete
     .text start:0x020a3ec0 end:0x020a3ee4

@@ -1,26 +1,6 @@
 #pragma once
 
-struct GrottoTilePoint
-{
-    char x;
-    char y;
-};
-
-class FloorMap
-{
-public:
-    // This is held externally, though seems to be held right after the 
-    // end of the generator.
-    char* pMapData; 
-    char* unknown; // Looks like it points to end of map data.
-
-    int width;
-    int height;
-    GrottoTilePoint stairsUp;
-    GrottoTilePoint stairsDown;
-
-    // More to come...
-};
+#include "FloorMap.h"
 
 class FloorMapGenerator
 {

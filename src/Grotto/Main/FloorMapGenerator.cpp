@@ -2,14 +2,11 @@
 #include "std_library_functions.h"
 #include <globaldefs.h>
 
-extern "C"
-{
-    
-}
+
 
 // USA: func_020925b8
 // JPN: func_02092ed8
-void FloorMapGenerator::Initialize()
+ARM void FloorMapGenerator::Initialize()
 {
     seed = -1;
     pFloorMap = NULL;
@@ -25,10 +22,11 @@ void FloorMapGenerator::Initialize()
 
 // USA: func_02092614
 // JPN: func_02092f34
-int FloorMapGenerator::RandRange(int minimum, int maximum) const
+ARM int FloorMapGenerator::RandRange(int minimum, int maximum) const
 {
     if (minimum == maximum)
         return minimum;
     
     return minimum + (rand() % (maximum - minimum + 1));
 }
+
