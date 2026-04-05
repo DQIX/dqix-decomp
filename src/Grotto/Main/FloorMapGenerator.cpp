@@ -18,6 +18,8 @@ extern "C"
 // idempotent operation, so when interpreting the effect of this you can ignore
 // successive invocations on the same variable (at least for the purposes of
 // function behaviour: they'll still affect the assembly output).
+// also, don't try to write this with a ternary operator or implicit cast from
+// bool to int... the compiler will freak out and use different registers
 #define REDUCE_TILEVALUE(n) if (n == 1 || n == 3) n = 1; else n = 0
 
 // USA: func_02091bc0
@@ -240,27 +242,10 @@ ARM bool FloorMapGenerator::RoutineK()
     
             if (numAttempts < 100)
             {
-                // Do not condense this into a ternary operator or bool -> int
-                // conversion, the compiler will put these in r6-r9 instead
-                if (u4 == 1 || u4 == 3)
-                    u4 = 1;
-                else
-                    u4 = 0;
-
-                if (u5 == 1 || u5 == 3)
-                    u5 = 1;
-                else
-                    u5 = 0;
-
-                if (u6 == 1 || u6 == 3)
-                    u6 = 1;
-                else
-                    u6 = 0;
-
-                if (u7 == 1 || u7 == 3)
-                    u7 = 1;
-                else
-                    u7 = 0;
+                REDUCE_TILEVALUE(u4);
+                REDUCE_TILEVALUE(u5);
+                REDUCE_TILEVALUE(u6);
+                REDUCE_TILEVALUE(u7);
                 
                 if (u4 && u5 && u6 && u7)
                 {
