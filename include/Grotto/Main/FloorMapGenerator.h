@@ -45,6 +45,10 @@ public:
     {
         BasicRectangle bounds;
         GrottoTilePoint joinPoints[8];
+
+        // In the binary this is placed right after RoutineJ, so it might
+        // just be a static function.
+        Room& CopyFrom(const Room& other);
     };
 
     FloorMap* pFloorMap;
@@ -60,6 +64,8 @@ public:
     bool mainRoomAssigned;
 
 public:
+    bool RoutineJ();
+
     bool RoutineK();
     void RoutineD(Room& room);
 

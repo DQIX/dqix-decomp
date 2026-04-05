@@ -22,7 +22,13 @@ public:
     GrottoTilePoint stairsUp;
     GrottoTilePoint stairsDown;
 
-    char unknown[104];
+    char unknown1[0x24]; // most likely a struct of nine ints
+    int upStairWorldX, upStairWorldY, upStairWorldZ;
+    int fpUpStairRotation; // fixed point representation
+
+    char unknown2[0x24]; // most likely a struct of nine ints
+    int downStairWorldX, downStairWorldY, downStairWorldZ;
+    int fpDownStairRotation;
 
     GrottoTilePoint chests[5]; // may be wrong number but memset clears 10 bytes here
     char padding[2];

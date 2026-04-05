@@ -2,6 +2,10 @@
 #include "std_library_functions.h"
 #include <globaldefs.h>
 
+#ifdef jpn
+#define func_02032544 func_0203207c
+#endif
+
 extern "C"
 {
     // This is some kind of memory allocation.
@@ -162,6 +166,7 @@ ARM void FloorMap::WriteTile(int x, int y, unsigned char value)
 }
 
 // USA: func_02092934
+// JPN: func_02093254
 ARM int FloorMap::GetTile(int x, int y) const
 {
     if (x < 0 || y < 0)
@@ -170,6 +175,7 @@ ARM int FloorMap::GetTile(int x, int y) const
 }
 
 // USA: func_02092950
+// USA: func_02093270
 ARM void FloorMap::WriteRectangle(int left, int top, int width, int height, unsigned char value)
 {
     if (left < 0 || top < 0 || width < 1 || height < 1)
@@ -185,6 +191,7 @@ ARM void FloorMap::WriteRectangle(int left, int top, int width, int height, unsi
 }
 
 // USA: func_020929b4
+// JPN: func_020932d4
 ARM int FloorMap::GetAdjacencyBits(int x, int y) const
 {
     if (x < 0 || y < 0)
@@ -197,6 +204,7 @@ ARM int FloorMap::GetAdjacencyBits(int x, int y) const
 }
 
 // USA: func_020929e4
+// JPN: func_02093304
 ARM void FloorMap::AllocateBuffers(void* allocator)
 {
     if (pMapData == 0)
@@ -206,6 +214,8 @@ ARM void FloorMap::AllocateBuffers(void* allocator)
         pMapAdjacencyData = (unsigned char*)func_02032544(allocator, 256);
 }
 
+// USA: func_02092a2c
+// JPN: func_0209334c
 ARM void FloorMap::Clear()
 {
     width = 0;
@@ -221,6 +231,8 @@ ARM void FloorMap::Clear()
     memset(chests, 0, 10);
 }
 
+// USA: func_02092a68
+// JPN: func_02093388
 ARM void FloorMap::Clear2()
 {
     Clear();
