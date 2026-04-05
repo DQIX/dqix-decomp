@@ -64,6 +64,9 @@ public:
     bool mainRoomAssigned;
 
 public:
+    bool RoutineG(const BoundaryRect& boundary);
+    bool RoutineH(const GrottoTilePoint& p1, const GrottoTilePoint& p2,
+        const BoundaryRect& boundary, bool extend);
     bool RoutineJ();
 
     bool RoutineK();

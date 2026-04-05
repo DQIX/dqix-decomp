@@ -22,6 +22,183 @@ extern "C"
 // bool to int... the compiler will freak out and use different registers
 #define REDUCE_TILEVALUE(n) if (n == 1 || n == 3) n = 1; else n = 0
 
+// USA: func_02091448
+// JPN: func_02091d68
+bool FloorMapGenerator::RoutineG(const BoundaryRect& boundary)
+{
+    if (boundary.cutType == CutType_Horizontal)
+    {
+        const Room* top = boundary.leftOrTop->pRoom;
+        const Room* bottom = boundary.rightOrBottom->pRoom;
+        bool extend = RandRange(0, 7) == 0;
+        RoutineH(top->joinPoints[6], bottom->joinPoints[4], boundary, extend);
+        extend = RandRange(0, 7) == 0;
+        RoutineH(top->joinPoints[7], bottom->joinPoints[4], boundary, extend);
+        extend = RandRange(0, 7) == 0;
+        RoutineH(top->joinPoints[6], bottom->joinPoints[5], boundary, extend);
+        extend = RandRange(0, 7) == 0;
+        RoutineH(top->joinPoints[7], bottom->joinPoints[5], boundary, extend);
+    }
+    else if (boundary.cutType == CutType_Vertical)
+    {
+        const Room* left = boundary.leftOrTop->pRoom;
+        const Room* right = boundary.rightOrBottom->pRoom;
+        bool extend = RandRange(0, 7) == 0;
+        RoutineH(left->joinPoints[2], right->joinPoints[0], boundary, extend);
+        extend = RandRange(0, 7) == 0;
+        RoutineH(left->joinPoints[3], right->joinPoints[0], boundary, extend);
+        extend = RandRange(0, 7) == 0;
+        RoutineH(left->joinPoints[2], right->joinPoints[1], boundary, extend);
+        extend = RandRange(0, 7) == 0;
+        RoutineH(left->joinPoints[3], right->joinPoints[1], boundary, extend);
+    }
+
+    return true;
+}
+
+// USA: func_0209162c
+// JPN: func_02091f4c
+bool FloorMapGenerator::RoutineH(const GrottoTilePoint& p1, const GrottoTilePoint& p2,
+    const BoundaryRect& boundary, bool extend)
+{
+    if (p1.x == 0 || p1.y == 0 || p2.x == 0 || p2.y == 0)
+        return false;
+
+    if (boundary.cutType == CutType_Horizontal)
+    {
+        for (int ry = p1.y + 1; ry < boundary.bounds.top + 1; ry++)
+            pFloorMap->WriteTile(p1.x, ry, 2);
+
+        for (int ry = p2.y - 1; ry > boundary.bounds.top; ry--)
+            pFloorMap->WriteTile(p2.x, ry, 2);
+
+        if (p1.x < p2.x)
+        {
+            for (int rx = p1.x; rx < p2.x + 1; rx++)
+                pFloorMap->WriteTile(rx, boundary.bounds.top, 2);
+        }
+        else if (p1.x > p2.x)
+        {
+            for (int rx = p2.x; rx < p1.x + 1; rx++)
+                pFloorMap->WriteTile(rx, boundary.bounds.top, 2);
+        }
+
+        if (extend)
+        {
+            if (p1.x < p2.x)
+            {
+                for (int limit = p2.x + 1; limit < 16; limit++)
+                {
+                    int tileValue = pFloorMap->GetTile(limit, boundary.bounds.top);
+                    if (tileValue == 1 || tileValue == 3)
+                        continue;
+                    for (int rx = p2.x + 1; rx < limit; rx++)
+                        pFloorMap->WriteTile(rx, boundary.bounds.top, 2);
+                    break;
+                }
+                for (int limit = p1.x - 1; limit >= 0; limit--)
+                {
+                    int tileValue = pFloorMap->GetTile(limit, boundary.bounds.top);
+                    if (tileValue == 1 || tileValue == 3)
+                        continue;
+                    for (int rx = p1.x - 1; rx > limit; rx--)
+                        pFloorMap->WriteTile(rx, boundary.bounds.top, 2);
+                    break;
+                }
+            }
+            else if (p1.x >= p2.x)
+            {
+                for (int limit = p1.x + 1; limit < 16; limit++)
+                {
+                    int tileValue = pFloorMap->GetTile(limit, boundary.bounds.top);
+                    if (tileValue == 1 || tileValue == 3)
+                        continue;
+                    for (int rx = p1.x + 1; rx < limit; rx++)
+                        pFloorMap->WriteTile(rx, boundary.bounds.top, 2);
+                    break;
+                }
+                for (int limit = p2.x - 1; limit >= 0; limit--)
+                {
+                    int tileValue = pFloorMap->GetTile(limit, boundary.bounds.top);
+                    if (tileValue == 1 || tileValue == 3)
+                        continue;
+                    for (int rx = p2.x - 1; rx > limit; rx--)
+                        pFloorMap->WriteTile(rx, boundary.bounds.top, 2);
+                    break;
+                }
+            }
+        }
+    }
+    else if (boundary.cutType == CutType_Vertical)
+    {
+        for (int rx = p1.x + 1; rx < boundary.bounds.left + 1; rx++)
+            pFloorMap->WriteTile(rx, p1.y, 2);
+        for (int rx = p2.x - 1; rx > boundary.bounds.left; rx--)
+            pFloorMap->WriteTile(rx, p2.y, 2);
+
+        if (p1.y < p2.y)
+        {
+            for (int ry = p1.y; ry < p2.y + 1; ry++)
+                pFloorMap->WriteTile(boundary.bounds.left, ry, 2);
+        }
+        else if (p1.y > p2.y)
+        {
+            for (int ry = p2.y; ry < p1.y + 1; ry++)
+                pFloorMap->WriteTile(boundary.bounds.left, ry, 2);
+        }
+
+        if (extend)
+        {
+            if (p1.y < p2.y)
+            {
+                for (int limit = p2.y + 1; limit < 16; limit++)
+                {
+                    int tileValue = pFloorMap->GetTile(boundary.bounds.left, limit);
+                    if (tileValue == 1 || tileValue == 3)
+                        continue;
+                    for (int ry = p2.y + 1; ry < limit; ry++)
+                        pFloorMap->WriteTile(boundary.bounds.left, ry, 2);
+                    break;
+                }
+
+                for (int limit = p1.y - 1; limit >= 0; limit--)
+                {
+                    int tileValue = pFloorMap->GetTile(boundary.bounds.left, limit);
+                    if (tileValue == 1 || tileValue == 3)
+                        continue;
+                    for (int ry = p1.y - 1; ry > limit; ry--)
+                        pFloorMap->WriteTile(boundary.bounds.left, ry, 2);
+                    break;
+                }
+            }
+            else if (p1.y >= p2.y)
+            {
+                for (int limit = p1.y + 1; limit < 16; limit++)
+                {
+                    int tileValue = pFloorMap->GetTile(boundary.bounds.left, limit);
+                    if (tileValue == 1 || tileValue == 3)
+                        continue;
+                    for (int ry = p1.y + 1; ry < limit; ry++)
+                        pFloorMap->WriteTile(boundary.bounds.left, ry, 2);
+                    break;
+                }
+
+                for (int limit = p2.y - 1; limit >= 0; limit--)
+                {
+                    int tileValue = pFloorMap->GetTile(boundary.bounds.left, limit);
+                    if (tileValue == 1 || tileValue == 3)
+                        continue;
+                    for (int ry = p2.y - 1; ry > limit; ry--)
+                        pFloorMap->WriteTile(boundary.bounds.left, ry, 2);
+                    break;
+                }
+            }
+        }
+    }
+    
+    return true;
+}
+
 // USA: func_02091bc0
 // JPN: func_020924e0
 bool FloorMapGenerator::RoutineJ()
@@ -29,8 +206,8 @@ bool FloorMapGenerator::RoutineJ()
     int upRoomIdx;
     Room room;
     
-    int numAttempts = 0;
-    int numDAttempts = 0;
+    int numUpAttempts = 0;
+    int numDownAttempts = 0;
 
     int posX, posY;
     while (true)
@@ -40,7 +217,7 @@ bool FloorMapGenerator::RoutineJ()
         posX = RandRange(room.bounds.left, room.bounds.right);
         posY = RandRange(room.bounds.top, room.bounds.bottom);
         int tileN, tileS, tileW, tileE;
-        if (numAttempts < 100)
+        if (numUpAttempts < 100)
         {
             tileN = pFloorMap->GetTile(posX, posY - 1);
             tileS = pFloorMap->GetTile(posX, posY + 1);
@@ -58,14 +235,14 @@ bool FloorMapGenerator::RoutineJ()
         
             if (tileN && tileS && tileW && tileE)
             {
-                numAttempts++;
+                numUpAttempts++;
                 continue;
             }
         
             if ((tileN && tileE) || (tileN && tileW) ||
                 (tileS && tileE) || (tileS && tileW))
             {
-                numAttempts++;
+                numUpAttempts++;
                 continue;
             }
             
@@ -75,7 +252,7 @@ bool FloorMapGenerator::RoutineJ()
                  adjacency == 0xA3 || adjacency == 0x8E || adjacency == 0x3A || adjacency == 0xE8 ||
                  adjacency == 0xB8 || adjacency == 0xE2 || adjacency == 0x8B || adjacency == 0x2E)
             {
-                numAttempts++;
+                numUpAttempts++;
                 continue;
             }
         }
@@ -116,15 +293,15 @@ bool FloorMapGenerator::RoutineJ()
         int oldUpX, oldUpY;
         oldUpX = posX;
         oldUpY = posY;
-        numAttempts = 0;
+        numUpAttempts = 0;
         Room* roomArray = this->rooms;
         
         while (true)
         {
             int downRoomIdx = RandRange(0, roomCount - 1);
-            if (upRoomIdx == downRoomIdx && numDAttempts < 25)
+            if (upRoomIdx == downRoomIdx && numDownAttempts < 25)
             {
-                numDAttempts++;
+                numDownAttempts++;
                 continue;
             }
             
@@ -148,14 +325,14 @@ bool FloorMapGenerator::RoutineJ()
     
         if (tileN && tileS && tileW && tileE)
         {
-            numAttempts++;
+            numUpAttempts++;
             continue;
         }
     
         if ((tileN && tileE) || (tileN && tileW) ||
             (tileS && tileE) || (tileS && tileW))
         {
-            numAttempts++;
+            numUpAttempts++;
             continue;
         }
         break;
