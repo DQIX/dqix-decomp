@@ -13,6 +13,19 @@ extern "C"
     void func_020c1280(void*, int, int);
 }
 
+// I'm not going to replace tile values with an enum, but here's what
+// they correspond to:
+// 0 = generic walkable tile
+// 1 = generic void tile
+// 2 = corridor
+// 3 = void tile forming part of a boundary
+// 4 = stairs going up (there can be multiple of these, only one of them counts.
+//                      rest are effectively generic walkable tiles)
+// 5 = stairs going down
+// 6 = chest
+// 7 is unused
+// 8 = join point of a room
+
 // 1 and 3 correspond to blocked/void tiles, so this is replacing a tile value
 // with a bool indicating whether it's blocked or not. Note that this is an
 // idempotent operation, so when interpreting the effect of this you can ignore
@@ -21,6 +34,244 @@ extern "C"
 // also, don't try to write this with a ternary operator or implicit cast from
 // bool to int... the compiler will freak out and use different registers
 #define REDUCE_TILEVALUE(n) if (n == 1 || n == 3) n = 1; else n = 0
+
+// USA: func_02090444
+// JPN: func_02090d64
+void FloorMapGenerator::Calculate(int floor)
+{
+    if (seed < 0 || pFloorMap == NULL)
+        return;
+    
+    srand(seed + floor);
+    int width = pFloorMap->width;
+    int height = pFloorMap->height;
+
+    partitionRects[0].bounds.left = 1;
+    partitionRects[0].bounds.top = 1;
+    partitionRects[0].bounds.right = width - 2;
+    partitionRects[0].bounds.bottom = height - 2;
+
+    RoutineF(partitionRects[0]);
+
+    for (int i = 0; i < partitionRectCount; i++)
+    {
+        if (RoutineC(partitionRects[i], rooms[roomCount]) == true)
+            roomCount++;
+    }
+
+    for (int i = 0; i < partitionRectCount; i++)
+        ReshapeRoom(partitionRects[i]);
+
+    for (int i = 0; i < boundaryCount; i++)
+        RoutineG(boundaries[i]);
+
+    for (int rx = 0; rx < pFloorMap->width; rx++)
+    {
+        pFloorMap->WriteTile(rx, 0, 1);
+        pFloorMap->WriteTile(rx, pFloorMap->height - 1, 1);
+    }
+
+    for (int ry = 0; ry < pFloorMap->height; ry++)
+    {
+        pFloorMap->WriteTile(0, ry, 1);
+        pFloorMap->WriteTile(pFloorMap->width - 1, ry, 1);
+    }
+
+    RoutineJ();
+    if (floor > 2)
+        RoutineK();
+    else
+        pFloorMap->chestCount = 0;
+}
+
+// USA: 0209060c
+// JPN: 02090f2c
+void FloorMapGenerator::RoutineF(PartitionRect& part)
+{
+    if (partitionRectCount >= 15)
+        return;
+
+    if (part.cutY)
+    {
+        if (!RoutineA(part, partitionRects[partitionRectCount], boundaries[boundaryCount]))
+            return;
+    }
+    else if (part.cutX)
+    {
+        if (!RoutineE(part, partitionRects[partitionRectCount], boundaries[boundaryCount]))
+            return;
+    }
+    else if (rand() % 2 != 0)
+    {
+        if (!RoutineE(part, partitionRects[partitionRectCount], boundaries[boundaryCount]))
+            return;
+    }
+    else
+    {
+        if (!RoutineA(part, partitionRects[partitionRectCount], boundaries[boundaryCount]))
+            return;
+    }
+
+    int nextIdx = partitionRectCount++;
+    boundaryCount++;
+    if (rand() % 2 != 0)
+    {
+        RoutineF(part);
+        RoutineF(partitionRects[nextIdx]);
+    }
+    else
+    {
+        RoutineF(partitionRects[nextIdx]);
+        RoutineF(part);
+    }
+}
+
+// USA: func_0209076c
+// JPN: func_0209108c
+bool FloorMapGenerator::RoutineE(PartitionRect& oldpart, PartitionRect& newpart, BoundaryRect& boundary)
+{
+    if (oldpart.bounds.right - oldpart.bounds.left + 1 < 7)
+        return false;
+
+    if (oldpart.cutY)
+        return false;
+
+    // might need to reorder this sum
+    int cutPos = oldpart.bounds.left + 3 +
+        RandRange(0, oldpart.bounds.right - oldpart.bounds.left - 6);
+
+    
+    for (int ry = 0; ry < oldpart.bounds.GetHeight(); ry++)
+    {
+        pFloorMap->WriteTile(cutPos, oldpart.bounds.top + ry, 3);
+    }
+
+    newpart.bounds.left = cutPos + 1;
+    newpart.bounds.top = oldpart.bounds.top;
+    newpart.bounds.right = oldpart.bounds.right;
+    newpart.bounds.bottom = oldpart.bounds.bottom;
+
+    oldpart.bounds.right = cutPos - 1;
+    oldpart.cutY = true;
+
+    boundary.bounds.left = cutPos;
+    boundary.bounds.top = oldpart.bounds.top;
+    boundary.bounds.right = cutPos;
+    boundary.bounds.bottom = oldpart.bounds.bottom;
+
+    boundary.leftOrTop = &oldpart;
+    boundary.rightOrBottom = &newpart;
+    boundary.cutType = CutType_Vertical;
+    
+    return true;
+}
+
+// USA: func_02090860
+// JPN: func_02091180
+int FloorMapGenerator::BasicRectangle::GetHeight() const
+{
+    return bottom - top + 1;
+}
+
+// USA: func_02090874
+// JPN: func_02091194
+bool FloorMapGenerator::RoutineA(PartitionRect& oldpart, PartitionRect& newpart, BoundaryRect& boundary)
+{
+    if (oldpart.bounds.GetHeight() < 7)
+        return false;
+
+    if (oldpart.cutX)
+        return false;
+
+    int rngMax = oldpart.bounds.GetHeight() - 6;
+    int cutPos = oldpart.bounds.top + 3 + RandRange(0, rngMax - 1);
+    
+    for (int rx = 0; rx < oldpart.bounds.right - oldpart.bounds.left + 1; rx++)
+    {
+        pFloorMap->WriteTile(oldpart.bounds.left + rx, cutPos, 3);
+    }
+
+    newpart.bounds.left = oldpart.bounds.left;
+    newpart.bounds.top = cutPos + 1;
+    newpart.bounds.right = oldpart.bounds.right;
+    newpart.bounds.bottom = oldpart.bounds.bottom;
+
+    oldpart.bounds.bottom = cutPos - 1;
+    oldpart.cutX = true;
+
+    boundary.bounds.left = oldpart.bounds.left;
+    boundary.bounds.top = cutPos;
+    boundary.bounds.right = oldpart.bounds.right;
+    boundary.bounds.bottom = cutPos;
+
+    boundary.leftOrTop = &oldpart;
+    boundary.rightOrBottom = &newpart;
+    boundary.cutType = CutType_Horizontal;
+    
+    return true;
+}
+
+// USA: func_0209096c
+// JPN: func_0209128c
+bool FloorMapGenerator::RoutineC(PartitionRect& part, Room& room)
+{
+    if (part.bounds.right - part.bounds.left + 1 < 3 ||
+        part.bounds.GetHeight() < 3)
+        return false;
+
+    int roomLeft;
+    int roomTop;
+    int roomRight;
+    int roomBottom;
+
+    if (RandRange(0, 1) != 0)
+    {
+        roomLeft = RandRange(
+            part.bounds.left,
+            part.bounds.left + (part.bounds.right - part.bounds.left + 1) / 3);
+        roomTop = RandRange(
+            part.bounds.top,
+            part.bounds.top + part.bounds.GetHeight() / 3);
+    }
+    else
+    {
+        roomLeft = RandRange(
+            part.bounds.left + 1,
+            part.bounds.left + (part.bounds.right - part.bounds.left + 1) / 3);
+        roomTop = RandRange(
+            part.bounds.top + 1,
+            part.bounds.top + part.bounds.GetHeight() / 3);
+    }
+
+    if (RandRange(0, 1) != 0)
+    {
+        roomRight = RandRange(
+            part.bounds.left + (part.bounds.right - part.bounds.left + 1) / 3 * 2,
+            part.bounds.right);
+        roomBottom = RandRange(
+            part.bounds.top + part.bounds.GetHeight() / 3 * 2,
+            part.bounds.bottom);
+    }
+    else
+    {
+        roomRight = RandRange(
+            part.bounds.left + (part.bounds.right - part.bounds.left + 1) / 3 * 2,
+            part.bounds.right - 1);
+        roomBottom = RandRange(
+            part.bounds.top + part.bounds.GetHeight() / 3 * 2,
+            part.bounds.bottom - 1);
+    }
+
+    pFloorMap->WriteRectangle(roomLeft, roomTop, 
+        roomRight - roomLeft + 1, roomBottom - roomTop + 1, 0);
+    room.bounds.left = roomLeft;
+    room.bounds.top = roomTop;
+    room.bounds.right = roomRight;
+    room.bounds.bottom = roomBottom;
+    part.pRoom = &room;
+    RoutineD(room);
+    return true;
+}
 
 // USA: func_02090b8c
 // JPN: func_020914ac

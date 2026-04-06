@@ -64,17 +64,44 @@ public:
     bool mainRoomAssigned;
 
 public:
-    // The save editor calls this GenerateFloorMap
+    // The save editor calls this CreateDungeonDetail
+    void Calculate(int floor);
+    
+private:
+    // Randomly and recursively subdivides a partition rectangle
+    void RoutineF(PartitionRect& part);
+
+    // Splits a partition rectangle into two with a vertical cut
+    bool RoutineE(PartitionRect& oldpart, PartitionRect& newpart, BoundaryRect& boundary);
+    // Splits a partition rectangle into two with a horizontal cut
+    bool RoutineA(PartitionRect& oldpart, PartitionRect& newpart, BoundaryRect& boundary);
+
+    // Selects a subrectangle of the partition rectangle to use as a
+    // base shape for the corresponding room. Returns true if a room was
+    // successfully created (it can fail if the partition rectangle is small).
+    bool RoutineC(PartitionRect& part, Room& room);
+
+    // The save editor calls this GenerateFloorMap.
+    // Reshapes a room by randomly expanding/eroding along each boundary point.
     void ReshapeRoom(const PartitionRect& part);
 
+    // Connects the rooms on each side of the boundary via their join points,
+    // creating a corridor shaped like a tetris S/Z-piece.
     bool RoutineG(const BoundaryRect& boundary);
+    // Performs a single connection for RoutineG. If extend is true, the
+    // 'middle' part of the S/Z-shape will be extended into a longer corridor.
     bool RoutineH(const GrottoTilePoint& p1, const GrottoTilePoint& p2,
         const BoundaryRect& boundary, bool extend);
+    // Generates location of stairs
     bool RoutineJ();
-
+    // Generates quantity and location of chests
     bool RoutineK();
+    // Randomly assigns join points to a rectangular room
     void RoutineD(Room& room);
 
+public:
     void Initialize();
+
+private:
     int RandRange(int minimum, int maximum) const;
 };
