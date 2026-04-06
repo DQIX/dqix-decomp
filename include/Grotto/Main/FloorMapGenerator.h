@@ -64,6 +64,9 @@ public:
     bool mainRoomAssigned;
 
 public:
+    // The save editor calls this GenerateFloorMap
+    void ReshapeRoom(const PartitionRect& part);
+
     bool RoutineG(const BoundaryRect& boundary);
     bool RoutineH(const GrottoTilePoint& p1, const GrottoTilePoint& p2,
         const BoundaryRect& boundary, bool extend);

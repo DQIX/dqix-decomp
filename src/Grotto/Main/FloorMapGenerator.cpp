@@ -22,6 +22,197 @@ extern "C"
 // bool to int... the compiler will freak out and use different registers
 #define REDUCE_TILEVALUE(n) if (n == 1 || n == 3) n = 1; else n = 0
 
+// USA: func_02090b8c
+// JPN: func_020914ac
+void FloorMapGenerator::ReshapeRoom(const PartitionRect& part)
+{
+    const Room& room = *(part.pRoom);
+    room.bounds.GetHeight(); // wasted call?
+    char halfWidth = (room.bounds.right - room.bounds.left + 1) / 2;
+    char halfHeight = room.bounds.GetHeight() / 2;
+
+    char topMargin;
+    char bottomMargin;
+    char leftMargin;
+    char rightMargin;
+
+    if (mainRoomAssigned || RandRange(0, 15) != 0)
+    {
+        topMargin = room.bounds.top - part.bounds.top;
+        bottomMargin = part.bounds.bottom - room.bounds.bottom;
+        leftMargin = room.bounds.left - part.bounds.left;
+        rightMargin = part.bounds.right - room.bounds.right;
+    }
+    else
+    {
+        topMargin = room.bounds.top - 1;
+        bottomMargin = pFloorMap->height - room.bounds.bottom - 1;
+        leftMargin = room.bounds.left - 1;
+        rightMargin = pFloorMap->width - room.bounds.right - 1;
+        // needs reinterpretation. Pretty sure this room is still effectively
+        // constrained to within its PartitionRect, because of the procedure
+        // of putting 8s in all boundary tiles.
+        mainRoomAssigned = true;
+    }  
+
+    for (int rx = room.bounds.left; rx <= room.bounds.right; rx++)
+    {
+        int topTile = pFloorMap->GetTile(rx, room.bounds.top);
+        if (topTile == 1 || topTile == 3)
+            continue;
+        if (RandRange(0, 1) != 0)
+        {
+            unsigned char yexpand = RandRange(0, topMargin);
+            for (int ry = 0; ry < yexpand; ry++)
+            {
+                if (pFloorMap->GetTile(rx, room.bounds.top - 1 - ry) != 8)
+                    pFloorMap->WriteTile(rx, room.bounds.top - 1 - ry, 0);
+            }
+        }
+        else
+        {
+            if (topTile == 8)
+                continue;
+            int outer = pFloorMap->GetTile(rx, room.bounds.top - 1);
+            if (outer == 1 || outer == 8)
+                continue;
+            unsigned char yreduce = RandRange(0, halfHeight);
+            for (int ry = 0; ry < yreduce; ry++)
+            {
+                if (pFloorMap->GetTile(rx, room.bounds.top + ry) == 8)
+                    break;
+                if (pFloorMap->GetTile(rx, room.bounds.top + ry + 1) == 1)
+                    break;
+                if (pFloorMap->GetTile(rx + 1, room.bounds.top + ry) != 1 &&
+                    pFloorMap->GetTile(rx + 1, room.bounds.top + ry + 1) == 1)
+                    break;
+                if (pFloorMap->GetTile(rx - 1, room.bounds.top + ry) != 1 &&
+                    pFloorMap->GetTile(rx - 1, room.bounds.top + ry + 1) == 1)
+                    break;
+                pFloorMap->WriteTile(rx, room.bounds.top + ry, 1);
+            }
+        }
+    }
+
+    for (int rx = room.bounds.left; rx <= room.bounds.right; rx++)
+    {
+        int bottomTile = pFloorMap->GetTile(rx, room.bounds.bottom);
+        if (bottomTile == 1 || bottomTile == 3)
+            continue;
+        if (RandRange(0, 1) != 0)
+        {
+            unsigned char yexpand = RandRange(0, bottomMargin);
+            for (int ry = 0; ry < yexpand; ry++)
+            {
+                if (pFloorMap->GetTile(rx, room.bounds.bottom + 1 + ry) != 8)
+                    pFloorMap->WriteTile(rx, room.bounds.bottom + 1 + ry, 0);
+            }
+        }
+        else
+        {
+            if (bottomTile == 8)
+                continue;
+            int outer = pFloorMap->GetTile(rx, room.bounds.bottom + 1);
+            if (outer == 1 || outer == 8)
+                continue;
+            unsigned char yreduce = RandRange(0, halfHeight);
+            for (int ry = 0; ry < yreduce; ry++)
+            {
+                if (pFloorMap->GetTile(rx, room.bounds.bottom - ry) == 8)
+                    break;
+                if (pFloorMap->GetTile(rx, room.bounds.bottom - ry - 1) == 1)
+                    break;
+                if (pFloorMap->GetTile(rx + 1, room.bounds.bottom - ry) != 1 &&
+                    pFloorMap->GetTile(rx + 1, room.bounds.bottom - ry - 1) == 1)
+                    break;
+                if (pFloorMap->GetTile(rx - 1, room.bounds.bottom - ry) != 1 &&
+                    pFloorMap->GetTile(rx - 1, room.bounds.bottom - ry - 1) == 1)
+                    break;
+                pFloorMap->WriteTile(rx, room.bounds.bottom - ry, 1);
+            }
+        }
+    }
+
+    for (int ry = room.bounds.top; ry <= room.bounds.bottom; ry++)
+    {
+        int edgeTile = pFloorMap->GetTile(room.bounds.left, ry);
+        if (edgeTile == 1 || edgeTile == 3)
+            continue;
+        if (RandRange(0, 1) != 0)
+        {
+            unsigned char xexpand = RandRange(0, leftMargin);
+            for (int rx = 0; rx < xexpand; rx++)
+            {
+                if (pFloorMap->GetTile(room.bounds.left - 1 - rx, ry) != 8)
+                    pFloorMap->WriteTile(room.bounds.left - 1 - rx, ry, 0);
+            }
+        }
+        else
+        {
+            if (edgeTile == 8)
+                continue;
+            int outer = pFloorMap->GetTile(room.bounds.left - 1, ry);
+            if (outer == 1 || outer == 8)
+                continue;
+            unsigned char xreduce = RandRange(0, halfWidth);
+            for (int rx = 0; rx < xreduce; rx++)
+            {
+                if (pFloorMap->GetTile(room.bounds.left + rx, ry) == 8)
+                    break;
+                if (pFloorMap->GetTile(room.bounds.left + rx + 1, ry) == 1)
+                    break;
+                if (pFloorMap->GetTile(room.bounds.left + rx, ry + 1) != 1 &&
+                    pFloorMap->GetTile(room.bounds.left + rx + 1, ry + 1) == 1)
+                    break;
+                if (pFloorMap->GetTile(room.bounds.left + rx, ry - 1) != 1 &&
+                    pFloorMap->GetTile(room.bounds.left + rx + 1, ry - 1) == 1)
+                    break;
+                pFloorMap->WriteTile(room.bounds.left + rx, ry, 1);
+            }
+        }
+    }
+
+    for (int ry = room.bounds.top; ry <= room.bounds.bottom; ry++)
+    {
+        int edgeTile = pFloorMap->GetTile(room.bounds.right, ry);
+        if (edgeTile == 1 || edgeTile == 3)
+            continue;
+        if (RandRange(0, 1) != 0)
+        {
+            unsigned char xexpand = RandRange(0, rightMargin);
+            for (int rx = 0; rx < xexpand; rx++)
+            {
+                if (pFloorMap->GetTile(room.bounds.right + 1 + rx, ry) != 8)
+                    pFloorMap->WriteTile(room.bounds.right + 1 + rx, ry, 0);
+            }
+        }
+        else
+        {
+            if (edgeTile == 8)
+                continue;
+            // bug? Would make much more sense as bounds.right + 1
+            int outer = pFloorMap->GetTile(room.bounds.top + 1, ry);
+            if (outer == 1 || outer == 8)
+                continue;
+            unsigned char xreduce = RandRange(0, halfWidth);
+            for (int rx = 0; rx < xreduce; rx++)
+            {
+                if (pFloorMap->GetTile(room.bounds.right - rx, ry) == 8)
+                    break;
+                if (pFloorMap->GetTile(room.bounds.right - rx - 1, ry) == 1)
+                    break;
+                if (pFloorMap->GetTile(room.bounds.right - rx, ry + 1) != 1 &&
+                    pFloorMap->GetTile(room.bounds.right - rx - 1, ry + 1) == 1)
+                    break;
+                if (pFloorMap->GetTile(room.bounds.right - rx, ry - 1) != 1 &&
+                    pFloorMap->GetTile(room.bounds.right - rx - 1, ry - 1) == 1)
+                    break;
+                pFloorMap->WriteTile(room.bounds.right - rx, ry, 1);
+            }
+        }
+    }
+}
+
 // USA: func_02091448
 // JPN: func_02091d68
 bool FloorMapGenerator::RoutineG(const BoundaryRect& boundary)
