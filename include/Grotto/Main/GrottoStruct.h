@@ -2,6 +2,9 @@
 
 #include "TreasureMapMetadata.h"
 
+// Could probably do with a better name. This is a persistent struct
+// holding data about all grottos, as opposed to the ActiveGrottoStruct
+// which only holds data about a single grotto while you're inside it.
 struct GrottoStruct
 {
     unsigned char unknown1[7];

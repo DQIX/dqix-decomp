@@ -65,7 +65,7 @@ public:
 
 public:
     // The save editor calls this CreateDungeonDetail
-    void Calculate(int floor);
+    void Calculate(int floor, int unused);
     
 private:
     // Randomly and recursively subdivides a partition rectangle

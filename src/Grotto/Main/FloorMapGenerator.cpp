@@ -37,7 +37,7 @@ extern "C"
 
 // USA: func_02090444
 // JPN: func_02090d64
-void FloorMapGenerator::Calculate(int floor)
+void FloorMapGenerator::Calculate(int floor, int unused)
 {
     if (seed < 0 || pFloorMap == NULL)
         return;

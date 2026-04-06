@@ -3,7 +3,7 @@
 
 // USA: func_02090268
 // JPN: func_02090b88
-unsigned short GetActiveGrottoSeed()
+unsigned short ActiveGrottoClass::GetActiveGrottoSeed() const
 {
     GrottoStruct* grottoData = GetGrottoStruct(GetBattleStruct());
 
