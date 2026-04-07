@@ -2,6 +2,12 @@
 #include "std_library_functions.h"
 //#include "padsection.h"
 
+#ifdef jpn
+#define data_020e7010 data_020e78b4
+#define data_020e700c data_020e78b0
+#define func_02012fe4 func_02012dac
+#endif
+
 extern unsigned char const data_020e7010[];
 extern "C" int func_02012fe4(void);
 

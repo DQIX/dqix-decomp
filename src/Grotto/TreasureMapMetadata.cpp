@@ -3,6 +3,16 @@
 #include "Combat/Main/BattleList.h"
 #include <globaldefs.h>
 
+#ifdef jpn
+#define func_020ca594 func_020cc060
+#define func_020a3ec0 func_020a5bfc
+#define func_020100a8 func_0200ff04
+#define func_0200ff1c func_0200fd78
+#define func_02012fe4 func_02012dac
+#define func_02011738 func_020114a8
+#endif
+
+
 extern "C"
 {
 // Looks like an implementation of memset (including some optimisations to

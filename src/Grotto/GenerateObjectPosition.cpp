@@ -2,9 +2,15 @@
 #include "Grotto/TileFeatures.h"
 
 extern "C" extern char* strstr(const char*, const char*);
+#ifdef jpn
+#define data_020e6f04 data_020e77a8
+#define data_020e6f00 data_020e77a4
+#define data_020ef292 data_020ef1ce
+#endif
 extern char const data_020e6f04[];
 extern char const data_020e6f00[];
 extern char const data_020ef292[];
+
 
 int GenerateGrottoObjectPositionOrientation(void* data, int tileX, int tileY, int* outX, int* outY,
     const TileFeaturePlacementData* tileDataArray, bool preferFaceDown) {
