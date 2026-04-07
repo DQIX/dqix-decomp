@@ -69,8 +69,15 @@ unsigned short GenerateNewMapQuality()
         // inner->levels[j] and inner->revocs[j] and it still works. 
         unsigned char j = i;
         // beware pointer trickery, this is really offset 0x16c + 2*j
-        unsigned short level = *(*(unsigned short**)(maybeMainCharDataPtr + 0x150) + 0xb6 + j);  
-        unsigned short revocCount = *(*(unsigned char**)(maybeMainCharDataPtr + 0x150) + 0x186 + j);
+		#ifdef usa
+        unsigned short level = *(*(unsigned short**)(maybeMainCharDataPtr + 0x150) + 0xb6 + j); 
+		unsigned short revocCount = *(*(unsigned char**)(maybeMainCharDataPtr + 0x150) + 0x186 + j);
+		#endif
+		#ifdef jpn
+		unsigned short level = *(*(unsigned short**)(maybeMainCharDataPtr + 0x144) + 0xb6 + j);  
+		unsigned short revocCount = *(*(unsigned char**)(maybeMainCharDataPtr + 0x144) + 0x186 + j);
+		#endif
+        
         if (level > maxCharLevel)
             maxCharLevel = level;
         if (revocCount > maxNumRevocs)

@@ -18,7 +18,12 @@ int GenerateGrottoObjectPositionOrientation(void* data, int tileX, int tileY, in
     if (tileDataArray == 0)
     {
         // This is absolutely hideous, but it produces the right assembly
+		#ifdef usa
         char* ptr1 = *(char**)((char*)data + 0x420);
+		#endif
+		#ifdef jpn
+		char* ptr1 = *(char**)((char*)data + 0x440);
+		#endif
         char* ptr2 = ptr1 + tileX * 0x48 + (tileY << 4) * 0x48;
         if (ptr2 == 0)
             return -1;
