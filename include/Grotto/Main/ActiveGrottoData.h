@@ -8,8 +8,8 @@
 // This is stored at offset 0x23EC from the 'zone struct'
 // (which I haven't detailed yet but is at location 020FB3F0
 // in the USA version, and whose pointer is returned by func_02012fe4). 
-// The JPN is definitely different, probably because of character buffers
-// being a different size. I haven't looked at it properly yet.
+// The JPN is 0x20 bytes larger, probably because of text buffers being
+// different sizes.
 // For some hints, look at the function func_020a3a34 (USA). It seems to populate
 // this class based on a calling TreasureMapMetadata.
 class ActiveGrottoClass
@@ -35,7 +35,8 @@ public:
         char mapImageName[16]; // e.g. "mapt_005"
         char unknown_3D[15];
 
-        struct NameData
+        union {
+        struct RegularMapNameData
         {
             short seed; // might technically be unsigned
             unsigned char quality;
@@ -57,16 +58,51 @@ public:
             char buffer1[64]; // seems to hold the grotto name without level
             char buffer2[8]; // seems to hold the grotto level string (e.g. "Lv. 1")
             char buffer3[64]; // seems to hold full grotto name
-            // seems to hold full grotto name too. Probably not just a buffer, though
-            // in my testing the rest was all 0s.
-            char buffer4[149];
-            char buffer5[64];
-        } nameData;
-
+            // seems to hold full grotto name too. Based on legacy boss version,
+            // maybe this is the one you see on entering the grotto?
+            char buffer4[64];
 #ifdef jpn
-        // probably wrong and instead the previous buffers are just larger.
-        char unknown_jp[0x20];
+            // this is probably not what's actually going on, but it makes
+            // this object the right size for memset calls. Probably either the
+            // buffers are resized or there are some extra ones.
+            char jpnBufferResize[0x80];
 #endif
+        } regularMapNameData;
+
+        struct LegacyBossNameData // see func_020a425c
+        {
+            char bossID;
+            short unknown_4E[4];
+            unsigned char level;
+            unsigned short minTurns;
+            char bossName[26]; // unsure of length, could be zeros at end for another reason
+            // amazingly these are actually used quantities, if you modify them
+            // on entering the grotto with a cheat, it changes their stats
+            // when you fight them 
+            int bossHP;
+            int bossMP;
+            unsigned short bossAgility;
+            unsigned short bossAttack;
+            unsigned short bossDefense;
+            char padding_82[2];
+            int unknown_84;
+            int rewardExp;
+            unsigned short rewardGold;
+            char unknown_8E[0x2E];
+
+            // All stored in the 'markup' encoding, e.g. using <1> for apostrophe
+            char mapNameNoLevel[64]; // e.g. "Estark<1>s Map"
+            char mapNameNoLevel_v2[64]; // same as above, not sure what the difference is
+            char mapLevelString[8]; // e.g. "Lv. 99"
+            char mapName[64]; // "Estark<1>s Map Lv. 99"
+            char mapPopupName[64]; // e.g. "Estark Lv. 99" (what pops up on entering the grotto)
+#ifdef jpn
+            // again definitely not what's actually going on here. The function
+            // func_020a6050 in JPN version might give some clues?
+            char jpnBufferResize[0x20];
+#endif
+        } legacyMapNameData;
+        };
 
         int unknown_1C4;
 
@@ -75,6 +111,10 @@ public:
     FloorMap floorMap;
     FloorMapGenerator* pGenerator;
     int floorWidth, floorHeight;
+    char unknown_260[3];
+    int unknown_264[4];
+    short unknown_274;
+    char unknown_276;
 
     bool CalculateFloorMap(int floor, int width, int height, FloorMap* pFloorMap);
 
@@ -99,4 +139,14 @@ public:
     // 630 (the last variable in this class).
 
     void Clear();
+    void ClearGenerator(bool keepFloormap);
+    void BlankFunction2() const; // again does literally nothing
+
+    // Definitely not confusing at all: pass true if you *dont* want
+    // to allocate the floor map's buffers, and false if you *do* want to.
+    void AllocateGenerator(void* allocator, bool skipAllocateMapBuffers);
+
+    // 'randomly' picks a dimension from within the given range using the
+    // modulus trick, except the rng value is (grotto seed + floor)
+    int GetMapDimensionFromRange(int minimum, int maximum, int floor) const;
 };

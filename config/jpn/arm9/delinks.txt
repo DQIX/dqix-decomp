@@ -11,11 +11,15 @@ src/Grotto/Main/GrottoStruct.c:
 
 src/Grotto/Main/ActiveGrottoClass.c:
     complete
-    .text start:0x02090780 end:0x020907e8
+    .text start:0x02090780 end:0x02090a98
 
 src/Grotto/Main/ActiveGrottoSeed.c:
     complete
-    .text start:0x02090b88 end:0x02090bb0
+    .text start:0x02090b88 end:0x02090bb4
+
+src/Grotto/Main/ActiveGrottoClass_2.c:
+    complete
+    .text start:0x02090c5c end:0x02090d64
 
 src/Grotto/Main/FloorMapGenerator.c:
     complete

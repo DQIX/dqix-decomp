@@ -2,14 +2,14 @@
 #include "Combat/Main/BattleList.h"
 #include <globaldefs.h>
 
+#ifdef jpn
+    #define func_020323c4 func_02031efc
+#endif
+
 extern "C"
 {
     // RandRange but it's implemented by double arithmetic
     int func_020323c4(int minimum, int maximum);
-
-    // class member, chooses from [min, max] by doing (rng + floor), but the
-    // rng value is the map seed.
-     int func_02090400(ActiveGrottoClass*, int minimum, int maximum, int floor);
 }
 
 bool ActiveGrottoClass::CalculateFloorMap(int floor, int width, int height, FloorMap* pFloorMap)
@@ -29,11 +29,11 @@ bool ActiveGrottoClass::CalculateFloorMap(int floor, int width, int height, Floo
 int ActiveGrottoClass::CalculateAndStoreFloorWidth(int floor)
 {
     if (floor >= 0 && floor <= 4)
-        floorWidth = func_02090400(this, 10, 14, floor);
+        floorWidth = GetMapDimensionFromRange(10, 14, floor);
     else if (floor >= 5 && floor <= 8)
-        floorWidth = func_02090400(this, 12, 15, floor);
+        floorWidth = GetMapDimensionFromRange(12, 15, floor);
     else if (floor >= 9 && floor <= 12)
-        floorWidth = func_02090400(this, 14, 16, floor);
+        floorWidth = GetMapDimensionFromRange(14, 16, floor);
     else
         floorWidth = 16;
 
@@ -43,11 +43,11 @@ int ActiveGrottoClass::CalculateAndStoreFloorWidth(int floor)
 int ActiveGrottoClass::CalculateAndStoreFloorHeight(int floor)
 {
     if (floor >= 0 && floor <= 4)
-        floorHeight = func_02090400(this, 10, 14, floor);
+        floorHeight = GetMapDimensionFromRange(10, 14, floor);
     else if (floor >= 5 && floor <= 8)
-        floorHeight = func_02090400(this, 12, 15, floor);
+        floorHeight = GetMapDimensionFromRange(12, 15, floor);
     else if (floor >= 9 && floor <= 12)
-        floorHeight = func_02090400(this, 14, 16, floor);
+        floorHeight = GetMapDimensionFromRange(14, 16, floor);
     else
         floorHeight = 16;
 
