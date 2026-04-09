@@ -12,3 +12,7 @@ unsigned short ActiveGrottoClass::GetActiveGrottoSeed() const
 
     return grottoData->activeMapData.SeedOrMinTurns;
 }
+
+void ActiveGrottoClass::BlankFunction() const
+{
+}

@@ -7,7 +7,10 @@
 // which only holds data about a single grotto while you're inside it.
 struct GrottoStruct
 {
-    unsigned char unknown1[7];
+    unsigned char unknown1[5];
+    // still a bit unsure of these, though seems correct.
+    unsigned char activeEnviron;
+    unsigned char activeStartingMonsterRank;
     unsigned char activeMapLevel;
 
 #ifdef jpn

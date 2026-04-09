@@ -3,13 +3,19 @@
 #include "GrottoStruct.h"
 #include "FloorMapGenerator.h"
 
-// Very WIP, not sure where it ends. This is stored at offset 0x23EC from the
-// 'zone struct' (which I haven't detailed yet but is at location 020FB3F0
+// Very WIP. I think in the USA version, the size of this should be
+// 632 (0x278), but I don't know what the last members are for.
+// This is stored at offset 0x23EC from the 'zone struct'
+// (which I haven't detailed yet but is at location 020FB3F0
 // in the USA version, and whose pointer is returned by func_02012fe4). 
+// The JPN is definitely different, probably because of character buffers
+// being a different size. I haven't looked at it properly yet.
+// For some hints, look at the function func_020a3a34 (USA). It seems to populate
+// this class based on a calling TreasureMapMetadata.
 class ActiveGrottoClass
 {
 public:
-    char maybeDiscoveryState; // was 2 in an uncleared grotto and 3 in cleared
+ char maybeDiscoveryState; // was 2 in an uncleared grotto and 3 in cleared
     char maybeMapType;
     // Stored in the DQ9 string encoding. I think it's 12 bytes, but could
     // be padding at the end/secretly used for something else but was always
@@ -56,10 +62,29 @@ public:
 
     FloorMap floorMap;
     FloorMapGenerator* pGenerator;
-    // more to come...
+    int floorWidth, floorHeight;
+
+    bool CalculateFloorMap(int floor, int width, int height, FloorMap* pFloorMap);
+
+    int CalculateAndStoreFloorWidth(int floor);
+    int CalculateAndStoreFloorHeight(int floor);
+    int GetFloorMonsterRank(int floor) const;
+    // doesn't modify this class but it does advance the A-table
+    int RandomizeChestRank(int floor);
+    int GetActiveGrottoEnviron() const;
+
+    // here we get functions func_02090180 and func_020901fc.
+    // The former might be calculating the number of floors.
+    // The latter seems to return a pointer to one of the buffers, but unsure
+    // what it does with it (probably fills it with the name or something)
 
     // could totally be static, but in practice gets called with a this pointer
     unsigned short GetActiveGrottoSeed() const;
+    void BlankFunction() const; // does literally nothing. why does this exist
 
-    bool CalculateFloorMap(int floor, int width, int height, FloorMap* pFloorMap);
+    // func_02090294 belongs here. I have no clue what it does, but it seems
+    // to run only when you start following a treasure map. It writes to byte
+    // 630 (the last variable in this class).
+
+    void Clear();
 };
