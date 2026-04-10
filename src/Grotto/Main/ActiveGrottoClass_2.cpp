@@ -1,4 +1,4 @@
-#include "Grotto/Main/ActiveGrottoData.h"
+#include "Grotto/Main/ActiveGrottoClass.h"
 #include "Combat/Main/BattleList.h"
 #include <globaldefs.h>
 
@@ -10,7 +10,7 @@
 extern "C"
 {
     // Just (vector)-memsets to zero
-    void func_020a40e8(ActiveGrottoClass::UniversalData*);
+    void func_020a40e8(DetailedTreasureMapData*);
 
     // probably an allocation - see FloorMap.cpp
     void* func_02032544(void* allocator, unsigned int size);
@@ -21,7 +21,7 @@ extern "C"
 void ActiveGrottoClass::Clear()
 {
     pGenerator = NULL;
-    func_020a40e8(&universal);
+    func_020a40e8(&overallMapData);
     floorMap.Clear();
     floorWidth = 16;
     floorHeight = 16;

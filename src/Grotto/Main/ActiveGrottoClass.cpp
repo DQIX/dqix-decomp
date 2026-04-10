@@ -1,4 +1,4 @@
-#include "Grotto/Main/ActiveGrottoData.h"
+#include "Grotto/Main/ActiveGrottoClass.h"
 #include "Combat/Main/BattleList.h"
 #include <globaldefs.h>
 
@@ -31,10 +31,10 @@ extern "C"
     void func_020a395c();
 
     // Not sure about the last two parameters. This 'exports' a TreasureMapMetadata
-    // out to a UniversalData struct. Somewhere in this it's running the code to
+    // out to the detailed struct. Somewhere in this it's running the code to
     // generate map names. Needs some closer investigation. (Probably a member
     // function of TreasureMapMetadata)
-    bool func_020a3a34(TreasureMapMetadata*, ActiveGrottoClass::UniversalData*, bool, void*);
+    bool func_020a3a34(TreasureMapMetadata*, DetailedTreasureMapData*, bool, void*);
 }
 
 // USA: func_0209fe68
@@ -170,16 +170,16 @@ int ActiveGrottoClass::GetFloorCount() const
     if (grotto->activeMapData.GetMapType() == TreasureMapType_Legacy)
         return 0;
 
-    if (universal.discoveryState == DiscoveryState_Invalid)
+    if (overallMapData.discoveryState == DiscoveryState_Invalid)
     {
         func_020a3720();
-        UniversalData data;
+        DetailedTreasureMapData data;
         func_020a3a34(&grotto->activeMapData, &data, true, NULL);
         func_020a395c();
-        return data.regularMapData.floorCount;
+        return data.regular.floorCount;
     }
 
-    return universal.regularMapData.floorCount;
+    return overallMapData.regular.floorCount;
 }
 
 // USA: func_020901fc
@@ -187,25 +187,25 @@ int ActiveGrottoClass::GetFloorCount() const
 const char* ActiveGrottoClass::GetPopupName() const
 {
     GrottoStruct* grotto = GetGrottoStruct(GetBattleStruct());
-    if (universal.discoveryState != DiscoveryState_Invalid)
+    if (overallMapData.discoveryState != DiscoveryState_Invalid)
     {
-        if (universal.mapType == TreasureMapType_Legacy)
-            return universal.legacyMapData.popupName;
+        if (overallMapData.mapType == TreasureMapType_Legacy)
+            return overallMapData.legacy.popupName;
         else
-            return universal.regularMapData.popupName;
+            return overallMapData.regular.popupName;
     }    
 
     // Returning a temporary, could something go wrong here?
     // Would have to call another function after this which uses the stack.
     func_020a3720();
-    UniversalData data;
+    DetailedTreasureMapData data;
     func_020a3a34(&grotto->activeMapData, &data, true, NULL);
     func_020a395c();
 
     if (data.mapType == TreasureMapType_Legacy)
-        return data.legacyMapData.popupName;
+        return data.legacy.popupName;
     else
-        return data.regularMapData.popupName;
+        return data.regular.popupName;
 }
 
 // USA: func_02090268
