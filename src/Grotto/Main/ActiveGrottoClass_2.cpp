@@ -16,6 +16,8 @@ extern "C"
     void* func_02032544(void* allocator, unsigned int size);
 }
 
+// USA: func_0209033c
+// JPN: func_02090c5c
 void ActiveGrottoClass::Clear()
 {
     pGenerator = NULL;
@@ -34,6 +36,8 @@ void ActiveGrottoClass::Clear()
     unknown_276 = 0;
 }
 
+// USA: func_02090394
+// JPN: func_02090cb4
 void ActiveGrottoClass::ClearGenerator(bool keepFloormap)
 {
     pGenerator = NULL;
@@ -41,10 +45,14 @@ void ActiveGrottoClass::ClearGenerator(bool keepFloormap)
         floorMap.Clear();
 }
 
+// USA: func_020903b4
+// JPN: func_02090cd4
 void ActiveGrottoClass::BlankFunction2() const
 {
 }
 
+// USA: func_020903b8
+// JPN: func_02090cd8
 void ActiveGrottoClass::AllocateGenerator(void* allocator, bool skipAllocMapBuffers)
 {
     if (pGenerator == NULL)
@@ -57,6 +65,8 @@ void ActiveGrottoClass::AllocateGenerator(void* allocator, bool skipAllocMapBuff
         floorMap.AllocateBuffers(allocator);
 }
 
+// USA: func_02090400
+// JPN: func_02090d20
 int ActiveGrottoClass::GetMapDimensionFromRange(int minimum, int maximum, int floor) const
 {
     GetActiveGrottoSeed();

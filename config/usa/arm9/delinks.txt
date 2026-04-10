@@ -11,11 +11,7 @@ src/Grotto/Main/GrottoStruct.c:
 
 src/Grotto/Main/ActiveGrottoClass.c:
     complete
-    .text start:0x0208fe68 end:0x02090180
-
-src/Grotto/Main/ActiveGrottoSeed.c:
-    complete
-    .text start:0x02090268 end:0x02090294
+    .text start:0x0208fe68 end:0x02090294
 
 src/Grotto/Main/ActiveGrottoClass_2.c:
     complete

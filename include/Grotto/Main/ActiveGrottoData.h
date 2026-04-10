@@ -8,7 +8,7 @@
 // This is stored at offset 0x23EC from the 'zone struct'
 // (which I haven't detailed yet but is at location 020FB3F0
 // in the USA version, and whose pointer is returned by func_02012fe4). 
-// The JPN is 0x20 bytes larger, probably because of text buffers being
+// The JPN is 0x20 bytes larger, seemingly because of text buffers being
 // different sizes.
 // For some hints, look at the function func_020a3a34 (USA). It seems to populate
 // this class based on a calling TreasureMapMetadata.
@@ -17,32 +17,36 @@ class ActiveGrottoClass
 public:
     struct UniversalData
     {
-        char maybeDiscoveryState; // was 2 in an uncleared grotto and 3 in cleared
-        char maybeMapType;
-        // Stored in the DQ9 string encoding. I think it's 12 bytes, but could
-        // be padding at the end/secretly used for something else but was always
-        // zero when I looked at it.
+        unsigned char discoveryState;
+        unsigned char mapType;
+        // Stored in the DQ9 string encoding. 12 bytes get zeroed out but
+        // only 10 bytes get copied in
         char discoveredBy[12];
         char clearedBy[12];
-        char probablyPadding1[2];
+        char probablyPadding_1A[2];
         // not sure about this, seemed correct for a couple of grottos but the
-        // z coordinate was off by 8192. 
+        // z coordinate was off by 8192. I guess it could be the location of the
+        // grotto entrance model? You do spawn a bit below it when you exit.
         int entranceZoneID;
         int entranceX;
         int entranceY;
         int entranceZ;
         unsigned char mapLocation;
         char mapImageName[16]; // e.g. "mapt_005"
-        char unknown_3D[15];
+        bool discoveredTreasures[3];
+        short treasureItemIDs[3]; // might be unsigned?
+        unsigned char treasureDropRates[3];
+        char unknown_49[3]; // might just be padding
 
         union {
-        struct RegularMapNameData
+        struct RegularMapData
         {
             short seed; // might technically be unsigned
             unsigned char quality;
-            char padding2[1];
+            char padding_4F[1];
+            // the rest of these are probably unsigned too
             char environ; // caves, ruins, ice, water, fire as 1,2,3,4,5 resp.
-            char floorCount;
+            unsigned char floorCount;
             char startingMonsterRank;
             char bossID; // 1 to 12
             // these are probably chars, or maybe a short followed by 12 chars.
@@ -55,21 +59,25 @@ public:
             unsigned char level;
             char unknown_66; // was always 1 in the grottos I checked
 
-            char buffer1[64]; // seems to hold the grotto name without level
-            char buffer2[8]; // seems to hold the grotto level string (e.g. "Lv. 1")
-            char buffer3[64]; // seems to hold full grotto name
-            // seems to hold full grotto name too. Based on legacy boss version,
-            // maybe this is the one you see on entering the grotto?
-            char buffer4[64];
-#ifdef jpn
+#ifndef jpn
+            // This is still pretty speculative, but from a quick glance at
+            // func_020a51b0 and looking at memory while in a grotto, I think
+            // it's something like:
+            char buffer1[64]; // holds grotto name without level
+            char buffer2[8]; // level string, e.g. "Lv. 1"
+            char buffer3[64]; // full grotto name
+            char popupName[64]; // full grotto name but used in the popup msg
+                                // when you enter / load a quicksave
+#else
             // this is probably not what's actually going on, but it makes
             // this object the right size for memset calls. Probably either the
             // buffers are resized or there are some extra ones.
-            char jpnBufferResize[0x80];
+            char unknownJpnBuffers[0xC8];
+            char popupName[64];
 #endif
-        } regularMapNameData;
+        } regularMapData;
 
-        struct LegacyBossNameData // see func_020a425c
+        struct LegacyBossMapData
         {
             char bossID;
             short unknown_4E[4];
@@ -90,24 +98,32 @@ public:
             unsigned short rewardGold;
             char unknown_8E[0x2E];
 
-            // All stored in the 'markup' encoding, e.g. using <1> for apostrophe
+#ifndef jpn
+            // All stored in the 'markup' encoding, e.g. using <1> for apostrophe.
+            // Speculative based on looking at memory in a legacy grotto and
+            // a glance at func_020a425c
             char mapNameNoLevel[64]; // e.g. "Estark<1>s Map"
             char mapNameNoLevel_v2[64]; // same as above, not sure what the difference is
             char mapLevelString[8]; // e.g. "Lv. 99"
             char mapName[64]; // "Estark<1>s Map Lv. 99"
-            char mapPopupName[64]; // e.g. "Estark Lv. 99" (what pops up on entering the grotto)
-#ifdef jpn
-            // again definitely not what's actually going on here. The function
-            // func_020a6050 in JPN version might give some clues?
-            char jpnBufferResize[0x20];
+            char popupName[64]; // e.g. "Estark Lv. 99" (what pops up on entering the grotto)
+#else
+            // really no idea, I just looked at func_020a6050 (JPN) to guess
+            // the sizes and positions
+            char jpnBuffer1[32];
+            char jpnBuffer2[32];
+            char jpnBuffer3[32];
+            char jpnBuffer4[8];
+            char jpnBuffer5[64];
+            char popupName[64];
+            char jpnBuffer6[64];
 #endif
-        } legacyMapNameData;
+        } legacyMapData;
         };
 
-        int unknown_1C4;
-
     } universal;
-
+    
+    int unknown_1C4;
     FloorMap floorMap;
     FloorMapGenerator* pGenerator;
     int floorWidth, floorHeight;
@@ -125,12 +141,9 @@ public:
     int RandomizeChestRank(int floor);
     int GetActiveGrottoEnviron() const;
 
-    // here we get functions func_02090180 and func_020901fc.
-    // The former might be calculating the number of floors.
-    // The latter seems to return a pointer to one of the buffers, but unsure
-    // what it does with it (probably fills it with the name or something)
+    int GetFloorCount() const;
+    const char* GetPopupName() const;
 
-    // could totally be static, but in practice gets called with a this pointer
     unsigned short GetActiveGrottoSeed() const;
     void BlankFunction() const; // does literally nothing. why does this exist
 
