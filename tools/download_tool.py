@@ -41,13 +41,14 @@ TOOLS = {
 
 
 download_url = TOOLS[args.tool](args.tag)
-print(f'\nDownloading {args.tool} {args.tag}...')
-response = requests.get(download_url)
-if download_url.endswith('.zip'):
-    zip_file = zipfile.ZipFile(io.BytesIO(response.content))
-    zip_file.extractall(args.path)
-else:
-    out_path: Path = args.path
-    with out_path.open('wb') as f:
-        f.write(response.content)
-    out_path.chmod(out_path.stat().st_mode | stat.S_IEXEC)
+if (args.tool != "mwccarm"):
+    print(f'\nDownloading {args.tool} {args.tag}...')
+    response = requests.get(download_url)
+    if download_url.endswith('.zip'):
+        zip_file = zipfile.ZipFile(io.BytesIO(response.content))
+        zip_file.extractall(args.path)
+    else:
+        out_path: Path = args.path
+        with out_path.open('wb') as f:
+            f.write(response.content)
+        out_path.chmod(out_path.stat().st_mode | stat.S_IEXEC)

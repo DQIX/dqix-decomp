@@ -1,15 +1,18 @@
 #include "Memory/AllocatorUnion.h"
 
+// USA: func_020afe6c
 void* AllocatorUnion::Allocate(unsigned int len)
 {
     return versions.base.pVTable->allocate(&versions.base, len);
 }
 
+// USA: func_020afe80
 void AllocatorUnion::Free(void* data)
 {
     versions.base.pVTable->free(&versions.base, data);
 }
 
+// USA: func_020afe94
 void AllocatorUnion::InitializeTypeB(void* pAlloc, int unknown)
 {
     versions.typeB.pVTable = &AllocatorTypeB::s_vtable;
@@ -18,7 +21,8 @@ void AllocatorUnion::InitializeTypeB(void* pAlloc, int unknown)
     versions.typeB.unknown[1] = 0;
 }
 
-void AllocatorUnion::InitializeTypeA(void* pAlloc, int align)
+// USA: func_020afec4
+void AllocatorUnion::InitializeTypeA(DoubleEndedArenaAllocator* pAlloc, int align)
 {
     versions.typeA.pVTable = &AllocatorTypeA::s_vtable;
     versions.typeA.pArenaAllocator = pAlloc;

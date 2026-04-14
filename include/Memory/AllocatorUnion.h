@@ -18,5 +18,5 @@ public:
     void Free(void* data);
 
     void InitializeTypeB(void* pAlloc, int unknown);
-    void InitializeTypeA(void* pArenaAlloc, int alignAndDir);
+    void InitializeTypeA(DoubleEndedArenaAllocator* pArenaAlloc, int alignAndDir);
 };
