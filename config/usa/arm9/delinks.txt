@@ -64,3 +64,16 @@ src/Combat/Main/GetCombatantFromList.c:
 src/System/Random.c:
 	complete
 	.text start:0x020741d0 end:0x020744a8
+
+src/Memory/FixedSizeBlockList.cpp:
+    complete
+    .text start:0x020afaf0 end:0x020afb58
+
+src/Memory/AllocatorB.cpp:
+    complete
+    .rodata start:0x020e9168 end:0x020e9178
+    .text start:0x020afdc8 end:0x020afe04
+
+src/Memory/AllocatorUnion.cpp:
+    complete
+    .text start:0x020afe6c end:0x020afec4
