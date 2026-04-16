@@ -12,24 +12,18 @@ const AllocatorBase::VTable AllocatorTypeB::s_vtable = {
     &AllocatorTypeB::Free
 };
 
-extern "C"
-{
-    void* func_020af748(void* allocator, unsigned int len, int unknown);
-    void func_020af778(void* allocator, void* data);
-}
-
 // USA: func_020afdc8
 void* AllocatorTypeB::Allocate(AllocatorBase* base, unsigned int len)
 {
     AllocatorTypeB* self = static_cast<AllocatorTypeB*>(base);
-    return func_020af748(self->pUnderlyingAllocator, len, self->unknown[0]);
+    return self->pHPXEAllocator->Allocate(len, self->alignmentAndDir);
 }
 
 // USA: func_020afddc
 void AllocatorTypeB::Free(AllocatorBase* base, void* data)
 {
     AllocatorTypeB* self = static_cast<AllocatorTypeB*>(base);
-    func_020af778(self->pUnderlyingAllocator, data);
+    self->pHPXEAllocator->Free(data);
 }
 
 // USA: func_020afdec

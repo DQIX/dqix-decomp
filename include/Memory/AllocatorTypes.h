@@ -2,6 +2,7 @@
 
 #include "AllocatorBase.h"
 #include "DoubleEndedArenaAllocator.h"
+#include "HPXEAllocator.h"
 
 // The order of functions in the binary is the reverse of that of
 // the vtables, so any ordering is a bit silly. Here they're ordered by
@@ -37,8 +38,9 @@ struct AllocatorTypeA : public AllocatorBase // nonvirtual inheritance!
 // This one is more complicated, seemingly doing some linked list shenanigans.
 struct AllocatorTypeB : public AllocatorBase // nonvirtual inheritance
 {
-    void* pUnderlyingAllocator;
-    int unknown[2];
+    HPXEAllocator* pHPXEAllocator;
+    int alignmentAndDir;
+    int unknown;
 
     // Static to minimise function pointer messiness
     static void* Allocate(AllocatorBase* self, unsigned int size);

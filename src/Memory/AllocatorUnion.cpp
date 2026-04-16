@@ -13,12 +13,12 @@ void AllocatorUnion::Free(void* data)
 }
 
 // USA: func_020afe94
-void AllocatorUnion::InitializeTypeB(void* pAlloc, int unknown)
+void AllocatorUnion::InitializeTypeB(HPXEAllocator* pAlloc, int align)
 {
     versions.typeB.pVTable = &AllocatorTypeB::s_vtable;
-    versions.typeB.pUnderlyingAllocator = pAlloc;
-    versions.typeB.unknown[0] = unknown;
-    versions.typeB.unknown[1] = 0;
+    versions.typeB.pHPXEAllocator = pAlloc;
+    versions.typeB.alignmentAndDir = align;
+    versions.typeB.unknown = 0;
 }
 
 // USA: func_020afec4

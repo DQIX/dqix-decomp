@@ -17,6 +17,6 @@ public:
     void* Allocate(unsigned int len);
     void Free(void* data);
 
-    void InitializeTypeB(void* pAlloc, int unknown);
+    void InitializeTypeB(HPXEAllocator* pAlloc, int alignAndDir);
     void InitializeTypeA(DoubleEndedArenaAllocator* pArenaAlloc, int alignAndDir);
 };
