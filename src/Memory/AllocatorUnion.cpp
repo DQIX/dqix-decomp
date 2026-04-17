@@ -22,10 +22,10 @@ void AllocatorUnion::InitializeTypeB(HPXEAllocator* pAlloc, int align)
 }
 
 // USA: func_020afec4
-void AllocatorUnion::InitializeTypeA(DoubleEndedArenaAllocator* pAlloc, int align)
+void AllocatorUnion::InitializeTypeA(HMRFAllocator* pAlloc, int align)
 {
     versions.typeA.pVTable = &AllocatorTypeA::s_vtable;
-    versions.typeA.pArenaAllocator = pAlloc;
+    versions.typeA.pHMRFAllocator = pAlloc;
     versions.typeA.alignmentAndDir = align;
     versions.typeA.unknown = 0;
 }

@@ -30,7 +30,7 @@ void AllocatorTypeB::Free(AllocatorBase* base, void* data)
 void* AllocatorTypeA::Allocate(AllocatorBase* base, unsigned int len)
 {
     AllocatorTypeA* self = static_cast<AllocatorTypeA*>(base);
-    return self->pArenaAllocator->Allocate(len, self->alignmentAndDir);
+    return self->pHMRFAllocator->Allocate(len, self->alignmentAndDir);
 }
 
 // USA: func_020afe00

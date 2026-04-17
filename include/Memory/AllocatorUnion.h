@@ -18,5 +18,5 @@ public:
     void Free(void* data);
 
     void InitializeTypeB(HPXEAllocator* pAlloc, int alignAndDir);
-    void InitializeTypeA(DoubleEndedArenaAllocator* pArenaAlloc, int alignAndDir);
+    void InitializeTypeA(HMRFAllocator* pAlloc, int alignAndDir);
 };

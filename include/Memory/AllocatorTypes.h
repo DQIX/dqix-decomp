@@ -1,7 +1,7 @@
 #pragma once
 
 #include "AllocatorBase.h"
-#include "DoubleEndedArenaAllocator.h"
+#include "HMRFAllocator.h"
 #include "HPXEAllocator.h"
 
 // The order of functions in the binary is the reverse of that of
@@ -16,7 +16,7 @@
 // block or backwards from the end).
 struct AllocatorTypeA : public AllocatorBase // nonvirtual inheritance!
 {
-    DoubleEndedArenaAllocator* pArenaAllocator; // type will be determined later
+    HMRFAllocator* pHMRFAllocator; // type will be determined later
     // If this is positive, the allocation will go forwards, and if negative
     // it will go backwards. The absolute value is a power of 2 indicating
     // the alignment of each allocated item. (In practice, this always seems

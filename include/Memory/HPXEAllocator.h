@@ -1,6 +1,7 @@
 #pragma once
 
 #include <globaldefs.h>
+#include "SignedAllocator.h"
 
 // I don't know what HPXE stands for, but the class features a magic constant
 // which looks like this in memory, so that's what I'm calling it. There is a 
@@ -70,13 +71,7 @@ public:
     };
     
 public:
-    unsigned int signature; // always 0x45585048 ("HXPE")
-    char unknown_0[0x14];
-    // We have a linked list of blocks but all of them are carved out of
-    // one contiguous region
-    void* allocBegin;
-    void* allocEnd;
-    unsigned char clearFlags;
+    SignedAllocatorHeader header;
     BlockManager blocks;
 
 private:
@@ -92,6 +87,7 @@ private:
 
 public:
     static HPXEAllocator* CreateAtLocation(void* where, unsigned int size, unsigned short clearFlags);
+    void RemoveFromTree();
 
     void* Allocate(unsigned int len, int alignAndDir);
     void Free(void* data);
