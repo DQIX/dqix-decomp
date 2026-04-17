@@ -4386,9 +4386,9 @@ _ZN13HMRFAllocator4FreeEi kind:function(arm,size=0x2c) addr:0x020af9ec
 _ZN13HMRFAllocator24GetMaxPossibleAllocationEi kind:function(arm,size=0x38) addr:0x020afa18
 _ZN13HMRFAllocator16SaveCurrentStateEi kind:function(arm,size=0x50) addr:0x020afa50
 _ZN13HMRFAllocator12RestoreStateEi kind:function(arm,size=0x50) addr:0x020afaa0
-func_020afaf0 kind:function(arm,size=0x18) addr:0x020afaf0
-func_020afb08 kind:function(arm,size=0x40) addr:0x020afb08
-func_020afb48 kind:function(arm,size=0x10) addr:0x020afb48
+_ZN21UnusedSignedAllocator17PopFrontAndUpdateEPPNS_5BlockE kind:function(arm,size=0x18) addr:0x020afaf0
+_ZN21UnusedSignedAllocator8AllocateEv kind:function(arm,size=0x40) addr:0x020afb08
+_ZN21UnusedSignedAllocator4FreeEPv kind:function(arm,size=0x10) addr:0x020afb48
 func_020afb58 kind:function(arm,size=0x44) addr:0x020afb58
 func_020afb9c kind:function(arm,size=0x148) addr:0x020afb9c
 func_020afce4 kind:function(arm,size=0x28) addr:0x020afce4
@@ -4399,8 +4399,8 @@ _ZN14AllocatorTypeB8AllocateEP13AllocatorBasej kind:function(arm,size=0x14) addr
 _ZN14AllocatorTypeB4FreeEP13AllocatorBasePv kind:function(arm,size=0x10) addr:0x020afddc
 _ZN14AllocatorTypeA8AllocateEP13AllocatorBasej kind:function(arm,size=0x14) addr:0x020afdec
 _ZN14AllocatorTypeA4FreeEP13AllocatorBasePv kind:function(arm,size=0x4) addr:0x020afe00
-func_020afe04 kind:function(arm,size=0x20) addr:0x020afe04
-func_020afe24 kind:function(arm,size=0x10) addr:0x020afe24
+_ZN19AllocatorTypeUnused8AllocateEP13AllocatorBasej kind:function(arm,size=0x20) addr:0x020afe04
+_ZN19AllocatorTypeUnused4FreeEP13AllocatorBasePv kind:function(arm,size=0x10) addr:0x020afe24
 func_020afe34 kind:function(arm,size=0x1c) addr:0x020afe34
 func_020afe50 kind:function(arm,size=0x1c) addr:0x020afe50
 _ZN14AllocatorUnion8AllocateEj kind:function(arm,size=0x14) addr:0x020afe6c
@@ -6461,6 +6461,7 @@ data_020e9138 kind:data(any) addr:0x020e9138
 data_020e9148 kind:data(any) addr:0x020e9148
 data_020e9149 kind:data(any) addr:0x020e9149
 data_020e914a kind:data(any) addr:0x020e914a
+_ZN19AllocatorTypeUnused8s_vtableE kind:data(any) addr:0x020e9160
 _ZN14AllocatorTypeA8s_vtableE kind:data(any) addr:0x020e9168
 _ZN14AllocatorTypeB8s_vtableE kind:data(any) addr:0x020e9170
 data_020e9180 kind:data(any) addr:0x020e9180

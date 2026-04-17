@@ -78,10 +78,14 @@ src/Memory/HMRFAllocator.cpp:
     complete
     .text start:0x020af838 end:0x020afaf0
 
+src/Memory/UnusedSignedAllocator.cpp:
+    complete
+    .text start:0x020afaf0 end:0x020afb58
+
 src/Memory/AllocatorTypes.cpp:
     complete
-    .rodata start:0x020e9168 end:0x020e9178
-    .text start:0x020afdc8 end:0x020afe04
+    .rodata start:0x020e9160 end:0x020e9178
+    .text start:0x020afdc8 end:0x020afe34
 
 src/Memory/AllocatorUnion.cpp:
     complete
