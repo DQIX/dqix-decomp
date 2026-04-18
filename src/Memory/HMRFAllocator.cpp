@@ -1,5 +1,10 @@
 #include "Memory/HMRFAllocator.h"
 
+#ifdef jpn
+#define func_020017a4 func_020016c0
+#define func_020ca3ec func_020cbeb8
+#endif
+
 extern "C"
 {
     // Either abs or labs (they are identical as long == int on this system,
@@ -14,6 +19,7 @@ extern "C"
 }
 
 // USA: func_020af838
+// JPN: func_020b1304
 HMRFAllocator* HMRFAllocator::CreateInRegion(void* start, void* end, unsigned short clearFlags)
 {
     HMRFAllocator* alloc = (HMRFAllocator*)start;
@@ -27,6 +33,7 @@ HMRFAllocator* HMRFAllocator::CreateInRegion(void* start, void* end, unsigned sh
 }
 
 // USA: func_020af880
+// JPN: func_020b134c
 void* HMRFAllocator::Block::AllocateForward(unsigned int len, unsigned int align)
 {
     unsigned int pieceTrueStart = startAddress;
@@ -50,6 +57,7 @@ void* HMRFAllocator::Block::AllocateForward(unsigned int len, unsigned int align
 }
 
 // USA: func_020af8dc
+// JPN: func_020b13a8
 void* HMRFAllocator::Block::AllocateBackward(unsigned int len, unsigned int align)
 {
     unsigned int pieceStart = (this->endAddress - len) & ~(align - 1);
@@ -69,6 +77,7 @@ void* HMRFAllocator::Block::AllocateBackward(unsigned int len, unsigned int alig
 }
 
 // USA: func_020af934
+// JPN: func_020b1400
 void HMRFAllocator::FreeFront()
 {
     block.startAddress = (unsigned int)header.allocBegin;
@@ -78,6 +87,7 @@ void HMRFAllocator::FreeFront()
 }
 
 // USA: func_020af948
+// JPN: func_020b1414
 void HMRFAllocator::FreeBack()
 {
     SavedState* state = newestState;
@@ -94,6 +104,7 @@ void HMRFAllocator::FreeBack()
 }
 
 // USA: func_020af974
+// JPN: func_020b1440
 HMRFAllocator* HMRFAllocator::CreateAtLocation(void* where, unsigned int size, unsigned short clearFlags)
 {
     unsigned int end = (size + (unsigned int)where) & ~3;
@@ -108,12 +119,14 @@ HMRFAllocator* HMRFAllocator::CreateAtLocation(void* where, unsigned int size, u
 }
 
 // USA: func_020af9ac
+// JPN: func_020b1478
 void HMRFAllocator::RemoveFromTree()
 {
     AllocatorTree::Remove(&header);
 }
 
 // USA: func_020af9b8
+// JPN: func_020b1484
 void* HMRFAllocator::Allocate(unsigned int len, int alignAndDir)
 {
     if (len == 0)
@@ -127,6 +140,7 @@ void* HMRFAllocator::Allocate(unsigned int len, int alignAndDir)
 }
 
 // USA: func_020af9ec
+// JPN: func_020b14b8
 void HMRFAllocator::Free(int flags)
 {
     if (flags & 1)
@@ -137,6 +151,7 @@ void HMRFAllocator::Free(int flags)
 }
 
 // USA: func_020afa18
+// JPN: func_020b14e4
 unsigned int HMRFAllocator::GetMaxPossibleAllocation(int alignAndDir)
 {
     unsigned int align = func_020017a4(alignAndDir);
@@ -154,6 +169,7 @@ unsigned int HMRFAllocator::GetMaxPossibleAllocation(int alignAndDir)
 }
 
 // USA: func_020afa50
+// JPN: func_020b151c
 bool HMRFAllocator::SaveCurrentState(int id)
 {
     unsigned int currentFront = block.startAddress;
@@ -171,6 +187,7 @@ bool HMRFAllocator::SaveCurrentState(int id)
 }
 
 // USA: func_020afaa0
+// JPN: func_020b156c
 bool HMRFAllocator::RestoreState(int id)
 {
     SavedState* loopState = newestState;

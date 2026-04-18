@@ -1,5 +1,9 @@
 #include "Memory/UnusedSignedAllocator.h"
 
+#ifdef jpn
+#define func_020ca3ec func_020cbeb8
+#endif
+
 extern "C"
 {
     // Yet another memset but with stupid parameter order and assumes
@@ -9,6 +13,8 @@ extern "C"
     void func_020ca3ec(int value, void* start, unsigned length);
 }
 
+// USA: func_020afaf0
+// JPN: func_020b15bc
 UnusedSignedAllocator::Block* UnusedSignedAllocator::PopFrontAndUpdate(Block** ppBlock)
 {
     Block* oldFront = *ppBlock;
@@ -19,6 +25,8 @@ UnusedSignedAllocator::Block* UnusedSignedAllocator::PopFrontAndUpdate(Block** p
     return oldFront;
 }
 
+// USA: func_020afb08
+// JPN: func_020b15d4
 void* UnusedSignedAllocator::Allocate()
 {
     Block* ret = PopFrontAndUpdate(&pFirstAvailableBlock);
@@ -32,6 +40,8 @@ void* UnusedSignedAllocator::Allocate()
     return ret;
 }
 
+// USA: func_020afb48
+// JPN: func_020b1614
 void UnusedSignedAllocator::Free(void* data)
 {
     Block* newBlock = (Block*)data;

@@ -1,5 +1,10 @@
 #include "Memory/SafeAllocator.h"
 
+#ifdef jpn
+#define func_020d970c func_020db118
+#define func_020d974c func_020db158
+#endif
+
 extern "C"
 {
     void func_020d970c();
@@ -10,18 +15,21 @@ extern int safeAllocatorShouldIncCount;
 extern unsigned int safeAllocatorLiveCount;
 
 // USA: func_0203246c
+// JPN: func_02031fa4
 unsigned int SafeAllocator::GetLiveCount()
 {
     return safeAllocatorLiveCount;
 }
 
 // USA: func_0203247c
+// JPN: func_02031fb4
 void SafeAllocator::ResetAllocatorPointer()
 {
     pSignedAlloc = NULL;
 }
 
 // USA: func_02032488
+// JPN: func_02031fc0
 void SafeAllocator::CreateTypeB(void* bufferStart, unsigned int bufferSize, int alignAndDir)
 {
     func_020d970c();
@@ -37,6 +45,7 @@ void SafeAllocator::CreateTypeB(void* bufferStart, unsigned int bufferSize, int 
 }
 
 // USA: func_020324f0
+// JPN: func_02032028
 void SafeAllocator::CreateTypeA(void* bufferStart, unsigned int bufferSize)
 {
     func_020d970c();
@@ -50,6 +59,7 @@ void SafeAllocator::CreateTypeA(void* bufferStart, unsigned int bufferSize)
 }
 
 // USA: func_02032544
+// JPN: func_0203207c
 void* SafeAllocator::Allocate(unsigned int len)
 {
     if (pSignedAlloc == NULL)
@@ -63,6 +73,7 @@ void* SafeAllocator::Allocate(unsigned int len)
 }
 
 // USA: func_02032584
+// JPN: func_020320bc
 void* SafeAllocator::AllocateReversed(unsigned int len)
 {
     if (pSignedAlloc == NULL)
@@ -89,6 +100,7 @@ void* SafeAllocator::AllocateReversed(unsigned int len)
 }
 
 // USA: func_02032618
+// JPN: func_02032150
 void SafeAllocator::Free(void* data)
 {
     if (pSignedAlloc == NULL)
@@ -112,6 +124,7 @@ void SafeAllocator::Free(void* data)
 }
 
 // USA: func_02032688
+// JPN: func_020321c0
 void SafeAllocator::Reset()
 {
     if (pSignedAlloc == NULL)
@@ -140,6 +153,7 @@ void SafeAllocator::Reset()
 }
 
 // USA: func_02032730
+// JPN: func_02032268
 void SafeAllocator::Destroy()
 {
     if (pSignedAlloc == NULL)
@@ -171,6 +185,7 @@ void SafeAllocator::Destroy()
 }
 
 // USA: func_020327c0
+// JPN: func_020322f8
 unsigned int SafeAllocator::GetSize() const
 {
     if (pSignedAlloc == NULL)
@@ -183,6 +198,7 @@ unsigned int SafeAllocator::GetSize() const
 }
 
 // USA: func_020327f4
+// JPN: func_0203232c
 unsigned int SafeAllocator::GetMaxPossibleAllocation() const
 {
     if (pSignedAlloc == NULL)
@@ -208,6 +224,7 @@ unsigned int SafeAllocator::GetMaxPossibleAllocation() const
 }
 
 // USA: func_02032874
+// JPN: func_020323ac
 unsigned int SafeAllocator::GetSizeWithLargestBlockRemoved() const
 {
     if (pSignedAlloc == NULL)
@@ -220,6 +237,7 @@ unsigned int SafeAllocator::GetSizeWithLargestBlockRemoved() const
 }
 
 // USA: func_020328b4
+// JPN: func_020323ec
 SignedAllocatorHeader* SafeAllocator::GetSignedAllocator() const
 {
     return pSignedAlloc;

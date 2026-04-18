@@ -8,17 +8,22 @@
 // Every other function in this file is unaffected by this.
 #pragma optimize_for_size off
 
+#ifdef jpn
+#define func_020017a4 func_020016c0
+#define func_020ca3ec func_020cbeb8
+#endif
+
 extern "C"
 {
     // Either abs or labs (they are identical as long == int on this system,
     // but there are two of them and both get used)
     int func_020017a4(int);
 
-    // 
     void func_020ca3ec(int val, void* dst, unsigned int len);
 }
 
 // USA: func_020af20c
+// JPN: func_020b0cd8
 void HPXEAllocator::MemoryRangeDescription::PopulateFromBlock(Block* block)
 {
     unsigned int dataStart = (unsigned int)block + sizeof(Block);
@@ -28,6 +33,7 @@ void HPXEAllocator::MemoryRangeDescription::PopulateFromBlock(Block* block)
 }
 
 // USA: func_020af238
+// JPN: func_020b0d04
 HPXEAllocator::Block* HPXEAllocator::BlockList::RemoveAndGetPrevious(Block* block)
 {
     Block* oldPrev = block->pPrev;
@@ -47,6 +53,7 @@ HPXEAllocator::Block* HPXEAllocator::BlockList::RemoveAndGetPrevious(Block* bloc
 }
 
 // USA: func_020af260
+// JPN: func_020b0d2c
 HPXEAllocator::Block* HPXEAllocator::BlockList::InsertAfter(Block* newBlock, Block* prev)
 {
     Block* next;
@@ -72,6 +79,7 @@ HPXEAllocator::Block* HPXEAllocator::BlockList::InsertAfter(Block* newBlock, Blo
 }
 
 // USA: func_020af290
+// JPN: func_020b0d5c
 HPXEAllocator::Block* HPXEAllocator::MemoryRangeDescription::CreateBlock(unsigned short sig)
 {
     Block* block = (Block*)beginAddr;
@@ -85,6 +93,7 @@ HPXEAllocator::Block* HPXEAllocator::MemoryRangeDescription::CreateBlock(unsigne
 }
 
 // USA: func_020af2bc
+// JPN: func_020b0d88
 HPXEAllocator* HPXEAllocator::CreateInRegion(void* start, void* end, unsigned short clearFlags)
 {
     HPXEAllocator* alloc = (HPXEAllocator*)start;
@@ -108,6 +117,7 @@ HPXEAllocator* HPXEAllocator::CreateInRegion(void* start, void* end, unsigned sh
 }
 
 // USA: func_020af330
+// JPN: func_020b0dfc
 void* HPXEAllocator::BlockManager::AllocateFromFreeBlock(
     Block* initNode, unsigned int effStart, unsigned int length, unsigned short reversed)
 {
@@ -170,6 +180,7 @@ void* HPXEAllocator::BlockManager::AllocateFromFreeBlock(
 }
 
 // USA: func_020af4b0
+// JPN: func_020b0f7c
 void* HPXEAllocator::AllocateFromFront(unsigned int len, unsigned int align)
 {
     bool acceptAnyBlock = (unsigned short)(blocks.blockSelectFlags & 1) == 0;
@@ -210,6 +221,8 @@ void* HPXEAllocator::AllocateFromFront(unsigned int len, unsigned int align)
     return blocks.AllocateFromFreeBlock(bestBlock, addrWithinBestBlock, len, 0);
 }
 
+// USA: func_020af564
+// JPN: func_020b1030
 void* HPXEAllocator::AllocateFromEnd(unsigned int len, unsigned int align)
 {
     bool acceptAnyBlock = (unsigned short)(blocks.blockSelectFlags & 1) == 0;
@@ -251,6 +264,7 @@ void* HPXEAllocator::AllocateFromEnd(unsigned int len, unsigned int align)
 
 // https://decomp.me/scratch/BJC0E
 // USA: func_020af614
+// JPN: func_020b10e0
 bool HPXEAllocator::BlockManager::FreeMemoryRange(const MemoryRangeDescription& range)
 {
     MemoryRangeDescription updatedRange = range;
@@ -300,6 +314,8 @@ bool HPXEAllocator::BlockManager::FreeMemoryRange(const MemoryRangeDescription& 
     return true;
 }
 
+// USA: func_020af704
+// JPN: func_020b11d0
 HPXEAllocator* HPXEAllocator::CreateAtLocation(void* where, unsigned int size, unsigned short clearFlags)
 {
     unsigned int end = (size + (unsigned int)where) & ~3;
@@ -314,12 +330,14 @@ HPXEAllocator* HPXEAllocator::CreateAtLocation(void* where, unsigned int size, u
 }
 
 // USA: func_020af73c
+// JPN: func_020b1208
 void HPXEAllocator::RemoveFromTree()
 {
     AllocatorTree::Remove(&header);
 }
 
 // USA: func_020af748
+// JPN: func_020b1214
 void* HPXEAllocator::Allocate(unsigned int len, int alignAndDir)
 {
     if (len == 0)
@@ -333,6 +351,7 @@ void* HPXEAllocator::Allocate(unsigned int len, int alignAndDir)
 }
 
 // USA: func_020af778
+// JPN: func_020b1244
 void HPXEAllocator::Free(void* data)
 {
     Block* pBlock = (Block*)((char*)data - sizeof(Block));
@@ -344,6 +363,7 @@ void HPXEAllocator::Free(void* data)
 }
 
 // USA: func_020af7b4
+// JPN: func_020b1280
 unsigned int HPXEAllocator::GetMaxPossibleAllocation(int alignAndDir)
 {
     unsigned int align = func_020017a4(alignAndDir);

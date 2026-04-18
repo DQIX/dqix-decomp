@@ -7,6 +7,7 @@ namespace AllocatorTree
 }
 
 // USA: func_020aeec8
+// JPN: func_020b0994
 void SignedAllocatorList::Initialize(unsigned short sigLength)
 {
     pFirst = NULL;
@@ -16,6 +17,7 @@ void SignedAllocatorList::Initialize(unsigned short sigLength)
 }
 
 // USA: func_020aeee0
+// JPN: func_020b09ac
 void SignedAllocatorList::DoInitialInsertion(SignedAllocatorHeader* what)
 {
     SignedAllocatorHeader** whatPtrs = (SignedAllocatorHeader**)((char*)what + signatureLength);
@@ -29,6 +31,7 @@ void SignedAllocatorList::DoInitialInsertion(SignedAllocatorHeader* what)
 }
 
 // USA: func_020aef0c
+// JPN: func_020b09d8
 void SignedAllocatorList::InsertAtEnd(SignedAllocatorHeader* what)
 {
     if (pFirst == NULL)
@@ -45,6 +48,7 @@ void SignedAllocatorList::InsertAtEnd(SignedAllocatorHeader* what)
 }
 
 // USA: func_020aef60
+// JPN: func_020b0a2c
 void SignedAllocatorList::InsertAtStart(SignedAllocatorHeader* what)
 {
     if (pFirst == NULL)
@@ -62,6 +66,7 @@ void SignedAllocatorList::InsertAtStart(SignedAllocatorHeader* what)
 }
 
 // USA: func_020aefb0
+// JPN: func_020b0a7c
 void SignedAllocatorList::InsertBefore(SignedAllocatorHeader* where, SignedAllocatorHeader* what)
 {
     if (where == NULL)
@@ -83,6 +88,7 @@ void SignedAllocatorList::InsertBefore(SignedAllocatorHeader* where, SignedAlloc
 }
 
 // USA: func_020af014
+// JPN: func_020b0ae0
 void SignedAllocatorList::Remove(SignedAllocatorHeader* what)
 {
     SignedAllocatorHeader** prevAndNext = (SignedAllocatorHeader**)((char*)what + signatureLength);
@@ -103,6 +109,7 @@ void SignedAllocatorList::Remove(SignedAllocatorHeader* what)
 }
 
 // USA: func_020af074
+// JPN: func_020b0b40
 SignedAllocatorHeader* SignedAllocatorList::ElementAfter(SignedAllocatorHeader* what)
 {
     if (what == NULL)
@@ -112,6 +119,7 @@ SignedAllocatorHeader* SignedAllocatorList::ElementAfter(SignedAllocatorHeader* 
 }
 
 // USA: func_020af08c
+// JPN: func_020b0b58
 SignedAllocatorHeader* SignedAllocatorList::ElementBefore(SignedAllocatorHeader* what)
 {
     if (what == NULL)
@@ -121,6 +129,7 @@ SignedAllocatorHeader* SignedAllocatorList::ElementBefore(SignedAllocatorHeader*
 }
 
 // USA: func_020af0a0
+// JPN: func_020b0b6c
 SignedAllocatorHeader* SignedAllocatorList::GetNthElement(unsigned int n)
 {
     unsigned int loopIdx = 0;
@@ -141,6 +150,7 @@ SignedAllocatorHeader* SignedAllocatorList::GetNthElement(unsigned int n)
 }
 
 // USA: func_020af0e8
+// JPN: func_020b0bb4
 SignedAllocatorHeader* AllocatorTree::GetParent(SignedAllocatorList* searchList, SignedAllocatorHeader* alloc)
 {
     // Loop through the list to find which element is an ancestor
@@ -171,6 +181,7 @@ SignedAllocatorHeader* AllocatorTree::GetParent(SignedAllocatorList* searchList,
 }
 
 // USA: func_020af150
+// JPN: func_020b0c1c
 SignedAllocatorList* AllocatorTree::GetListContainingAllocator(SignedAllocatorHeader* alloc)
 {
     SignedAllocatorList* list = &topLevel;
@@ -180,6 +191,8 @@ SignedAllocatorList* AllocatorTree::GetListContainingAllocator(SignedAllocatorHe
     return list;
 }
 
+// USA: func_020af178
+// JPN: func_020b0c44
 void AllocatorTree::InsertNewAndPopulateHeader(SignedAllocatorHeader* allocator,
     unsigned int sig, void* allocBegin, void* allocEnd, unsigned short clearFlags)
 {
@@ -203,6 +216,8 @@ void AllocatorTree::InsertNewAndPopulateHeader(SignedAllocatorHeader* allocator,
     containList->InsertAtEnd(header);
 }
 
+// USA: func_020af1f4
+// JPN: func_020b0cc0
 void AllocatorTree::Remove(SignedAllocatorHeader* alloc)
 {
     SignedAllocatorList* containList = GetListContainingAllocator(alloc);

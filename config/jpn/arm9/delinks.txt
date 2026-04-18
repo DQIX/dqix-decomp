@@ -64,3 +64,33 @@ src/Combat/Main/GetBattleList.c:
 src/Combat/Main/GetCombatantFromList.c:
 	complete
 	.text start:0x0200fcc4 end:0x0200fd00
+
+src/Memory/SafeAllocator.cpp:
+    complete
+    .text start:0x02031fa4 end:0x020323f4
+
+src/Memory/SignedAllocator.cpp:
+    complete
+    .bss start:0x02109cb4 end:0x02109cc4
+    .text start:0x020b0994 end:0x020b0cd8
+
+src/Memory/HPXEAllocator.cpp:
+    complete
+    .text start:0x020b0cd8 end:0x020b1304
+
+src/Memory/HMRFAllocator.cpp:
+    complete
+    .text start:0x020b1304 end:0x020b15bc
+
+src/Memory/UnusedSignedAllocator.cpp:
+    complete
+    .text start:0x020b15bc end:0x020b1624
+
+src/Memory/AllocatorTypes.cpp:
+    complete
+    .rodata start:0x020e926c end:0x020e9284
+    .text start:0x020b1894 end:0x020b1900
+
+src/Memory/AllocatorUnion.cpp:
+    complete
+    .text start:0x020b1938 end:0x020b1990
