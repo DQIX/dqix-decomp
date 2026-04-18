@@ -61,6 +61,10 @@ src/Combat/Main/GetCombatantFromList.c:
 	complete
 	.text start:0x0200FE68 end:0x0200FEA4
 
+src/Memory/SafeAllocator.cpp:
+    complete
+    .text start:0x0203246c end:0x020328bc
+
 src/System/Random.c:
 	complete
 	.text start:0x020741d0 end:0x020744a8
@@ -90,4 +94,4 @@ src/Memory/AllocatorTypes.cpp:
 src/Memory/AllocatorUnion.cpp:
     complete
     .text start:0x020afe6c end:0x020afec4
-    
+

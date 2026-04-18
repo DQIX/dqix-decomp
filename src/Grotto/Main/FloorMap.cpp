@@ -2,22 +2,6 @@
 #include "std_library_functions.h"
 #include <globaldefs.h>
 
-#ifdef jpn
-#define func_02032544 func_0203207c
-#endif
-
-extern "C"
-{
-    // This is some kind of memory allocation.
-    // Testing with a Lua script reveals that:
-    // 1) the function is called with multiple different values in first parameter
-    // 2) when called with the same value, the return values successively increase
-    //    by the size parameter.
-    // So I think this is probably an arena allocator or something
-    // (and the function is a member function of an allocator object).
-    void* func_02032544(void* allocator, unsigned int size);
-}
-
 // USA: func_02092644
 // JPN: func_02092f64
 ARM bool FloorMap::Initialize(int w, int h)
@@ -205,13 +189,13 @@ ARM int FloorMap::GetAdjacencyBits(int x, int y) const
 
 // USA: func_020929e4
 // JPN: func_02093304
-ARM void FloorMap::AllocateBuffers(void* allocator)
+ARM void FloorMap::AllocateBuffers(SafeAllocator* allocator)
 {
     if (pMapData == 0)
-        pMapData = (unsigned char*)func_02032544(allocator, 256);
+        pMapData = (unsigned char*)allocator->Allocate(256);
 
     if (pMapAdjacencyData == 0)
-        pMapAdjacencyData = (unsigned char*)func_02032544(allocator, 256);
+        pMapAdjacencyData = (unsigned char*)allocator->Allocate(256);
 }
 
 // USA: func_02092a2c
