@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Memory/SafeAllocator.h"
+
 struct GrottoTilePoint
 {
     char x;
@@ -49,7 +51,7 @@ public:
 
     int GetAdjacencyBits(int x, int y) const;
 
-    void AllocateBuffers(void* allocator);
+    void AllocateBuffers(SafeAllocator* allocator);
 
     // These do the exact same thing (v2 calls v1).
     // Based on where Clear2 gets called, it might be a destructor (albeit a pointless one)

@@ -4,16 +4,12 @@
 
 #ifdef jpn
     #define func_020a40e8 func_020a5f00
-    #define func_02032544 func_0203207c
 #endif
 
 extern "C"
 {
     // Just (vector)-memsets to zero
     void func_020a40e8(DetailedTreasureMapData*);
-
-    // probably an allocation - see FloorMap.cpp
-    void* func_02032544(void* allocator, unsigned int size);
 }
 
 // USA: func_0209033c
@@ -53,11 +49,11 @@ void ActiveGrottoClass::BlankFunction2() const
 
 // USA: func_020903b8
 // JPN: func_02090cd8
-void ActiveGrottoClass::AllocateGenerator(void* allocator, bool skipAllocMapBuffers)
+void ActiveGrottoClass::AllocateGenerator(SafeAllocator* allocator, bool skipAllocMapBuffers)
 {
     if (pGenerator == NULL)
     {
-        pGenerator = (FloorMapGenerator*)func_02032544(allocator, sizeof(FloorMapGenerator));
+        pGenerator = (FloorMapGenerator*)allocator->Allocate(sizeof(FloorMapGenerator));
         pGenerator->Initialize();
     }
 

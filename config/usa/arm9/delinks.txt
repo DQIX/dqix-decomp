@@ -61,6 +61,37 @@ src/Combat/Main/GetCombatantFromList.c:
 	complete
 	.text start:0x0200FE68 end:0x0200FEA4
 
+src/Memory/SafeAllocator.cpp:
+    complete
+    .text start:0x0203246c end:0x020328bc
+
 src/System/Random.c:
 	complete
 	.text start:0x020741d0 end:0x020744a8
+
+src/Memory/SignedAllocator.cpp:
+    complete
+    .bss start:0x02109ffc end:0x0210a00c
+    .text start:0x020aeec8 end:0x020af20c
+
+src/Memory/HPXEAllocator.cpp:
+    complete
+    .text start:0x020af20c end:0x020af838
+
+src/Memory/HMRFAllocator.cpp:
+    complete
+    .text start:0x020af838 end:0x020afaf0
+
+src/Memory/UnusedSignedAllocator.cpp:
+    complete
+    .text start:0x020afaf0 end:0x020afb58
+
+src/Memory/AllocatorTypes.cpp:
+    complete
+    .rodata start:0x020e9160 end:0x020e9178
+    .text start:0x020afdc8 end:0x020afe34
+
+src/Memory/AllocatorUnion.cpp:
+    complete
+    .text start:0x020afe6c end:0x020afec4
+

@@ -4,6 +4,7 @@
 #include "FloorMapGenerator.h"
 
 #include "DetailedTreasureMapData.h"
+#include "Memory/SafeAllocator.h"
 
 // Very WIP. I think in the USA version, the size of this should be
 // 632 (0x278), but I don't know what the last members are for.
@@ -54,7 +55,7 @@ public:
 
     // Definitely not confusing at all: pass true if you *dont* want
     // to allocate the floor map's buffers, and false if you *do* want to.
-    void AllocateGenerator(void* allocator, bool skipAllocateMapBuffers);
+    void AllocateGenerator(SafeAllocator* allocator, bool skipAllocateMapBuffers);
 
     // 'randomly' picks a dimension from within the given range using the
     // modulus trick, except the rng value is (grotto seed + floor)
