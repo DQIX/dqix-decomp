@@ -1,29 +1,32 @@
 #include <globaldefs.h>
-#include "Grotto/TileFeatures.h"
+#include "Grotto/Main/TileFeatures.h"
+#include "std_library_functions.h"
 
-extern "C" extern char* strstr(const char*, const char*);
 #ifdef jpn
-#define data_020e6f04 data_020e77a8
 #define data_020e6f00 data_020e77a4
+#define data_020e6f04 data_020e77a8
 #define data_020ef292 data_020ef1ce
 #endif
-extern char const data_020e6f04[];
+
 extern char const data_020e6f00[];
+extern char const data_020e6f04[];
 extern char const data_020ef292[];
 
+#ifdef jpn
+#define DATA_OFFSET 0x440
+#else
+#define DATA_OFFSET 0x420
+#endif
 
+// USA: func_0201a188
+// JPN: func_02019f28
 int GenerateGrottoObjectPositionOrientation(void* data, int tileX, int tileY, int* outX, int* outY,
     const TileFeaturePlacementData* tileDataArray, bool preferFaceDown) {
     const TileFeaturePlacementData* tileDataPtr;
     if (tileDataArray == 0)
     {
         // This is absolutely hideous, but it produces the right assembly
-		#ifdef usa
-        char* ptr1 = *(char**)((char*)data + 0x420);
-		#endif
-		#ifdef jpn
-		char* ptr1 = *(char**)((char*)data + 0x440);
-		#endif
+        char* ptr1 = *(char**)((char*)data + DATA_OFFSET);
         char* ptr2 = ptr1 + tileX * 0x48 + (tileY << 4) * 0x48;
         if (ptr2 == 0)
             return -1;

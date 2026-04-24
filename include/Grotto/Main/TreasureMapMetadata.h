@@ -3,6 +3,21 @@
 unsigned short GenerateMapLocation(unsigned int quality);
 unsigned short GenerateNewMapQuality();
 
+enum eDiscoveryState
+{
+    DiscoveryState_Invalid = 0,
+    DiscoveryState_Undiscovered = 1,
+    DiscoveryState_Discovered = 2,
+    DiscoveryState_Cleared = 3
+};
+
+enum eTreasureMapType
+{
+    TreasureMapType_Invalid = 0,
+    TreasureMapType_Regular = 1,
+    TreasureMapType_Legacy = 2
+};
+
 // This also seems to be the data that is stored to the save file (at location
 // 0x5E8E as an array of these). 
 class TreasureMapMetadata
@@ -38,14 +53,11 @@ public:
     // Might be a constructor. Generates an uncleared map
     void InitialiseAsLegacyBossMap(unsigned int bossID, unsigned int level);
 
-    // 1 = undiscovered, 2 = discovered, 3 = cleared
-    void SetDiscoveryState(int state);
-    int GetDiscoveryState() const;
+    void SetDiscoveryState(eDiscoveryState state);
+    eDiscoveryState GetDiscoveryState() const;
 
-    // Pass 1 for non-legacy, 2 for legacy
-    void SetMapType(int type);
-    // Returns 1 for non-legacy, 2 for legacy and 0 otherwise
-    int GetMapType() const;
+    void SetMapType(eTreasureMapType type);
+    eTreasureMapType GetMapType() const;
 
     void SetInitialByteUnknownBit();
     void ClearInitialByteUnknownBit();

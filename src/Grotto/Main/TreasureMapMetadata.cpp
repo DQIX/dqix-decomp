@@ -1,27 +1,19 @@
-#include "Grotto/TreasureMapMetadata.h"
+#include "Grotto/Main/TreasureMapMetadata.h"
+#include "Grotto/Main/RandATRangeModular.h"
+#include "System/Memory.h"
 #include "std_library_functions.h"
 #include "Combat/Main/BattleList.h"
+#include "Grotto/Main/GrottoStruct.h"
 #include <globaldefs.h>
 
 #ifdef jpn
-#define func_020ca594 func_020cc060
-#define func_020a3ec0 func_020a5bfc
 #define func_020100a8 func_0200ff04
 #define func_0200ff1c func_0200fd78
 #define func_02012fe4 func_02012dac
-#define func_02011738 func_020114a8
 #endif
-
 
 extern "C"
 {
-// Looks like an implementation of memset (including some optimisations to
-// do 4 bytes at a time based on alignment). 
-void func_020ca594(void* ptr, int value, unsigned int length);
-
-// Seems to just get a rand() output and force it into range [min, max].
-int func_020a3ec0(int minimum, int maximum);
-
 // Seems to return a u32 whose address is just past the end of the BattleStruct.
 // Maybe BattleStruct is just the beginning of some larger struct?
 unsigned int func_020100a8(BattleStruct*);
@@ -33,20 +25,23 @@ char* func_0200ff1c(BattleStruct*, unsigned int);
 // This just returns some data. It's also being spam-called in TileFeatures.cpp,
 // discarding the return value.
 int func_02012fe4(void);
-
-// Just applies an offset. Empirically, this offset from the BattleStruct
-// has some data about the currently active grotto.
-unsigned char* func_02011738(BattleStruct*);
 }
 
-// func_020a5cb8
+// USA: func_020a5cb8
+// JPN: func_020a7a5c
 unsigned short GenerateNewMapQuality()
 {
     BattleStruct* battle = GetBattleStruct();
     char* maybeMainCharDataPtr = func_0200ff1c(battle, func_020100a8(battle));
     // Another pointless function call
     func_02012fe4();
-    unsigned char* maybeGrottoDataPtr = func_02011738(battle);
+    GrottoStruct* grotto = GetGrottoStruct(battle);
+
+#ifdef jpn
+    #define MAIN_CHAR_DATA_PTR_OFFSET 0x144
+#else
+    #define MAIN_CHAR_DATA_PTR_OFFSET 0x150
+#endif
 
     unsigned short maxCharLevel = 0;
     unsigned short maxNumRevocs = 0;
@@ -69,15 +64,8 @@ unsigned short GenerateNewMapQuality()
         // inner->levels[j] and inner->revocs[j] and it still works. 
         unsigned char j = i;
         // beware pointer trickery, this is really offset 0x16c + 2*j
-		#ifdef usa
-        unsigned short level = *(*(unsigned short**)(maybeMainCharDataPtr + 0x150) + 0xb6 + j); 
-		unsigned short revocCount = *(*(unsigned char**)(maybeMainCharDataPtr + 0x150) + 0x186 + j);
-		#endif
-		#ifdef jpn
-		unsigned short level = *(*(unsigned short**)(maybeMainCharDataPtr + 0x144) + 0xb6 + j);  
-		unsigned short revocCount = *(*(unsigned char**)(maybeMainCharDataPtr + 0x144) + 0x186 + j);
-		#endif
-        
+        unsigned short level = *(*(unsigned short**)(maybeMainCharDataPtr + MAIN_CHAR_DATA_PTR_OFFSET) + 0xb6 + j);  
+        unsigned short revocCount = *(*(unsigned char**)(maybeMainCharDataPtr + MAIN_CHAR_DATA_PTR_OFFSET) + 0x186 + j);
         if (level > maxCharLevel)
             maxCharLevel = level;
         if (revocCount > maxNumRevocs)
@@ -92,15 +80,15 @@ unsigned short GenerateNewMapQuality()
 
     unsigned short quality;
     // Probably checking if regular map or legacy boss map?
-    if (maybeGrottoDataPtr[9] == 2)
+    if (grotto->unknown2[1] == 2)
     {
-        quality = maxCharLevel + maxNumRevocs * 5 + maybeGrottoDataPtr[7];
+        quality = maxCharLevel + maxNumRevocs * 5 + grotto->activeMapLevel;
     }
     else
     {
         quality = (unsigned short)(1.5f * (float)maxCharLevel + 5.0f * (float)maxNumRevocs);
     }
-    maybeGrottoDataPtr[9] = 0;
+    grotto->unknown2[1] = 0;
     float tenth = 0.1f * (float)quality;
     int quotient = 2 * (int)tenth + 1;
     quality += (int)((float)(rand() % quotient) - tenth);
@@ -111,22 +99,24 @@ unsigned short GenerateNewMapQuality()
     return quality;
 }
 
-// func_020a5e10
+// USA: func_020a5e10
+// JPN: func_020a7bb4
 unsigned short GenerateMapLocation(unsigned int quality)
 {
     if (quality >= 81 && quality <= 248)
-        return func_020a3ec0(1, 150);
+        return RandATRangeModular(1, 150);
     if (quality >= 51 && quality <= 80)
-        return func_020a3ec0(1, 131);
-    return func_020a3ec0(1, 47);
+        return RandATRangeModular(1, 131);
+    return RandATRangeModular(1, 47);
 }
 
-// func_020a5e7c
+// USA: func_020a5e7c
+// JPN: func_020a7c20
 ARM void TreasureMapMetadata::InitialiseAsNonLegacyMap(unsigned int quality, int seed)
 {
-    func_020ca594(this, 0, 28);
-    SetDiscoveryState(1);
-    SetMapType(1);
+    VectorizedMemset(this, 0, 28);
+    SetDiscoveryState(DiscoveryState_Undiscovered);
+    SetMapType(TreasureMapType_Regular);
     if (quality >= 2 && quality <= 248)
     {
         QualityOrLegacyBossID = (unsigned char)quality;
@@ -148,12 +138,13 @@ ARM void TreasureMapMetadata::InitialiseAsNonLegacyMap(unsigned int quality, int
     Location = (unsigned char)GenerateMapLocation(QualityOrLegacyBossID);
 }
 
-// func_020a5efc
+// USA: func_020a5efc
+// JPN: func_020a7ca0
 ARM void TreasureMapMetadata::InitialiseAsLegacyBossMap(unsigned int bossID, unsigned int level)
 {
-    func_020ca594(this, 0, 28);
-    SetDiscoveryState(1);
-    SetMapType(2);
+    VectorizedMemset(this, 0, 28);
+    SetDiscoveryState(DiscoveryState_Undiscovered);
+    SetMapType(TreasureMapType_Legacy);
     if (bossID == 0 || bossID > 13)
     {
         QualityOrLegacyBossID = 1;
@@ -181,8 +172,9 @@ ARM void TreasureMapMetadata::InitialiseAsLegacyBossMap(unsigned int bossID, uns
     Location = (unsigned char)GenerateMapLocation(finalQuality);
 }
 
-// func_020a5f88
-ARM void TreasureMapMetadata::SetDiscoveryState(int state)
+// USA: func_020a5f88
+// JPN: func_020a7d2c
+ARM void TreasureMapMetadata::SetDiscoveryState(eDiscoveryState state)
 {
     DiscoveryStateAndMapTypeAndUnknown &= 0xF8;
     if (state == 1)
@@ -199,55 +191,61 @@ ARM void TreasureMapMetadata::SetDiscoveryState(int state)
     }
 }
 
-// func_020a5fd0
-ARM int TreasureMapMetadata::GetDiscoveryState() const
+// USA: func_020a5fd0
+// JPN: func_020a7d74
+ARM eDiscoveryState TreasureMapMetadata::GetDiscoveryState() const
 {
     if (DiscoveryStateAndMapTypeAndUnknown & 0x01)
-        return 1;
+        return DiscoveryState_Undiscovered;
     if (DiscoveryStateAndMapTypeAndUnknown & 0x02)
-        return 2;
+        return DiscoveryState_Discovered;
     if (DiscoveryStateAndMapTypeAndUnknown & 0x04)
-        return 3;
-    return 0;
+        return DiscoveryState_Cleared;
+    return DiscoveryState_Invalid;
 }
 
-// func_020a5ffc
-ARM void TreasureMapMetadata::SetMapType(int type)
+// USA: func_020a5ffc
+// JPN: func_020a7da0
+ARM void TreasureMapMetadata::SetMapType(eTreasureMapType type)
 {
     DiscoveryStateAndMapTypeAndUnknown &= 0xe7;
-    if (type == 1)
+    if (type == TreasureMapType_Regular)
     {
         DiscoveryStateAndMapTypeAndUnknown |= 0x08;
     }
-    else if (type == 2)
+    else if (type == TreasureMapType_Legacy)
     {
         DiscoveryStateAndMapTypeAndUnknown |= 0x10;
     }
 }
 
-// func_020a6030
-ARM int TreasureMapMetadata::GetMapType() const
+// USA: func_020a6030
+// JPN: func_020a7dd4
+ARM eTreasureMapType TreasureMapMetadata::GetMapType() const
 {
     if (DiscoveryStateAndMapTypeAndUnknown & 0x08)
-        return 1;
+        return TreasureMapType_Regular;
     if (DiscoveryStateAndMapTypeAndUnknown & 0x10)
-        return 2;
-    return 0;
+        return TreasureMapType_Legacy;
+    return TreasureMapType_Invalid;
 }
 
-// func_020a6050
+// USA: func_020a6050
+// JPN: func_020a7df4
 ARM void TreasureMapMetadata::SetInitialByteUnknownBit()
 {
     DiscoveryStateAndMapTypeAndUnknown |= 0x20;
 }
 
-// func_020a6060
+// USA: func_020a6060
+// JPN: func_020a7e04
 ARM void TreasureMapMetadata::ClearInitialByteUnknownBit()
 {
     DiscoveryStateAndMapTypeAndUnknown &= 0xdf;
 }
 
-// func_020a6070
+// USA: func_020a6070
+// JPN: func_020a7e14
 ARM bool TreasureMapMetadata::GetInitialByteUnknownBit() const
 {
     return DiscoveryStateAndMapTypeAndUnknown & 0x20;

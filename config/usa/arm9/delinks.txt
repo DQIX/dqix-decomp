@@ -5,17 +5,41 @@
     .data       start:0x020eebe0 end:0x020f2e60 kind:data align:32
     .bss        start:0x020f2e60 end:0x021536e0 kind:bss align:32
 
-src/Grotto/TileFeatures.c:
-	complete
-	.text start:0x0201ea54 end:0x0201ebc4
+src/Grotto/Main/GrottoStruct.c:
+    complete
+    .text start:0x02011738 end:0x02011744
 
-src/Grotto/GenerateObjectPosition.c:
-	complete
-	.text start:0x0201a188 end:0x0201a300
+src/Grotto/Main/ActiveGrottoClass.c:
+    complete
+    .text start:0x0208fe68 end:0x02090294
 
-src/Grotto/TreasureMapMetadata.c:
-	complete
-	.text start:0x020a5cb8 end:0x020a6084
+src/Grotto/Main/ActiveGrottoClass_2.c:
+    complete
+    .text start:0x0209033c end:0x02090444
+
+src/Grotto/Main/FloorMapGenerator.c:
+    complete
+    .text start:0x02090444 end:0x02092644
+
+src/Grotto/Main/FloorMap.c:
+    complete
+    .text start:0x02092644 end:0x02092a74
+
+src/Grotto/Main/RandATRangeModular.c:
+    complete
+    .text start:0x020a3ec0 end:0x020a3ee4
+
+src/Grotto/Main/TileFeatures.c:
+    complete
+    .text start:0x0201ea54 end:0x0201ebc4
+
+src/Grotto/Main/GenerateObjectPosition.c:
+    complete
+    .text start:0x0201a188 end:0x0201a300
+
+src/Grotto/Main/TreasureMapMetadata.c:
+    complete
+    .text start:0x020a5cb8 end:0x020a6084
 
 src/Combat/Main/BasicAttackCalculation.c:
     complete
@@ -37,6 +61,37 @@ src/Combat/Main/GetCombatantFromList.c:
 	complete
 	.text start:0x0200FE68 end:0x0200FEA4
 
+src/Memory/SafeAllocator.cpp:
+    complete
+    .text start:0x0203246c end:0x020328bc
+
 src/System/Random.c:
 	complete
 	.text start:0x020741d0 end:0x020744a8
+
+src/Memory/SignedAllocator.cpp:
+    complete
+    .bss start:0x02109ffc end:0x0210a00c
+    .text start:0x020aeec8 end:0x020af20c
+
+src/Memory/HPXEAllocator.cpp:
+    complete
+    .text start:0x020af20c end:0x020af838
+
+src/Memory/HMRFAllocator.cpp:
+    complete
+    .text start:0x020af838 end:0x020afaf0
+
+src/Memory/UnusedSignedAllocator.cpp:
+    complete
+    .text start:0x020afaf0 end:0x020afb58
+
+src/Memory/AllocatorTypes.cpp:
+    complete
+    .rodata start:0x020e9160 end:0x020e9178
+    .text start:0x020afdc8 end:0x020afe34
+
+src/Memory/AllocatorUnion.cpp:
+    complete
+    .text start:0x020afe6c end:0x020afec4
+
