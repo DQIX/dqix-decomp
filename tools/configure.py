@@ -228,10 +228,13 @@ def main():
         # -MMD excludes all includes instead of just system includes for some reason, so use -MD instead.
         mwcc_cmd = f'{WINE} "{CC}" {CC_FLAGS} {CC_INCLUDES} $cc_flags -d $game_version -MD -c $in -o $basedir'
         mwcc_implicit = [CC]
+        mwld_implicit = [LD]
         if platform.system != "windows":
             transform_dep = "tools/transform_dep.py"
             mwcc_cmd += f" && $python {transform_dep} $basefile.d $basefile.d"
             mwcc_implicit.append(transform_dep)
+            mwcc_implicit.append(WINE) # force wine/wibo as an actual dependency
+            mwld_implicit.append(WINE) # so it downloads first
         n.rule(
             name="mwcc",
             command=mwcc_cmd,
@@ -304,14 +307,18 @@ def main():
         add_extract_build(n, project)
         add_delink_and_lcf_builds(n, project)
         add_mwcc_builds(n, project, mwcc_implicit)
-        add_mwld_and_rom_builds(n, project)
+        add_mwld_and_rom_builds(n, project, mwld_implicit)
         add_check_builds(n, project)
         add_objdiff_builds(n, project)
 
-        # Without this, `ninja` also builds a decomp.me context for every source file,
-        # which makes GCC a prerequisite for producing the ROM. `sha1` is left out
-        # because it needs the optional ARM7 BIOS dump to pass.
-        n.default(["rom", "check"])
+        # Provide barebones alternative `ninja min` to avoid building a 
+        # decomp.me context for every source file, which makes GCC a 
+        # prerequisite for producing the ROM. Also skips the sha1 step
+        n.build(
+            inputs=["rom", "check"],
+            rule="phony",
+            outputs="min")
+        n.newline()
 
 
 def add_download_tool_builds(n: ninja_syntax.Writer):
@@ -377,14 +384,14 @@ def add_extract_build(n: ninja_syntax.Writer, project: Project):
         n.newline()
 
 
-def add_mwld_and_rom_builds(n: ninja_syntax.Writer, project: Project):
+def add_mwld_and_rom_builds(n: ninja_syntax.Writer, project: Project, mwld_implicit: list[Path]):
     lcf_file = str(project.arm9_lcf())
     objects_file = str(project.arm9_objects_txt())
     delink_file = str(project.arm9_delink_yaml())
     elf_file = str(project.arm9_o())
     n.build(
         inputs=project.source_object_files() + [lcf_file, objects_file, delink_file],
-        implicit=LD,
+        implicit=mwld_implicit,
         rule="mwld",
         outputs=elf_file,
         variables={
