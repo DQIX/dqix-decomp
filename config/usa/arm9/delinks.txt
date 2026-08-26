@@ -5,59 +5,59 @@
     .data       start:0x020eebe0 end:0x020f2e60 kind:data align:32
     .bss        start:0x020f2e60 end:0x021536e0 kind:bss align:32
 
-src/Grotto/Main/GrottoStruct.c:
+src/Grotto/Main/GrottoStruct.cpp:
     complete
     .text start:0x02011738 end:0x02011744
 
-src/Grotto/Main/ActiveGrottoClass.c:
+src/Grotto/Main/ActiveGrottoClass.cpp:
     complete
     .text start:0x0208fe68 end:0x02090294
 
-src/Grotto/Main/ActiveGrottoClass_2.c:
+src/Grotto/Main/ActiveGrottoClass_2.cpp:
     complete
     .text start:0x0209033c end:0x02090444
 
-src/Grotto/Main/FloorMapGenerator.c:
+src/Grotto/Main/FloorMapGenerator.cpp:
     complete
     .text start:0x02090444 end:0x02092644
 
-src/Grotto/Main/FloorMap.c:
+src/Grotto/Main/FloorMap.cpp:
     complete
     .text start:0x02092644 end:0x02092a74
 
-src/Grotto/Main/RandATRangeModular.c:
+src/Grotto/Main/RandATRangeModular.cpp:
     complete
     .text start:0x020a3ec0 end:0x020a3ee4
 
-src/Grotto/Main/TileFeatures.c:
+src/Grotto/Main/TileFeatures.cpp:
     complete
     .text start:0x0201ea54 end:0x0201ebc4
 
-src/Grotto/Main/GenerateObjectPosition.c:
+src/Grotto/Main/GenerateObjectPosition.cpp:
     complete
     .text start:0x0201a188 end:0x0201a300
 
-src/Grotto/Main/TreasureMapMetadata.c:
+src/Grotto/Main/TreasureMapMetadata.cpp:
     complete
     .text start:0x020a5cb8 end:0x020a6084
 
-src/Combat/Main/BasicAttackCalculation.c:
+src/Combat/Main/BasicAttackCalculation.cpp:
     complete
     .text start:0x020744a8 end:0x02074738
 
-src/Combat/Main/TensionBonusCalculation.c:
+src/Combat/Main/TensionBonusCalculation.cpp:
 	complete
 	.text start:0x02074764 end:0x020747a4
 	
-src/Combat/Main/CritRateCalculation.c:
+src/Combat/Main/CritRateCalculation.cpp:
 	complete
 	.text start:0x020747a4 end:0x02074838
 
-src/Combat/Main/GetBattleList.c:
+src/Combat/Main/GetBattleList.cpp:
 	complete
 	.text start:0x0200f398 end:0x0200f3a4
 
-src/Combat/Main/GetCombatantFromList.c:
+src/Combat/Main/GetCombatantFromList.cpp:
 	complete
 	.text start:0x0200FE68 end:0x0200FEA4
 
@@ -65,7 +65,7 @@ src/Memory/SafeAllocator.cpp:
     complete
     .text start:0x0203246c end:0x020328bc
 
-src/System/Random.c:
+src/System/Random.cpp:
 	complete
 	.text start:0x020741d0 end:0x020744a8
 
