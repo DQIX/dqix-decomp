@@ -234,12 +234,12 @@ struct FNTMainTableEntry
 int NitroVM_DefaultCommand_GetDirectoryData(NitroVM* vm)
 {
     NitroHandle* nitroHandle = vm->linkedHandle;
-    FSRegisterTriple* extendedRegs = &vm->regext_abc;
+    NitroDirectoryAccessor* extendedRegs = &vm->args_GetDirectoryData.accessor;
     FNTMainTableEntry tableEntry;
     FSReadDescription readDesc;
     
     readDesc.nitroHandle = nitroHandle;
-    readDesc.offset = extendedRegs->b.u16.low * 8 + nitroHandle->nameTableOffsetFast;
+    readDesc.offset = extendedRegs->dirID * 8 + nitroHandle->nameTableOffsetFast;
     
     int result = Nitro_ReadMetadataBytes(&readDesc, &tableEntry, 8);
 
@@ -247,7 +247,7 @@ int NitroVM_DefaultCommand_GetDirectoryData(NitroVM* vm)
     {
         vm->dirInfo.accessor = *(NitroDirectoryAccessor*)extendedRegs;
     
-        if (extendedRegs->b.u16.high == 0 && extendedRegs->c.u32 == 0)
+        if (extendedRegs->firstFileID == 0 && extendedRegs->handleSubtableOffset == 0)
         {
             vm->dirInfo.accessor.firstFileID = tableEntry.firstContainedFileID;
             vm->dirInfo.accessor.handleSubtableOffset = nitroHandle->nameTableOffsetFast + tableEntry.subtableOffset;
@@ -258,25 +258,9 @@ int NitroVM_DefaultCommand_GetDirectoryData(NitroVM* vm)
     return result;
 }
 
-struct FileDataStore
-{
-    NitroHandle* nitroHandle;
-    // If holding data for a file, holds the file ID as a 32-bit value
-    // (i.e. top 16 bits are zero).
-    // If holding data for a directory, the bottom 16 bits hold its ID
-    // without the 0xF000 term, and the top 16 bits hold the ID of the first
-    // file in the directory.
-    FSRegister fileOrDirID;
-    // Only used for directory entries
-    unsigned int maybeSubtableOffset;
-    unsigned int isDirectory; // 1 = directory, 0 = file
-    unsigned int stringLength;
-    unsigned char name[128];
-};
-
 int NitroVM_DefaultCommand_GetFileOrDirectoryNameData(NitroVM* vm)
 {
-    FileDataStore* pStorage = (FileDataStore*)vm->regext_abc.a.ptr;
+    FileDataStore* pStorage = vm->args_GetFileOrDirectoryNameData.output;
     FSReadDescription readDesc;
 
     readDesc.nitroHandle = vm->linkedHandle;
@@ -294,7 +278,7 @@ int NitroVM_DefaultCommand_GetFileOrDirectoryNameData(NitroVM* vm)
     if (pStorage->stringLength == 0)
         return NITRO_RESULT_FAILURE;
 
-    if (!vm->regext_abc.b.u32) // don't skip copying the string
+    if (!vm->args_GetFileOrDirectoryNameData.skipStoreString)
     {
         result = Nitro_ReadMetadataBytes(&readDesc, pStorage->name, pStorage->stringLength);
         if (result != NITRO_RESULT_SUCCESS)
@@ -313,15 +297,15 @@ int NitroVM_DefaultCommand_GetFileOrDirectoryNameData(NitroVM* vm)
         result = Nitro_ReadMetadataBytes(&readDesc, &directoryID, 2);
         if (result != NITRO_RESULT_SUCCESS)
             return result;
-        pStorage->nitroHandle = vm->linkedHandle;
-        pStorage->fileOrDirID.u16.low = directoryID & 0xfff;
-        pStorage->fileOrDirID.u16.high = 0;
-        pStorage->maybeSubtableOffset = 0;
+        pStorage->dir.handle = vm->linkedHandle;
+        pStorage->dir.dirID = directoryID & 0xfff;
+        pStorage->dir.firstFileID = 0;
+        pStorage->dir.handleSubtableOffset = 0;
     }
     else
     {
-        pStorage->nitroHandle = vm->linkedHandle;
-        pStorage->fileOrDirID.u32 = vm->dirInfo.accessor.firstFileID;
+        pStorage->file.handle = vm->linkedHandle;
+        pStorage->file.fileID = vm->dirInfo.accessor.firstFileID;
         vm->dirInfo.accessor.firstFileID++;
     }
     
@@ -332,8 +316,8 @@ int NitroVM_DefaultCommand_GetFileOrDirectoryNameData(NitroVM* vm)
 int NitroVM_DefaultCommand_GetFileOrDirectoryByName(NitroVM* vm)
 {
     FileDataStore storage;
-    unsigned char* filePath = (unsigned char*)vm->regext_d.ptr;
-    int targetIsDirectory = vm->reg8.s32;
+    const unsigned char* filePath = vm->args_GetFileOrDirectoryByName.path;
+    CBool targetIsDirectory = vm->args_GetFileOrDirectoryByName.searchForDirectory;
 
     NitroVM_ExecuteCommand(vm, NITROVM_OPCODE_GET_DIRECTORY_DATA);
     
@@ -380,8 +364,6 @@ int NitroVM_DefaultCommand_GetFileOrDirectoryByName(NitroVM* vm)
                 // the check doesn't short-circuit (and the bools cast to int)
                 if (tokenLength == 2 & filePath[1] == '.')
                 {
-                    // base_D holds the parent directory index following initial
-                    // execution of opcode 2. (If this runs, it'll be updated to the parent of that)
                     if (vm->dirInfo.accessor.dirID != 0)
                         NitroVM_LoadDirectoryDataByIndex(vm, vm->dirInfo.parentID);
                     filePath += 2;
@@ -392,8 +374,8 @@ int NitroVM_DefaultCommand_GetFileOrDirectoryByName(NitroVM* vm)
             if (tokenLength > 127)
                 return NITRO_RESULT_FAILURE;
 
-            vm->regext_abc.a.ptr = &storage;
-            vm->regext_abc.b.u32 = 0;
+            vm->args_GetFileOrDirectoryNameData.output = &storage;
+            vm->args_GetFileOrDirectoryNameData.skipStoreString = 0;
             while (true)
             {
                 if (NitroVM_ExecuteCommand(vm, NITROVM_OPCODE_GET_FILE_OR_DIRECTORY_NAME_DATA) != NITRO_RESULT_SUCCESS)
@@ -416,10 +398,10 @@ int NitroVM_DefaultCommand_GetFileOrDirectoryByName(NitroVM* vm)
                     return NITRO_RESULT_FAILURE;
 
                 volatile FileDataStore& volStorage = storage;
-                NitroFileAccessor* output = (NitroFileAccessor*)vm->reg9.ptr;
+                NitroFileAccessor* output = (NitroFileAccessor*)vm->args_GetFileOrDirectoryByName.output;
 
-                NitroHandle* nh = volStorage.nitroHandle;
-                unsigned int fileID = volStorage.fileOrDirID.s32;
+                NitroHandle* nh = volStorage.file.handle;
+                unsigned int fileID = volStorage.file.fileID;
                 output->handle = nh;
                 output->fileID = fileID;
                 return NITRO_RESULT_SUCCESS;
@@ -436,7 +418,7 @@ int NitroVM_DefaultCommand_GetFileOrDirectoryByName(NitroVM* vm)
         return NITRO_RESULT_FAILURE;
     
     // base registers a, b, c follow the right format for NitroDirectoryMetadata
-    *((NitroDirectoryAccessor*)vm->reg9.ptr) = vm->dirInfo.accessor;
+    *((NitroDirectoryAccessor*)vm->args_GetFileOrDirectoryByName.output) = vm->dirInfo.accessor;
     return NITRO_RESULT_SUCCESS;
 }
 
@@ -490,7 +472,7 @@ int NitroVM_DefaultCommand_GetPath(NitroVM* vm)
                 if (NitroVM_ExecuteCommand(&tempVM, NITROVM_OPCODE_GET_FILE_OR_DIRECTORY_NAME_DATA) == NITRO_RESULT_SUCCESS)
                 {
                     do {
-                        if (!storage.isDirectory && storage.fileOrDirID.u32 == targetFileID)
+                        if (!storage.isDirectory && storage.file.fileID == targetFileID)
                         {
                             targetDirID = tempVM.dirInfo.accessor.dirID;
                             break;
@@ -549,7 +531,7 @@ int NitroVM_DefaultCommand_GetPath(NitroVM* vm)
                         if (!storage.isDirectory)
                             continue;
                         
-                        if (storage.fileOrDirID.u16.low != ancestorDirID)
+                        if (storage.dir.dirID != ancestorDirID)
                             continue;
     
                         totalWriteSize += storage.stringLength + 1;
@@ -608,7 +590,7 @@ int NitroVM_DefaultCommand_GetPath(NitroVM* vm)
         {
             do 
             {
-                if (!storage.isDirectory && storage.fileOrDirID.u32 == targetFileID)
+                if (!storage.isDirectory && storage.file.fileID == targetFileID)
                     break;
             } while (NitroVM_ExecuteCommand(&tempVM, NITROVM_OPCODE_GET_FILE_OR_DIRECTORY_NAME_DATA) == NITRO_RESULT_SUCCESS);
         }
@@ -638,7 +620,7 @@ int NitroVM_DefaultCommand_GetPath(NitroVM* vm)
                 do
                 {
                     if (!storage.isDirectory) continue;
-                    if (storage.fileOrDirID.u16.low != targetDirID) continue;
+                    if (storage.dir.dirID != targetDirID) continue;
                     
                     unsigned int tokenLength = storage.stringLength;
                     VectorizedInvertedMemcpy(storage.name,

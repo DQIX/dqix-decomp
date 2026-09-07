@@ -365,13 +365,13 @@ int NitroVM_SearchFileOrDirectory(NitroVM* vm, const char* inPath,
     vm->regext_abc = *(FSRegisterTriple*)&accessor;
     if (outDirData != NULL)
     {
-        vm->reg8.u32 = 1; // search for directory
-        vm->reg9.ptr = outDirData;
+        vm->args_GetFileOrDirectoryByName.searchForDirectory = 1;
+        vm->args_GetFileOrDirectoryByName.output = outDirData;
     }
     else
     {
-        vm->reg8.u32 = 0; // search for file
-        vm->reg9.ptr = outFileData;
+        vm->args_GetFileOrDirectoryByName.searchForDirectory = 0;
+        vm->args_GetFileOrDirectoryByName.output = outFileData;
     }
 
     return NitroVM_QueueCommand(vm, NITROVM_OPCODE_GET_FILE_OR_DIRECTORY_BY_NAME);

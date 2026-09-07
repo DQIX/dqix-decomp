@@ -77,6 +77,12 @@ union FSRegisterTriple
 #define NITRO_RESULT_FALLBACK_TO_DEFAULT 7
 #define NITRO_RESULT_OPCODE_NOT_IMPLEMENTED 8
 
+struct NitroFileAccessor
+{
+    NitroHandle* handle;
+    unsigned int fileID;
+};
+
 struct NitroDirectoryAccessor
 {
     // unnamed struct to make this trivially copyable (using ldm, stm commands)
@@ -86,6 +92,17 @@ struct NitroDirectoryAccessor
         unsigned short firstFileID;
         unsigned int handleSubtableOffset;
     };
+};
+
+struct FileDataStore
+{
+    union {
+        NitroFileAccessor file;
+        NitroDirectoryAccessor dir;
+    };
+    unsigned int isDirectory; // 1 = directory, 0 = file
+    unsigned int stringLength;
+    unsigned char name[128];
 };
 
 // sizeof(NitroVM) == 72 == 0x48.
@@ -115,10 +132,33 @@ struct NitroVM
             int cursorPos;   // startOffset <= cursorPos <= endOffset.
         } fileInfo;
     };
-    FSRegisterTriple regext_abc;
-    FSRegister regext_d;
-    FSRegister reg8;
-    volatile FSRegister reg9;
+    union
+    {
+        struct
+        {
+            FSRegisterTriple regext_abc;
+            FSRegister regext_d;
+        };
+        struct
+        {
+            NitroDirectoryAccessor accessor;
+        } args_GetDirectoryData;
+        struct
+        {
+            FileDataStore* output;
+            CBool skipStoreString;
+        } args_GetFileOrDirectoryNameData;
+        struct
+        {
+            NitroHandle* handle;
+            unsigned short searchDirID;
+            unsigned short bhigh;
+            int c;
+            const unsigned char* path;
+            CBool searchForDirectory;
+            void* volatile output;
+        } args_GetFileOrDirectoryByName;
+    };
 };
 
 struct FSReadDescription
@@ -183,13 +223,6 @@ struct NitroHandle
     // if (1 << n) bit is set, use the above override for command n
     unsigned int overrideOpcodeFlags;
 };
-
-struct NitroFileAccessor
-{
-    NitroHandle* handle;
-    unsigned int fileID;
-};
-
 
 void NitroVM_UnlinkAndStoreResult(NitroVM* fs, int result);
 int NitroVM_ExecuteCommand(NitroVM* fs, int opcode);
