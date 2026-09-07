@@ -100,7 +100,7 @@ static int LightingScript_CreateBasicLightingEntry(Script::Parameter* params, in
     s_scriptCurrentLightingInfo->basic_.potBarrelDiffuseColor[index] = potBarrelColor;
     s_scriptCurrentLightingInfo->basic_.unk_70[index] = arg8;
     s_scriptCurrentLightingInfo->basic_.unk_54[index] = arg9;
-    s_scriptCurrentLightingInfo->basic_.unk_e0[index] = 1;
+    s_scriptCurrentLightingInfo->basic_.unk_e0[index] = true;
     s_scriptCurrentLightingInfo->basic_.spriteDiffuseColor[index] = spriteColor;
     s_scriptCurrentLightingInfo->basic_.modelDiffuseColor[index] = modelColor;
     s_scriptCurrentLightingInfo->basic_.edgeColor[index] = edgeColor;

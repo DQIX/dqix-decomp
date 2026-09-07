@@ -43,6 +43,10 @@ src/Grotto/Main/TileFeatures.cpp:
     complete
     .text start:0x0201ea54 end:0x0201ebc4
 
+//src/World/BMDJ.cpp:
+//    complete
+//    .text start:0x0201ebc4 end:0x0201f390
+
 src/Filesystem/BackgroundLoader.cpp:
     complete
     .text start:0x0202f700 end:0x02030634

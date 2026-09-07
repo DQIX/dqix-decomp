@@ -42,11 +42,6 @@ extern "C"
     void* func_02053c6c(void*);
     void func_0205e104(const char*, SafeAllocator*, const void*, unsigned int);
 
-    // member functions of the struct at 0x10c
-    void func_0207b98c(void*);
-    void func_0207b9cc(void*);
-    void func_0207ba0c(void*, void*, unsigned int, SafeAllocator*);
-
     // Texture functions
     void* func_0207df50(void*);
     void func_0207df90(void*);
@@ -63,7 +58,6 @@ extern "C"
     void func_02013750(Zone3D*, bool);
     void func_02014414(Zone3D*, const void*, unsigned);
     void func_02014a24(Zone3D*, void*);
-    void func_0201f040(void*, SafeAllocator*, const void*, unsigned int);
 
     // checks if zone id corresponds to a main floor of a grotto
     bool func_0201b5b0(int id);
@@ -388,8 +382,8 @@ bool Zone3D::ProcessBATSFile(const void* filedata, unsigned int /*filesize*/)
     SafeAllocator* allocator = pAllocator_68_;
     unsigned int decompressedLength;
     void* decompressed = DecompressLZ77FileIntoScratchSpace(*allocator, filedata, decompressedLength);
-    func_0207b98c(&lighting_);
-    func_0207ba0c(&lighting_, decompressed, decompressedLength, allocator);
+    lighting_.Initialize();
+    lighting_.LoadFromScript(decompressed, decompressedLength, allocator);
     return true;
 }
 
@@ -577,7 +571,7 @@ bool Zone3D::ProcessBMDJFile(const void* filedata, unsigned int filesize, ZoneFe
     if (decompressed == NULL)
         return false;
 
-    func_0201f040(&newStruct->unk_4, allocator, decompressed, decompressedLength);
+    newStruct->scriptData_.Load(allocator, decompressed, decompressedLength);
     newStruct->pNext_ = firstBMDJStruct_41c_;
     firstBMDJStruct_41c_ = newStruct;
     return true;
