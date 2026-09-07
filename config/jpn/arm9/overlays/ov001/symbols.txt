@@ -507,8 +507,10 @@ func_ov001_02165d94 kind:function(arm,size=0x100) addr:0x02165d94
 func_ov001_02165e94 kind:function(arm,size=0xcc) addr:0x02165e94
 func_ov001_02165f60 kind:function(arm,size=0x54) addr:0x02165f60
 data_ov001_02165fbc kind:data(any) addr:0x02165fbc
-func_ov001_02165fe4 kind:function(arm,size=0x94) addr:0x02165fe4
-func_ov001_02166078 kind:function(arm,size=0x88) addr:0x02166078
+__sinit_ov001_02165fe4 kind:function(arm,size=0x94) addr:0x02165fe4
+__sinit_ov001_02166078 kind:function(arm,size=0x88) addr:0x02166078
+.p__sinit_ov001_02165fe4 kind:data(word) addr:0x02166100
+.p__sinit_ov001_02166078 kind:data(word) addr:0x02166104
 data_ov001_02166120 kind:data(any) addr:0x02166120
 data_ov001_02166130 kind:data(any) addr:0x02166130
 data_ov001_02166140 kind:data(any) addr:0x02166140
