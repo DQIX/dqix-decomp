@@ -21,3 +21,12 @@ extern "C" ARM void SetAndLockBrightness(UnknownContext *context, int brightness
     func_0203b19c(context, brightness, duration);
     context->subBrightnessLocked = 1;
 }
+
+extern "C" ARM void UnlockAndSetMainBrightness(
+    UnknownContext *context,
+    int brightness,
+    int duration)
+{
+    context->mainBrightnessLocked = 0;
+    func_0203b110(context, brightness, duration);
+}
