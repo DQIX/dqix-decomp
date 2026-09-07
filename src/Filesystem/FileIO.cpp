@@ -24,9 +24,6 @@
 
 extern "C"
 {
-    // zero memory
-    void func_0200f374(void*, unsigned);
-
     // some sort of bit test of a struct member at offset 0
     bool func_02046708(void*, unsigned int);
     // returns pointer to some unknown struct (at 02114e04)
@@ -69,9 +66,7 @@ void* LoadFileIntoMemory(const char* path, void* buffer, unsigned int* outLength
 #if defined(usa)
     BattleStruct* battle = GetBattleStruct();
     
-    char replacedPath[128];
-    func_0200f374(replacedPath, sizeof(replacedPath));
-
+    char replacedPath[128] = { 0 };
     int language = func_0200fb08((BattleStruct*)battle);
     StringReplaceLanguageTag(path, replacedPath, language);
 #elif defined(jpn)
@@ -110,8 +105,7 @@ void* LoadFileIntoNewAllocation(const char* path, SafeAllocator& alloc, unsigned
 #if defined(usa)
     BattleStruct* battle = GetBattleStruct();
 
-    char replacedPath[128];
-    func_0200f374(replacedPath, sizeof(replacedPath));
+    char replacedPath[128] = { 0 };
 
     int language = func_0200fb08(battle);
     StringReplaceLanguageTag(path, replacedPath, language);
@@ -340,8 +334,7 @@ extern "C" void* ExtractFileFromGP2(const char* gp2Path, const char* innerFilePa
 
     func_0202f7a8();
     BattleStruct* battle = GetBattleStruct();
-    char innerFileReplacedPath[128];
-    func_0200f374(innerFileReplacedPath, 128);
+    char innerFileReplacedPath[128] = { 0 };
 
     int language = func_0200fb08(battle);
     StringReplaceLanguageTag(innerFilePath, innerFileReplacedPath, language);

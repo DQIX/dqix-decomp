@@ -28,8 +28,6 @@ extern "C"
     void func_020a1e54(unsigned int);
 
     unsigned int func_0200fdcc(BattleStruct*);
-    // zeroes out memory (not used in jpn version)
-    void func_0200f374(void* where, unsigned int len);
     // copies character name into the buffer? (not used in jpn version)
     void func_020426bc(void*, char* buffer, int);
 
@@ -265,8 +263,7 @@ bool DetailedTreasureMapData::UpdateFollowingCompletion(bool levelledUp, unsigne
     // Based on how the jpn version works, I would guess this is undoing the
     // custom text encoding (e.g. lowercase a is 0x2A vs ascii 0x61)
     void* playerRelatedPtr = *(void**)(func_0200fdcc(GetBattleStruct()) + 0x134);
-    char asciiName[10]; // maybe 12
-    func_0200f374(asciiName, 10);
+    char asciiName[10] = { 0 };
     func_020426bc(playerRelatedPtr, asciiName, 1);
 #else
     // 0200fc28 is the address in the japanese version

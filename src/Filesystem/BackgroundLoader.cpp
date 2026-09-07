@@ -26,8 +26,6 @@ struct Struct_02104304
 
 extern "C"
 {
-    // zero memory
-    void func_0200f374(void*, unsigned);
     // get system language
     int func_0200fb08(BattleStruct*);
 
@@ -196,8 +194,7 @@ int BackgroundLoader::QueueFileTask(const char* filename, int type, const char* 
     LockResourceMutex();
 #if defined(usa)
     int language = func_0200fb08(GetBattleStruct());
-    char replacedFilename[80];
-    func_0200f374(replacedFilename, sizeof(replacedFilename));
+    char replacedFilename[80] = { 0 };
     StringReplaceLanguageTag(filename, replacedFilename, language);
 #endif
 
@@ -216,8 +213,7 @@ int BackgroundLoader::QueueFileTask(const char* filename, int type, const char* 
             if (type == BackgroundLoader::TaskType_LoadFromGP2 && innerFile != NULL)
             {
 #if defined(usa)
-                char replacedInnerFile[128];
-                func_0200f374(replacedInnerFile, sizeof(replacedInnerFile));
+                char replacedInnerFile[128] = { 0 };
                 StringReplaceLanguageTag(innerFile, replacedInnerFile, language);
                 strcpy(entry->innerFilename_, replacedInnerFile);
 #elif defined(jpn)     
