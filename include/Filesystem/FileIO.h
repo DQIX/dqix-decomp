@@ -18,7 +18,7 @@ bool GetFileInNarc(const void* narcBuffer, const char* innerFilePath,
 // Behaves like GetFileInNarc, but the file path isn't case sensitive and the
 // extension is ignored
 bool GetFileInNarcPermissive(const void* narcBuffer, const char* innerFilePath,
-    const void** pOutFilePtr, unsigned int* pOutFileSize, unsigned int firstFileIdxSearch);
+    const void** pOutFilePtr, unsigned int* pOutFileSize);
 
 // Finds files whose name contains substr as a substring. Commonly used
 // with substr = ".nsbmd" or similar to search by extension. Returns the

@@ -176,7 +176,7 @@ bool GetFileInNarc(const void *narcBuffer, const char *targetFilePath,
 }
 
 bool GetFileInNarcPermissive(const void *narcBuffer, const char *targetFilePath,
-    const void **pOutFilePtr, unsigned int *pOutFileSize, unsigned int firstFileIdx)
+    const void **pOutFilePtr, unsigned int *pOutFileSize)
 {
     bool success = false;
     LockResourceMutex();

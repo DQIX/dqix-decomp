@@ -14753,8 +14753,8 @@ from:0x0207cdc0 kind:arm_call to:0x02032268 module:main
 from:0x0207cdd0 kind:load to:0x020f1030 module:main
 from:0x0207cdd4 kind:load to:0x02108dbc module:main
 from:0x0207cdd8 kind:load to:0x020f0fe0 module:main
-from:0x0207cddc kind:load to:0x020f1037 module:main
-from:0x0207cde0 kind:load to:0x020f1044 module:main
+from:0x0207cddc kind:load to:0x020f1030 add:0x7 module:main
+from:0x0207cde0 kind:load to:0x020f1030 add:0x14 module:main
 from:0x0207ce58 kind:arm_call to:0x02030644 module:main
 from:0x0207ceac kind:arm_call to:0x0207cf60 module:main
 from:0x0207ceb8 kind:load to:0x02108dbc module:main

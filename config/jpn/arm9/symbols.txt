@@ -2660,7 +2660,7 @@ func_0207621c kind:function(arm,size=0x8) addr:0x0207621c
 _Z18LoadFileIntoMemoryPKcPvPj kind:function(arm,size=0xb8) addr:0x02076224
 _Z25LoadFileIntoNewAllocationPKcR13SafeAllocatorPj kind:function(arm,size=0x9c) addr:0x020762dc
 _Z13GetFileInNarcPKvPKcPS0_Pjj kind:function(arm,size=0xfc) addr:0x02076378
-_Z23GetFileInNarcPermissivePKvPKcPS0_Pjj kind:function(arm,size=0x1a8) addr:0x02076474
+_Z23GetFileInNarcPermissivePKvPKcPS0_Pj kind:function(arm,size=0x1a8) addr:0x02076474
 _Z17MakeCharUpperCasec kind:function(arm,size=0x20) addr:0x0207661c
 _Z26FindFilesInNarcBySubstringPKvPKcPS0_Pjj kind:function(arm,size=0xfc) addr:0x0207663c
 _Z34DecompressLZ77FileIntoScratchSpaceR13SafeAllocatorPKvRj kind:function(arm,size=0x4c) addr:0x02076738
@@ -2786,24 +2786,24 @@ _ZN12LightingInfo10InitializeEv kind:function(arm,size=0x40) addr:0x0207c7c4
 _ZN12LightingInfo5ResetEv kind:function(arm,size=0x40) addr:0x0207c804
 _ZN12LightingInfo14LoadFromScriptEPKvjP13SafeAllocator kind:function(arm,size=0x1c) addr:0x0207c844
 func_0207c860 kind:function(arm,size=0x2c) addr:0x0207c860
-func_0207c88c kind:function(arm,size=0xc) addr:0x0207c88c
-func_0207c898 kind:function(arm,size=0x8) addr:0x0207c898
-func_0207c8a0 kind:function(arm,size=0x8) addr:0x0207c8a0
-func_0207c8a8 kind:function(arm,size=0x20) addr:0x0207c8a8
-func_0207c8c8 kind:function(arm,size=0x234) addr:0x0207c8c8
-func_0207cafc kind:function(arm,size=0x28) addr:0x0207cafc
-func_0207cb24 kind:function(arm,size=0x48) addr:0x0207cb24
-func_0207cb6c kind:function(arm,size=0x278) addr:0x0207cb6c
-func_0207cde4 kind:function(arm,size=0x2c) addr:0x0207cde4
-func_0207ce10 kind:function(arm,size=0x44) addr:0x0207ce10
-func_0207ce54 kind:function(arm,size=0x68) addr:0x0207ce54
-func_0207cebc kind:function(arm,size=0x28) addr:0x0207cebc
-func_0207cee4 kind:function(arm,size=0x18) addr:0x0207cee4
-func_0207cefc kind:function(arm,size=0x64) addr:0x0207cefc
-func_0207cf60 kind:function(arm,size=0x3c) addr:0x0207cf60
-func_0207cf9c kind:function(arm,size=0x28) addr:0x0207cf9c
-func_0207cfc4 kind:function(arm,size=0x60) addr:0x0207cfc4
-func_0207d024 kind:function(arm,size=0x58) addr:0x0207d024
+_ZN24LootableContainerManager15GetMainInstanceEv kind:function(arm,size=0xc) addr:0x0207c88c
+_Z14Loot_Opcode_64PN6Script9ParameterEi kind:function(arm,size=0x8) addr:0x0207c898
+_Z14Loot_Opcode_65PN6Script9ParameterEi kind:function(arm,size=0x8) addr:0x0207c8a0
+_Z22LootManager_Unknown_66PN6Script9ParameterEi kind:function(arm,size=0x20) addr:0x0207c8a8
+_Z27LootManager_CreateContainerPN6Script9ParameterEi kind:function(arm,size=0x234) addr:0x0207c8c8
+_ZN24LootableContainerManager5ResetEv kind:function(arm,size=0x28) addr:0x0207cafc
+_ZN24LootableContainerManager14ResetAllocatorEP13SafeAllocator kind:function(arm,size=0x48) addr:0x0207cb24
+_ZN24LootableContainerManager18LoadZoneContainersEPKvjPKcP13SafeAllocator kind:function(arm,size=0x278) addr:0x0207cb6c
+_ZN24LootableContainerManager17RegisterContainerEPNS_9ContainerE kind:function(arm,size=0x2c) addr:0x0207cde4
+_ZN24LootableContainerManager16GetContainerByIDEiPt kind:function(arm,size=0x44) addr:0x0207ce10
+_Z31LootDistribution_DeclareOutcomePN6Script9ParameterEi kind:function(arm,size=0x68) addr:0x0207ce54
+_Z33LootDistribution_AllocateOutcomesPN6Script9ParameterEi kind:function(arm,size=0x28) addr:0x0207cebc
+_ZN16LootDistribution5ResetEv kind:function(arm,size=0x18) addr:0x0207cee4
+_ZN16LootDistribution14LoadFromScriptEP13SafeAllocatorPKvj kind:function(arm,size=0x64) addr:0x0207cefc
+_ZN16LootDistribution13InsertOutcomeEPNS_7OutcomeE kind:function(arm,size=0x3c) addr:0x0207cf60
+_ZN16LootDistribution16AllocateOutcomesEt kind:function(arm,size=0x28) addr:0x0207cf9c
+_ZN16LootDistribution6SampleEi kind:function(arm,size=0x60) addr:0x0207cfc4
+_ZN16LootDistribution17GetOutcomesByRankEiPPKNS_7OutcomeEi kind:function(arm,size=0x58) addr:0x0207d024
 func_0207d07c kind:function(arm,size=0x14) addr:0x0207d07c
 func_0207d090 kind:function(arm,size=0x120) addr:0x0207d090
 func_0207d1b0 kind:function(arm,size=0x10c) addr:0x0207d1b0
@@ -7099,11 +7099,9 @@ s_dayLength kind:data(any) addr:0x020f0f94 local
 s_morningLength kind:data(any) addr:0x020f0f98 local
 s_nightLength kind:data(any) addr:0x020f0f9c local
 s_lightingOpcodes kind:data(any) addr:0x020f0fa0 local
-data_020f0fe0 kind:data(any) addr:0x020f0fe0
-data_020f1008 kind:data(any) addr:0x020f1008
-data_020f1030 kind:data(any) addr:0x020f1030
-data_020f1037 kind:data(any) addr:0x020f1037
-data_020f1044 kind:data(any) addr:0x020f1044
+s_zoneContainerOpcodes kind:data(any) addr:0x020f0fe0 local
+s_distributionOpcodes kind:data(any) addr:0x020f1008 local
+@stringBase0 kind:data(any) addr:0x020f1030 local
 data_020f1050 kind:data(any) addr:0x020f1050
 data_020f106e kind:data(any) addr:0x020f106e
 data_020f1094 kind:data(any) addr:0x020f1094

@@ -113,6 +113,11 @@ src/Graphics/LightingInfo.cpp:
     .data start:0x020f0f90 end:0x020f0fe0
     .bss start:0x02108da4 end:0x02108dbc
 
+src/World/LootableContainer.cpp:
+    complete
+    .text start:0x0207c88c end:0x0207d07c
+    .data start:0x020f0fe0 end:0x020f1050
+
 src/Graphics/Animation3D.cpp:
     complete
     .text start:0x0207ede0 end:0x0207efbc
