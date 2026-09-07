@@ -127,7 +127,7 @@ src/System/InterruptEnableDisable.cpp:
 
 src/System/GamecardBusOwnership.cpp:
     complete
-    .text start:0x020c8914 end:0x020c8bfc
+    .text start:0x020c8914 end:0x020c8b4c
 
 src/System/ContextList.cpp:
     complete

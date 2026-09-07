@@ -89,7 +89,7 @@ extern "C" int NitroVM_ExecuteCommand(NitroVM* vm, int opcode)
             &NitroVM_DefaultCommand_GetFileOrDirectoryByName,
             &NitroVM_DefaultCommand_GetPath,
             &NitroVM_DefaultCommand_GetFATEntry,
-            &NitroVM_DefaultCommand_CopyRegisters,
+            &NitroVM_DefaultCommand_SetFilePointers,
             &NitroVM_DefaultCommand_Nop
         };
         result = defaultCommands[opcode](vm);
@@ -657,19 +657,19 @@ int NitroVM_DefaultCommand_GetFATEntry(NitroVM* vm)
     if (result != NITRO_RESULT_SUCCESS)
         return result;
 
-    vm->args_CopyRegisters.startOffset = offsets[0];
-    vm->args_CopyRegisters.endOffset = offsets[1];
-    vm->args_CopyRegisters.fileID = entryIdx;
+    vm->args_SetFilePointers.startOffset = offsets[0];
+    vm->args_SetFilePointers.endOffset = offsets[1];
+    vm->args_SetFilePointers.fileID = entryIdx;
 
-    return NitroVM_ExecuteCommand(vm, NITROVM_OPCODE_COPY_REGISTERS);
+    return NitroVM_ExecuteCommand(vm, NITROVM_OPCODE_SET_FILE_POINTERS);
 }
 
-int NitroVM_DefaultCommand_CopyRegisters(NitroVM* vm)
+int NitroVM_DefaultCommand_SetFilePointers(NitroVM* vm)
 {
-    vm->fileInfo.startOffset = vm->args_CopyRegisters.startOffset;
-    vm->fileInfo.cursorPos = vm->args_CopyRegisters.startOffset;
-    vm->fileInfo.endOffset = vm->args_CopyRegisters.endOffset;
-    vm->fileInfo.fileID = vm->args_CopyRegisters.fileID;
+    vm->fileInfo.startOffset = vm->args_SetFilePointers.startOffset;
+    vm->fileInfo.cursorPos = vm->args_SetFilePointers.startOffset;
+    vm->fileInfo.endOffset = vm->args_SetFilePointers.endOffset;
+    vm->fileInfo.fileID = vm->args_SetFilePointers.fileID;
     return NITRO_RESULT_SUCCESS;
 }
 

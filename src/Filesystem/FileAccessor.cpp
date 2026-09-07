@@ -25,13 +25,13 @@ CBool NitroVM_PrepareRead(NitroVM* vm, NitroHandle* handle,
     unsigned int start, unsigned int end, unsigned int fileID)
 {
     vm->linkedHandle = handle;
-    vm->args_CopyRegisters.fileID = fileID;
-    vm->args_CopyRegisters.startOffset = start;
-    vm->args_CopyRegisters.endOffset = end;
+    vm->args_SetFilePointers.fileID = fileID;
+    vm->args_SetFilePointers.startOffset = start;
+    vm->args_SetFilePointers.endOffset = end;
 
     // Operand 7 copies capacity into base_a,
     // start into base_b and base_d, end into base_c.
-    if (!NitroVM_QueueCommand(vm, NITROVM_OPCODE_COPY_REGISTERS))
+    if (!NitroVM_QueueCommand(vm, NITROVM_OPCODE_SET_FILE_POINTERS))
         return false;
 
     vm->flags = (vm->flags | (1 << NITROVM_FLAG_READ_POSITIONS_CONFIGURED)) & ~(1 << NITROVM_FLAG_SEARCH_TARGET_IS_DIRECTORY);

@@ -5296,7 +5296,7 @@ _Z49NitroVM_DefaultCommand_GetFileOrDirectoryNameDataP7NitroVM kind:function(arm
 _Z47NitroVM_DefaultCommand_GetFileOrDirectoryByNameP7NitroVM kind:function(arm,size=0x1e4) addr:0x020cb580
 _Z30NitroVM_DefaultCommand_GetPathP7NitroVM kind:function(arm,size=0x3ac) addr:0x020cb764
 _Z34NitroVM_DefaultCommand_GetFATEntryP7NitroVM kind:function(arm,size=0x80) addr:0x020cbb10
-_Z36NitroVM_DefaultCommand_CopyRegistersP7NitroVM kind:function(arm,size=0x28) addr:0x020cbb90
+_Z38NitroVM_DefaultCommand_SetFilePointersP7NitroVM kind:function(arm,size=0x28) addr:0x020cbb90
 _Z26NitroVM_DefaultCommand_NopP7NitroVM kind:function(arm,size=0x8) addr:0x020cbbb8
 _Z24Nitro_CalculateSignaturePKci kind:function(arm,size=0x58) addr:0x020cbbc0
 _Z20DefaultNitroReadProcP11NitroHandlePvjj kind:function(arm,size=0x1c) addr:0x020cbc18
