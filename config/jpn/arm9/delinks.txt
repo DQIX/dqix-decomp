@@ -117,6 +117,92 @@ src/Memory/AllocatorUnion.cpp:
     complete
     .text start:0x020b1938 end:0x020b1990
 
+src/Graphics/NSBXX/Animation.cpp:
+    complete
+    .text start:0x020b4598 end:0x020b4908
+
+src/Graphics/NSBXX/TEX.cpp:
+    complete
+    .text start:0x020b4908 end:0x020b518c
+
+src/Graphics/NSBXX/RenderConfig.cpp:
+    complete
+    .text start:0x020b518c end:0x020b559c
+
+src/Graphics/NSBXX/AnimationProcessing.cpp:
+    complete
+    .text start:0x020b559c end:0x020b5aec
+
+src/Graphics/NSBXX/RenderCommands.cpp:
+    complete
+    .text start:0x020b5aec end:0x020b7224
+
+//src/Graphics/NSBXX/RenderCommand_9.cpp:
+//    complete
+//    .text start:0x020b7224 end:0x020b7980
+
+src/Graphics/NSBXX/RenderCommands_10_13.cpp:
+    complete
+    .text start:0x020b7980 end:0x020b8464
+
+src/Graphics/NSBXX/GeometryFifo.cpp:
+    complete
+    .text start:0x020b8464 end:0x020b8964
+
+src/Graphics/NSBXX/NSBXX.cpp:
+    complete
+    .text start:0x020b8964 end:0x020b8e38
+
+//src/Graphics/NSBXX/NameList.cpp:
+//    complete
+//    .text start:0x020b8e38 end:0x020b9160
+
+src/Graphics/NSBXX/PatternAnimation.cpp:
+    complete
+    .text start:0x020b9160 end:0x020b930c
+
+//src/Graphics/NSBXX/JAC.cpp:
+//    complete
+//    .text start:0x020b930c end:0x020ba92c
+
+src/Graphics/NSBXX/MAM.cpp:
+    complete
+    .text start:0x020ba92c end:0x020bad44
+
+src/Graphics/NSBXX/MAT.cpp:
+    complete
+    .text start:0x020bad44 end:0x020bb168
+
+src/Graphics/NSBXX/MPT.cpp:
+    complete
+    .text start:0x020bb168 end:0x020bb3f8
+
+src/Graphics/NSBXX/VAV.cpp:
+    complete
+    .text start:0x020bb3f8 end:0x020bb47c
+
+src/Graphics/NSBXX/RenderCommandProcs.cpp:
+    complete
+    .text start:0x020bb47c end:0x020bcef0
+
+// VRAMAllocations to go here 
+
+src/System/VRAM.cpp:
+    complete
+    .text start:0x020c5518 end:0x020c6740
+
+src/System/BGBases.cpp:
+    complete
+    .text start:0x020c6740 end:0x020c6bb0
+
+src/System/ColorEffects.cpp:
+    complete
+    .text start:0x020c6bb0 end:0x020c6c38
+
+src/System/LoadToVRAM.cpp:
+    complete
+    .text start:0x020c72ec end:0x020c83e0
+
 //src/System/InterruptHandler.cpp:
 //    complete
 //    .text start:0x020c8420 end:0x020c875c

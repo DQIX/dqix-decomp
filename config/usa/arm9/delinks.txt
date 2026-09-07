@@ -117,6 +117,94 @@ src/Memory/AllocatorUnion.cpp:
     complete
     .text start:0x020afe6c end:0x020afec4
 
+src/Graphics/NSBXX/Animation.cpp:
+    complete
+    .text start:0x020b2acc end:0x020b2e3c
+
+src/Graphics/NSBXX/TEX.cpp:
+    complete
+    .text start:0x020b2e3c end:0x020b36c0
+
+src/Graphics/NSBXX/RenderConfig.cpp:
+    complete
+    .text start:0x020b36c0 end:0x020b3ad0
+
+src/Graphics/NSBXX/AnimationProcessing.cpp:
+    complete
+    .text start:0x020b3ad0 end:0x020b4020
+
+src/Graphics/NSBXX/RenderCommands.cpp:
+    complete
+    .text start:0x020b4020 end:0x020b5758
+
+//src/Graphics/NSBXX/RenderCommand_9.cpp:
+//    complete
+//    .text start:0x020b5758 end:0x020b5eb4
+
+src/Graphics/NSBXX/RenderCommands_10_13.cpp:
+    complete
+    .text start:0x020b5eb4 end:0x020b6998
+
+src/Graphics/NSBXX/GeometryFifo.cpp:
+    complete
+    .text start:0x020b6998 end:0x020b6e98
+
+src/Graphics/NSBXX/NSBXX.cpp:
+    complete
+    .text start:0x020b6e98 end:0x020b736c
+
+//src/Graphics/NSBXX/NameList.cpp:
+//    complete
+//    .text start:0x020b736c end:0x020b7694
+
+src/Graphics/NSBXX/PatternAnimation.cpp:
+    complete
+    .text start:0x020b7694 end:0x020b7840
+
+//src/Graphics/NSBXX/JAC.cpp:
+//    complete
+//    .text start:0x020b7840 end:0x020b8e60
+
+src/Graphics/NSBXX/MAM.cpp:
+    complete
+    .text start:0x020b8e60 end:0x020b9278
+
+src/Graphics/NSBXX/MAT.cpp:
+    complete
+    .text start:0x020b9278 end:0x020b969c
+
+src/Graphics/NSBXX/MPT.cpp:
+    complete
+    .text start:0x020b969c end:0x020b992c
+
+src/Graphics/NSBXX/VAV.cpp:
+    complete
+    .text start:0x020b992c end:0x020b99b0
+
+src/Graphics/NSBXX/RenderCommandProcs.cpp:
+    complete
+    .text start:0x020b99b0 end:0x020bb424
+
+//src/Graphics/VRAMAllocations.cpp:
+//    complete
+//    .text start:0x020bb588 end:0x020c0044
+
+src/System/VRAM.cpp:
+    complete
+    .text start:0x020c3a4c end:0x020c4c74
+
+src/System/BGBases.cpp:
+    complete
+    .text start:0x020c4c74 end:0x020c50e4
+
+src/System/ColorEffects.cpp:
+    complete
+    .text start:0x020c50e4 end:0x020c516c
+
+src/System/LoadToVRAM.cpp:
+    complete
+    .text start:0x020c5820 end:0x020c6914
+
 //src/System/InterruptHandler.cpp:
 //    complete
 //    .text start:0x020c6954 end:0x020c6c90
