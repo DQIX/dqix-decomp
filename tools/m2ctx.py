@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 import sys
-import pyperclip
 import subprocess
 import os
 from pathlib import Path
@@ -58,6 +57,12 @@ with tempfile.NamedTemporaryFile(delete=False, suffix=suffix) as tmp_file:
             *CXX_FLAGS,
             tmp_file.name
         ], cwd=root_dir, encoding=args.encoding)
+    except FileNotFoundError:
+        eprint("gcc was not found on PATH; it is required to generate decomp.me contexts")
+        eprint("Install GCC 9+ (see the prerequisites in README.md)")
+        tmp_file.close()
+        os.remove(tmpFileName)
+        exit(1)
     except subprocess.CalledProcessError as e:
         eprint(f"Failed to preprocess '{args.file}'")
         if args.verbose: eprint(e)
@@ -87,6 +92,7 @@ if args.out_file:
         else: eprint("Use -v for more verbose error output")
         exit(1)
 if args.clipboard:
+    import pyperclip
     pyperclip.copy(ctx)
     eprint("Copied context to clipboard")
 if args.out_file is None and not args.clipboard:

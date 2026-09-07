@@ -13,19 +13,19 @@ src/Grotto/Main/GrottoStruct.c:
     complete
     .text start:0x020114a8 end:0x020114b4
 
-src/Grotto/Main/ActiveGrottoClass.c:
+src/Grotto/Main/ActiveGrottoClass.cpp:
     complete
     .text start:0x02090780 end:0x02090bb4
 
-src/Grotto/Main/ActiveGrottoClass_2.c:
+src/Grotto/Main/ActiveGrottoClass_2.cpp:
     complete
     .text start:0x02090c5c end:0x02090d64
 
-src/Grotto/Main/FloorMapGenerator.c:
+src/Grotto/Main/FloorMapGenerator.cpp:
     complete
     .text start:0x02090d64 end:0x02092f64
 
-src/Grotto/Main/FloorMap.c:
+src/Grotto/Main/FloorMap.cpp:
     complete
     .text start:0x02092f64 end:0x02093394
 
@@ -38,39 +38,39 @@ src/Grotto/Main/DetailedTreasureMapData.cpp:
     .rodata start:0x020e914c end:0x020e9188
     .text start:0x020a5c20 end:0x020a7a5c
 
-src/Grotto/Main/TileFeatures.c:
+src/Grotto/Main/TileFeatures.cpp:
 	complete
 	.text start:0x0201e7e0 end:0x0201e950
 
-src/Grotto/Main/GenerateObjectPosition.c:
+src/Grotto/Main/GenerateObjectPosition.cpp:
 	complete
 	.text start:0x02019f28 end:0x0201a0a0
 
-src/Grotto/Main/TreasureMapMetadata.c:
+src/Grotto/Main/TreasureMapMetadata.cpp:
 	complete
 	.text start:0x020a7a5c end:0x020a7e28
 
-src/System/Random.c:
+src/System/Random.cpp:
 	complete
 	.text start:0x0207535c end:0x02075634
 
-src/Combat/Main/BasicAttackCalculation.c:
+src/Combat/Main/BasicAttackCalculation.cpp:
 	complete
 	.text start:0x02075634 end:0x020758c4
 
-src/Combat/Main/TensionBonusCalculation.c:
+src/Combat/Main/TensionBonusCalculation.cpp:
 	complete
 	.text start:0x020758f0 end:0x02075930
 
-src/Combat/Main/CritRateCalculation.c:
+src/Combat/Main/CritRateCalculation.cpp:
 	complete
 	.text start:0x02075930 end:0x020759c4
 	
-src/Combat/Main/GetBattleList.c:
+src/Combat/Main/GetBattleList.cpp:
 	complete
 	.text start:0x0200f25c end:0x0200f268
 
-src/Combat/Main/GetCombatantFromList.c:
+src/Combat/Main/GetCombatantFromList.cpp:
 	complete
 	.text start:0x0200fcc4 end:0x0200fd00
 
