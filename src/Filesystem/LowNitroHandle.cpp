@@ -361,8 +361,8 @@ int NitroVM_SearchFileOrDirectory(NitroVM* vm, const char* inPath,
     }
 
     vm->linkedHandle = accessor.handle;
-    vm->regext_d.ptr = (char*)path;
-    vm->regext_abc = *(FSRegisterTriple*)&accessor;
+    vm->args_GetFileOrDirectoryByName.path = path;
+    vm->args_GetFileOrDirectoryByName.searchDirectory = accessor;
     if (outDirData != NULL)
     {
         vm->args_GetFileOrDirectoryByName.searchForDirectory = 1;
@@ -393,9 +393,9 @@ int NitroVM_Read(NitroVM* vm, void* dst, int capacity, CBool async)
     if (lengthToCopy < 0)
         lengthToCopy = 0;
     
-    vm->regext_abc.a.ptr = (char*)dst;
-    vm->regext_abc.b.u32 = copyOfCapacity;
-    vm->regext_abc.c.u32 = lengthToCopy;
+    vm->args_Read.destination = (char*)dst;
+    vm->args_Read.unknown = copyOfCapacity;
+    vm->args_Read.length = lengthToCopy;
     
     if (!async)
         vm->flags |= (1 << NITROVM_FLAG_SYNCHRONOUS);

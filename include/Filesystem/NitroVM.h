@@ -136,9 +136,16 @@ struct NitroVM
     {
         struct
         {
-            FSRegisterTriple regext_abc;
-            FSRegister regext_d;
-        };
+            void* destination;
+            int unknown;
+            int length;
+        } args_Read;
+        struct
+        {
+            void* source;
+            int unknown;
+            int length;
+        } args_Write;
         struct
         {
             NitroDirectoryAccessor accessor;
@@ -150,14 +157,32 @@ struct NitroVM
         } args_GetFileOrDirectoryNameData;
         struct
         {
-            NitroHandle* handle;
-            unsigned short searchDirID;
-            unsigned short bhigh;
-            int c;
+            // the directory to search in
+            NitroDirectoryAccessor searchDirectory;
             const unsigned char* path;
             CBool searchForDirectory;
             void* volatile output;
         } args_GetFileOrDirectoryByName;
+        struct
+        {
+            void* pathOutput;
+            int outputCapacity;
+            unsigned short numBytesWritten;
+            // if you specified a directory, this will be populated with that ID,
+            // if you specified a file this will be populated by the ID of the
+            // directory containing it after this command runs
+            unsigned short directoryID;
+        } args_GetPath;
+        struct
+        {
+            NitroFileAccessor accessor;
+        } args_GetFATEntry;
+        struct
+        {
+            int startOffset;
+            int endOffset;
+            int fileID;
+        } args_CopyRegisters;
     };
 };
 

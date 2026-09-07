@@ -4,7 +4,8 @@
 
 CBool CreateFileAccessor(NitroFileAccessor* outAccessor, const char* path);
 
-CBool NitroVM_PrepareRead(NitroVM* vm, NitroHandle* handle, unsigned int start, unsigned int end, unsigned int capacity);
+// I don't really know what the 5th parameter is there for, but in practice it's always -1
+CBool NitroVM_PrepareRead(NitroVM* vm, NitroHandle* handle, unsigned int start, unsigned int end, unsigned int fileID);
 
 // Sets up the appropriate registers to point to the relevant parts, so that 
 // the handle load proc can load the file

@@ -22,12 +22,12 @@ CBool CreateFileAccessor(NitroFileAccessor* outAccessor, const char* path)
 }
 
 CBool NitroVM_PrepareRead(NitroVM* vm, NitroHandle* handle,
-    unsigned int start, unsigned int end, unsigned int capacity)
+    unsigned int start, unsigned int end, unsigned int fileID)
 {
     vm->linkedHandle = handle;
-    vm->regext_abc.c.u32 = capacity;
-    vm->regext_abc.a.u32 = start;
-    vm->regext_abc.b.u32 = end;
+    vm->args_CopyRegisters.fileID = fileID;
+    vm->args_CopyRegisters.startOffset = start;
+    vm->args_CopyRegisters.endOffset = end;
 
     // Operand 7 copies capacity into base_a,
     // start into base_b and base_d, end into base_c.
@@ -46,14 +46,11 @@ bool NitroVM_PrepareReadFileByID(NitroVM* vm, NitroFileAccessor volatile accesso
         return false;
 
     vm->linkedHandle = handle;
-    vm->regext_abc.a.ptr = handle;
-    vm->regext_abc.b.u32 = accessor.fileID;
-    // After this call, base_A will also hold the file ID
+    vm->args_GetFATEntry.accessor.handle = handle;
+    vm->args_GetFATEntry.accessor.fileID = accessor.fileID;
     if (!NitroVM_QueueCommand(vm, NITROVM_OPCODE_GET_FAT_ENTRY))
         return false;
 
-    // Not sure about bit 4, but bit 5 is cleared because this is a file
-    // (so command 5 can run properly)
     vm->flags = (vm->flags | (1 << NITROVM_FLAG_READ_POSITIONS_CONFIGURED)) & ~(1 << NITROVM_FLAG_SEARCH_TARGET_IS_DIRECTORY);
     return true;
 }
@@ -87,12 +84,12 @@ void NitroVM_WriteOutFilePath(NitroVM* vm, char* buffer, unsigned int bufferLeng
 {
     if (vm->pendingCommand != NITROVM_OPCODE_GET_FILE_OR_DIRECTORY_PATH)
     {
-        vm->regext_abc.c.u16.low = 0;
-        vm->regext_abc.c.u16.high = 0;
+        vm->args_GetPath.numBytesWritten = 0;
+        vm->args_GetPath.directoryID = 0;
     }
 
-    vm->regext_abc.a.ptr = buffer;
-    vm->regext_abc.b.u32 = bufferLength;
+    vm->args_GetPath.pathOutput = buffer;
+    vm->args_GetPath.outputCapacity = bufferLength;
 
     // This might be a bool function, in which case we return the return value
     // of this. (We still get tail call optimisation though)
