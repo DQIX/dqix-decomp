@@ -1,6 +1,11 @@
 #include "Combat/Main/UnknownContext.h"
 #include <globaldefs.h>
 
+extern "C" ARM int IsMainBrightnessTransitionActive(UnknownContext* context)
+{
+    return context->mainBrightnessTimeRemaining > 0;
+}
+
 extern "C" ARM int IsSubBrightnessTransitionActive(UnknownContext* context)
 {
     return context->subBrightnessTimeRemaining > 0;
