@@ -1,6 +1,5 @@
 #include "Combat/Main/UnknownContext.h"
 #include "System/Brightness.h"
-#include "System/BrightnessWrappers.h"
 #include <globaldefs.h>
 
 extern "C" ARM void *func_020daf90();
