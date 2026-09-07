@@ -71,7 +71,7 @@ src/System/Random.cpp:
 
 src/System/Brightness.cpp:
     complete
-    .text start:0x0203b3c0 end:0x0203b498
+    .text start:0x0203b3ac end:0x0203b498
 
 src/Memory/SignedAllocator.cpp:
     complete
