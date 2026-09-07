@@ -9,7 +9,7 @@ src/Grotto/Main/GrottoNameDataFile.cpp:
     complete
     .text start:0x020113b4 end:0x020113cc
 
-src/Grotto/Main/GrottoStruct.c:
+src/Grotto/Main/GrottoStruct.cpp:
     complete
     .text start:0x020114a8 end:0x020114b4
 

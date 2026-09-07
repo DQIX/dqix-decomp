@@ -9,7 +9,7 @@ src/Grotto/Main/GrottoNameDataFile.cpp:
     complete
     .text start:0x02011644 end:0x0201165c
 
-src/Grotto/Main/GrottoStruct.c:
+src/Grotto/Main/GrottoStruct.cpp:
     complete
     .text start:0x02011738 end:0x02011744
 
@@ -29,7 +29,7 @@ src/Grotto/Main/FloorMap.cpp:
     complete
     .text start:0x02092644 end:0x02092a74
 
-src/Grotto/Main/TileFeatures.c:
+src/Grotto/Main/TileFeatures.cpp:
     complete
     .text start:0x0201ea54 end:0x0201ebc4
 
@@ -46,7 +46,7 @@ src/Grotto/Main/DetailedTreasureMapData.cpp:
     .rodata start:0x020e9038 end:0x020e9074
     .text start:0x020a3ee4 end:0x020a5cb8
 
-src/Grotto/Main/TreasureMapMetadata.c:
+src/Grotto/Main/TreasureMapMetadata.cpp:
     complete
     .text start:0x020a5cb8 end:0x020a6084
 
