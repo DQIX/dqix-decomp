@@ -42,18 +42,18 @@ extern "C" ARM void UnlockAndSetBrightness(UnknownContext *context, int brightne
     func_0203b19c(context, brightness, duration);
 }
 
-extern "C" ARM void func_0203b318(UnknownContext *context, int brightness, unsigned int duration) {
+extern "C" ARM void SetMainBrightnessWithDurationMs(UnknownContext *context, int brightness, unsigned int durationMs) {
     if (context->mainBrightnessLocked != 0) return;
 
     void *unk = func_020daf90();
 
-    unsigned int scaledDuration = (duration * 3) / 100;
+    unsigned int scaledDuration = (durationMs * 3) / 100;
 
     if (func_020db9cc(unk, 0, brightness, scaledDuration) == 0) return;
 
-    if (duration != 0) {
+    if (durationMs != 0) {
         context->mainBrightnessTarget        = brightness;
-        context->mainBrightnessTimeRemaining = duration;
+        context->mainBrightnessTimeRemaining = durationMs;
         return;
     }
 
