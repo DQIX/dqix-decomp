@@ -2,7 +2,8 @@ _Z28PopulateOv33BackgroundLoaderPvji kind:function(arm,size=0x28) addr:0x022a218
 _ZN20Ov33BackgroundLoader7ProcessEv kind:function(arm,size=0x7c4) addr:0x022a21a8
 func_ov033_022a296c kind:function(arm,size=0x2c) addr:0x022a296c
 func_ov033_022a2998 kind:function(arm,size=0x20) addr:0x022a2998
-func_ov033_022a29b8 kind:function(arm,size=0x2c) addr:0x022a29b8
+__sinit_ov033_022a29b8 kind:function(arm,size=0x2c) addr:0x022a29b8
+.p__sinit_ov033_022a29b8 kind:data(word) addr:0x022a29e4
 data_ov033_022a2a08 kind:data(any) addr:0x022a2a08
 data_ov033_022a2a14 kind:data(any) addr:0x022a2a14
 data_ov033_022a2a20 kind:bss addr:0x022a2a20
