@@ -1,9 +1,13 @@
     .text       start:0x02000000 end:0x020e5920 kind:code align:32
     .init       start:0x020e5920 end:0x020e692c kind:code align:4
-    .rodata     start:0x020e692c end:0x020eeb18 kind:rodata align:4
+    .rodata     start:0x020e692c end:0x020eeb18 kind:rodata align:1
     .ctor       start:0x020eeb18 end:0x020eebc4 kind:rodata align:4
     .data       start:0x020eebe0 end:0x020f2e60 kind:data align:32
     .bss        start:0x020f2e60 end:0x021536e0 kind:bss align:32
+
+src/Grotto/Main/GrottoNameDataFile.cpp:
+    complete
+    .text start:0x02011644 end:0x0201165c
 
 src/Grotto/Main/GrottoStruct.cpp:
     complete
@@ -25,10 +29,6 @@ src/Grotto/Main/FloorMap.cpp:
     complete
     .text start:0x02092644 end:0x02092a74
 
-src/Grotto/Main/RandATRangeModular.cpp:
-    complete
-    .text start:0x020a3ec0 end:0x020a3ee4
-
 src/Grotto/Main/TileFeatures.cpp:
     complete
     .text start:0x0201ea54 end:0x0201ebc4
@@ -36,6 +36,15 @@ src/Grotto/Main/TileFeatures.cpp:
 src/Grotto/Main/GenerateObjectPosition.cpp:
     complete
     .text start:0x0201a188 end:0x0201a300
+
+src/Grotto/Main/TreasureMapDataStructs.cpp:
+    complete
+    .text start:0x020a3a34 end:0x020a3ee4
+
+src/Grotto/Main/DetailedTreasureMapData.cpp:
+    complete
+    .rodata start:0x020e9038 end:0x020e9074
+    .text start:0x020a3ee4 end:0x020a5cb8
 
 src/Grotto/Main/TreasureMapMetadata.cpp:
     complete

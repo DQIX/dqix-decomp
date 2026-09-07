@@ -2,43 +2,33 @@
 #include "Combat/Main/BattleList.h"
 #include <globaldefs.h>
 
-#ifdef jpn
-    #define func_020a40e8 func_020a5f00
-#endif
-
-extern "C"
-{
-    // Just (vector)-memsets to zero
-    void func_020a40e8(DetailedTreasureMapData*);
-}
-
 // USA: func_0209033c
 // JPN: func_02090c5c
 void ActiveGrottoClass::Clear()
 {
-    pGenerator = NULL;
-    func_020a40e8(&overallMapData);
-    floorMap.Clear();
-    floorWidth = 16;
-    floorHeight = 16;
-    unknown_260[0] = 0;
-    unknown_260[1] = 0;
-    unknown_260[2] = 0;
-    unknown_264[0] = 0;
-    unknown_264[1] = 0;
-    unknown_264[2] = 0;
-    unknown_264[3] = 0;
-    unknown_274 = 0;
-    unknown_276 = 0;
+    pGenerator_ = NULL;
+    overallMapData_.Clear();
+    floorMap_.Clear();
+    floorWidth_ = 16;
+    floorHeight_ = 16;
+    unknown_260_[0] = 0;
+    unknown_260_[1] = 0;
+    unknown_260_[2] = 0;
+    unknown_264_[0] = 0;
+    unknown_264_[1] = 0;
+    unknown_264_[2] = 0;
+    unknown_264_[3] = 0;
+    unknown_274_ = 0;
+    unknown_276_ = 0;
 }
 
 // USA: func_02090394
 // JPN: func_02090cb4
 void ActiveGrottoClass::ClearGenerator(bool keepFloormap)
 {
-    pGenerator = NULL;
+    pGenerator_ = NULL;
     if (!keepFloormap)
-        floorMap.Clear();
+        floorMap_.Clear();
 }
 
 // USA: func_020903b4
@@ -51,21 +41,21 @@ void ActiveGrottoClass::BlankFunction2() const
 // JPN: func_02090cd8
 void ActiveGrottoClass::AllocateGenerator(SafeAllocator* allocator, bool skipAllocMapBuffers)
 {
-    if (pGenerator == NULL)
+    if (pGenerator_ == NULL)
     {
-        pGenerator = (FloorMapGenerator*)allocator->Allocate(sizeof(FloorMapGenerator));
-        pGenerator->Initialize();
+        pGenerator_ = (FloorMapGenerator*)allocator->Allocate(sizeof(FloorMapGenerator));
+        pGenerator_->Initialize();
     }
 
     if (!skipAllocMapBuffers)
-        floorMap.AllocateBuffers(allocator);
+        floorMap_.AllocateBuffers(allocator);
 }
 
 // USA: func_02090400
 // JPN: func_02090d20
 int ActiveGrottoClass::GetMapDimensionFromRange(int minimum, int maximum, int floor) const
 {
-    GetActiveGrottoSeed();
+    (void)GetActiveGrottoSeed();
     if (minimum == maximum)
         return minimum;
     

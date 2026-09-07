@@ -5,6 +5,10 @@
     .data       start:0x020eeb40 end:0x020f2e60 kind:data align:32
     .bss        start:0x020f2e60 end:0x02154e60 kind:bss align:32
 
+src/Grotto/Main/GrottoNameDataFile.cpp:
+    complete
+    .text start:0x020113b4 end:0x020113cc
+
 src/Grotto/Main/GrottoStruct.cpp:
     complete
     .text start:0x020114a8 end:0x020114b4
@@ -25,9 +29,14 @@ src/Grotto/Main/FloorMap.cpp:
     complete
     .text start:0x02092f64 end:0x02093394
 
-src/Grotto/Main/RandATRangeModular.cpp:
+src/Grotto/Main/TreasureMapDataStructs.cpp:
     complete
-    .text start:0x020a5bfc end:0x020a5c20
+    .text start:0x020a5770 end:0x020a5c20
+
+src/Grotto/Main/DetailedTreasureMapData.cpp:
+    complete
+    .rodata start:0x020e914c end:0x020e9188
+    .text start:0x020a5c20 end:0x020a7a5c
 
 src/Grotto/Main/TileFeatures.cpp:
 	complete

@@ -22,6 +22,8 @@ unsigned int strlen(const char* str);
 char* strcpy(char* dst, const char* src);
 char* strncpy(char* dst, const char* src, unsigned int count);
 
+char* strcat(char* dst, const char* src);
+
 // also vectorized like strcpy, but seems to have a bug(?).
 // doesn't break the functionality but causes the process to revert to per-char
 // comparison as soon as it encounters a character value of >= 129
@@ -30,6 +32,9 @@ int strncmp(const char* lhs, const char* rhs, unsigned int count);
 char* strchr(const char* str, int ch);
 char* strrchr(const char* str, int ch);
 char* strstr(const char* str, const char* substr);
+
+// stdio.h
+int sprintf(char* buffer, const char* format, ...);
 
 #ifdef __cplusplus
 }
