@@ -69,6 +69,14 @@ src/World/Object3D.cpp:
     .data start:0x020ef998 end:0x020efa34
     .bss start:0x02104858 end:0x021048a0
 
+src/Graphics/LightingManager.cpp:
+    complete
+    .text start:0x02051924 end:0x02053e28
+    .init start:0x020e6678 end:0x020e670c
+    .ctor start:0x020eeac8 end:0x020eeacc
+    .data start:0x020f033c end:0x020f0450
+    .bss start:0x02107860 end:0x02107910
+
 src/Util/Random.cpp:
 	complete
 	.text start:0x0207535c end:0x02075634
@@ -88,6 +96,22 @@ src/Combat/Main/CritRateCalculation.cpp:
 src/Filesystem/FileIO.cpp:
     complete
     .text start:0x02076224 end:0x020767bc
+
+src/Graphics/AtmosphericEffect.cpp:
+    complete
+    .text start:0x0207ae98 end:0x0207c104
+    .init start:0x020e6a04 end:0x020e6a8c
+    .ctor start:0x020eeaf4 end:0x020eeaf8
+    .data start:0x020f0f00 end:0x020f0f90
+    .bss start:0x02108d84 end:0x02108da4
+
+src/Graphics/LightingInfo.cpp:
+    complete
+    .text start:0x0207c104 end:0x0207c860
+    .init start:0x020e6a8c end:0x020e6b14
+    .ctor start:0x020eeaf8 end:0x020eeafc
+    .data start:0x020f0f90 end:0x020f0fe0
+    .bss start:0x02108da4 end:0x02108dbc
 
 src/Graphics/Animation3D.cpp:
     complete

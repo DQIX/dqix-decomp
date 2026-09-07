@@ -131,8 +131,8 @@ func_0200bd10 kind:function(arm,size=0xa4) addr:0x0200bd10
 func_0200bdb4 kind:function(arm,size=0x9c) addr:0x0200bdb4
 _deq kind:function(arm,size=0x8c) addr:0x0200be50
 func_0200bedc kind:function(arm,size=0x8c) addr:0x0200bedc
-func_0200bf68 kind:function(arm,size=0x5c) addr:0x0200bf68
-func_0200bfc4 kind:function(arm,size=0x5c) addr:0x0200bfc4
+_fgeq kind:function(arm,size=0x5c) addr:0x0200bf68
+_fgr kind:function(arm,size=0x5c) addr:0x0200bfc4
 _fleq kind:function(arm,size=0x68) addr:0x0200c020
 _fls kind:function(arm,size=0x5c) addr:0x0200c088
 _feq kind:function(arm,size=0x68) addr:0x0200c0e4
@@ -2001,30 +2001,30 @@ func_02050100 kind:function(arm,size=0x300) addr:0x02050100
 func_02050400 kind:function(arm,size=0x2c) addr:0x02050400
 func_0205042c kind:function(arm,size=0x14) addr:0x0205042c
 func_02050440 kind:function(arm,size=0x14) addr:0x02050440
-func_02050454 kind:function(arm,size=0xc) addr:0x02050454
-func_02050460 kind:function(arm,size=0x44) addr:0x02050460
-func_020504a4 kind:function(arm,size=0x238) addr:0x020504a4
-func_020506dc kind:function(arm,size=0x154) addr:0x020506dc
-func_02050830 kind:function(arm,size=0x110) addr:0x02050830
-func_02050940 kind:function(arm,size=0x30) addr:0x02050940
-func_02050970 kind:function(arm,size=0x2b0) addr:0x02050970
-func_02050c20 kind:function(arm,size=0x4fc) addr:0x02050c20
-func_0205111c kind:function(arm,size=0x34) addr:0x0205111c
-func_02051150 kind:function(arm,size=0xf4) addr:0x02051150
-func_02051244 kind:function(arm,size=0x338) addr:0x02051244
-func_0205157c kind:function(arm,size=0x10c) addr:0x0205157c
-func_02051688 kind:function(arm,size=0x8) addr:0x02051688
-func_02051690 kind:function(arm,size=0x354) addr:0x02051690
-func_020519e4 kind:function(arm,size=0x344) addr:0x020519e4
-func_02051d28 kind:function(arm,size=0x514) addr:0x02051d28
-func_0205223c kind:function(arm,size=0x8) addr:0x0205223c
-func_02052244 kind:function(arm,size=0xf4) addr:0x02052244
-func_02052338 kind:function(arm,size=0x18) addr:0x02052338
-func_02052350 kind:function(arm,size=0xc0) addr:0x02052350
-func_02052410 kind:function(arm,size=0x474) addr:0x02052410
-func_02052884 kind:function(arm,size=0x40) addr:0x02052884
-func_020528c4 kind:function(arm,size=0x80) addr:0x020528c4
-func_02052944 kind:function(arm,size=0x14) addr:0x02052944
+_ZN15LightingManager11GetInstanceEv kind:function(arm,size=0xc) addr:0x02050454
+_Z16GetDayThresholdsPfS_S_S_S_ kind:function(arm,size=0x44) addr:0x02050460
+_ZN15LightingManager16AdvancedLighting18FillMissingEntriesEv kind:function(arm,size=0x238) addr:0x020504a4
+_ZN15LightingManager13BasicLighting18FillMissingEntriesEv kind:function(arm,size=0x154) addr:0x020506dc
+_ZN15LightingManager7FogList18FillMissingEntriesEv kind:function(arm,size=0x110) addr:0x02050830
+_ZN15LightingManager18GetFifoCommandDataEiPi kind:function(arm,size=0x30) addr:0x02050940
+_ZN15LightingManager36ColorTransformTintBrightnessContrastEj kind:function(arm,size=0x2b0) addr:0x02050970
+_ZN15LightingManager32GetCurrentAdvancedLightingValuesEPtS0_S0_S0_S0_S0_S0_PNS_13Light3DConfigES2_ kind:function(arm,size=0x4fc) addr:0x02050c20
+_ZN15LightingManager13Light3DConfigaSERKS0_ kind:function(arm,size=0x34) addr:0x0205111c
+_ZN15LightingManager17InterpolateColorsEiif kind:function(arm,size=0xf4) addr:0x02051150
+_ZN15LightingManager14ComputeFogInfoEPNS_7FogInfoE kind:function(arm,size=0x338) addr:0x02051244
+_ZN15LightingManager10InitializeEv kind:function(arm,size=0x10c) addr:0x0205157c
+_ZN15LightingManager7SetZoneEP6Zone3D kind:function(arm,size=0x8) addr:0x02051688
+_ZN15LightingManager36ModelTransformTintBrightnessContrastEP18NSBXXInternalModel kind:function(arm,size=0x354) addr:0x02051690
+_ZN15LightingManager17ProcessZoneChangeEP6Zone3D kind:function(arm,size=0x344) addr:0x020519e4
+_ZN15LightingManager25RecomputeAdvancedLightingEv kind:function(arm,size=0x514) addr:0x02051d28
+_Z23SetVector3fixComponentsP8Vector3iiii kind:function(arm,size=0x8) addr:0x0205223c
+_ZN15LightingManager20SubmitToRenderConfigEv kind:function(arm,size=0xf4) addr:0x02052244
+_ZN15LightingManager24ApplyAmbientColorToModelEP18NSBXXInternalModel kind:function(arm,size=0x18) addr:0x02052338
+_ZN15LightingManager27MaybeComputeHorizonPositionEv kind:function(arm,size=0xc0) addr:0x02052350
+_ZN15LightingManager22DrawBackgroundGradientEv kind:function(arm,size=0x474) addr:0x02052410
+_ZN15LightingManager9BeginFadeEst kind:function(arm,size=0x40) addr:0x02052884
+_Z18ConvertToTimeOfDayf kind:function(arm,size=0x80) addr:0x020528c4
+_ZN15LightingManagerC1Ev kind:function(arm,size=0x14) addr:0x02052944
 func_02052958 kind:function(arm,size=0xb8) addr:0x02052958
 func_02052a10 kind:function(arm,size=0x3c) addr:0x02052a10
 func_02052a4c kind:function(arm,size=0x9c) addr:0x02052a4c
@@ -2885,41 +2885,41 @@ func_02079f20 kind:function(arm,size=0x7c) addr:0x02079f20
 func_02079f9c kind:function(arm,size=0x2c) addr:0x02079f9c
 func_02079fc8 kind:function(arm,size=0x4c) addr:0x02079fc8
 func_0207a014 kind:function(arm,size=0x4c) addr:0x0207a014
-func_0207a060 kind:function(arm,size=0x68) addr:0x0207a060
-func_0207a0c8 kind:function(arm,size=0x9c) addr:0x0207a0c8
-func_0207a164 kind:function(arm,size=0x8c) addr:0x0207a164
-func_0207a1f0 kind:function(arm,size=0x30) addr:0x0207a1f0
-func_0207a220 kind:function(arm,size=0x8c) addr:0x0207a220
-func_0207a2ac kind:function(arm,size=0x9c) addr:0x0207a2ac
-func_0207a348 kind:function(arm,size=0xb4) addr:0x0207a348
-func_0207a3fc kind:function(arm,size=0x68) addr:0x0207a3fc
-func_0207a464 kind:function(arm,size=0x60) addr:0x0207a464
-func_0207a4c4 kind:function(arm,size=0x94) addr:0x0207a4c4
-func_0207a558 kind:function(arm,size=0x60) addr:0x0207a558
+_ZN17AtmosphericEffect10InitializeEv kind:function(arm,size=0x68) addr:0x0207a060
+_Z27EffectScript_SetScrollSpeedPN6Script9ParameterEi kind:function(arm,size=0x9c) addr:0x0207a0c8 local
+_Z27EffectScript_SetScrollFlagsPN6Script9ParameterEi kind:function(arm,size=0x8c) addr:0x0207a164 local
+_Z25EffectScript_SelectEffectPN6Script9ParameterEi kind:function(arm,size=0x30) addr:0x0207a1f0 local
+_Z27EffectScript_SetOriginFlagsPN6Script9ParameterEi kind:function(arm,size=0x8c) addr:0x0207a220 local
+_Z28EffectScript_SetScrollOriginPN6Script9ParameterEi kind:function(arm,size=0x9c) addr:0x0207a2ac local
+_Z22EffectScript_DuplicatePN6Script9ParameterEi kind:function(arm,size=0xb4) addr:0x0207a348 local
+_Z21EffectScript_SetScalePN6Script9ParameterEi kind:function(arm,size=0x68) addr:0x0207a3fc local
+_Z21EffectScript_SetAlphaPN6Script9ParameterEi kind:function(arm,size=0x60) addr:0x0207a464 local
+_Z30EffectScript_SetTileDimensionsPN6Script9ParameterEi kind:function(arm,size=0x94) addr:0x0207a4c4 local
+_Z32EffectScript_SetHiddenTimesOfDayPN6Script9ParameterEi kind:function(arm,size=0x60) addr:0x0207a558 local
 _ZN20AtmosphericEffectSet5ResetEv kind:function(arm,size=0x5c) addr:0x0207a5b8
-func_0207a614 kind:function(arm,size=0x90) addr:0x0207a614
-func_0207a6a4 kind:function(arm,size=0x90) addr:0x0207a6a4
-func_0207a734 kind:function(arm,size=0x524) addr:0x0207a734
-func_0207ac58 kind:function(arm,size=0x338) addr:0x0207ac58
-func_0207af90 kind:function(arm,size=0x2c) addr:0x0207af90
-func_0207afbc kind:function(arm,size=0x44) addr:0x0207afbc
-func_0207b000 kind:function(arm,size=0x8) addr:0x0207b000
-func_0207b008 kind:function(arm,size=0x100) addr:0x0207b008
-func_0207b108 kind:function(arm,size=0x4c) addr:0x0207b108
-func_0207b154 kind:function(arm,size=0x50) addr:0x0207b154
-func_0207b1a4 kind:function(arm,size=0xa0) addr:0x0207b1a4
-func_0207b244 kind:function(arm,size=0x88) addr:0x0207b244
-func_0207b2cc kind:function(arm,size=0x38) addr:0x0207b2cc
-func_0207b304 kind:function(arm,size=0x8) addr:0x0207b304
-func_0207b30c kind:function(arm,size=0x1b4) addr:0x0207b30c
-func_0207b4c0 kind:function(arm,size=0x34) addr:0x0207b4c0
-func_0207b4f4 kind:function(arm,size=0x144) addr:0x0207b4f4
-func_0207b638 kind:function(arm,size=0x144) addr:0x0207b638
-func_0207b77c kind:function(arm,size=0x1ac) addr:0x0207b77c
-func_0207b928 kind:function(arm,size=0x64) addr:0x0207b928
-func_0207b98c kind:function(arm,size=0x40) addr:0x0207b98c
+_ZN20AtmosphericEffectSet11LoadArchiveEPKc kind:function(arm,size=0x90) addr:0x0207a614
+_ZN20AtmosphericEffectSet15IsArchiveLoadedEv kind:function(arm,size=0x90) addr:0x0207a6a4
+_ZN20AtmosphericEffectSet14ProcessArchiveEPS_P13SafeAllocatorPv kind:function(arm,size=0x524) addr:0x0207a734
+_ZN20AtmosphericEffectSet4DrawEv kind:function(arm,size=0x338) addr:0x0207ac58
+_ZN20AtmosphericEffectSet15AddEffectObjectEP17AtmosphericEffect kind:function(arm,size=0x2c) addr:0x0207af90
+_ZN20AtmosphericEffectSet15GetEffectByNameEPKc kind:function(arm,size=0x44) addr:0x0207afbc
+_ZN20AtmosphericEffectSet14GetFirstEffectEv kind:function(arm,size=0x8) addr:0x0207b000
+_ZN20AtmosphericEffectSet16AdvanceAlphaFadeEv kind:function(arm,size=0x100) addr:0x0207b008
+_ZN20AtmosphericEffectSet12StartFadeOutEv kind:function(arm,size=0x4c) addr:0x0207b108
+_ZN20AtmosphericEffectSet11StartFadeInEv kind:function(arm,size=0x50) addr:0x0207b154
+_ZN20AtmosphericEffectSet32DetermineVisibilityFromTimeOfDayEv kind:function(arm,size=0xa0) addr:0x0207b1a4
+_ZN20AtmosphericEffectSet30DetermineVisibilityFromUnknownEv kind:function(arm,size=0x88) addr:0x0207b244
+_Z38LightingScript_DeclareAdvancedLightingPN6Script9ParameterEi kind:function(arm,size=0x38) addr:0x0207b2cc local 
+_Z18LightingScript_NopPN6Script9ParameterEi kind:function(arm,size=0x8) addr:0x0207b304 local 
+_Z52LightingScript_CreateAdvancedLightingEntry_AlternatePN6Script9ParameterEi kind:function(arm,size=0x1b4) addr:0x0207b30c local 
+_Z35LightingScript_DeclareBasicLightingPN6Script9ParameterEi kind:function(arm,size=0x34) addr:0x0207b4c0 local 
+_Z39LightingScript_CreateBasicLightingEntryPN6Script9ParameterEi kind:function(arm,size=0x144) addr:0x0207b4f4 local 
+_Z29LightingScript_CreateFogEntryPN6Script9ParameterEi kind:function(arm,size=0x144) addr:0x0207b638 local 
+_Z42LightingScript_CreateAdvancedLightingEntryPN6Script9ParameterEi kind:function(arm,size=0x1ac) addr:0x0207b77c local 
+_Z21ExecuteLightingScriptPKvjP12LightingInfoP13SafeAllocator kind:function(arm,size=0x64) addr:0x0207b928
+_ZN12LightingInfo10InitializeEv kind:function(arm,size=0x40) addr:0x0207b98c
 _ZN12LightingInfo5ResetEv kind:function(arm,size=0x40) addr:0x0207b9cc
-func_0207ba0c kind:function(arm,size=0x1c) addr:0x0207ba0c
+_ZN12LightingInfo14LoadFromScriptEPKvjP13SafeAllocator kind:function(arm,size=0x1c) addr:0x0207ba0c
 func_0207ba28 kind:function(arm,size=0x2c) addr:0x0207ba28
 func_0207ba54 kind:function(arm,size=0xc) addr:0x0207ba54
 func_0207ba60 kind:function(arm,size=0x8) addr:0x0207ba60
@@ -6179,7 +6179,7 @@ __sinit_020e5c58 kind:function(arm,size=0x90) addr:0x020e5c58
 __sinit_020e5ce8 kind:function(arm,size=0x14) addr:0x020e5ce8
 __sinit_020e5cfc kind:function(arm,size=0x88) addr:0x020e5cfc
 __sinit_020e5d84 kind:function(arm,size=0x14) addr:0x020e5d84
-__sinit_020e5d98 kind:function(arm,size=0x94) addr:0x020e5d98
+__sinit_LightingManager.cpp kind:function(arm,size=0x94) addr:0x020e5d98 local
 __sinit_020e5e2c kind:function(arm,size=0x88) addr:0x020e5e2c
 __sinit_020e5eb4 kind:function(arm,size=0x2c) addr:0x020e5eb4
 __sinit_020e5ee0 kind:function(arm,size=0x2c) addr:0x020e5ee0
@@ -6190,8 +6190,8 @@ __sinit_020e6038 kind:function(arm,size=0x88) addr:0x020e6038
 __sinit_020e60c0 kind:function(arm,size=0x20) addr:0x020e60c0
 __sinit_020e60e0 kind:function(arm,size=0x18) addr:0x020e60e0
 __sinit_020e60f8 kind:function(arm,size=0x2c) addr:0x020e60f8
-__sinit_020e6124 kind:function(arm,size=0x88) addr:0x020e6124
-__sinit_020e61ac kind:function(arm,size=0x88) addr:0x020e61ac
+__sinit_AtmosphericEffect.cpp kind:function(arm,size=0x88) addr:0x020e6124 local
+__sinit_LightingInfo.cpp kind:function(arm,size=0x88) addr:0x020e61ac local
 __sinit_020e6234 kind:function(arm,size=0x2c) addr:0x020e6234
 __sinit_020e6260 kind:function(arm,size=0x2c) addr:0x020e6260
 __sinit_020e628c kind:function(arm,size=0x14) addr:0x020e628c
@@ -6554,7 +6554,7 @@ data_020eeab0 kind:data(any) addr:0x020eeab0
 .p__sinit_020e5ce8 kind:data(word) addr:0x020eeb3c
 .p__sinit_020e5cfc kind:data(word) addr:0x020eeb40
 .p__sinit_020e5d84 kind:data(word) addr:0x020eeb44
-.p__sinit_020e5d98 kind:data(word) addr:0x020eeb48
+.p__sinit_LightingManager.cpp kind:data(word) addr:0x020eeb48 local
 .p__sinit_020e5e2c kind:data(word) addr:0x020eeb4c
 .p__sinit_020e5eb4 kind:data(word) addr:0x020eeb50
 .p__sinit_020e5ee0 kind:data(word) addr:0x020eeb54
@@ -6565,8 +6565,8 @@ data_020eeab0 kind:data(any) addr:0x020eeab0
 .p__sinit_020e60c0 kind:data(word) addr:0x020eeb68
 .p__sinit_020e60e0 kind:data(word) addr:0x020eeb6c
 .p__sinit_020e60f8 kind:data(word) addr:0x020eeb70
-.p__sinit_020e6124 kind:data(word) addr:0x020eeb74
-.p__sinit_020e61ac kind:data(word) addr:0x020eeb78
+.p__sinit_AtmosphericEffect.cpp kind:data(word) addr:0x020eeb74 local
+.p__sinit_LightingInfo.cpp kind:data(word) addr:0x020eeb78 local
 .p__sinit_020e6234 kind:data(word) addr:0x020eeb7c
 .p__sinit_020e6260 kind:data(word) addr:0x020eeb80
 .p__sinit_020e628c kind:data(word) addr:0x020eeb84
@@ -6991,9 +6991,12 @@ data_020f02fc kind:data(any) addr:0x020f02fc
 data_020f0300 kind:data(any) addr:0x020f0300
 data_020f0303 kind:data(any) addr:0x020f0303
 data_020f0306 kind:data(any) addr:0x020f0306
-data_020f030c kind:data(any) addr:0x020f030c
-data_020f0320 kind:data(any) addr:0x020f0320
-data_020f0321 kind:data(any) addr:0x020f0321
+s_dayTransitionLength kind:data(any) addr:0x020f030c local
+s_eveningLength kind:data(any) addr:0x020f0310 local
+s_dayLength kind:data(any) addr:0x020f0314 local
+s_morningLength kind:data(any) addr:0x020f0318 local
+s_nightLength kind:data(any) addr:0x020f031c local
+s_commandColorInfo kind:data(any) addr:0x020f0320 local
 data_020f0420 kind:data(any) addr:0x020f0420
 data_020f0434 kind:data(any) addr:0x020f0434
 data_020f044c kind:data(any) addr:0x020f044c
@@ -7220,15 +7223,17 @@ data_020f0df2 kind:data(any) addr:0x020f0df2
 data_020f0e02 kind:data(any) addr:0x020f0e02
 data_020f0e17 kind:data(any) addr:0x020f0e17
 data_020f0e28 kind:data(any) addr:0x020f0e28
-data_020f0e38 kind:data(any) addr:0x020f0e38
-data_020f0e48 kind:data(any) addr:0x020f0e48
-data_020f0ea0 kind:data(any) addr:0x020f0ea0
-data_020f0eb0 kind:data(any) addr:0x020f0eb0
-data_020f0eb4 kind:data(any) addr:0x020f0eb4
-data_020f0eba kind:data(any) addr:0x020f0eba
-data_020f0ec0 kind:data(any) addr:0x020f0ec0
-data_020f0ec8 kind:data(any) addr:0x020f0ec8
-data_020f0ed8 kind:data(any) addr:0x020f0ed8
+s_dataFloatA kind:data(any) addr:0x020f0e38 local
+s_dataFloatD kind:data(any) addr:0x020f0e3c local
+s_dataFloatC kind:data(any) addr:0x020f0e40 local
+s_dataFloatB kind:data(any) addr:0x020f0e44 local
+effectScriptOpcodes kind:data(any) addr:0x020f0e48 local
+@stringBase0 kind:data(byte[0x25]) addr:0x020f0ea0 local
+s_eveningLength kind:data(any) addr:0x020f0ec8 local
+s_dayLength kind:data(any) addr:0x020f0ecc local
+s_morningLength kind:data(any) addr:0x020f0ed0 local
+s_nightLength kind:data(any) addr:0x020f0ed4 local
+s_lightingOpcodes kind:data(any) addr:0x020f0ed8 local
 data_020f0f18 kind:data(any) addr:0x020f0f18
 data_020f0f40 kind:data(any) addr:0x020f0f40
 data_020f0f68 kind:data(any) addr:0x020f0f68
@@ -7676,8 +7681,8 @@ data_021078ac kind:bss addr:0x021078ac
 data_021078e0 kind:bss addr:0x021078e0
 data_021078e4 kind:bss addr:0x021078e4
 data_02107918 kind:bss addr:0x02107918
-data_0210791c kind:bss addr:0x0210791c
-data_02107930 kind:bss addr:0x02107930
+s_dayThresholds kind:bss addr:0x0210791c local
+s_lightingManager kind:bss addr:0x02107930 local
 data_021079cc kind:bss addr:0x021079cc
 data_021079e0 kind:bss addr:0x021079e0
 data_021079ec kind:bss addr:0x021079ec
@@ -7705,8 +7710,10 @@ data_02108dfc kind:bss addr:0x02108dfc
 data_02108e00 kind:bss addr:0x02108e00
 data_02108e04 kind:bss addr:0x02108e04
 data_02108e10 kind:bss addr:0x02108e10
-data_02108e40 kind:bss addr:0x02108e40
-data_02108e60 kind:bss addr:0x02108e60
+effectScriptData kind:bss addr:0x02108e40 local 
+s_sums kind:bss addr:0x02108e4c local
+s_scriptCurrentLightingInfo kind:bss addr:0x02108e60 local
+s_dayThresholds kind:bss addr:0x02108e64 local
 data_02108e78 kind:bss addr:0x02108e78
 data_02108e84 kind:bss addr:0x02108e84
 data_02108e90 kind:bss addr:0x02108e90
