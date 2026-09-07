@@ -204,23 +204,23 @@ int NitroVM_LoadDirectoryDataByIndex(NitroVM* vm, unsigned int dirIndex)
 
 int NitroVM_DefaultCommand_Read(NitroVM* vm)
 {
-    unsigned int oldOffset = vm->regbase_d.u32;
+    unsigned int oldCursor = vm->fileInfo.cursorPos;
     unsigned int length = vm->regext_abc.c.u32;
     NitroHandle* nitroHandle = vm->linkedHandle;
     void* dst = vm->regext_abc.a.ptr;
 
-    vm->regbase_d.u32 = oldOffset + length;
-    return nitroHandle->readProc(nitroHandle, dst, oldOffset, length);
+    vm->fileInfo.cursorPos = oldCursor + length;
+    return nitroHandle->readProc(nitroHandle, dst, oldCursor, length);
 }
 
 int NitroVM_DefaultCommand_Write(NitroVM* vm)
 {
-    unsigned int oldOffset = vm->regbase_d.u32;
+    unsigned int oldOffset = vm->fileInfo.cursorPos;
     unsigned int length = vm->regext_abc.c.u32;
     NitroHandle* nitroHandle = vm->linkedHandle;
     void* src = vm->regext_abc.a.ptr;
 
-    vm->regbase_d.u32 = oldOffset + length;
+    vm->fileInfo.cursorPos = oldOffset + length;
     return nitroHandle->writeProc(nitroHandle, src, oldOffset, length);
 }
 
@@ -245,14 +245,14 @@ int NitroVM_DefaultCommand_GetDirectoryData(NitroVM* vm)
 
     if (result == NITRO_RESULT_SUCCESS)
     {
-        vm->regbase_abc = *extendedRegs;
+        vm->dirInfo.accessor = *(NitroDirectoryAccessor*)extendedRegs;
     
         if (extendedRegs->b.u16.high == 0 && extendedRegs->c.u32 == 0)
         {
-            vm->regbase_abc.b.u16.high = tableEntry.firstContainedFileID;
-            vm->regbase_abc.c.u32 = nitroHandle->nameTableOffsetFast + tableEntry.subtableOffset;
+            vm->dirInfo.accessor.firstFileID = tableEntry.firstContainedFileID;
+            vm->dirInfo.accessor.handleSubtableOffset = nitroHandle->nameTableOffsetFast + tableEntry.subtableOffset;
         }
-        vm->regbase_d.u32 = tableEntry.numDirectoriesOrParentID & 0xfff;
+        vm->dirInfo.parentID = tableEntry.numDirectoriesOrParentID & 0xfff;
     }
 
     return result;
@@ -277,13 +277,13 @@ struct FileDataStore
 int NitroVM_DefaultCommand_GetFileOrDirectoryNameData(NitroVM* vm)
 {
     FileDataStore* pStorage = (FileDataStore*)vm->regext_abc.a.ptr;
-    FSReadDescription readHandle;
+    FSReadDescription readDesc;
 
-    readHandle.nitroHandle = vm->linkedHandle;
-    readHandle.offset = vm->regbase_abc.c.u32;
+    readDesc.nitroHandle = vm->linkedHandle;
+    readDesc.offset = vm->dirInfo.accessor.handleSubtableOffset;
 
     unsigned char stringLengthAndType;
-    int result = Nitro_ReadMetadataBytes(&readHandle, &stringLengthAndType, 1);
+    int result = Nitro_ReadMetadataBytes(&readDesc, &stringLengthAndType, 1);
 
     if (result != 0)
         return result;
@@ -296,7 +296,7 @@ int NitroVM_DefaultCommand_GetFileOrDirectoryNameData(NitroVM* vm)
 
     if (!vm->regext_abc.b.u32) // don't skip copying the string
     {
-        result = Nitro_ReadMetadataBytes(&readHandle, pStorage->name, pStorage->stringLength);
+        result = Nitro_ReadMetadataBytes(&readDesc, pStorage->name, pStorage->stringLength);
         if (result != NITRO_RESULT_SUCCESS)
             return result;
 
@@ -304,13 +304,13 @@ int NitroVM_DefaultCommand_GetFileOrDirectoryNameData(NitroVM* vm)
     }
     else // do skip over the string
     {
-        readHandle.offset += pStorage->stringLength;
+        readDesc.offset += pStorage->stringLength;
     }
 
     if (pStorage->isDirectory)
     {
         unsigned short directoryID;
-        result = Nitro_ReadMetadataBytes(&readHandle, &directoryID, 2);
+        result = Nitro_ReadMetadataBytes(&readDesc, &directoryID, 2);
         if (result != NITRO_RESULT_SUCCESS)
             return result;
         pStorage->nitroHandle = vm->linkedHandle;
@@ -321,11 +321,11 @@ int NitroVM_DefaultCommand_GetFileOrDirectoryNameData(NitroVM* vm)
     else
     {
         pStorage->nitroHandle = vm->linkedHandle;
-        pStorage->fileOrDirID.u32 = vm->regbase_abc.b.u16.high;
-        vm->regbase_abc.b.u16.high++;
+        pStorage->fileOrDirID.u32 = vm->dirInfo.accessor.firstFileID;
+        vm->dirInfo.accessor.firstFileID++;
     }
     
-    vm->regbase_abc.c.u32 = readHandle.offset;
+    vm->dirInfo.accessor.handleSubtableOffset = readDesc.offset;
     return result;
 }
 
@@ -382,8 +382,8 @@ int NitroVM_DefaultCommand_GetFileOrDirectoryByName(NitroVM* vm)
                 {
                     // base_D holds the parent directory index following initial
                     // execution of opcode 2. (If this runs, it'll be updated to the parent of that)
-                    if (vm->regbase_abc.b.u16.low != 0)
-                        NitroVM_LoadDirectoryDataByIndex(vm, vm->regbase_d.u32);
+                    if (vm->dirInfo.accessor.dirID != 0)
+                        NitroVM_LoadDirectoryDataByIndex(vm, vm->dirInfo.parentID);
                     filePath += 2;
                     goto loopEnd;
                 }
@@ -436,7 +436,7 @@ int NitroVM_DefaultCommand_GetFileOrDirectoryByName(NitroVM* vm)
         return NITRO_RESULT_FAILURE;
     
     // base registers a, b, c follow the right format for NitroDirectoryMetadata
-    *((FSRegisterTriple*)vm->reg9.ptr) = vm->regbase_abc;
+    *((NitroDirectoryAccessor*)vm->reg9.ptr) = vm->dirInfo.accessor;
     return NITRO_RESULT_SUCCESS;
 }
 
@@ -458,12 +458,12 @@ int NitroVM_DefaultCommand_GetPath(NitroVM* vm)
     
     if (GET_FLAG_BIT(vm->flags, NITROVM_FLAG_SEARCH_TARGET_IS_DIRECTORY))
     {
-        targetDirID = vm->regbase_abc.b.u16.low;
+        targetDirID = vm->dirInfo.accessor.dirID;
         targetFileID = NITROFS_ID_INVALID;
     }
     else // looking for a file
     {
-        targetFileID = vm->regbase_abc.a.u32;
+        targetFileID = vm->fileInfo.fileID;
         if (vm->regext_abc.c.u16.low != 0)
         {
             targetDirID = vm->regext_abc.c.u16.high;
@@ -478,10 +478,9 @@ int NitroVM_DefaultCommand_GetPath(NitroVM* vm)
                 NitroVM_LoadDirectoryDataByIndex(&tempVM, candidateDirID);
                 if (candidateDirID == 0)
                 {
-                    // Normally base_d would hold the parent directory id here,
-                    // but in the case of id 0 (i.e. the root) it instead holds
-                    // the total number of directories
-                    numDirectories = tempVM.regbase_d.u32;
+                    // in the case of id 0 (the root directory), the 'parent'
+                    // actually holds the total number of directories
+                    numDirectories = tempVM.dirInfo.parentID;
                 }
                 // [for command 3] where to store data about the file/directory entry
                 tempVM.regext_abc.a.ptr = &storage;
@@ -493,10 +492,7 @@ int NitroVM_DefaultCommand_GetPath(NitroVM* vm)
                     do {
                         if (!storage.isDirectory && storage.fileOrDirID.u32 == targetFileID)
                         {
-                            // This is equal to candidateDirID. It was written
-                            // during the command 2 call inside FS72_LoadDirectoryDataByIndex
-                            // and never changed by any of the command 3 calls.
-                            targetDirID = tempVM.regbase_abc.b.u16.low;
+                            targetDirID = tempVM.dirInfo.accessor.dirID;
                             break;
                         }
                     } while (NitroVM_ExecuteCommand(&tempVM, NITROVM_OPCODE_GET_FILE_OR_DIRECTORY_NAME_DATA) == NITRO_RESULT_SUCCESS);
@@ -542,7 +538,7 @@ int NitroVM_DefaultCommand_GetPath(NitroVM* vm)
             do 
             {
                 // Get data about the previous directory's parent
-                NitroVM_LoadDirectoryDataByIndex(&tempVM, tempVM.regbase_d.u32);
+                NitroVM_LoadDirectoryDataByIndex(&tempVM, tempVM.dirInfo.parentID);
                 tempVM.regext_abc.a.ptr = &storage;
                 tempVM.regext_abc.b.u32 = 1; // Don't bother copying the string
 
@@ -561,8 +557,8 @@ int NitroVM_DefaultCommand_GetPath(NitroVM* vm)
                     } while (NitroVM_ExecuteCommand(&tempVM, NITROVM_OPCODE_GET_FILE_OR_DIRECTORY_NAME_DATA) == NITRO_RESULT_SUCCESS);
                 }
                 // This still holds the parent id parameter passed to
-                // FS72_LoadDirectoryDataByIndex
-                ancestorDirID = tempVM.regbase_abc.b.u16.low;
+                // LoadDirectoryDataByIndex
+                ancestorDirID = tempVM.dirInfo.accessor.dirID;
             } while (ancestorDirID != 0);
         }
         // +1 to account for null terminator
@@ -631,7 +627,7 @@ int NitroVM_DefaultCommand_GetPath(NitroVM* vm)
     {
         do
         {
-            NitroVM_LoadDirectoryDataByIndex(&tempVM, tempVM.regbase_d.u32);
+            NitroVM_LoadDirectoryDataByIndex(&tempVM, tempVM.dirInfo.parentID);
             tempVM.regext_abc.a.ptr = &storage;
             tempVM.regext_abc.b.u32 = 0;
             *(writeDst + backWriteLocation - 1) = '/';
@@ -651,7 +647,7 @@ int NitroVM_DefaultCommand_GetPath(NitroVM* vm)
                     break;
                 } while (NitroVM_ExecuteCommand(&tempVM, NITROVM_OPCODE_GET_FILE_OR_DIRECTORY_NAME_DATA) == NITRO_RESULT_SUCCESS);
             }
-            targetDirID = tempVM.regbase_abc.b.u16.low;
+            targetDirID = tempVM.dirInfo.accessor.dirID;
         } while (targetDirID != 0);
     }
 
@@ -688,10 +684,10 @@ int NitroVM_DefaultCommand_GetFATEntry(NitroVM* vm)
 
 int NitroVM_DefaultCommand_CopyRegisters(NitroVM* vm)
 {
-    vm->regbase_abc.b.u32 = vm->regext_abc.a.u32;
-    vm->regbase_d.u32 = vm->regext_abc.a.u32;
-    vm->regbase_abc.c.u32 = vm->regext_abc.b.u32;
-    vm->regbase_abc.a.u32 = vm->regext_abc.c.u32;
+    vm->fileInfo.startOffset = vm->regext_abc.a.u32;
+    vm->fileInfo.cursorPos = vm->regext_abc.a.u32;
+    vm->fileInfo.endOffset = vm->regext_abc.b.u32;
+    vm->fileInfo.fileID = vm->regext_abc.c.u32;
     return NITRO_RESULT_SUCCESS;
 }
 

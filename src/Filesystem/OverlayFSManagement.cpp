@@ -133,8 +133,8 @@ bool LoadOverlayMetadataFromNitro(OverlayMetadata *into, bool isArm7,
     if (!NitroVM_PrepareReadFileByID(&machine, overlayAccessor))
         return false;
     
-    into->romStorageOffset = machine.regbase_abc.b.u32;
-    into->romStorageSize = machine.regbase_abc.c.u32 - machine.regbase_abc.b.u32;
+    into->romStorageOffset = machine.fileInfo.startOffset;
+    into->romStorageSize = machine.fileInfo.endOffset - machine.fileInfo.startOffset;
     NitroVM_FinishRead(&machine);
     return true;
 }
@@ -165,8 +165,8 @@ bool LoadOverlayMetadata(OverlayMetadata* into, bool isArm7, unsigned int idx)
         if (!NitroVM_PrepareReadFileByID(&machine, accessor))
             return false;
 
-        into->romStorageOffset = machine.regbase_abc.b.u32;
-        into->romStorageSize = machine.regbase_abc.c.u32 - machine.regbase_abc.b.u32;
+        into->romStorageOffset = machine.fileInfo.startOffset;
+        into->romStorageSize = machine.fileInfo.endOffset - machine.fileInfo.startOffset;
         NitroVM_FinishRead(&machine);
         return true;
     }

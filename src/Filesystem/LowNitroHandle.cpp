@@ -379,17 +379,16 @@ int NitroVM_SearchFileOrDirectory(NitroVM* vm, const char* inPath,
 
 int NitroVM_Read(NitroVM* vm, void* dst, int capacity, CBool async)
 {
-    // base_d is like seek / tell index, adjusted by load commands
-    int srcStart = vm->regbase_d.s32;
-    int srcEnd = vm->regbase_abc.c.s32;
+    int srcStart = vm->fileInfo.cursorPos;
+    int srcEnd = vm->fileInfo.endOffset;
     
-    int srcLength = srcEnd - srcStart;
+    int remainingLength = srcEnd - srcStart;
     
     int lengthToCopy = capacity;
     unsigned int copyOfCapacity = capacity; // unsigned fixes register stuff
     
-    if (lengthToCopy > srcLength)
-        lengthToCopy = srcLength;
+    if (lengthToCopy > remainingLength)
+        lengthToCopy = remainingLength;
     
     if (lengthToCopy < 0)
         lengthToCopy = 0;
@@ -406,7 +405,7 @@ int NitroVM_Read(NitroVM* vm, void* dst, int capacity, CBool async)
     if (!async)
     {
         if (NitroVM_AwaitCommandCompletion(vm))
-            lengthToCopy = vm->regbase_d.u32 - srcStart;
+            lengthToCopy = vm->fileInfo.cursorPos - srcStart;
         else
             lengthToCopy = -1;
     }

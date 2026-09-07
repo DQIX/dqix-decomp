@@ -77,6 +77,17 @@ union FSRegisterTriple
 #define NITRO_RESULT_FALLBACK_TO_DEFAULT 7
 #define NITRO_RESULT_OPCODE_NOT_IMPLEMENTED 8
 
+struct NitroDirectoryAccessor
+{
+    // unnamed struct to make this trivially copyable (using ldm, stm commands)
+    struct {
+        NitroHandle* handle;
+        unsigned short dirID;
+        unsigned short firstFileID;
+        unsigned int handleSubtableOffset;
+    };
+};
+
 // sizeof(NitroVM) == 72 == 0x48.
 // Used to execute 'commands' on a handle in order to load files. e.g. There
 // are commands to read bytes based on offsets within the struct, and commands
@@ -89,8 +100,21 @@ struct NitroVM
     int pendingCommand;
     int storedResult;
     BlockedContextList blockedContexts;
-    FSRegisterTriple regbase_abc;
-    FSRegister regbase_d;
+    union
+    {
+        struct
+        {
+            NitroDirectoryAccessor accessor;
+            unsigned int parentID;
+        } dirInfo;
+        struct
+        {
+            unsigned int fileID;
+            int startOffset; // offsets relative to the start of the
+            int endOffset;   // archive the file is in. Notably, 
+            int cursorPos;   // startOffset <= cursorPos <= endOffset.
+        } fileInfo;
+    };
     FSRegisterTriple regext_abc;
     FSRegister regext_d;
     FSRegister reg8;
@@ -164,17 +188,6 @@ struct NitroFileAccessor
 {
     NitroHandle* handle;
     unsigned int fileID;
-};
-
-struct NitroDirectoryAccessor
-{
-    // unnamed struct to make this trivially copyable (using ldm, stm commands)
-    struct {
-        NitroHandle* handle;
-        unsigned short dirID;
-        unsigned short firstFileID;
-        unsigned int handleSubtableOffset;
-    };
 };
 
 

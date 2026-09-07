@@ -161,24 +161,24 @@ CBool NitroVM_Seek(NitroVM* vm, int offset, int whence)
     switch (whence)
     {
     case 0: // SEEK_SET
-        offset += vm->regbase_abc.b.s32;
+        offset += vm->fileInfo.startOffset;
         break;
     case 1: // SEEK_CUR
-        offset += vm->regbase_d.s32;
+        offset += vm->fileInfo.cursorPos;
         break;
     case 2: // SEEK_END
-        offset += vm->regbase_abc.c.s32;
+        offset += vm->fileInfo.endOffset;
         break;
     default:
         return false;
     }
         
-    if (offset < vm->regbase_abc.b.s32)
-        offset = vm->regbase_abc.b.s32;
-    if (offset > vm->regbase_abc.c.s32)
-        offset = vm->regbase_abc.c.s32;
+    if (offset < vm->fileInfo.startOffset)
+        offset = vm->fileInfo.startOffset;
+    if (offset > vm->fileInfo.endOffset)
+        offset = vm->fileInfo.endOffset;
 
-    vm->regbase_d.s32 = offset;
+    vm->fileInfo.cursorPos = offset;
     return true;
 }
 

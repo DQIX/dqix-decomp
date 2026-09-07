@@ -163,8 +163,8 @@ bool GetFileInNarc(const void *narcBuffer, const char *targetFilePath,
             if (strcmp(currentFilePath + prefixLength, targetFilePath) == 0)
             {
                 const void* pFile = handle.GetFileByIndex(idx);
-                unsigned int endOffset = machine.regbase_abc.c.u32;
-                unsigned int startOffset = machine.regbase_abc.b.u32;
+                unsigned int endOffset = machine.fileInfo.endOffset;
+                unsigned int startOffset = machine.fileInfo.startOffset;
                 *pOutFilePtr = pFile;
                 *pOutFileSize = endOffset - startOffset;
                 strrchr(targetFilePath, '/');
@@ -222,8 +222,8 @@ bool GetFileInNarcPermissive(const void *narcBuffer, const char *targetFilePath,
                 if (comparison == 0)
                 {
                     const void* pFile = handle.GetFileByIndex(midpoint);
-                    unsigned int endOffset = machine.regbase_abc.c.u32;
-                    unsigned int startOffset = machine.regbase_abc.b.u32;
+                    unsigned int endOffset = machine.fileInfo.endOffset;
+                    unsigned int startOffset = machine.fileInfo.startOffset;
                     success = true;
                     *pOutFilePtr = pFile;
                     *pOutFileSize = endOffset - startOffset;
@@ -283,8 +283,8 @@ unsigned int FindFilesInNarcBySubstring(const void* narcBuffer, const char* subs
             if (strstr(pLoopFilename, substr))
             {
                 const void* pFile = handle.GetFileByIndex(idx);
-                unsigned int endOffset = machine.regbase_abc.c.u32;
-                unsigned int startOffset = machine.regbase_abc.b.u32;
+                unsigned int endOffset = machine.fileInfo.endOffset;
+                unsigned int startOffset = machine.fileInfo.startOffset;
                 pOutFilePtrs[numFound] = pFile;
                 pOutFileSizes[numFound] = endOffset - startOffset;
                 // unused?

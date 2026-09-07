@@ -127,15 +127,15 @@ src/System/InterruptEnableDisable.cpp:
 
 src/System/GamecardBusOwnership.cpp:
     complete
-    .text start:0x020c6e48 end:0x020c7130
+    .text start:0x020c6e48 end:0x020c7080
 
 src/System/ContextList.cpp:
     complete
     .text start:0x020c71a4 end:0x020c745c
 
-src/System/ProcessorContext.cpp:
-    complete
-    .text start:0x020c75b4 end:0x020c7d34
+//src/System/ProcessorContext.cpp:
+//    complete
+//    .text start:0x020c75b4 end:0x020c7d34
 
 src/System/Mutex.cpp:
     complete

@@ -133,9 +133,9 @@ src/System/ContextList.cpp:
     complete
     .text start:0x020c8c70 end:0x020c8f28
 
-src/System/ProcessorContext.cpp:
-    complete
-    .text start:0x020c9080 end:0x020c9800
+//src/System/ProcessorContext.cpp:
+//    complete
+//    .text start:0x020c9080 end:0x020c9800
 
 src/System/Mutex.cpp:
     complete
