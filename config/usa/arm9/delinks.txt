@@ -21,6 +21,10 @@ src/Grotto/Main/GrottoStruct.cpp:
     complete
     .text start:0x02011738 end:0x02011744
 
+src/World/Zone3D.cpp:
+    complete
+    .text start:0x0201383c end:0x02013b70
+
 src/Grotto/Main/GenerateObjectPosition.cpp:
     complete
     .text start:0x0201a188 end:0x0201a300
@@ -38,9 +42,32 @@ src/Resource/Script.cpp:
     complete
     .text start:0x02030634 end:0x02030c68
 
+src/Graphics/ExtendedVectorMath.cpp:
+    complete
+    .text start:0x02030c68 end:0x0203109c
+
 src/Memory/SafeAllocator.cpp:
     complete
     .text start:0x0203246c end:0x020328bc
+    .data start:0x020ef91c end:0x020ef920
+    .bss start:0x02104b0c end:0x02104b10
+
+src/Resource/BCFG.cpp:
+    complete
+    .text start:0x020343a0 end:0x020349c8
+    .data start:0x020efa48 end:0x020efaa8
+    .bss start:0x02104b10 end:0x02104b18
+
+src/Graphics/AlphaTween.cpp:
+    complete
+    .text start:0x020349c8 end:0x02034bc4
+
+src/World/Object3D.cpp:
+    complete
+    .text start:0x02034bc4 end:0x02037d10
+    .rodata start:0x020e7800 end:0x020e780c
+    .data start:0x020efaa8 end:0x020efb44
+    .bss start:0x02104b18 end:0x02104b60
 
 src/Util/Random.cpp:
 	complete

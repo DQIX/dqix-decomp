@@ -1,8 +1,8 @@
 #include "Memory/SafeAllocator.h"
 #include "Resource/ResourceMutex.h"
 
-extern int safeAllocatorShouldIncCount;
-extern unsigned int safeAllocatorLiveCount;
+int safeAllocatorShouldIncCount = 1;
+unsigned int safeAllocatorLiveCount = 0;
 
 // USA: func_0203246c
 // JPN: func_02031fa4
