@@ -10,7 +10,7 @@ void srand(int seed);
 
 // string.h
 void* memcpy(void* dst, void* src, unsigned int length);
-void* memmove(void* dst, void* src, unsigned int length);
+void* memmove(void* dst, const void* src, unsigned int length);
 void* memset(void* dst, int value, unsigned int length);
 
 unsigned int strlen(const char* str);
@@ -38,4 +38,10 @@ int sprintf(char* buffer, const char* format, ...);
 
 #ifdef __cplusplus
 }
+
+#define offsetof(type, member) ((unsigned int)(&((type*)0)->member))
+
+typedef unsigned long long uint64_t;
+typedef signed long long int64_t;
+
 #endif

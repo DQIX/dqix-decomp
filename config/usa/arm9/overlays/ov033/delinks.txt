@@ -4,3 +4,6 @@
     .data       start:0x022a2a00 end:0x022a2a20 kind:data align:32
     .bss        start:0x022a2a20 end:0x022a31c0 kind:bss align:32
 
+src/Filesystem/Overlay_33/Ov33BackgroundLoader.cpp:
+    complete
+    .text start:0x022a2180 end:0x022a296c

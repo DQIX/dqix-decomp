@@ -2,17 +2,17 @@
 #include "Combat/Main/BattleList.h"
 #include "Grotto/Main/GrottoStruct.h"
 #include "Grotto/Overlay_17/Struct44C8.h"
+#include "Filesystem/FileIO.h"
+#include "Filesystem/BackgroundLoader.h"
 #include "System/Memory.h"
 #include "std_library_functions.h"
+#include <asmhacks.h>
 
 #ifdef jpn
 #define func_020a1df8 func_020a3b70
 #define func_020a1e54 func_020a3bcc
 
 #define func_0200fdcc func_0200fc28
-
-#define func_0202f7c8 func_0202f338
-#define func_0202f7e8 func_0202f358
 
 #define func_02075098 func_02076224
 #define func_02075248 func_02076378
@@ -43,16 +43,6 @@ extern "C"
     // lack of support for German & Italian.
     // not used in jpn version
     int func_0200fb08(BattleStruct*);
-
-    void func_0202f7c8();
-    void func_0202f7e8();
-
-    // Seems to load an arbitrary file into a buffer, then return that buffer
-    unsigned char* func_02075098(const char* file, const void* buffer, unsigned int* outLength);
-
-    // Seems to extract a file from a NARC buffer
-    bool func_02075248(const unsigned char* narcBuffer, const char* filename,
-        const unsigned char** ppFileData, unsigned int* pFileSize, unsigned int startFileIndex);
 }
 
 #define BINARY_READ_AND_ADVANCE(buffer, offset, dst, len) \
@@ -1230,7 +1220,7 @@ void DetailedTreasureMapData::LoadLegacyBossStats(bool compute, const unsigned c
         return;
     }
     
-    func_0202f7c8();
+    BackgroundLoader::AddLockGlobal();
     unsigned int archiveSize = 0;
     const unsigned char* usedArchive = data_0211e33c;
     
@@ -1238,9 +1228,9 @@ void DetailedTreasureMapData::LoadLegacyBossStats(bool compute, const unsigned c
         usedArchive = providedArchive;
     else
     {
-        if (!func_02075098(data_020f1ae4, usedArchive, &archiveSize))
+        if (!LoadFileIntoMemory(data_020f1ae4, const_cast<unsigned char*>(usedArchive), &archiveSize))
         {
-            func_0202f7e8();
+            BackgroundLoader::RemoveLockGlobal();
             return;
         }
     }
@@ -1249,13 +1239,13 @@ void DetailedTreasureMapData::LoadLegacyBossStats(bool compute, const unsigned c
     sprintf(innerFileName, data_020f1af8, legacy_.bossMonsterID_);
     const unsigned char* innerFileData;
     unsigned int innerFileSize;
-    if (!func_02075248(usedArchive, innerFileName, &innerFileData, &innerFileSize, 0))
+    if (!GetFileInNarc(usedArchive, innerFileName, reinterpret_cast<const void**>(&innerFileData), &innerFileSize, 0))
     {
-        func_0202f7e8();
+        BackgroundLoader::RemoveLockGlobal();
         return;
     }
 
-    func_0202f7e8();
+    BackgroundLoader::RemoveLockGlobal();
 
     const unsigned char* copyOfInnerFilePtr;
     unsigned int loadlevel = legacy_.level_;
@@ -1266,12 +1256,7 @@ void DetailedTreasureMapData::LoadLegacyBossStats(bool compute, const unsigned c
     __asm("mov stride, 0x18");
     copyOfInnerFilePtr = innerFileData; // forces innerFileData to get loaded into a register here
     __asm("sub loadlevel, loadlevel, 1");
-    // This gets optimized out, but not immediately. Without it, the 4s, 2s and 1s
-    // in subsequent reads get loaded from the literal pool (e.g ldr r2, [pc, blah]
-    // instead of mov r2, #4). A branch/if/goto seems to restore normal behaviour
-    // but trivial if/goto statements get optimized out too early in the process
-    // to be viable as a fix.
-    __asm("b right_here\nright_here:");
+    DECLARE_ASM_NOP();
     
     unsigned int offset = stride * loadlevel;
     

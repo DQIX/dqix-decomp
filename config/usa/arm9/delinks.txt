@@ -5,6 +5,14 @@
     .data       start:0x020eebe0 end:0x020f2e60 kind:data align:32
     .bss        start:0x020f2e60 end:0x021536e0 kind:bss align:32
 
+src/Combat/Main/GetBattleList.cpp:
+	complete
+	.text start:0x0200f398 end:0x0200f3a4
+
+src/Combat/Main/GetCombatantFromList.cpp:
+	complete
+	.text start:0x0200fe68 end:0x0200fea4
+
 src/Grotto/Main/GrottoNameDataFile.cpp:
     complete
     .text start:0x02011644 end:0x0201165c
@@ -12,6 +20,43 @@ src/Grotto/Main/GrottoNameDataFile.cpp:
 src/Grotto/Main/GrottoStruct.cpp:
     complete
     .text start:0x02011738 end:0x02011744
+
+src/Grotto/Main/GenerateObjectPosition.cpp:
+    complete
+    .text start:0x0201a188 end:0x0201a300
+
+src/Grotto/Main/TileFeatures.cpp:
+    complete
+    .text start:0x0201ea54 end:0x0201ebc4
+
+src/Filesystem/BackgroundLoader.cpp:
+    complete
+    .bss start:0x02104304 end:0x02104b0c
+    .text start:0x0202f700 end:0x02030634
+
+src/Memory/SafeAllocator.cpp:
+    complete
+    .text start:0x0203246c end:0x020328bc
+
+src/Util/Random.cpp:
+	complete
+	.text start:0x020741d0 end:0x020744a8
+
+src/Combat/Main/BasicAttackCalculation.cpp:
+    complete
+    .text start:0x020744a8 end:0x02074738
+
+src/Combat/Main/TensionBonusCalculation.cpp:
+	complete
+	.text start:0x02074764 end:0x020747a4
+	
+src/Combat/Main/CritRateCalculation.cpp:
+	complete
+	.text start:0x020747a4 end:0x02074838
+
+src/Filesystem/FileIO.cpp:
+    complete
+    .text start:0x02075098 end:0x0207568c
 
 src/Grotto/Main/ActiveGrottoClass.cpp:
     complete
@@ -29,14 +74,6 @@ src/Grotto/Main/FloorMap.cpp:
     complete
     .text start:0x02092644 end:0x02092a74
 
-src/Grotto/Main/TileFeatures.cpp:
-    complete
-    .text start:0x0201ea54 end:0x0201ebc4
-
-src/Grotto/Main/GenerateObjectPosition.cpp:
-    complete
-    .text start:0x0201a188 end:0x0201a300
-
 src/Grotto/Main/TreasureMapDataStructs.cpp:
     complete
     .text start:0x020a3a34 end:0x020a3ee4
@@ -49,34 +86,6 @@ src/Grotto/Main/DetailedTreasureMapData.cpp:
 src/Grotto/Main/TreasureMapMetadata.cpp:
     complete
     .text start:0x020a5cb8 end:0x020a6084
-
-src/Combat/Main/BasicAttackCalculation.cpp:
-    complete
-    .text start:0x020744a8 end:0x02074738
-
-src/Combat/Main/TensionBonusCalculation.cpp:
-	complete
-	.text start:0x02074764 end:0x020747a4
-	
-src/Combat/Main/CritRateCalculation.cpp:
-	complete
-	.text start:0x020747a4 end:0x02074838
-
-src/Combat/Main/GetBattleList.cpp:
-	complete
-	.text start:0x0200f398 end:0x0200f3a4
-
-src/Combat/Main/GetCombatantFromList.cpp:
-	complete
-	.text start:0x0200FE68 end:0x0200FEA4
-
-src/Memory/SafeAllocator.cpp:
-    complete
-    .text start:0x0203246c end:0x020328bc
-
-src/System/Random.cpp:
-	complete
-	.text start:0x020741d0 end:0x020744a8
 
 src/Memory/SignedAllocator.cpp:
     complete
@@ -95,6 +104,10 @@ src/Memory/UnusedSignedAllocator.cpp:
     complete
     .text start:0x020afaf0 end:0x020afb58
 
+src/Filesystem/NarcHandle.cpp:
+    complete
+    .text start:0x020afb58 end:0x020afdc8
+
 src/Memory/AllocatorTypes.cpp:
     complete
     .rodata start:0x020e9160 end:0x020e9178
@@ -104,3 +117,89 @@ src/Memory/AllocatorUnion.cpp:
     complete
     .text start:0x020afe6c end:0x020afec4
 
+//src/System/InterruptHandler.cpp:
+//    complete
+//    .text start:0x020c6954 end:0x020c6c90
+
+src/System/InterruptEnableDisable.cpp:
+    complete
+    .text start:0x020c6c90 end:0x020c6d48
+
+src/System/GamecardBusOwnership.cpp:
+    complete
+    .text start:0x020c6e48 end:0x020c7080
+
+src/System/ContextList.cpp:
+    complete
+    .text start:0x020c71a4 end:0x020c745c
+
+//src/System/ProcessorContext.cpp:
+//    complete
+//    .text start:0x020c75b4 end:0x020c7d34
+
+src/System/Mutex.cpp:
+    complete
+    .text start:0x020c805c end:0x020c824c
+
+src/System/Cache.cpp:
+    complete
+    .text start:0x020c824c end:0x020c8348
+
+src/System/Timing.cpp:
+    complete
+    .text start:0x020c8c50 end:0x020c9288
+
+src/System/CPSRInterruptState.cpp:
+    complete
+    .text start:0x020c96e8 end:0x020c976c
+
+src/System/DMA.cpp:
+    complete
+    .text start:0x020c9c0c end:0x020ca0a8
+
+src/System/IPC.cpp:
+    complete
+    .bss start:0x021116a4 end:0x02111728
+    .text start:0x020cad18 end:0x020cb034
+
+src/Filesystem/NitroVM.cpp:
+    complete
+    .rodata start:0x020ed6c8 end:0x020ed6ec
+    .text start:0x020cb034 end:0x020cc0fc
+
+src/Filesystem/LowNitroHandle.cpp:
+    complete
+    .text start:0x020cc0fc end:0x020cc940
+
+src/Filesystem/FileAccessor.cpp:
+    complete
+    .text start:0x020cc940 end:0x020ccf7c
+
+src/Filesystem/OverlayFSManagement.cpp:
+    complete
+    .text start:0x020ccf7c end:0x020cd494
+
+src/Filesystem/CardReadManagerInit.cpp:
+    complete
+    .text start:0x020cfcbc end:0x020cffcc
+
+src/Filesystem/CardReadManagerAcquireBus.cpp:
+    complete
+    .text start:0x020cffcc end:0x020d0040
+
+src/Filesystem/CardReadManager.cpp:
+    complete
+    .text start:0x020d084c end:0x020d0fc4
+
+src/Filesystem/ExtendedNitroVM.cpp:
+    complete
+    .text start:0x020d8714 end:0x020d8fcc
+
+src/Filesystem/GPC.cpp:
+    complete
+    .text start:0x020d8fcc end:0x020d96b0
+
+src/Resource/ResourceMutex.cpp:
+    complete
+    .bss start:0x0214e4a8 end:0x0214e4c8
+    .text start:0x020d96b0 end:0x020d97a8

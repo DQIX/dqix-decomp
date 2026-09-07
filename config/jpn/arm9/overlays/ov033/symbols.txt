@@ -1,5 +1,5 @@
-func_ov033_022a2960 kind:function(arm,size=0x28) addr:0x022a2960
-func_ov033_022a2988 kind:function(arm,size=0x7c4) addr:0x022a2988
+_Z28PopulateOv33BackgroundLoaderPvji kind:function(arm,size=0x28) addr:0x022a2960
+_ZN20Ov33BackgroundLoader7ProcessEv kind:function(arm,size=0x7c4) addr:0x022a2988
 func_ov033_022a314c kind:function(arm,size=0x2c) addr:0x022a314c
 func_ov033_022a3178 kind:function(arm,size=0x20) addr:0x022a3178
 func_ov033_022a3198 kind:function(arm,size=0x2c) addr:0x022a3198

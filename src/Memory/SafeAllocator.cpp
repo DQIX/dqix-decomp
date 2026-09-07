@@ -1,15 +1,5 @@
 #include "Memory/SafeAllocator.h"
-
-#ifdef jpn
-#define func_020d970c func_020db118
-#define func_020d974c func_020db158
-#endif
-
-extern "C"
-{
-    void func_020d970c();
-    void func_020d974c();
-}
+#include "Resource/ResourceMutex.h"
 
 extern int safeAllocatorShouldIncCount;
 extern unsigned int safeAllocatorLiveCount;
@@ -32,7 +22,7 @@ void SafeAllocator::ResetAllocatorPointer()
 // JPN: func_02031fc0
 void SafeAllocator::CreateTypeB(void* bufferStart, unsigned int bufferSize, int alignAndDir)
 {
-    func_020d970c();
+    LockResourceMutex();
 
     // 0 as third parameter means memory isn't cleared on allocation
     pSignedAlloc = &HPXEAllocator::CreateAtLocation(bufferStart, bufferSize, 0)->header;
@@ -41,21 +31,21 @@ void SafeAllocator::CreateTypeB(void* bufferStart, unsigned int bufferSize, int 
     if (safeAllocatorShouldIncCount)
         safeAllocatorLiveCount++;
 
-    func_020d974c();
+    UnlockResourceMutex();
 }
 
 // USA: func_020324f0
 // JPN: func_02032028
 void SafeAllocator::CreateTypeA(void* bufferStart, unsigned int bufferSize)
 {
-    func_020d970c();
+    LockResourceMutex();
 
     // 0 as third parameter means memory isn't cleared on allocation
     pSignedAlloc = &HMRFAllocator::CreateAtLocation(bufferStart, bufferSize, 0)->header;
     allocUnion.InitializeTypeA((HMRFAllocator*)pSignedAlloc, 4);
     safeAllocatorLiveCount++;
 
-    func_020d974c();
+    UnlockResourceMutex();
 }
 
 // USA: func_02032544
@@ -65,9 +55,9 @@ void* SafeAllocator::Allocate(unsigned int len)
     if (pSignedAlloc == NULL)
         return NULL;
 
-    func_020d970c();
+    LockResourceMutex();
     void* ret = allocUnion.Allocate((len + 3) & ~3);
-    func_020d974c();
+    UnlockResourceMutex();
 
     return ret;
 }
@@ -79,7 +69,7 @@ void* SafeAllocator::AllocateReversed(unsigned int len)
     if (pSignedAlloc == NULL)
         return NULL;
 
-    func_020d970c();
+    LockResourceMutex();
 
     void* ret = NULL;
 
@@ -95,7 +85,7 @@ void* SafeAllocator::AllocateReversed(unsigned int len)
         break;
     }
 
-    func_020d974c();
+    UnlockResourceMutex();
     return ret;
 }
 
@@ -106,7 +96,7 @@ void SafeAllocator::Free(void* data)
     if (pSignedAlloc == NULL)
         return;
 
-    func_020d970c();
+    LockResourceMutex();
 
     switch (pSignedAlloc->signature)
     {
@@ -120,7 +110,7 @@ void SafeAllocator::Free(void* data)
         break;
     }
 
-    func_020d974c();
+    UnlockResourceMutex();
 }
 
 // USA: func_02032688
@@ -130,7 +120,7 @@ void SafeAllocator::Reset()
     if (pSignedAlloc == NULL)
         return;
     
-    func_020d970c();
+    LockResourceMutex();
 
     void* allocStart = pSignedAlloc;
     unsigned int allocSize = GetSize();
@@ -149,7 +139,7 @@ void SafeAllocator::Reset()
         break;
     }
 
-    func_020d974c();
+    UnlockResourceMutex();
 }
 
 // USA: func_02032730
@@ -159,7 +149,7 @@ void SafeAllocator::Destroy()
     if (pSignedAlloc == NULL)
         return;
 
-    func_020d970c();
+    LockResourceMutex();
 
     bool removed = false;
     switch (pSignedAlloc->signature)
@@ -181,7 +171,7 @@ void SafeAllocator::Destroy()
 
     pSignedAlloc = NULL;
 
-    func_020d974c();
+    UnlockResourceMutex();
 }
 
 // USA: func_020327c0
@@ -191,9 +181,9 @@ unsigned int SafeAllocator::GetSize() const
     if (pSignedAlloc == NULL)
         return 0;
 
-    func_020d970c();
+    LockResourceMutex();
     unsigned int len = (unsigned int)pSignedAlloc->allocEnd - (unsigned int)pSignedAlloc;
-    func_020d974c();
+    UnlockResourceMutex();
     return len;
 }
 
@@ -204,7 +194,7 @@ unsigned int SafeAllocator::GetMaxPossibleAllocation() const
     if (pSignedAlloc == NULL)
         return 0;
 
-    func_020d970c();
+    LockResourceMutex();
 
     unsigned int ret = 0;
     switch (pSignedAlloc->signature)
@@ -219,7 +209,7 @@ unsigned int SafeAllocator::GetMaxPossibleAllocation() const
         break;
     }
 
-    func_020d974c();
+    UnlockResourceMutex();
     return ret;
 }
 
@@ -230,9 +220,9 @@ unsigned int SafeAllocator::GetSizeWithLargestBlockRemoved() const
     if (pSignedAlloc == NULL)
         return 0;
 
-    func_020d970c();
+    LockResourceMutex();
     unsigned int ret = GetSize() - GetMaxPossibleAllocation();
-    func_020d974c();
+    UnlockResourceMutex();
     return ret;
 }
 

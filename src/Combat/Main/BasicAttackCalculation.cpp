@@ -1,6 +1,6 @@
 #include <globaldefs.h>
 
-#include "System/Random.h"
+#include "Util/Random.h"
 
 ARM int RoundUp(float attack) {
 	return 0.5f + attack;
