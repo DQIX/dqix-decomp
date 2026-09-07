@@ -4,12 +4,15 @@
 extern "C" {
 #endif
 
+int abs(int);
+long labs(long); // identical to abs() but also used
+
 // stdlib.h
 int rand();
 void srand(int seed);
 
 // string.h
-void* memcpy(void* dst, void* src, unsigned int length);
+void* memcpy(void* dst, const void* src, unsigned int length);
 void* memmove(void* dst, const void* src, unsigned int length);
 void* memset(void* dst, int value, unsigned int length);
 

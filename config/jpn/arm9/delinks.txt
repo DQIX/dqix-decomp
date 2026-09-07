@@ -185,8 +185,6 @@ src/Graphics/NSBXX/RenderCommandProcs.cpp:
     complete
     .text start:0x020bb47c end:0x020bcef0
 
-// VRAMAllocations to go here 
-
 src/System/VRAM.cpp:
     complete
     .text start:0x020c5518 end:0x020c6740
@@ -289,3 +287,8 @@ src/Resource/ResourceMutex.cpp:
     complete
     .bss start:0x0214fc70 end:0x0214fc90
     .text start:0x020db0bc end:0x020db1b4
+
+src/Graphics/VRAMStaging.cpp:
+    complete
+    .bss start:0x0214fdac end:0x02154df0
+    .text start:0x020dda84 end:0x020ddc1c

@@ -26930,7 +26930,6 @@ from:0x020e9440 kind:load to:0x020bd6f8 module:main
 from:0x020e94ac kind:load to:0x022001ee module:overlay(24)
 from:0x020ea3fc kind:load to:0x02270fdb module:overlays(31,32)
 from:0x020ea400 kind:load to:0x02210fdc module:overlay(32)
-from:0x020ea408 kind:load to:0x02150fdd module:main
 from:0x020ec6ac kind:load to:0x020ef022 module:main
 from:0x020ec6b8 kind:load to:0x0221f024 module:overlay(32)
 from:0x020ec6bc kind:load to:0x0227f025 module:overlays(31,32)

@@ -27232,7 +27232,6 @@ from:0x020e9334 kind:load to:0x020bbc2c module:main
 from:0x020e93a0 kind:load to:0x022001ee module:overlay(32)
 from:0x020ea2f0 kind:load to:0x02270fdb module:overlays(31,32)
 from:0x020ea2f4 kind:load to:0x02210fdc module:overlay(32)
-from:0x020ea2fc kind:load to:0x02150fdd module:main
 from:0x020ec5a0 kind:load to:0x020ef022 module:main
 from:0x020ec5ac kind:load to:0x0221f024 module:overlay(32)
 from:0x020ec5b0 kind:load to:0x0227f025 module:overlays(31,32)

@@ -1,16 +1,12 @@
 #include "Memory/HMRFAllocator.h"
+#include "std_library_functions.h"
 
 #ifdef jpn
-#define func_020017a4 func_020016c0
 #define func_020ca3ec func_020cbeb8
 #endif
 
 extern "C"
 {
-    // Either abs or labs (they are identical as long == int on this system,
-    // but there are two of them and both get used)
-    int func_020017a4(int);
-
     // Yet another memset but with stupid parameter order and assumes
     // 4-byte alignment (it writes ints).
     // Notably, if dst is not 4-byte aligned it might write before the start,
@@ -154,7 +150,7 @@ void HMRFAllocator::Free(int flags)
 // JPN: func_020b14e4
 unsigned int HMRFAllocator::GetMaxPossibleAllocation(int alignAndDir)
 {
-    unsigned int align = func_020017a4(alignAndDir);
+    unsigned int align = abs(alignAndDir);
 
     unsigned int maxEnd = block.endAddress;
 

@@ -4,3 +4,7 @@
 src/System/itcm/DMA_ITCM.cpp:
     complete
     .text start:0x01ff8480 end:0x01ff85b8
+
+src/Graphics/itcm/VRAMStagingITCM.cpp:
+    complete
+    .text start:0x01ff87b0 end:0x01ff96e0
