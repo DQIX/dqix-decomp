@@ -18,6 +18,7 @@ enum eTreasureMapType
     TreasureMapType_Legacy = 2
 };
 
+// sizeof == 0x1c == 28.
 // This also seems to be the data that is stored to the save file (at location
 // 0x5E8E as an array of these). 
 class TreasureMapMetadata
@@ -47,10 +48,10 @@ public:
     unsigned char LegacyBossLevel; 
     unsigned short SeedOrMinTurns;
 
-    // Might be a constructor. Generates an uncleared map
+    // generates an uncleared map
     void InitialiseAsNonLegacyMap(unsigned int quality, int seed);
 
-    // Might be a constructor. Generates an uncleared map
+    // generates an uncleared map
     void InitialiseAsLegacyBossMap(unsigned int bossID, unsigned int level);
 
     void SetDiscoveryState(eDiscoveryState state);
@@ -62,10 +63,4 @@ public:
     void SetInitialByteUnknownBit();
     void ClearInitialByteUnknownBit();
     bool GetInitialByteUnknownBit() const;
-    
-    // The next function after this (func_020a6084) doesn't seem
-    // related to this, so I think that's the last one. (It takes no parameters,
-    // so if anything it would have to be a static function. It returns a fixed
-    // memory address, could be some global instance of an array of these?
-    // I looked at memory in-game and it didn't seem to suggest anything though)
 };

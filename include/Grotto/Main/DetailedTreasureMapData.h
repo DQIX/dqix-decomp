@@ -22,10 +22,10 @@ struct LegacyBossStats
     unsigned short agility;
     unsigned short attack;
     unsigned short defense;
-    char padding[2];
+    char pad_e[2];
     int alternateVersion; // 1, 2 or 3
     int rewardExp;
-    // might be an int, but only the last 16 bytes are used
+    // might be signed. only the last 16 bytes are used
     unsigned int rewardGold;
     unsigned char dropListIndex;
     bool newDropListAtNextLevel;
@@ -44,40 +44,40 @@ public:
     class RegularMapData
     {
     public:
-        unsigned short seed;
-        unsigned char quality;
+        unsigned short seed_;
+        unsigned char quality_;
         // Related to unknown_66. It's always 0 but the code allows a random chance
         // to be 1-12 based on the seed (but in practice the chance is 0% for each).
         // I don't know what it does if it's nonzero.
-        char unknown_4F;
-        unsigned char environ; // caves, ruins, ice, water, fire as 1,2,3,4,5 resp.
-        unsigned char floorCount;
-        unsigned char startingMonsterRank;
-        unsigned char bossID; // 1 to 12
-        unsigned short bossMonsterID; // the number in square brackets in yabd's bestiary
+        char unknown_4f_;
+        unsigned char environ_; // caves, ruins, ice, water, fire as 1,2,3,4,5 resp.
+        unsigned char floorCount_;
+        unsigned char startingMonsterRank_;
+        unsigned char bossID_; // 1 to 12
+        unsigned short bossMonsterID_; // the number in square brackets in yabd's bestiary
         // looks like it gets populated with a random valid chest rank
         // for each monster rank, but never gets used
-        char maybeUnusedChestRanks[12];
-        unsigned char prefix;
-        unsigned char suffix;
-        unsigned char localeRank;
-        unsigned char level;
-        char unknown_66; // was always 1 in the grottos I checked
+        char maybeUnusedChestRanks_[12];
+        unsigned char prefix_;
+        unsigned char suffix_;
+        unsigned char localeRank_;
+        unsigned char level_;
+        char unknown_66_; // was always 1 in the grottos I checked
 
 #if defined(usa)
-        char nameNoLevel[64];
-        char levelString[8];
-        char topScreenName[64];
+        char nameNoLevel_[64];
+        char levelString_[8];
+        char topScreenName_[64];
         // Does not include the <PAD_WAIT> command (that's added externally)
-        char popupName[64];
+        char popupName_[64];
 #elif defined(jpn)
-        char nameNoLevel[32];
-        char prefixString[32];
-        char suffixString[32];
-        char localeString[32];
-        char levelString[8];
-        char topScreenName[64];
-        char popupName[128];
+        char nameNoLevel_[32];
+        char prefixString_[32];
+        char suffixString_[32];
+        char localeString_[32];
+        char levelString_[8];
+        char topScreenName_[64];
+        char popupName_[128];
 #endif
 
     public:
@@ -101,35 +101,33 @@ public:
     class LegacyBossMapData
     {
     public:
-        unsigned char bossID;
-        unsigned short bossMonsterID; 
+        unsigned char bossID_;
+        unsigned short bossMonsterID_; 
         // holds the ids of the 1A, 2A, 3A versions in yabd bestiary
-        unsigned short alternateVersionIDs[3];
-        unsigned char level;
-        unsigned short minTurns;
-        // could be e.g. 24 bytes with padding
-        // in JPN version, this is stored *with* furigana decorations
-        char bossName[26];
-        LegacyBossStats stats;
+        unsigned short alternateVersionIDs_[3];
+        unsigned char level_;
+        unsigned short minTurns_;
+        // could be 24 bytes with padding
+        // in JPN version, this is stored with furigana decorations
+        char bossName_[26];
+        LegacyBossStats stats_;
 
 #if defined(usa)
         // All stored in the 'markup' encoding, e.g. using <1> for apostrophe
-        char mapNameNoLevel[64]; // e.g. "Baramos<1>s Map"
-        char mapNameNoLevel_v2[32]; // same as above, not sure what the difference is
-        char seeminglyEmptyBuffer[32];
-        char mapLevelString[8]; // e.g. "Lv. 99"
-        char topScreenName[64]; // "Baramos<1>s Map Lv. 99"
-        char popupName[64]; // e.g. "Baramos Lv. 99" (what pops up on entering the grotto)
+        char mapNameNoLevel_[64]; // e.g. "Baramos<1>s Map"
+        char mapNameNoLevel_v2_[32]; // same as above, not sure what the difference is
+        char seeminglyEmptyBuffer_[32];
+        char mapLevelString_[8]; // e.g. "Lv. 99"
+        char topScreenName_[64]; // "Baramos<1>s Map Lv. 99"
+        char popupName_[64]; // e.g. "Baramos Lv. 99" (what pops up on entering the grotto)
 #elif defined(jpn)
-        // The sizes are correct, but the interpretation is potentially dodgy -
-        // someone who actually knows Japanese should probably take a look (I
-        // deduced the linguistic purpose of these from Google Translate/Wikipedia)
-        char mapNameNoLevel[32]; // e.g. Baramos no chizu
-        char bossNameGenitive[32]; // e.g. Baramos no
-        char fixedStringChizu[32]; // always holds "chizu", which I gather means map
-        char mapLevelString[8]; // e.g. "Lv 99"
-        char topScreenName[64]; // e.g. Baramos no chizu Lv 99
-        char popupName[128]; // e.g. Baramos Lv 99 no chizu (pops up on entering the grotto)
+        // interpretation of this might be dodgy as I don't speak japanese
+        char mapNameNoLevel_[32]; // e.g. "Baramos no chizu"
+        char bossNameGenitive_[32]; // e.g. "Baramos no"
+        char fixedStringChizu_[32]; // always holds "chizu" (means map?)
+        char mapLevelString_[8]; // e.g. "Lv 99"
+        char topScreenName_[64]; // e.g. "Baramos no chizu Lv 99"
+        char popupName_[128]; // e.g. "Baramos Lv 99 no chizu" (pops up on entering the grotto)
 #endif
 
     public:
@@ -142,29 +140,29 @@ public:
         unsigned short GetLearnedMove(unsigned char atLevel, int filter);
     };
 
-    unsigned char discoveryState;
-    unsigned char mapType;
+    unsigned char discoveryState_;
+    unsigned char mapType_;
     // Stored in the DQ9 string encoding. 12 bytes get zeroed out but
     // only 10 bytes get copied in
-    char discoveredBy[12];
-    char clearedBy[12];
-    char probablyPadding_1A[2];
+    char discoveredBy_[12];
+    char clearedBy_[12];
+    char pad_1a[2];
     // coordinates of the model (you spawn at offset (0, 0, +8192) on exiting)
-    int entranceZoneID;
-    int entranceX;
-    int entranceY;
-    int entranceZ;
-    unsigned char mapLocation;
-    char mapImageName[16]; // e.g. "mapt_005"
-    bool discoveredTreasures[3];
-    unsigned short treasureItemIDs[3];
-    unsigned char treasureDropRates[3];
-    char unknown_49[3]; // might just be padding
+    int entranceZoneID_;
+    int entranceX_;
+    int entranceY_;
+    int entranceZ_;
+    unsigned char mapLocation_; // 1 to 150
+    char mapImageName_[16]; // e.g. "mapt_005"
+    bool discoveredTreasures_[3];
+    unsigned short treasureItemIDs_[3];
+    unsigned char treasureDropRates_[3];
+    char pad_49[3];
 
     union
     {
-        RegularMapData regular;
-        LegacyBossMapData legacy;
+        RegularMapData regular_;
+        LegacyBossMapData legacy_;
     };
 
 public:

@@ -5,10 +5,10 @@
     .data       start:0x02184a00 end:0x02185320 kind:data align:32
     .bss        start:0x02185320 end:0x021853a0 kind:bss align:32
 
-src/Combat/Overlay_0/GetCombatantByID.c:
+src/Combat/Overlay_0/GetCombatantByID.cpp:
 	complete
 	.text start:0x02154e60 end:0x02154e78
 
-src/Combat/Overlay_0/UpdateCombatantBuffs.c:
+src/Combat/Overlay_0/UpdateCombatantBuffs.cpp:
 	complete
 	.text start:0x021571d0 end:0x02157614

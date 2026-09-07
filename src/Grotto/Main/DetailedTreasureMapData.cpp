@@ -210,9 +210,9 @@ bool GetTreasureMapTypeFromItemID(unsigned short itemID, unsigned char* out)
 void DetailedTreasureMapData::RegularMapData::Populate(unsigned short newseed, unsigned char newquality)
 {
     VectorizedMemset(this, 0, sizeof(RegularMapData));
-    seed = newseed;
-    srand(seed);
-    quality = newquality;
+    seed_ = newseed;
+    srand(seed_);
+    quality_ = newquality;
     func_020a1df8(4);
 
     GenerateUnknownData();
@@ -225,14 +225,14 @@ void DetailedTreasureMapData::RegularMapData::Populate(unsigned short newseed, u
     GenerateSuffix();
     GenerateLocaleRank();
 
-    int levelSum = floorCount + startingMonsterRank + bossID;
+    int levelSum = floorCount_ + startingMonsterRank_ + bossID_;
     int unclampedLevel = (rand() % 11) - 5 + (levelSum - 4) * 3;
     if (unclampedLevel <= 0)
-        level = 1;
+        level_ = 1;
     else if (unclampedLevel > 99)
-        level = 99;
+        level_ = 99;
     else
-        level = unclampedLevel;
+        level_ = unclampedLevel;
 
     GenerateNameBuffers();
     GeneratePopupName();
@@ -242,9 +242,9 @@ void DetailedTreasureMapData::RegularMapData::Populate(unsigned short newseed, u
 
 unsigned short DetailedTreasureMapData::LegacyBossMapData::MaybeGetCurrentAlternateID() const
 {
-    int idx = stats.alternateVersion;
+    int idx = stats_.alternateVersion;
     if (idx >= 1 && idx <= 3)
-        return alternateVersionIDs[idx - 1];
+        return alternateVersionIDs_[idx - 1];
     return 0;
 }
 
@@ -257,7 +257,7 @@ void DetailedTreasureMapData::BlankFunction() const {}
 
 bool DetailedTreasureMapData::UpdateFollowingCompletion(bool levelledUp, unsigned short numTurns)
 {
-    if (mapType != TreasureMapType_Legacy)
+    if (mapType_ != TreasureMapType_Legacy)
         return false;
 
     // Retrieving the name of the player character I guess?
@@ -273,48 +273,48 @@ bool DetailedTreasureMapData::UpdateFollowingCompletion(bool levelledUp, unsigne
     char* asciiName = *(char**)(func_0200fc28(GetBattleStruct()) + 0x134);
 #endif
 
-    discoveryState = DiscoveryState_Cleared;
+    discoveryState_ = DiscoveryState_Cleared;
 
-    VectorizedMemset(clearedBy, 0, 12);
-    VectorizedInvertedMemcpy(asciiName, clearedBy, 10);
+    VectorizedMemset(clearedBy_, 0, 12);
+    VectorizedInvertedMemcpy(asciiName, clearedBy_, 10);
 
-    if (levelledUp && legacy.stats.newDropListAtNextLevel)
+    if (levelledUp && legacy_.stats_.newDropListAtNextLevel)
     {
-        discoveredTreasures[0] = true;
-        discoveredTreasures[1] = false;
-        discoveredTreasures[2] = false;
+        discoveredTreasures_[0] = true;
+        discoveredTreasures_[1] = false;
+        discoveredTreasures_[2] = false;
     }
 
     if (levelledUp)
     {
-        legacy.level++;
-        if (legacy.level > 99)
-            legacy.level = 99;
-        legacy.minTurns = 0;   
+        legacy_.level_++;
+        if (legacy_.level_ > 99)
+            legacy_.level_ = 99;
+        legacy_.minTurns_ = 0;   
     }
     else
     {
-        if (numTurns < 1000 && (legacy.minTurns == 0 || numTurns < legacy.minTurns))
+        if (numTurns < 1000 && (legacy_.minTurns_ == 0 || numTurns < legacy_.minTurns_))
         {
-            legacy.minTurns = numTurns;
+            legacy_.minTurns_ = numTurns;
             return true;
         }
     }
 
-    legacy.WriteMapLevelString();
+    legacy_.WriteMapLevelString();
     GrottoStruct* grotto = GetGrottoStruct(GetBattleStruct());
-    strcpy(grotto->activeMapNameNoLevel, legacy.mapNameNoLevel);
-    grotto->activeMapLevel = legacy.level;
+    strcpy(grotto->activeMapNameNoLevel, legacy_.mapNameNoLevel_);
+    grotto->activeMapLevel = legacy_.level_;
     return false;
 }
 
 unsigned int DetailedTreasureMapData::GetLevel() const
 {
     unsigned int ret = 1;
-    if (mapType == TreasureMapType_Regular)
-        ret = regular.level;
-    else if (mapType == TreasureMapType_Legacy)
-        ret = legacy.level;
+    if (mapType_ == TreasureMapType_Regular)
+        ret = regular_.level_;
+    else if (mapType_ == TreasureMapType_Legacy)
+        ret = legacy_.level_;
     return ret;
 }
 
@@ -349,11 +349,11 @@ void DetailedTreasureMapData::LegacyBossMapData::Populate(
     if (GetTreasureMapLanguageData(GetBattleStruct()) == 0)
         return;
 
-    bossMonsterID = 0;
-    bossID = newBossID;
+    bossMonsterID_ = 0;
+    bossID_ = newBossID;
 
     for (int i = 0; i < 3; i++)
-        alternateVersionIDs[i] = 0;
+        alternateVersionIDs_[i] = 0;
 
     unsigned short numEntries = 0;
 
@@ -383,11 +383,11 @@ void DetailedTreasureMapData::LegacyBossMapData::Populate(
 
         if (newBossID == readBossID)
         {
-            bossMonsterID = readMonsterID;
+            bossMonsterID_ = readMonsterID;
             for (int j = 0; j < 3; j++)
-                alternateVersionIDs[j] = readAlternates[j];
-            VectorizedInvertedMemcpy(dataPtr + readOffset, bossName, readStringLen);
-            bossName[readStringLen] = '\0';
+                alternateVersionIDs_[j] = readAlternates[j];
+            VectorizedInvertedMemcpy(dataPtr + readOffset, bossName_, readStringLen);
+            bossName_[readStringLen] = '\0';
 #if defined(jpn)
             break;
 #endif
@@ -403,37 +403,37 @@ void DetailedTreasureMapData::LegacyBossMapData::Populate(
 
         if (newBossID == readBossID)
         {
-            VectorizedInvertedMemcpy(dataPtr + readOffset, mapNameNoLevel, readStringLen);
-            mapNameNoLevel[readStringLen] = '\0';
+            VectorizedInvertedMemcpy(dataPtr + readOffset, mapNameNoLevel_, readStringLen);
+            mapNameNoLevel_[readStringLen] = '\0';
             break;
         }
         readOffset += readStringLen;
 #endif
     }
 
-    if (bossMonsterID == 0)
+    if (bossMonsterID_ == 0)
         return;
 
-    level = newLevel;
-    minTurns = newMinTurns;
+    level_ = newLevel;
+    minTurns_ = newMinTurns;
 
 #if defined(usa)
-    sprintf(mapNameNoLevel_v2, data_020f1ac0, mapNameNoLevel);
-    strcpy(seeminglyEmptyBuffer, data_020f1ac3);
-    sprintf(mapLevelString, data_020f1ac4, func_020e51cc(1011), level);
-    sprintf(topScreenName, data_020f1ac9, mapNameNoLevel, mapLevelString);
-    sprintf(popupName, data_020f1ac9, bossName, mapLevelString);
+    sprintf(mapNameNoLevel_v2_, data_020f1ac0, mapNameNoLevel_);
+    strcpy(seeminglyEmptyBuffer_, data_020f1ac3);
+    sprintf(mapLevelString_, data_020f1ac4, func_020e51cc(1011), level_);
+    sprintf(topScreenName_, data_020f1ac9, mapNameNoLevel_, mapLevelString_);
+    sprintf(popupName_, data_020f1ac9, bossName_, mapLevelString_);
 #elif defined(jpn)
     char bossNameUndecorated[256];
 
-    RemoveFurigana(bossName, bossNameUndecorated);
-    sprintf(mapNameNoLevel, data_020f1c0c, bossNameUndecorated);
-    sprintf(bossNameGenitive, data_020f1c15, bossName);
-    strcpy(fixedStringChizu, data_020f1c1a);
-    strcpy(mapLevelString, data_020f1c26);
-    sprintf(mapLevelString, data_020f1c27, level);
-    sprintf(topScreenName, data_020f1c2c, mapNameNoLevel, mapLevelString);
-    sprintf(popupName, data_020f1c36, bossName, level);
+    RemoveFurigana(bossName_, bossNameUndecorated);
+    sprintf(mapNameNoLevel_, data_020f1c0c, bossNameUndecorated);
+    sprintf(bossNameGenitive_, data_020f1c15, bossName_);
+    strcpy(fixedStringChizu_, data_020f1c1a);
+    strcpy(mapLevelString_, data_020f1c26);
+    sprintf(mapLevelString_, data_020f1c27, level_);
+    sprintf(topScreenName_, data_020f1c2c, mapNameNoLevel_, mapLevelString_);
+    sprintf(popupName_, data_020f1c36, bossName_, level_);
 #endif
 }
 
@@ -443,9 +443,9 @@ void DetailedTreasureMapData::LegacyBossMapData::WriteMapLevelString()
 {
 #if defined(usa)
     const char* lvlPrefix = func_020e51cc(1011);
-    sprintf(mapLevelString, data_020f1ac4, lvlPrefix, level);
+    sprintf(mapLevelString_, data_020f1ac4, lvlPrefix, level_);
 #elif defined(jpn)
-    sprintf(mapLevelString, data_020f1c27, level);
+    sprintf(mapLevelString_, data_020f1c27, level_);
 #endif
 }
 
@@ -453,11 +453,11 @@ void DetailedTreasureMapData::LegacyBossMapData::WriteMapLevelString()
 // JPN: func_020a62e4
 bool DetailedTreasureMapData::LegacyBossMapData::CanUseLevelUpMove(unsigned short id)
 {
-    for (int i = 0; i < stats.numLevelUpMoves; i++)
+    for (int i = 0; i < stats_.numLevelUpMoves; i++)
     {
-        LegacyBossStats::LevelUpMove* move = &stats.levelUpMoves[i];
+        LegacyBossStats::LevelUpMove* move = &stats_.levelUpMoves[i];
         if (move->moveID == id)
-            return move->level <= this->level;
+            return move->level <= this->level_;
     }
 
     // If not a level up move, treat as having it by default
@@ -468,9 +468,9 @@ bool DetailedTreasureMapData::LegacyBossMapData::CanUseLevelUpMove(unsigned shor
 // JPN: func_020a6338
 unsigned short DetailedTreasureMapData::LegacyBossMapData::GetLearnedMove(unsigned char atLevel, int filter)
 {
-    for (int i = 0; i < stats.numLevelUpMoves; i++)
+    for (int i = 0; i < stats_.numLevelUpMoves; i++)
     {
-        LegacyBossStats::LevelUpMove* move = &stats.levelUpMoves[i];
+        LegacyBossStats::LevelUpMove* move = &stats_.levelUpMoves[i];
         if (move->level != atLevel)
             continue;
 
@@ -504,8 +504,8 @@ void DetailedTreasureMapData::RegularMapData::GenerateUnknownData()
     unsigned char value = 1;
     unsigned char chance = 0;
 
-    unknown_66 = 1;
-    unknown_4F = 0;
+    unknown_66_ = 1;
+    unknown_4f_ = 0;
 
     int readOffset = func_ov017_0218b5b0()->pTMapLanguageOffsets->unknown_18;
 
@@ -521,8 +521,8 @@ void DetailedTreasureMapData::RegularMapData::GenerateUnknownData()
 
         if (rand() % 100 < (int)chance)
         {
-            unknown_66 = value;
-            unknown_4F = index;
+            unknown_66_ = value;
+            unknown_4f_ = index;
             return;
         }
     }
@@ -553,7 +553,7 @@ void DetailedTreasureMapData::RegularMapData::GenerateEnviron()
 
         if (rngValue < readChance + percentile)
         {
-            this->environ = readEnviron;
+            this->environ_ = readEnviron;
             return;
         }
 
@@ -584,9 +584,9 @@ void DetailedTreasureMapData::RegularMapData::GenerateFloorCount()
         TMAPLANGDATA_READ(readOffset, &readMinFloors, 1);
         TMAPLANGDATA_READ(readOffset, &readMaxFloors, 1);
 
-        if (readMinQuality <= quality && quality <= readMaxQuality)
+        if (readMinQuality <= quality_ && quality_ <= readMaxQuality)
         {
-            floorCount = RandATRangeModular(readMinFloors, readMaxFloors);
+            floorCount_ = RandATRangeModular(readMinFloors, readMaxFloors);
             return;
         }
     }
@@ -615,9 +615,9 @@ void DetailedTreasureMapData::RegularMapData::GenerateMonsterRank()
         TMAPLANGDATA_READ(readOffset, &readMinRank, 1);
         TMAPLANGDATA_READ(readOffset, &readMaxRank, 1);
 
-        if (readMinQuality <= quality && quality <= readMaxQuality)
+        if (readMinQuality <= quality_ && quality_ <= readMaxQuality)
         {
-            startingMonsterRank = RandATRangeModular(readMinRank, readMaxRank);
+            startingMonsterRank_ = RandATRangeModular(readMinRank, readMaxRank);
             return;
         }
     }
@@ -646,7 +646,7 @@ void DetailedTreasureMapData::RegularMapData::GenerateBoss()
         TMAPLANGDATA_READ(readOffset, &readMinBoss, 1);
         TMAPLANGDATA_READ(readOffset, &readMaxBoss, 1);
 
-        if (readMinQuality > quality || quality > readMaxQuality)
+        if (readMinQuality > quality_ || quality_ > readMaxQuality)
             continue;
 
         int weightReadOffset;
@@ -676,8 +676,8 @@ void DetailedTreasureMapData::RegularMapData::GenerateBoss()
 
             if (rng < readBossWeight + weightAccumulator)
             {
-                bossID = i;
-                bossMonsterID = readMonsterID;
+                bossID_ = i;
+                bossMonsterID_ = readMonsterID;
                 return;
             }
 
@@ -711,7 +711,7 @@ void DetailedTreasureMapData::RegularMapData::GenerateUnusedChestRanks()
         TMAPLANGDATA_READ(readOffset, &readMinChestRank, 1);
         TMAPLANGDATA_READ(readOffset, &readMaxChestRank, 1);
 
-        maybeUnusedChestRanks[i] = RandATRangeModular(readMinChestRank, readMaxChestRank);
+        maybeUnusedChestRanks_[i] = RandATRangeModular(readMinChestRank, readMaxChestRank);
     }
 }
 
@@ -738,10 +738,10 @@ void DetailedTreasureMapData::RegularMapData::GeneratePrefix()
         TMAPLANGDATA_READ(readOffset, &readMinPrefixIdx, 1);
         TMAPLANGDATA_READ(readOffset, &readMaxPrefixIdx, 1);
 
-        if (readMinMonsterRank <= startingMonsterRank &&
-            startingMonsterRank <= readMaxMonsterRank)
+        if (readMinMonsterRank <= startingMonsterRank_ &&
+            startingMonsterRank_ <= readMaxMonsterRank)
         {
-            prefix = RandATRangeModular(readMinPrefixIdx, readMaxPrefixIdx);
+            prefix_ = RandATRangeModular(readMinPrefixIdx, readMaxPrefixIdx);
             return;
         }
     }
@@ -770,10 +770,10 @@ void DetailedTreasureMapData::RegularMapData::GenerateSuffix()
         TMAPLANGDATA_READ(readOffset, &readMinSuffixIdx, 1);
         TMAPLANGDATA_READ(readOffset, &readMaxSuffixIdx, 1);
 
-        if (readMinBossIdx <= bossID &&
-            bossID <= readMaxBossIdx)
+        if (readMinBossIdx <= bossID_ &&
+            bossID_ <= readMaxBossIdx)
         {
-            suffix = RandATRangeModular(readMinSuffixIdx, readMaxSuffixIdx);
+            suffix_ = RandATRangeModular(readMinSuffixIdx, readMaxSuffixIdx);
             return;
         }
     }
@@ -802,10 +802,10 @@ void DetailedTreasureMapData::RegularMapData::GenerateLocaleRank()
         TMAPLANGDATA_READ(readOffset, &readMinLocaleRank, 1);
         TMAPLANGDATA_READ(readOffset, &readMaxLocaleRank, 1);
 
-        if (readMinFloorCount <= floorCount &&
-            floorCount <= readMaxFloorCount)
+        if (readMinFloorCount <= floorCount_ &&
+            floorCount_ <= readMaxFloorCount)
         {
-            localeRank = RandATRangeModular(readMinLocaleRank, readMaxLocaleRank);
+            localeRank_ = RandATRangeModular(readMinLocaleRank, readMaxLocaleRank);
             return;
         }
     }
@@ -822,13 +822,13 @@ extern const unsigned char data_020e9077[]; // { 4, 13, 11 }
 // USA: func_020a51b0
 void DetailedTreasureMapData::RegularMapData::GenerateNameBuffers()
 {    
-    if (prefix == 0 || suffix == 0 || localeRank == 0 || level == 0)
+    if (prefix_ == 0 || suffix_ == 0 || localeRank_ == 0 || level_ == 0)
         return;
 
     if (GetTreasureMapLanguageData(GetBattleStruct()) == NULL)
         return;
 
-    nameNoLevel[0] = '\0';
+    nameNoLevel_[0] = '\0';
 
     // quantities read repeatedly from the binary file
     unsigned short numEntries = 0;
@@ -873,9 +873,9 @@ void DetailedTreasureMapData::RegularMapData::GenerateNameBuffers()
     }
     
     unsigned char indices[3];
-    indices[0] = prefix;
-    indices[1] = suffix;
-    indices[2] = localeRank;
+    indices[0] = prefix_;
+    indices[1] = suffix_;
+    indices[2] = localeRank_;
 
     char tempBuffer[256];
     
@@ -898,11 +898,11 @@ void DetailedTreasureMapData::RegularMapData::GenerateNameBuffers()
                 {
                     TMAPLANGDATA_READ(readOffset, &stringUnknown, 2);
                     TMAPLANGDATA_READ(readOffset, &stringLength, 2);
-                    if (environ == loopEnviron && nameIdx == readIndex)
+                    if (environ_ == loopEnviron && nameIdx == readIndex)
                     {
                         VectorizedInvertedMemcpy(langData + readOffset, tempBuffer, stringLength);
                         tempBuffer[stringLength] = '\0';
-                        strcat(nameNoLevel, tempBuffer);
+                        strcat(nameNoLevel_, tempBuffer);
                         entryLoop = numEntries; // hack to escape the j-level loop
                         break;
                     }
@@ -918,7 +918,7 @@ void DetailedTreasureMapData::RegularMapData::GenerateNameBuffers()
                 {
                     VectorizedInvertedMemcpy(langData + readOffset, tempBuffer, stringLength);
                     tempBuffer[stringLength] = '\0';
-                    strcat(nameNoLevel, tempBuffer);
+                    strcat(nameNoLevel_, tempBuffer);
                     break;
                 }
                 readOffset += stringLength;
@@ -926,8 +926,8 @@ void DetailedTreasureMapData::RegularMapData::GenerateNameBuffers()
         }
     }
 
-    sprintf(levelString, data_020f1ad0, func_020e51cc(1011), level);
-    sprintf(topScreenName, data_020f1ad5, nameNoLevel, levelString);
+    sprintf(levelString_, data_020f1ad0, func_020e51cc(1011), level_);
+    sprintf(topScreenName_, data_020f1ad5, nameNoLevel_, levelString_);
 }
 
 extern char data_020f1adb[]; // "%s%d"
@@ -935,13 +935,13 @@ extern char data_020f1adb[]; // "%s%d"
 // USA: func_020a54d0
 void DetailedTreasureMapData::RegularMapData::GeneratePopupName()
 {    
-    if (prefix == 0 || suffix == 0 || localeRank == 0 || level == 0)
+    if (prefix_ == 0 || suffix_ == 0 || localeRank_ == 0 || level_ == 0)
         return;
 
     if (GetTreasureMapLanguageData(GetBattleStruct()) == NULL)
         return;
 
-    popupName[0] = '\0';
+    popupName_[0] = '\0';
 
     // quantities read repeatedly from the binary file
     unsigned short numEntries = 0;
@@ -986,9 +986,9 @@ void DetailedTreasureMapData::RegularMapData::GeneratePopupName()
     }
     
     unsigned char indices[3];
-    indices[0] = prefix;
-    indices[1] = suffix;
-    indices[2] = localeRank;
+    indices[0] = prefix_;
+    indices[1] = suffix_;
+    indices[2] = localeRank_;
 
     char tempBuffer[64];
     
@@ -1004,18 +1004,18 @@ void DetailedTreasureMapData::RegularMapData::GeneratePopupName()
         for (unsigned short entryLoop = 0; entryLoop < numEntries; entryLoop++)
         {
             nameIdx = indices[currentNamePart];
-            if (ptrListIndex == 11)
+            if (ptrListIndex == 11) // locale
             {
                 TMAPLANGDATA_READ(readOffset, &readIndex, 1);
                 for (unsigned short loopEnviron = 1; loopEnviron <= 5; loopEnviron++)
                 {
                     TMAPLANGDATA_READ(readOffset, &stringUnknown, 2);
                     TMAPLANGDATA_READ(readOffset, &stringLength, 2);
-                    if (environ == loopEnviron && nameIdx == readIndex)
+                    if (environ_ == loopEnviron && nameIdx == readIndex)
                     {
                         VectorizedInvertedMemcpy(langData + readOffset, tempBuffer, stringLength);
                         tempBuffer[stringLength] = '\0';
-                        strcat(popupName, tempBuffer);
+                        strcat(popupName_, tempBuffer);
                         entryLoop = numEntries; // hack to escape the j-level loop
                         break;
                     }
@@ -1031,7 +1031,7 @@ void DetailedTreasureMapData::RegularMapData::GeneratePopupName()
                 {
                     VectorizedInvertedMemcpy(langData + readOffset, tempBuffer, stringLength);
                     tempBuffer[stringLength] = '\0';
-                    strcat(popupName, tempBuffer);
+                    strcat(popupName_, tempBuffer);
                     break;
                 }
                 readOffset += stringLength;
@@ -1039,8 +1039,8 @@ void DetailedTreasureMapData::RegularMapData::GeneratePopupName()
         }
     }
 
-    sprintf(tempBuffer, data_020f1adb, func_020e51cc(1011), level);
-    strcat(popupName, tempBuffer);
+    sprintf(tempBuffer, data_020f1adb, func_020e51cc(1011), level_);
+    strcat(popupName_, tempBuffer);
 }
 
 #elif defined(jpn)
@@ -1052,13 +1052,13 @@ extern char data_020f1c52[];
 // JPN: func_020a6f48
 void DetailedTreasureMapData::RegularMapData::GenerateNameBuffers()
 {    
-    if (prefix == 0 || suffix == 0 || localeRank == 0 || level == 0)
+    if (prefix_ == 0 || suffix_ == 0 || localeRank_ == 0 || level_ == 0)
         return;
 
     if (GetTreasureMapLanguageData(GetBattleStruct()) == NULL)
         return;
 
-    nameNoLevel[0] = '\0';
+    nameNoLevel_[0] = '\0';
 
     int readOffset;
     
@@ -1079,12 +1079,12 @@ void DetailedTreasureMapData::RegularMapData::GenerateNameBuffers()
         TMAPLANGDATA_READ(readOffset, &readIndex, 1);
         TMAPLANGDATA_READ(readOffset, &stringUnknown, 2);
         TMAPLANGDATA_READ(readOffset, &stringLength, 2);
-        if (prefix == readIndex)
+        if (prefix_ == readIndex)
         {
             VectorizedInvertedMemcpy(langData + readOffset, tempBuffer, stringLength);
             tempBuffer[stringLength] = '\0';
-            strcat(nameNoLevel, tempBuffer);
-            strcpy(prefixString, tempBuffer);
+            strcat(nameNoLevel_, tempBuffer);
+            strcpy(prefixString_, tempBuffer);
             break;
         }
         readOffset += stringLength;
@@ -1097,35 +1097,35 @@ void DetailedTreasureMapData::RegularMapData::GenerateNameBuffers()
         TMAPLANGDATA_READ(readOffset, &readIndex, 1);
         TMAPLANGDATA_READ(readOffset, &stringUnknown, 2);
         TMAPLANGDATA_READ(readOffset, &stringLength, 2);
-        if (suffix == readIndex)
+        if (suffix_ == readIndex)
         {
             VectorizedInvertedMemcpy(langData + readOffset, tempBuffer, stringLength);
             tempBuffer[stringLength] = '\0';
-            strcat(nameNoLevel, tempBuffer);
-            strcpy(suffixString, tempBuffer);
+            strcat(nameNoLevel_, tempBuffer);
+            strcpy(suffixString_, tempBuffer);
             break;
         }
         readOffset += stringLength;
     }
 
     char nameUndecorated[256];
-    RemoveFurigana(nameNoLevel, nameUndecorated);
+    RemoveFurigana(nameNoLevel_, nameUndecorated);
     strcat(nameUndecorated, data_020f1c48);
-    strcpy(nameNoLevel, nameUndecorated);
-    sprintf(levelString, data_020f1c4d, level);
-    sprintf(topScreenName, data_020f1c52, nameNoLevel, levelString);
+    strcpy(nameNoLevel_, nameUndecorated);
+    sprintf(levelString_, data_020f1c4d, level_);
+    sprintf(topScreenName_, data_020f1c52, nameNoLevel_, levelString_);
 }
 
 // JPN: func_020a71f8
 void DetailedTreasureMapData::RegularMapData::GeneratePopupName()
 {    
-    if (prefix == 0 || suffix == 0 || localeRank == 0 || level == 0)
+    if (prefix_ == 0 || suffix_ == 0 || localeRank_ == 0 || level_ == 0)
         return;
 
     if (GetTreasureMapLanguageData(GetBattleStruct()) == NULL)
         return;
 
-    popupName[0] = '\0';
+    popupName_[0] = '\0';
 
     int readOffset;
     
@@ -1146,12 +1146,12 @@ void DetailedTreasureMapData::RegularMapData::GeneratePopupName()
         TMAPLANGDATA_READ(readOffset, &readIndex, 1);
         TMAPLANGDATA_READ(readOffset, &stringUnknown, 2);
         TMAPLANGDATA_READ(readOffset, &stringLength, 2);
-        if (prefix == readIndex)
+        if (prefix_ == readIndex)
         {
             VectorizedInvertedMemcpy(langData + readOffset, tempBuffer, stringLength);
             tempBuffer[stringLength] = '\0';
-            strcat(popupName, tempBuffer);
-            strcpy(prefixString, tempBuffer);
+            strcat(popupName_, tempBuffer);
+            strcpy(prefixString_, tempBuffer);
             break;
         }
         readOffset += stringLength;
@@ -1164,12 +1164,12 @@ void DetailedTreasureMapData::RegularMapData::GeneratePopupName()
         TMAPLANGDATA_READ(readOffset, &readIndex, 1);
         TMAPLANGDATA_READ(readOffset, &stringUnknown, 2);
         TMAPLANGDATA_READ(readOffset, &stringLength, 2);
-        if (suffix == readIndex)
+        if (suffix_ == readIndex)
         {
             VectorizedInvertedMemcpy(langData + readOffset, tempBuffer, stringLength);
             tempBuffer[stringLength] = '\0';
-            strcat(popupName, tempBuffer);
-            strcpy(suffixString, tempBuffer);
+            strcat(popupName_, tempBuffer);
+            strcpy(suffixString_, tempBuffer);
             break;
         }
         readOffset += stringLength;
@@ -1184,12 +1184,12 @@ void DetailedTreasureMapData::RegularMapData::GeneratePopupName()
         {
             TMAPLANGDATA_READ(readOffset, &stringUnknown, 2);
             TMAPLANGDATA_READ(readOffset, &stringLength, 2);
-            if (environ == loopEnviron && localeRank == readIndex)
+            if (environ_ == loopEnviron && localeRank_ == readIndex)
             {
                 VectorizedInvertedMemcpy(langData + readOffset, tempBuffer, stringLength);
                 tempBuffer[stringLength] = '\0';
-                strcat(popupName, tempBuffer);
-                strcpy(localeString, tempBuffer);
+                strcat(popupName_, tempBuffer);
+                strcpy(localeString_, tempBuffer);
                 i = numEntries; // hack to escape the outer loop
                 break;
             }
@@ -1197,8 +1197,8 @@ void DetailedTreasureMapData::RegularMapData::GeneratePopupName()
         }
     }
 
-    sprintf(tempBuffer, data_020f1c4d, level);
-    strcat(popupName, tempBuffer);
+    sprintf(tempBuffer, data_020f1c4d, level_);
+    strcat(popupName_, tempBuffer);
 }
 
 #endif
@@ -1210,13 +1210,13 @@ extern unsigned char data_0211e33c[];
 
 void DetailedTreasureMapData::LoadLegacyBossStats(bool compute, const unsigned char* providedArchive)
 {
-    if (mapType != TreasureMapType_Legacy)
+    if (mapType_ != TreasureMapType_Legacy)
         return;
 
     if (!compute)
     {
-        legacy.stats.dropListIndex = 0;
-        legacy.stats.newDropListAtNextLevel = false;
+        legacy_.stats_.dropListIndex = 0;
+        legacy_.stats_.newDropListAtNextLevel = false;
         return;
     }
     
@@ -1236,7 +1236,7 @@ void DetailedTreasureMapData::LoadLegacyBossStats(bool compute, const unsigned c
     }
 
     char innerFileName[256];
-    sprintf(innerFileName, data_020f1af8, legacy.bossMonsterID);
+    sprintf(innerFileName, data_020f1af8, legacy_.bossMonsterID_);
     const unsigned char* innerFileData;
     unsigned int innerFileSize;
     if (!GetFileInNarc(usedArchive, innerFileName, reinterpret_cast<const void**>(&innerFileData), &innerFileSize, 0))
@@ -1248,7 +1248,7 @@ void DetailedTreasureMapData::LoadLegacyBossStats(bool compute, const unsigned c
     BackgroundLoader::RemoveLockGlobal();
 
     const unsigned char* copyOfInnerFilePtr;
-    unsigned int loadlevel = legacy.level;
+    unsigned int loadlevel = legacy_.level_;
     // I would very much like to see this horrible hack removed, but it does the trick
     // and without it, the compiler optimises out the constant 0x18. This way it gets
     // kept in a register until the end.
@@ -1260,21 +1260,21 @@ void DetailedTreasureMapData::LoadLegacyBossStats(bool compute, const unsigned c
     
     unsigned int offset = stride * loadlevel;
     
-    BINARY_READ_AND_ADVANCE(innerFileData, offset, &legacy.stats.maxHP, 4);
-    BINARY_READ_AND_ADVANCE(innerFileData, offset, &legacy.stats.maxMP, 4);
-    BINARY_READ_AND_ADVANCE(innerFileData, offset, &legacy.stats.agility, 2);
-    BINARY_READ_AND_ADVANCE(innerFileData, offset, &legacy.stats.attack, 2);
-    BINARY_READ_AND_ADVANCE(innerFileData, offset, &legacy.stats.defense, 2);
-    BINARY_READ_AND_ADVANCE(innerFileData, offset, &legacy.stats.alternateVersion, 1);
-    BINARY_READ_AND_ADVANCE(innerFileData, offset, &legacy.stats.rewardExp, 4);
-    BINARY_READ_AND_ADVANCE(innerFileData, offset, &legacy.stats.rewardGold, 4);
-    BINARY_READ_AND_ADVANCE(innerFileData, offset, &legacy.stats.dropListIndex, 1);
+    BINARY_READ_AND_ADVANCE(innerFileData, offset, &legacy_.stats_.maxHP, 4);
+    BINARY_READ_AND_ADVANCE(innerFileData, offset, &legacy_.stats_.maxMP, 4);
+    BINARY_READ_AND_ADVANCE(innerFileData, offset, &legacy_.stats_.agility, 2);
+    BINARY_READ_AND_ADVANCE(innerFileData, offset, &legacy_.stats_.attack, 2);
+    BINARY_READ_AND_ADVANCE(innerFileData, offset, &legacy_.stats_.defense, 2);
+    BINARY_READ_AND_ADVANCE(innerFileData, offset, &legacy_.stats_.alternateVersion, 1);
+    BINARY_READ_AND_ADVANCE(innerFileData, offset, &legacy_.stats_.rewardExp, 4);
+    BINARY_READ_AND_ADVANCE(innerFileData, offset, &legacy_.stats_.rewardGold, 4);
+    BINARY_READ_AND_ADVANCE(innerFileData, offset, &legacy_.stats_.dropListIndex, 1);
     
-    legacy.stats.newDropListAtNextLevel = false;
-    if (legacy.level < 99)
+    legacy_.stats_.newDropListAtNextLevel = false;
+    if (legacy_.level_ < 99)
     {
         LegacyBossStats next;
-        offset = stride * legacy.level;
+        offset = stride * legacy_.level_;
         BINARY_READ_AND_ADVANCE(innerFileData, offset, &next.maxHP, 4);
         BINARY_READ_AND_ADVANCE(innerFileData, offset, &next.maxMP, 4);
         BINARY_READ_AND_ADVANCE(innerFileData, offset, &next.agility, 2);
@@ -1285,15 +1285,15 @@ void DetailedTreasureMapData::LoadLegacyBossStats(bool compute, const unsigned c
         BINARY_READ_AND_ADVANCE(innerFileData, offset, &next.rewardGold, 4);
         BINARY_READ_AND_ADVANCE(innerFileData, offset, &next.dropListIndex, 1);
         
-        if (legacy.stats.dropListIndex < next.dropListIndex)
-            legacy.stats.newDropListAtNextLevel = true;
+        if (legacy_.stats_.dropListIndex < next.dropListIndex)
+            legacy_.stats_.newDropListAtNextLevel = true;
     }
 
     offset = stride * 99;
-    BINARY_READ_AND_ADVANCE(innerFileData, offset, &legacy.stats.numLevelUpMoves, 1);
-    for (int i = 0; i < legacy.stats.numLevelUpMoves; i++)
+    BINARY_READ_AND_ADVANCE(innerFileData, offset, &legacy_.stats_.numLevelUpMoves, 1);
+    for (int i = 0; i < legacy_.stats_.numLevelUpMoves; i++)
     {
-        LegacyBossStats::LevelUpMove* dst = &legacy.stats.levelUpMoves[i];
+        LegacyBossStats::LevelUpMove* dst = &legacy_.stats_.levelUpMoves[i];
         BINARY_READ_AND_ADVANCE(innerFileData, offset, &dst->moveID, 2);
         BINARY_READ_AND_ADVANCE(innerFileData, offset, &dst->level, 1);
         BINARY_READ_AND_ADVANCE(innerFileData, offset, &dst->announceLearn, 1);
@@ -1309,9 +1309,9 @@ void DetailedTreasureMapData::LoadTreasures()
     unsigned int offset;
     bool foundBoss = false;
 
-    if (mapType == TreasureMapType_Regular)
+    if (mapType_ == TreasureMapType_Regular)
     {
-        if (treasureItemIDs[0] != 0 && treasureItemIDs[1] != 0 && treasureItemIDs[2] != 0)
+        if (treasureItemIDs_[0] != 0 && treasureItemIDs_[1] != 0 && treasureItemIDs_[2] != 0)
             return;
         offset = offsets->grottoBossDrops;
         do
@@ -1321,7 +1321,7 @@ void DetailedTreasureMapData::LoadTreasures()
             unsigned int innerOffset = offset;
             TMAPLANGDATA_READ(innerOffset, &bossIndex, 1);
             TMAPLANGDATA_READ(innerOffset, &regularID, 2);
-            if (regularID == regular.bossMonsterID)
+            if (regularID == regular_.bossMonsterID_)
             {
                 rand();
                 foundBoss = true;
@@ -1339,10 +1339,10 @@ void DetailedTreasureMapData::LoadTreasures()
         {
             unsigned short legacyID;
             TMAPLANGDATA_READ(offset, &legacyID, 2);
-            if (legacyID == legacy.bossMonsterID)
+            if (legacyID == legacy_.bossMonsterID_)
             {
                 foundBoss = true;
-                offset += (legacy.stats.dropListIndex - 1) * 9;
+                offset += (legacy_.stats_.dropListIndex - 1) * 9;
                 break;
             }
             else
@@ -1354,8 +1354,8 @@ void DetailedTreasureMapData::LoadTreasures()
     {
         for (int i = 0; i < 3; i++)
         {
-            TMAPLANGDATA_READ(offset, &treasureItemIDs[i], 2);
-            TMAPLANGDATA_READ(offset, &treasureDropRates[i], 1);
+            TMAPLANGDATA_READ(offset, &treasureItemIDs_[i], 2);
+            TMAPLANGDATA_READ(offset, &treasureDropRates_[i], 1);
         }
     }
 }
