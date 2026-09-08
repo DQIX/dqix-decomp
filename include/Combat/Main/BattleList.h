@@ -42,10 +42,9 @@ struct CombatantStruct {
     // Applying a status writes a small constant here and zeroes the matching
     // counter; clearing it zeroes both. INFERRED as a duration in turns from
     // the values (4, 5 and 6) - not established.
-    /* 0x05f */ unsigned char statusDurations[11];
-    /* 0x06a */ char unknown_0x6a[0x82 - 0x6a];
-    /* 0x082 */ unsigned char statusCounters[11];
-    /* 0x08d */ char unknown_0x8d[0x134 - 0x8d];
+    /* 0x05f */ unsigned char statusDurations[0x23];
+    /* 0x082 */ unsigned char statusCounters[0x23];
+    /* 0x0a5 */ char unknown_0xa5[0x134 - 0xa5];
     /* 0x134 */ struct BaseCombatStats* baseStats; // TODO: holds more general info than just stats
     /* 0x138 */ struct ModifiableCombatStats* currentStats; // includes things like buffs being applied
 };

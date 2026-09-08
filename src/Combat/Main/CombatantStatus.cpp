@@ -262,3 +262,135 @@ ARM void ClearStatus_0x80000000(struct CombatantStruct* combatant)
     combatant->statusDurations[10] = 0;
     combatant->statusCounters[10] = 0;
 }
+
+// USA: func_02088bf0
+ARM bool CanApplyState_0x2(struct CombatantStruct* combatant)
+{
+    if (combatant->statusFlags & 1)
+        return false;
+
+    return (combatant->statusFlags & 0x20000) == 0;
+}
+
+// USA: func_02088c10
+ARM void ApplyState_0x2(struct CombatantStruct* combatant)
+{
+    combatant->statusDurations[0xd] = 5;
+    combatant->statusCounters[0xd] = 0;
+    combatant->stateFlags |= 0x2;
+    ClearState_0x4(combatant);
+}
+
+// USA: func_02088c38
+ARM void ClearState_0x2(struct CombatantStruct* combatant)
+{
+    combatant->stateFlags &= ~0x2;
+    combatant->statusDurations[0xd] = 0;
+    combatant->statusCounters[0xd] = 0;
+}
+
+// USA: func_02088c54
+ARM bool CanApplyState_0x4(struct CombatantStruct* combatant)
+{
+    if (combatant->statusFlags & 1)
+        return false;
+
+    return (combatant->statusFlags & 0x20000) == 0;
+}
+
+// USA: func_02088c74
+ARM void ApplyState_0x4(struct CombatantStruct* combatant)
+{
+    combatant->statusDurations[0xe] = 5;
+    combatant->statusCounters[0xe] = 0;
+    combatant->stateFlags |= 0x4;
+    ClearState_0x2(combatant);
+}
+
+// USA: func_02088c9c
+ARM void ClearState_0x4(struct CombatantStruct* combatant)
+{
+    combatant->stateFlags &= ~0x4;
+    combatant->statusDurations[0xe] = 0;
+    combatant->statusCounters[0xe] = 0;
+}
+
+// USA: func_02088cb8
+ARM bool CanApplyState_0x8(struct CombatantStruct* combatant)
+{
+    return (combatant->statusFlags & 1) == 0;
+}
+
+// USA: func_02088ccc
+ARM void ApplyState_0x8(struct CombatantStruct* combatant)
+{
+    combatant->statusDurations[0xc] = 5;
+    combatant->statusCounters[0xc] = 0;
+    combatant->stateFlags |= 0x8;
+    ClearState_0x10(combatant);
+}
+
+// USA: func_02088cf4
+ARM void ClearState_0x8(struct CombatantStruct* combatant)
+{
+    combatant->stateFlags &= ~0x8;
+    combatant->statusDurations[0xc] = 0;
+    combatant->statusCounters[0xc] = 0;
+}
+
+// USA: func_02088d10
+ARM bool CanApplyState_0x10(struct CombatantStruct* combatant)
+{
+    return (combatant->statusFlags & 1) == 0;
+}
+
+// USA: func_02088d24
+ARM void ApplyState_0x10(struct CombatantStruct* combatant)
+{
+    combatant->statusDurations[0x1c] = 5;
+    combatant->statusCounters[0x1c] = 0;
+    combatant->stateFlags |= 0x10;
+    ClearState_0x8(combatant);
+}
+
+// USA: func_02088d4c
+ARM void ClearState_0x10(struct CombatantStruct* combatant)
+{
+    combatant->stateFlags &= ~0x10;
+    combatant->statusDurations[0x1c] = 0;
+    combatant->statusCounters[0x1c] = 0;
+}
+
+// USA: func_02088d68
+ARM bool CanApplyState_0x100(struct CombatantStruct* combatant)
+{
+    return (combatant->statusFlags & 1) == 0;
+}
+
+// USA: func_02088d7c
+ARM void ApplyState_0x100(struct CombatantStruct* combatant)
+{
+    combatant->statusDurations[0x1e] = 5;
+    combatant->statusCounters[0x1e] = 0;
+    combatant->stateFlags |= 0x100;
+}
+
+// USA: func_02088d9c
+ARM void ClearState_0x100(struct CombatantStruct* combatant)
+{
+    combatant->stateFlags &= ~0x100;
+    combatant->statusDurations[0x1e] = 0;
+    combatant->statusCounters[0x1e] = 0;
+}
+
+// USA: func_02088db8
+ARM void SetState_0x20(struct CombatantStruct* combatant)
+{
+    combatant->stateFlags |= 0x20;
+}
+
+// USA: func_02088dc8
+ARM void ClearState_0x20(struct CombatantStruct* combatant)
+{
+    combatant->stateFlags &= ~0x20;
+}

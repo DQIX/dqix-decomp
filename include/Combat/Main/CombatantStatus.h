@@ -75,4 +75,37 @@ bool CanApplyStatus_0x80000000(struct CombatantStruct* combatant);
 void ApplyStatus_0x80000000(struct CombatantStruct* combatant);
 void ClearStatus_0x80000000(struct CombatantStruct* combatant);
 
+// USA: func_02088bf0 / func_02088c10 / func_02088c38
+// Applying this tail-calls ClearState_0x4: the two are exclusive.
+bool CanApplyState_0x2(struct CombatantStruct* combatant);
+void ApplyState_0x2(struct CombatantStruct* combatant);
+void ClearState_0x2(struct CombatantStruct* combatant);
+
+// USA: func_02088c54 / func_02088c74 / func_02088c9c
+// Applying this tail-calls ClearState_0x2: the two are exclusive.
+bool CanApplyState_0x4(struct CombatantStruct* combatant);
+void ApplyState_0x4(struct CombatantStruct* combatant);
+void ClearState_0x4(struct CombatantStruct* combatant);
+
+// USA: func_02088cb8 / func_02088ccc / func_02088cf4
+// Applying this tail-calls ClearState_0x10: the two are exclusive.
+bool CanApplyState_0x8(struct CombatantStruct* combatant);
+void ApplyState_0x8(struct CombatantStruct* combatant);
+void ClearState_0x8(struct CombatantStruct* combatant);
+
+// USA: func_02088d10 / func_02088d24 / func_02088d4c
+// Applying this tail-calls ClearState_0x8: the two are exclusive.
+bool CanApplyState_0x10(struct CombatantStruct* combatant);
+void ApplyState_0x10(struct CombatantStruct* combatant);
+void ClearState_0x10(struct CombatantStruct* combatant);
+
+// USA: func_02088d68 / func_02088d7c / func_02088d9c
+bool CanApplyState_0x100(struct CombatantStruct* combatant);
+void ApplyState_0x100(struct CombatantStruct* combatant);
+void ClearState_0x100(struct CombatantStruct* combatant);
+
+// USA: func_02088db8 / func_02088dc8
+void SetState_0x20(struct CombatantStruct* combatant);
+void ClearState_0x20(struct CombatantStruct* combatant);
+
 }
