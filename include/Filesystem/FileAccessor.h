@@ -21,7 +21,7 @@ CBool NitroVM_FinishRead(NitroVM* vm);
 
 // Assuming that register base_A holds the file ID, runs command 5 to output
 // the filename to the specified buffer
-void NitroVM_WriteOutFilePath(NitroVM* vm, char* buffer, unsigned int bufferLength);
+CBool NitroVM_WriteOutFilePath(NitroVM* vm, char* buffer, unsigned int bufferLength);
 
 CBool NitroVM_AwaitCommandCompletion(NitroVM* vm);
 void NitroVM_CancelCommand(NitroVM* vm);

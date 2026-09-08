@@ -2,6 +2,12 @@
 
 #include "Memory/SafeAllocator.h"
 
+#ifdef jpn
+#define data_0211e33c data_0211fb64
+#endif
+
+extern unsigned char data_0211e33c[0x30000];
+
 void* LoadFileIntoMemory(const char* path, void* buffer, unsigned int* outLength);
 void* LoadFileIntoNewAllocation(const char* path, SafeAllocator& alloc, unsigned int* outLength);
 // Returns true if the file was found, in which case a pointer to it will be written
@@ -12,7 +18,7 @@ bool GetFileInNarc(const void* narcBuffer, const char* innerFilePath,
 // Behaves like GetFileInNarc, but the file path isn't case sensitive and the
 // extension is ignored
 bool GetFileInNarcPermissive(const void* narcBuffer, const char* innerFilePath,
-    const void** pOutFilePtr, unsigned int* pOutFileSize, unsigned int firstFileIdxSearch);
+    const void** pOutFilePtr, unsigned int* pOutFileSize);
 
 // Finds files whose name contains substr as a substring. Commonly used
 // with substr = ".nsbmd" or similar to search by extension. Returns the

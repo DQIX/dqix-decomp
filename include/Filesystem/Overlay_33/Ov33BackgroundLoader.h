@@ -4,7 +4,7 @@
 
 struct Ov33BackgroundLoader : public BackgroundLoader
 {
-    //FileLoadDataOverride();
+    Ov33BackgroundLoader();
     virtual int Process();
 };
 

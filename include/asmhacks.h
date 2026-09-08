@@ -27,3 +27,17 @@
 #define ASM_GOTO(label) goto label 
 #define ASM_LABEL(label) label: ((void)0)
 #endif
+
+
+// very stupid hack. Sometimes we have assembly that reads like
+//     cmp rn, #0
+//     bls condition_not_met
+//     ...
+// corresponding to
+//     if ((unsigned int)rn > 0) { ... }.
+// But if you write this, the compiler optimizes > 0 to != 0 giving a
+// beq instruction instead. To get around this, you can either declare
+// an unsigned int variable set to zero and compare against that,
+// or you can compare against a call to this function (provided it
+// actually gets inlined) 
+inline unsigned int UNSIGNED_ZERO() { return 0; }
