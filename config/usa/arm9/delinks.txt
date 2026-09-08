@@ -27,9 +27,17 @@ src/World/Zone3D.cpp:
 
 // 0x02013b70 for basic, 0x02019728 for full
 
+src/World/BuildArcMemberPath.cpp:
+    complete
+    .text start:0x02014d18 end:0x02014d80
+
 src/Grotto/Main/GenerateObjectPosition.cpp:
     complete
     .text start:0x02019728 end:0x0201a300
+
+src/World/ZonePredicates.cpp:
+    complete
+    .text start:0x0201b588 end:0x0201b600
 
 src/World/MapListLoader.cpp:
     complete
@@ -155,6 +163,10 @@ src/Grotto/Main/FloorMapGenerator.cpp:
 src/Grotto/Main/FloorMap.cpp:
     complete
     .text start:0x02092644 end:0x02092a74
+
+src/System/SceneOverlays.cpp:
+    complete
+    .text start:0x020a18f4 end:0x020a1940
 
 src/Grotto/Main/TreasureMapDataStructs.cpp:
     complete

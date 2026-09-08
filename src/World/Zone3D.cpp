@@ -7,6 +7,7 @@
 #include "Filesystem/FileIO.h"
 #include "Grotto/Overlay_17/Struct44C8.h"
 #include "Graphics/NSBXX/NSBXX.h"
+#include "World/ZonePredicates.h"
 
 // we still need to include this file because of Vector3i::operator= being
 // implicitly defined here, so use this to include all the other functions 
@@ -19,7 +20,6 @@
 #define func_02011584 func_020112f4
 #define func_02013750 func_02013518
 #define func_02013490 func_02013258
-#define func_0201b5b0 func_0201b328
 #define func_02053c6c func_02054fe4
 #define func_0207a5b8 func_0207b3f0
 #define func_0207b9cc func_0207c804
@@ -58,11 +58,6 @@ extern "C"
     void func_02013750(Zone3D*, bool);
     void func_02014414(Zone3D*, const void*, unsigned);
     void func_02014a24(Zone3D*, void*);
-
-    // checks if zone id corresponds to a main floor of a grotto
-    bool func_0201b5b0(int id);
-    // checks if zone id corresponds to boss floor of a grotto
-    bool func_0201b5d8(int id);
 }
 
 extern char data_020ef0f0[]; // "data/map/maplist9.bin"
@@ -174,12 +169,12 @@ void Zone3D::SwitchZone(unsigned short newID)
 
     grottoTileMapData_420_ = NULL;
 
-    if (func_0201b5b0(previousZoneID_))
+    if (IsMainGrottoFloorZone(previousZoneID_))
     {
         grotto_.floorMap_.Clear();
     }
 
-    if (func_0201b5b0(newID))
+    if (IsMainGrottoFloorZone(newID))
     {
         isInMainGrottoFloor_23b8_ = true;
         currentGrottoFloor_23ba_ = newID % 20;
@@ -239,7 +234,7 @@ void Zone3D::LoadMapAMBL()
 
     char filenameBuffer[20];
 
-    if (func_0201b5b0(currentZoneID_))
+    if (IsMainGrottoFloorZone(currentZoneID_))
     {
         int environ = grotto_.GetActiveGrottoEnviron();
         if (environ == 0)
@@ -248,7 +243,7 @@ void Zone3D::LoadMapAMBL()
             environ = 5;
         sprintf(filenameBuffer, data_020ef106, data_020ef116, environ);
     }
-    else if (func_0201b5d8(currentZoneID_))
+    else if (IsGrottoBossFloorZone(currentZoneID_))
     {
         int environ = grotto_.GetActiveGrottoEnviron();
         sprintf(filenameBuffer, data_020ef11f, data_020ef116, environ);
@@ -445,7 +440,7 @@ void Zone3D::LoadMapAMDJ()
 {
     BackgroundLoader* loader = BackgroundLoader::GetInstance();
     char filenameBuffer[20];
-    if (func_0201b5b0(currentZoneID_))
+    if (IsMainGrottoFloorZone(currentZoneID_))
     {
         int environ = grotto_.GetActiveGrottoEnviron();
         if (environ == 0)
@@ -454,7 +449,7 @@ void Zone3D::LoadMapAMDJ()
             environ = 5;
         sprintf(filenameBuffer, data_020ef156, data_020ef116, environ);
     }
-    else if (func_0201b5d8(currentZoneID_))
+    else if (IsGrottoBossFloorZone(currentZoneID_))
     {
         int environ = grotto_.GetActiveGrottoEnviron();
         sprintf(filenameBuffer, data_020ef166, data_020ef116, environ);
