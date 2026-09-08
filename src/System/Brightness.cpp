@@ -8,8 +8,33 @@ extern "C" ARM void *func_020daf90();
 extern "C" ARM int func_020db9cc(void *unk, int screen, int brightness, unsigned int duration);
 extern "C" ARM void func_020c39a0(volatile unsigned short *reg, int brightness);
 extern "C" ARM int func_02010208(BattleStruct *battleStruct);
+extern "C" ARM int func_020c39c8(volatile unsigned short *reg);
 #define REG_MASTER_BRIGHT ((volatile unsigned short *) 0x0400006C)
 #define REG_MASTER_BRIGHT_SUB ((volatile unsigned short *) 0x0400106C)
+
+// func_0203aee0
+extern "C" ARM void InitializeBrightnessState(UnknownContext *context) {
+    context->flags_00 = 0;
+    context->flags_04 = 0;
+    context->flags_08 = 0;
+
+    context->mainBrightnessTimeRemaining = 0;
+    context->subBrightnessTimeRemaining  = 0;
+
+    context->mainBrightnessLocked = 0;
+    context->subBrightnessLocked  = 0;
+    context->mainBrightnessDirty  = 0;
+    context->subBrightnessDirty   = 0;
+
+    context->allowBrightnessApply = 1;
+
+    context->mainBrightness = (float) func_020c39c8(REG_MASTER_BRIGHT);
+
+    context->subBrightness = (float) func_020c39c8(REG_MASTER_BRIGHT_SUB);
+}
+
+// func_0203af44
+extern "C" ARM void Stub() {}
 
 // func_0203af48
 extern "C" ARM void UpdateBrightnessTransitions(UnknownContext *context) {
