@@ -31,6 +31,8 @@ don't match the same one, and where to ask for help when a function refuses to m
 > every module against the ROM and will fail if your code doesn't match.
 
 - Run `ninja` before opening a pull request and make sure it passes.
+- Tick both boxes in the pull request checklist. A check enforces them and names whichever is
+  still unticked; edit the description and it re-runs.
 - Rename symbols in `symbols.txt` to match the names used in your decompiled code.
 - Mark a file `complete` in `delinks.txt` only when every function in its address range matches.
 - Keep one logical change per pull request; a batch of matched functions in the same module is fine,
