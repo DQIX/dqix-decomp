@@ -37,10 +37,41 @@ struct CombatantStruct {
     struct ModifiableCombatStats* currentStats; // includes things like buffs being applied
 };
 
+// The offsets below were read off the accessors at 0x02011518..0x0201165c,
+// which reach 0x63e0 - so this struct is at least 25 KB, far past the part
+// modelled above. Everything between the named fields is carried as opaque
+// bytes. Note the padding is expressed relative to combatantList, so if that
+// array's size is ever corrected the padding must be adjusted to keep the
+// absolute offsets in the comments true.
 struct BattleStruct {
-    int unk0;
-    int unk4;
-    struct CombatantStruct* combatantList[0xe9]; // TODO: validate this size as well as this struct as a whole
+    /* 0x0000 */ int unk0;
+    /* 0x0004 */ int unk4;
+    /* 0x0008 */ struct CombatantStruct* combatantList[0xe9]; // TODO: validate this size as well as this struct as a whole
+    /* 0x03ac */ char unknown_0x3ac[0x468 - 0x3ac];
+    // A sub-object whose address is handed out by GetWorldData - ZoneFeatures
+    // and Zone3D both call it the world data, and pass it to the map record
+    // lookup. Its extent is not established; it is bounded here only by the
+    // next known field.
+    /* 0x0468 */ char worldData[0x571d - 0x468];
+    // Four entries and a count, read through a bounds check that returns -1.
+    // INFERRED as a party roster from the shape - four slots is the party
+    // size - but not established.
+    /* 0x571d */ signed char rosterIds[4];
+    /* 0x5721 */ unsigned char rosterCount;
+    /* 0x5722 */ char unknown_0x5722[0x5ccc - 0x5722];
+    // Read sign-extended from bit 0, so a signed one-bit field: 0 or -1.
+    /* 0x5ccc */ signed int flag_0x5ccc : 1;
+                 unsigned int unknown_0x5ccc_rest : 31;
+    /* 0x5cd0 */ char unknown_0x5cd0[0x63d6 - 0x5cd0];
+    /* 0x63d6 */ unsigned char value_0x63d6;
+    /* 0x63d7 */ char unknown_0x63d7;
+    /* 0x63d8 */ unsigned short value_0x63d8;
+    /* 0x63da */ unsigned short value_0x63da;
+    /* 0x63dc */ char unknown_0x63dc[0x63e0 - 0x63dc];
+    // GetTreasureMapLanguageData / SetTreasureMapLanguageDataPtr reach this
+    // through a raw offset, which is 0x6180 on jpn - so the offsets in this
+    // comment column hold for usa only.
+    /* 0x63e0 */ unsigned char* pTreasureMapLanguageData;
 };
 struct BattleStruct* GetBattleStruct();
 struct CombatantStruct* GetCombatantFromList(struct BattleStruct* battleStruct, int id);

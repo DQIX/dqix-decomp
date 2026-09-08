@@ -2,13 +2,13 @@
 #include "World/Zone3D.h"
 #include "Resource/Script.h"
 #include "Combat/Main/BattleList.h"
+#include "Combat/Main/BattleStructAccessors.h"
 #include "System/Memory.h"
 
 #if defined(jpn)
 #define data_020ef388 data_020ef2c4
 #define data_020fdc20 data_020fd98c
 
-#define func_02011584 func_020112f4
 #define func_0209998c func_0209b6c0
 #endif
 
@@ -23,7 +23,6 @@ struct Struct_020fdc20
 
 extern "C"
 {
-    void* func_02011584(BattleStruct*);
     // probably get zone data by name
     unsigned short* func_0209998c(void*, const char*);
 }
@@ -144,7 +143,7 @@ int WarpScript_Opcode_68(Script::Parameter* params, int numParams)
 bool ProcessExtraOpcode69Params(Script::Parameter* param, int numParams, ZoneFeatures::Opcode68Entry& entry)
 {
     Script::Parameter* paramStart = param;
-    void* worldData = func_02011584(GetBattleStruct());
+    void* worldData = GetWorldData(GetBattleStruct());
     
     entry.unk_0 = (param++)->ToInt();
     if (paramStart[1].type == 0)
@@ -479,7 +478,7 @@ int WarpScript_Opcode_74(Script::Parameter* params, int numParams)
 {
     if (data_020fdc20.currentEntry == NULL)
         return 0;
-    void* worldData = func_02011584(GetBattleStruct());
+    void* worldData = GetWorldData(GetBattleStruct());
     switch (data_020fdc20.currentEntry->maybeType)
     {
     case 0:
