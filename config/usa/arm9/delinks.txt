@@ -95,6 +95,10 @@ src/World/Object3D.cpp:
     .data start:0x020efaa8 end:0x020efb44
     .bss start:0x02104b18 end:0x02104b60
 
+src/Collision/Main/CollisionMesh.cpp:
+    complete
+    .text start:0x0204bf30 end:0x0204c030
+
 src/Graphics/LightingManager.cpp:
     complete
     .text start:0x02050454 end:0x02052958
