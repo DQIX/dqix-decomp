@@ -3,9 +3,9 @@
 struct UnknownContext {
     // full size: 0x44C8 bytes
 
-    unsigned int flags_00; // 0
-    unsigned int flags_04; // 4
-    unsigned int flags_08; // 8
+    unsigned int flags_00;
+    unsigned int flags_04;
+    unsigned int flags_08;
 
     float mainBrightness;
     int mainBrightnessTarget;
@@ -20,4 +20,6 @@ struct UnknownContext {
     unsigned char mainBrightnessDirty;
     unsigned char subBrightnessDirty;
     unsigned char allowBrightnessApply;
+
+     // ... ~0x449F bytes still to understand
 };
