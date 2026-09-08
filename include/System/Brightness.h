@@ -3,6 +3,8 @@
 #include "Combat/Main/UnknownContext.h"
 #include <globaldefs.h>
 
+extern "C" ARM void UpdateAndApplyBrightness(UnknownContext *context);
+
 extern "C" ARM void SetMainBrightness(UnknownContext *context, int brightness, int duration);
 
 extern "C" ARM void SetSubBrightness(UnknownContext *context, int brightness, int duration);
