@@ -1,13 +1,10 @@
 #include <globaldefs.h>
 #include "System/SceneOverlays.h"
 
-extern "C"
-{
-    extern const SceneEntry data_020e8f20[];
+extern const SceneEntry data_020e8f20[];
 
-    extern int data_01ffd348;            // current slot bank
-    extern signed char data_01ffd364[];  // six slots per bank
-}
+extern int data_01ffd348;            // current slot bank
+extern signed char data_01ffd364[];  // six slots per bank, 8 banks?
 
 // usa: func_020a18f4
 ARM bool IsSceneLoaded(unsigned int scene)
