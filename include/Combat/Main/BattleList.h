@@ -31,10 +31,21 @@ struct ModifiableCombatStats {
 };
 
 struct CombatantStruct {
-    unsigned short flags;
-    char unk[0x132];
-    struct BaseCombatStats* baseStats; // TODO: holds more general info than just stats
-    struct ModifiableCombatStats* currentStats; // includes things like buffs being applied
+    /* 0x000 */ unsigned short flags;
+    /* 0x002 */ char unk[0x14 - 0x2];
+    // Status bits. The accessors at 0x02088840..0x02088a70 set and clear seven
+    // of them, each paired with an entry in the two byte arrays below.
+    /* 0x014 */ unsigned int statusFlags;
+    /* 0x018 */ char unknown_0x18[0x5f - 0x18];
+    // Applying a status writes a small constant here and zeroes the matching
+    // counter; clearing it zeroes both. INFERRED as a duration in turns from
+    // the values (4, 5 and 6) - not established.
+    /* 0x05f */ unsigned char statusDurations[8];
+    /* 0x067 */ char unknown_0x67[0x82 - 0x67];
+    /* 0x082 */ unsigned char statusCounters[8];
+    /* 0x08a */ char unknown_0x8a[0x134 - 0x8a];
+    /* 0x134 */ struct BaseCombatStats* baseStats; // TODO: holds more general info than just stats
+    /* 0x138 */ struct ModifiableCombatStats* currentStats; // includes things like buffs being applied
 };
 
 // The offsets below were read off the accessors at 0x02011518..0x0201165c,

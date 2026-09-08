@@ -152,6 +152,10 @@ src/Graphics/Model3D.cpp:
     complete
     .text start:0x0207e264 end:0x0207ed1c
 
+src/Combat/Main/CombatantStatus.cpp:
+    complete
+    .text start:0x02088840 end:0x02088a70
+
 src/Grotto/Main/ActiveGrottoClass.cpp:
     complete
     .text start:0x0208fe68 end:0x02090294
