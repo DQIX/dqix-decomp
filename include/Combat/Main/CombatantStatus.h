@@ -48,4 +48,31 @@ bool CanApplyStatus_0x20000000(struct CombatantStruct* combatant);
 void ApplyStatus_0x20000000(struct CombatantStruct* combatant);
 void ClearStatus_0x20000000(struct CombatantStruct* combatant);
 
+// USA: func_02088a70 / func_02088a94 / func_02088aa8
+// Setting this state clears 0x200000; the two are mutually exclusive.
+bool CanEnterState_0x100000(struct CombatantStruct* combatant);
+void EnterState_0x100000(struct CombatantStruct* combatant);
+void LeaveState_0x100000(struct CombatantStruct* combatant);
+
+// USA: func_02088ab8 / func_02088adc / func_02088af0
+// Setting this state clears 0x100000; the two are mutually exclusive.
+bool CanEnterState_0x200000(struct CombatantStruct* combatant);
+void EnterState_0x200000(struct CombatantStruct* combatant);
+void LeaveState_0x200000(struct CombatantStruct* combatant);
+
+// USA: func_02088b00 / func_02088b14 / func_02088b34
+bool CanApplyStatus_0x400000(struct CombatantStruct* combatant);
+void ApplyStatus_0x400000(struct CombatantStruct* combatant);
+void ClearStatus_0x400000(struct CombatantStruct* combatant);
+
+// USA: func_02088b50 / func_02088b64 / func_02088b84
+bool CanApplyStatus_0x40000000(struct CombatantStruct* combatant);
+void ApplyStatus_0x40000000(struct CombatantStruct* combatant);
+void ClearStatus_0x40000000(struct CombatantStruct* combatant);
+
+// USA: func_02088ba0 / func_02088bb4 / func_02088bd4
+bool CanApplyStatus_0x80000000(struct CombatantStruct* combatant);
+void ApplyStatus_0x80000000(struct CombatantStruct* combatant);
+void ClearStatus_0x80000000(struct CombatantStruct* combatant);
+
 }

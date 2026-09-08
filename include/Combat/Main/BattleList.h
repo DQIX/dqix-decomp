@@ -36,14 +36,16 @@ struct CombatantStruct {
     // Status bits. The accessors at 0x02088840..0x02088a70 set and clear seven
     // of them, each paired with an entry in the two byte arrays below.
     /* 0x014 */ unsigned int statusFlags;
-    /* 0x018 */ char unknown_0x18[0x5f - 0x18];
+    // Bit 0x40 is read as a second precondition by the state accessors.
+    /* 0x018 */ unsigned int stateFlags;
+    /* 0x01c */ char unknown_0x1c[0x5f - 0x1c];
     // Applying a status writes a small constant here and zeroes the matching
     // counter; clearing it zeroes both. INFERRED as a duration in turns from
     // the values (4, 5 and 6) - not established.
-    /* 0x05f */ unsigned char statusDurations[8];
-    /* 0x067 */ char unknown_0x67[0x82 - 0x67];
-    /* 0x082 */ unsigned char statusCounters[8];
-    /* 0x08a */ char unknown_0x8a[0x134 - 0x8a];
+    /* 0x05f */ unsigned char statusDurations[11];
+    /* 0x06a */ char unknown_0x6a[0x82 - 0x6a];
+    /* 0x082 */ unsigned char statusCounters[11];
+    /* 0x08d */ char unknown_0x8d[0x134 - 0x8d];
     /* 0x134 */ struct BaseCombatStats* baseStats; // TODO: holds more general info than just stats
     /* 0x138 */ struct ModifiableCombatStats* currentStats; // includes things like buffs being applied
 };
