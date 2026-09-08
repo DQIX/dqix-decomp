@@ -5,8 +5,6 @@
 #ifdef jpn
 #define func_020a1a40 func_020a37b8
 #define func_020a1ccc func_020a3a44
-
-#define data_ov033_022a2a2c data_ov033_022a320c
 #endif
 
 extern "C"
@@ -20,11 +18,11 @@ extern "C"
     void func_020a1ccc(int);
 }
 
-extern Ov33BackgroundLoader data_ov033_022a2a2c;
+static Ov33BackgroundLoader loaderInstance;
 
 void PopulateOv33BackgroundLoader(void* fileLoadSpace, unsigned int capacity, int relativePrio)
 {
-    data_ov033_022a2a2c.Populate(fileLoadSpace, capacity, relativePrio);
+    loaderInstance.Populate(fileLoadSpace, capacity, relativePrio);
 }
 
 int Ov33BackgroundLoader::Process()
@@ -338,4 +336,8 @@ end:
         SleepIfResourceMutexNotLocked(5);
     ZeroDestroyGPCPointer(&pGPC);
     return 0;
+}
+
+Ov33BackgroundLoader::Ov33BackgroundLoader()
+{
 }

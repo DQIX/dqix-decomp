@@ -1,10 +1,10 @@
 _Z28PopulateOv33BackgroundLoaderPvji kind:function(arm,size=0x28) addr:0x022a2960
 _ZN20Ov33BackgroundLoader7ProcessEv kind:function(arm,size=0x7c4) addr:0x022a2988
-func_ov033_022a314c kind:function(arm,size=0x2c) addr:0x022a314c
-func_ov033_022a3178 kind:function(arm,size=0x20) addr:0x022a3178
-__sinit_ov033_022a3198 kind:function(arm,size=0x2c) addr:0x022a3198
-.p__sinit_ov033_022a3198 kind:data(word) addr:0x022a31c4
-data_ov033_022a31e8 kind:data(any) addr:0x022a31e8
-data_ov033_022a31f4 kind:data(any) addr:0x022a31f4
-data_ov033_022a3200 kind:bss addr:0x022a3200
-data_ov033_022a320c kind:bss addr:0x022a320c
+_ZN20Ov33BackgroundLoaderC1Ev kind:function(arm,size=0x2c) addr:0x022a314c
+_ZN20Ov33BackgroundLoaderD1Ev kind:function(arm,size=0x20) addr:0x022a3178
+__sinit_Ov33BackgroundLoader.cpp kind:function(arm,size=0x2c) addr:0x022a3198 local
+.p__sinit_Ov33BackgroundLoader.cpp kind:data(word) addr:0x022a31c4 local
+_ZTV20Ov33BackgroundLoader kind:data(any) addr:0x022a31e0
+_ZTV16BackgroundLoader kind:data(any) addr:0x022a31ec
+@356 kind:bss addr:0x022a3200 local
+loaderInstance kind:bss addr:0x022a320c local

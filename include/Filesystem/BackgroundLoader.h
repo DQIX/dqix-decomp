@@ -11,7 +11,8 @@
 // A pointer to this instance is then held at 0x02104308 (usa)
 struct BackgroundLoader
 {
-    // We might want an inline constructor here
+    BackgroundLoader() { InitializeOrReset(); }
+    ~BackgroundLoader() { InitializeOrReset(); }
 
     // sizeof == 0x44 == 68 bytes
     struct Task
