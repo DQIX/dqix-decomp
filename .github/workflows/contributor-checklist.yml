@@ -1,0 +1,33 @@
+name: Contributor checklist
+
+on:
+  pull_request_target:
+    types: [opened, edited, synchronize, ready_for_review]
+
+permissions: {}
+
+jobs:
+  confirm:
+    name: Checklist complete
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/github-script@v7
+        with:
+          script: |
+            const body = (context.payload.pull_request.body || '').replace(/<!--[\s\S]*?-->/g, '');
+
+            const required = [
+              { item: '`ninja` passes and every module still matches the original ROM',
+                ticked: /\[x\][^\n]*\bninja\b/i },
+              { item: 'Symbols in `symbols.txt` match the names used in the decompiled code',
+                ticked: /\[x\][^\n]*symbols\.txt/i },
+            ];
+
+            const missing = required.filter(r => !r.ticked.test(body));
+            if (missing.length) {
+              core.setFailed(
+                'Tick these boxes in the pull request description:\n' +
+                missing.map(r => `  - ${r.item}`).join('\n') +
+                '\n\nThis check re-runs when you save the edit.'
+              );
+            }

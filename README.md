@@ -49,6 +49,10 @@ This builds the ROM, verifies every module against the original, generates a dec
 
 ## 🤝 Contributing
 
+See [CONTRIBUTING.md](CONTRIBUTING.md) for the full guide.
+
+Work is coordinated on **The Quester's Rest**, the Dragon Quest IX Discord — join at **https://discord.gg/DQIX** and open the **[DQI-haX: SWEs of the Starry Skies](https://discord.com/channels/655390550698098700/1266135635014582332)** thread to claim a function, ask for help, or share a scratch.
+
 ### 📤 Submitting Contributions
 
 > [!Important]
