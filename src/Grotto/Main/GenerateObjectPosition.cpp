@@ -52,7 +52,7 @@ extern char const data_020ef292[];
 int Zone3D::ComputeGrottoTileTypes(int floor, ZoneFeatures *featuresArg, TileFeaturePlacementData *output, FloorMap *floorMapArg)
 {
     ZoneFeatures* features = (featuresArg == NULL) ? &bFeatures_ : featuresArg;
-    FloorMap* floorMap = (floorMapArg == NULL) ? &grotto_.floorMap : floorMapArg;
+    FloorMap* floorMap = (floorMapArg == NULL) ? &grotto_.floorMap_ : floorMapArg;
 
     
     char tileName[8] = {0};

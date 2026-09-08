@@ -176,7 +176,7 @@ void Zone3D::SwitchZone(unsigned short newID)
 
     if (func_0201b5b0(previousZoneID_))
     {
-        grotto_.floorMap.Clear();
+        grotto_.floorMap_.Clear();
     }
 
     if (func_0201b5b0(newID))
