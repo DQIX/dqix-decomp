@@ -27,7 +27,15 @@ src/World/Zone3D.cpp:
 
 src/Grotto/Main/GenerateObjectPosition.cpp:
 	complete
-	.text start:0x02019f28 end:0x0201a0a0
+	.text start:0x020194c8 end:0x0201a0a0
+
+src/World/MapListLoader.cpp:
+    complete
+    .text start:0x0201bf30 end:0x0201c528
+
+//src/World/ZoneFeatures.cpp:
+//    complete
+//    .text start:0x0201c528 end:0x0201e7e0
 
 src/Grotto/Main/TileFeatures.cpp:
 	complete
@@ -35,8 +43,8 @@ src/Grotto/Main/TileFeatures.cpp:
 
 src/Filesystem/BackgroundLoader.cpp:
     complete
-    .bss start:0x02104044 end:0x0210484c
     .text start:0x0202f270 end:0x0203016c
+    .bss start:0x02104044 end:0x0210484c
 
 src/Resource/Script.cpp:
     complete

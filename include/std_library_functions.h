@@ -11,6 +11,9 @@ long labs(long); // identical to abs() but also used
 int rand();
 void srand(int seed);
 
+int abs(int);
+long labs(long); // identical to abs() but also used
+
 // string.h
 void* memcpy(void* dst, const void* src, unsigned int length);
 void* memmove(void* dst, const void* src, unsigned int length);

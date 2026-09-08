@@ -1,7 +1,6 @@
 #include "Graphics/Animation3D.h"
 #include "Graphics/Model3D.h"
-
-fix32_t GetAnimationFrameCountFix32(AnimationData*);
+#include "World/Object3D.h"
 
 #define ANIMATION_FLAG_NOT_LOOPING 0
 

@@ -9,7 +9,7 @@ struct GrottoTilePoint
     char y;
 };
 
-// sizeof(FloorMap) == 140. (Look at buffer size in
+// sizeof(FloorMap) == 140 == 0x8c. (Look at buffer size in
 // func_ov017_021b4a88 to confirm this).
 class FloorMap
 {

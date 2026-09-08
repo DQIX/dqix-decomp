@@ -117,7 +117,7 @@ void InitializeCardReadManager()
     manager->ongoingReadBlock.last = 0;
     manager->ongoingReadBlock.first = 0;
 
-    PopulateContext(&manager->cartridgeReadContext, (unsigned int)&CartridgeReadContextLoop, 0, (unsigned int)(&data_021118e0 + 1), 0x400, manager->contextPriority_108);
+    PopulateProcessorContext(&manager->cartridgeReadContext, (unsigned int)&CartridgeReadContextLoop, 0, (unsigned int)(&data_021118e0 + 1), 0x400, manager->contextPriority_108);
     MarkContextReadyAndSwitch(&manager->cartridgeReadContext);
     SetArm9IPCCommandHandler(11, &IPCCommand11Proc);
 

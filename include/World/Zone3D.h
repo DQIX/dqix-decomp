@@ -7,6 +7,8 @@
 #include "Graphics/AtmosphericEffect.h"
 #include "Graphics/LightingInfo.h"
 #include "Grotto/Main/TileFeatures.h"
+#include "ZoneFeatures.h"
+#include "MapListLoader.h"
 
 struct Zone3D_StructPtr_8
 {
@@ -40,23 +42,7 @@ public:
     short unknown_4_;
     char unk_6[2];
     Zone3D_StructPtr_8* pUnknownStruct_8_;
-    struct
-    {
-        char buffer1[10];
-        char buffer2[16];
-        char buffer3[16];
-#if defined(jpn)
-        char jpbuffer[0x20];
-#endif
-        short unknown_2a_;
-        short unknown_2c_;
-        char pad_2e[2];
-        int unknown_30_;
-        short unknown_34_;
-        char pad_36[2];
-        int unknown_38_;
-        int unknown_3c_;
-    } substruct_c_;
+    MapListInfo mapListInfo_;
     SafeAllocator* pAllocator_4c_;
     void* unknown_ptr_50_; // referenced in the nsbtx processor, so something graphical
     SafeAllocator internalAllocator_;
@@ -64,15 +50,15 @@ public:
 
     // Populated from BMBL and BPOS scripts, among other things holds data
     // about warps and placement of stairs/chests in grottos
-    char substruct_6c_[0x88];
+    ZoneFeatures bFeatures_;
     AtmosphericEffectSet atmosphericEffects_;
     // populated by BATS files.
     // If you remove it, lighting goes weird outdoors, but I don't see any 
     // change in towns / battlefields
     LightingInfo lighting_;
     Model3DListNode* firstModel_418_;
-    void* firstBMDJStruct_41c_;
-    void* grottoTileMapData_420_;
+    Zone3D_BMDJStruct* firstBMDJStruct_41c_;
+    GrottoTileData* grottoTileMapData_420_;
     int unknown_424_;
     char unk_428[4];
     unsigned char unknown_42c_;
@@ -131,4 +117,53 @@ public:
 public:
     // usa: func_0201383c
     void SwitchZone(unsigned short newID);
+
+    // usa: func_02013fb4
+    bool ProcessMaplist9();
+
+    // usa: func_0201403c
+    // The ambl is a NARC containing nsbtx, bmbl, dat and bpos files.
+    void LoadMapAMBL();
+    // usa: func_02014108
+    bool UnpackMapAMBL();
+    // usa: func_02014390
+    bool ProcessBMBLFile(const void* filedata, unsigned int filesize);
+    // usa: func_020143d8
+    bool ProcessBPOSFile(const void* filedata, unsigned int filesize);
+    // usa: func_02014414
+    bool ProcessBATSFile(const void* filedata, unsigned int filesize);
+    
+    // usa: func_0201445c
+    bool ProcessNSBTXFile(const void* filedata, unsigned int filesize, const char* filename);
+
+    // usa: func_020145a8
+    // The amdj is a narc containing nsbmd, nsbma (?), col2 and bmdj files.
+    void LoadMapAMDJ();
+    // usa: func_020146fc
+    bool UnpackMapAMDJ();
+    // usa: func_02014900
+    bool ProcessBMDJFile(const void* filedata, unsigned int filesize, ZoneFeatures::Opcode64Entry* misc);
+
+    bool ProcessAtmosphericEffects();
+
+    // usa: func_02014b04
+    void QueueLoadATS_AMBL();
+    // usa: func_02014c04
+    bool UnpackATS_AMBL();
+
+    // Grotto functionality, this is also part of the class but we keep it in a separate
+    // file for now. (It will probably need to go in one file eventually to make
+    // data/rodata positioning work)
+
+    // features and floorMap are optional and will default to the instances within
+    // the class if NULL. If output is null, then the extended data array at offset
+    // 0x420 will be populated instead.
+    int ComputeGrottoTileTypes(int floor, ZoneFeatures* features, TileFeaturePlacementData* output, FloorMap* floorMap);
+    void RotateGrottoTileFeaturePlacementData(unsigned char* placementArray, int numTurns);
+    void RotateGrottoObjectDirectionBitmask(unsigned char* mask, int numTurns);
+    int GetGrottoObjectPositionOrientation(int tileX, int tileY, fix32_t* outX, fix32_t* outY,
+        const TileFeaturePlacementData* tileDataArray, bool preferFaceDown);
+
+    // pass the contents of data/scenario/treasure.nsarc
+    bool PlaceGrottoChestsAndDetermineContents(const void* treasureArchive);
 };

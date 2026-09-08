@@ -124,7 +124,7 @@ void SwitchContext();
 
 int IsPrimaryContextSetUp();
 
-void PopulateContext(ProcessorContext* context, unsigned int startAddress, unsigned int userdata,
+void PopulateProcessorContext(ProcessorContext* context, unsigned int startAddress, unsigned int userdata,
     unsigned int stackBottom, unsigned int stackSize, unsigned int priority);
 
 void ContextExecutionReturnProc();

@@ -26,7 +26,7 @@ extern "C"
     void func_020ca3ec(int value, void* dst, unsigned len);
 }
 
-void PopulateContext(ProcessorContext *context, unsigned int startAddress,
+void PopulateProcessorContext(ProcessorContext *context, unsigned int startAddress,
     unsigned int userdata, unsigned int stackBottom,
     unsigned int stackSize, unsigned int priority)
 {

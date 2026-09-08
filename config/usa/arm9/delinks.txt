@@ -25,18 +25,32 @@ src/World/Zone3D.cpp:
     complete
     .text start:0x0201383c end:0x02013b70
 
+// 0x02013b70 for basic, 0x02019728 for full
+
 src/Grotto/Main/GenerateObjectPosition.cpp:
     complete
-    .text start:0x0201a188 end:0x0201a300
+    .text start:0x02019728 end:0x0201a300
+
+src/World/MapListLoader.cpp:
+    complete
+    .text start:0x0201c1b8 end:0x0201c79c
+
+//src/World/ZoneFeatures.cpp:
+//    complete
+//    .text start:0x0201c79c end:0x0201ea54
 
 src/Grotto/Main/TileFeatures.cpp:
     complete
     .text start:0x0201ea54 end:0x0201ebc4
 
+//src/World/BMDJ.cpp:
+//    complete
+//    .text start:0x0201ebc4 end:0x0201f390
+
 src/Filesystem/BackgroundLoader.cpp:
     complete
-    .bss start:0x02104304 end:0x02104b0c
     .text start:0x0202f700 end:0x02030634
+    .bss start:0x02104304 end:0x02104b0c
 
 src/Resource/Script.cpp:
     complete

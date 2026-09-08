@@ -492,11 +492,11 @@ func_020192a8 kind:function(arm,size=0x60) addr:0x020192a8
 func_02019308 kind:function(arm,size=0x110) addr:0x02019308
 func_02019418 kind:function(arm,size=0x84) addr:0x02019418
 func_0201949c kind:function(arm,size=0x2c) addr:0x0201949c
-func_020194c8 kind:function(arm,size=0x7fc) addr:0x020194c8
-func_02019cc4 kind:function(arm,size=0x48) addr:0x02019cc4
-func_02019d0c kind:function(arm,size=0x19c) addr:0x02019d0c
-func_02019ea8 kind:function(arm,size=0x80) addr:0x02019ea8
-_Z39GenerateGrottoObjectPositionOrientationPviiPiS0_PK24TileFeaturePlacementDatab kind:function(arm,size=0x178) addr:0x02019f28
+_ZN6Zone3D22ComputeGrottoTileTypesEiP12ZoneFeaturesP24TileFeaturePlacementDataP8FloorMap kind:function(arm,size=0x7fc) addr:0x020194c8
+_ZN24TileFeaturePlacementDataaSERKS_ kind:function(arm,size=0x48) addr:0x02019cc4
+_ZN6Zone3D36RotateGrottoTileFeaturePlacementDataEPhi kind:function(arm,size=0x19c) addr:0x02019d0c
+_ZN6Zone3D34RotateGrottoObjectDirectionBitmaskEPhi kind:function(arm,size=0x80) addr:0x02019ea8
+_ZN6Zone3D34GetGrottoObjectPositionOrientationEiiPiS0_PK24TileFeaturePlacementDatab kind:function(arm,size=0x178) addr:0x02019f28
 func_0201a0a0 kind:function(arm,size=0x300) addr:0x0201a0a0
 func_0201a3a0 kind:function(arm,size=0x88c) addr:0x0201a3a0
 func_0201ac2c kind:function(arm,size=0x50) addr:0x0201ac2c
@@ -531,70 +531,70 @@ func_0201bd8c kind:function(arm,size=0xd4) addr:0x0201bd8c
 func_0201be60 kind:function(arm,size=0x20) addr:0x0201be60
 func_0201be80 kind:function(arm,size=0x1c) addr:0x0201be80
 func_0201be9c kind:function(arm,size=0x94) addr:0x0201be9c
-func_0201bf30 kind:function(arm,size=0x8) addr:0x0201bf30
-func_0201bf38 kind:function(arm,size=0x8) addr:0x0201bf38
-func_0201bf40 kind:function(arm,size=0x30) addr:0x0201bf40
-func_0201bf70 kind:function(arm,size=0x1ac) addr:0x0201bf70
-func_0201c11c kind:function(arm,size=0x4c) addr:0x0201c11c
-func_0201c168 kind:function(arm,size=0x24) addr:0x0201c168
-func_0201c18c kind:function(arm,size=0x30) addr:0x0201c18c
-func_0201c1bc kind:function(arm,size=0x2c) addr:0x0201c1bc
-func_0201c1e8 kind:function(arm,size=0x64) addr:0x0201c1e8
-func_0201c24c kind:function(arm,size=0x120) addr:0x0201c24c
-func_0201c36c kind:function(arm,size=0x8) addr:0x0201c36c
-func_0201c374 kind:function(arm,size=0x12c) addr:0x0201c374
-func_0201c4a0 kind:function(arm,size=0x8) addr:0x0201c4a0
-func_0201c4a8 kind:function(arm,size=0x8) addr:0x0201c4a8
-func_0201c4b0 kind:function(arm,size=0x78) addr:0x0201c4b0
-func_0201c528 kind:function(arm,size=0x28) addr:0x0201c528
-func_0201c550 kind:function(arm,size=0xe4) addr:0x0201c550
-func_0201c634 kind:function(arm,size=0x28) addr:0x0201c634
-func_0201c65c kind:function(arm,size=0x74) addr:0x0201c65c
-func_0201c6d0 kind:function(arm,size=0x28) addr:0x0201c6d0
-func_0201c6f8 kind:function(arm,size=0x1cc) addr:0x0201c6f8
-func_0201c8c4 kind:function(arm,size=0x28) addr:0x0201c8c4
-func_0201c8ec kind:function(arm,size=0x168) addr:0x0201c8ec
-func_0201ca54 kind:function(arm,size=0x148) addr:0x0201ca54
-func_0201cb9c kind:function(arm,size=0x68) addr:0x0201cb9c
+_Z24MapList_Opcode_64_UnusedPN6Script9ParameterEi kind:function(arm,size=0x8) addr:0x0201bf30
+_Z24MapList_Opcode_65_UnusedPN6Script9ParameterEi kind:function(arm,size=0x8) addr:0x0201bf38
+_Z24MapList_Opcode_66_UnusedPN6Script9ParameterEi kind:function(arm,size=0x30) addr:0x0201bf40
+_Z24MapList_Opcode_67_UnusedPN6Script9ParameterEi kind:function(arm,size=0x1ac) addr:0x0201bf70
+_Z24MapList_Opcode_68_UnusedPN6Script9ParameterEi kind:function(arm,size=0x4c) addr:0x0201c11c
+_Z24MapList_Opcode_69_UnusedPN6Script9ParameterEi kind:function(arm,size=0x24) addr:0x0201c168
+_ZN16ZoneGroupingList9AllocateAEi kind:function(arm,size=0x30) addr:0x0201c18c
+_ZN16ZoneGroupingList9AllocateBEi kind:function(arm,size=0x2c) addr:0x0201c1bc
+_ZN16ZoneGroupingList7InsertAEPKNS_6EntryAE kind:function(arm,size=0x64) addr:0x0201c1e8
+_ZN16ZoneGroupingList7InsertBEPKNS_6EntryBE kind:function(arm,size=0x120) addr:0x0201c24c
+_Z17MapList_Opcode_66PN6Script9ParameterEi kind:function(arm,size=0x8) addr:0x0201c36c
+_Z17MapList_Opcode_67PN6Script9ParameterEi kind:function(arm,size=0x12c) addr:0x0201c374
+_Z17MapList_Opcode_68PN6Script9ParameterEi kind:function(arm,size=0x8) addr:0x0201c4a0
+_Z17MapList_Opcode_69PN6Script9ParameterEi kind:function(arm,size=0x8) addr:0x0201c4a8
+_Z29LoadZoneInfoFromMapListScriptiP11MapListInfoPKvj kind:function(arm,size=0x78) addr:0x0201c4b0
+_Z20WarpScript_Opcode_64PN6Script9ParameterEi kind:function(arm,size=0x28) addr:0x0201c528
+_Z20WarpScript_Opcode_65PN6Script9ParameterEi kind:function(arm,size=0xe4) addr:0x0201c550
+_Z20WarpScript_Opcode_7dPN6Script9ParameterEi kind:function(arm,size=0x28) addr:0x0201c634
+_Z20WarpScript_Opcode_7ePN6Script9ParameterEi kind:function(arm,size=0x74) addr:0x0201c65c
+_Z20WarpScript_Opcode_66PN6Script9ParameterEi kind:function(arm,size=0x28) addr:0x0201c6d0
+_Z20WarpScript_Opcode_67PN6Script9ParameterEi kind:function(arm,size=0x1cc) addr:0x0201c6f8
+_Z20WarpScript_Opcode_68PN6Script9ParameterEi kind:function(arm,size=0x28) addr:0x0201c8c4
+_Z26ProcessExtraOpcode69ParamsPN6Script9ParameterEiRN12ZoneFeatures13Opcode68EntryE kind:function(arm,size=0x168) addr:0x0201c8ec
+_Z20WarpScript_Opcode_69PN6Script9ParameterEi kind:function(arm,size=0x148) addr:0x0201ca54
+_ZN12ZoneFeatures13Opcode68Entry5ResetEv kind:function(arm,size=0x68) addr:0x0201cb9c
 func_0201cc04 kind:function(arm,size=0x8) addr:0x0201cc04
-func_0201cc0c kind:function(arm,size=0x19c) addr:0x0201cc0c
-func_0201cda8 kind:function(arm,size=0x28) addr:0x0201cda8
-func_0201cdd0 kind:function(arm,size=0x3e0) addr:0x0201cdd0
-func_0201d1b0 kind:function(arm,size=0x50) addr:0x0201d1b0
-func_0201d200 kind:function(arm,size=0x20) addr:0x0201d200
-func_0201d220 kind:function(arm,size=0x58) addr:0x0201d220
-func_0201d278 kind:function(arm,size=0x44) addr:0x0201d278
-func_0201d2bc kind:function(arm,size=0x108) addr:0x0201d2bc
-func_0201d3c4 kind:function(arm,size=0x994) addr:0x0201d3c4
-func_0201dd58 kind:function(arm,size=0x4c) addr:0x0201dd58
-func_0201dda4 kind:function(arm,size=0x1b8) addr:0x0201dda4
-func_0201df5c kind:function(arm,size=0x78) addr:0x0201df5c
-func_0201dfd4 kind:function(arm,size=0x14) addr:0x0201dfd4
-func_0201dfe8 kind:function(arm,size=0x2c) addr:0x0201dfe8
-func_0201e014 kind:function(arm,size=0x2c) addr:0x0201e014
-func_0201e040 kind:function(arm,size=0x24) addr:0x0201e040
-func_0201e064 kind:function(arm,size=0x2c) addr:0x0201e064
-func_0201e090 kind:function(arm,size=0xc0) addr:0x0201e090
-func_0201e150 kind:function(arm,size=0x70) addr:0x0201e150
-func_0201e1c0 kind:function(arm,size=0x4c) addr:0x0201e1c0
-func_0201e20c kind:function(arm,size=0x30) addr:0x0201e20c
-func_0201e23c kind:function(arm,size=0x68) addr:0x0201e23c
-func_0201e2a4 kind:function(arm,size=0x30) addr:0x0201e2a4
+_Z20WarpScript_Opcode_72PN6Script9ParameterEi kind:function(arm,size=0x19c) addr:0x0201cc0c
+_Z20WarpScript_Opcode_6aPN6Script9ParameterEi kind:function(arm,size=0x28) addr:0x0201cda8
+_Z20WarpScript_Opcode_6bPN6Script9ParameterEi kind:function(arm,size=0x3e0) addr:0x0201cdd0
+_ZN12ZoneFeatures13Opcode6aEntry5ResetEv kind:function(arm,size=0x50) addr:0x0201d1b0
+_ZN15MaybeVector4fix8CopyFromERKS_ kind:function(arm,size=0x20) addr:0x0201d200
+_Z20WarpScript_Opcode_6ePN6Script9ParameterEi kind:function(arm,size=0x58) addr:0x0201d220
+_Z20WarpScript_Opcode_70PN6Script9ParameterEi kind:function(arm,size=0x44) addr:0x0201d278
+_Z20WarpScript_Opcode_73PN6Script9ParameterEi kind:function(arm,size=0x108) addr:0x0201d2bc
+_Z20WarpScript_Opcode_74PN6Script9ParameterEi kind:function(arm,size=0x994) addr:0x0201d3c4
+_Z20WarpScript_Opcode_7bPN6Script9ParameterEi kind:function(arm,size=0x4c) addr:0x0201dd58
+_Z20WarpScript_Opcode_7cPN6Script9ParameterEi kind:function(arm,size=0x1b8) addr:0x0201dda4
+_Z21ExecuteZoneWarpScriptPKvjP12ZoneFeaturesP13SafeAllocator kind:function(arm,size=0x78) addr:0x0201df5c
+_ZN12ZoneFeatures5ResetEv kind:function(arm,size=0x14) addr:0x0201dfd4
+_ZN12ZoneFeatures23AllocateOpcode64EntriesEiP13SafeAllocator kind:function(arm,size=0x2c) addr:0x0201dfe8
+_ZN12ZoneFeatures41AllocateGrottoTileFeaturePlacementEntriesEiP13SafeAllocator kind:function(arm,size=0x2c) addr:0x0201e014
+_ZN12ZoneFeatures14LoadFromScriptEP13SafeAllocatorPKvj kind:function(arm,size=0x24) addr:0x0201e040
+_ZN12ZoneFeatures16GetOpcode64EntryEi kind:function(arm,size=0x2c) addr:0x0201e064
+_ZN12ZoneFeatures19CreateOpcode64EntryERKNS_13Opcode64EntryE kind:function(arm,size=0xc0) addr:0x0201e090
+_ZN12ZoneFeatures37CreateGrottoTileFeaturePlacementEntryERK24TileFeaturePlacementData kind:function(arm,size=0x70) addr:0x0201e150
+_ZN12ZoneFeatures34GetGrottoTileFeaturePlacementEntryEPKc kind:function(arm,size=0x4c) addr:0x0201e1c0
+_ZN12ZoneFeatures23AllocateOpcode66EntriesEiP13SafeAllocator kind:function(arm,size=0x30) addr:0x0201e20c
+_ZN12ZoneFeatures19CreateOpcode66EntryERKNS_13Opcode66EntryE kind:function(arm,size=0x68) addr:0x0201e23c
+_ZN12ZoneFeatures23AllocateOpcode68EntriesEiP13SafeAllocator kind:function(arm,size=0x30) addr:0x0201e2a4
 func_0201e2d4 kind:function(arm,size=0x2c) addr:0x0201e2d4
-func_0201e300 kind:function(arm,size=0xc0) addr:0x0201e300
-func_0201e3c0 kind:function(arm,size=0x30) addr:0x0201e3c0
+_ZN12ZoneFeatures19CreateOpcode68EntryERKNS_13Opcode68EntryE kind:function(arm,size=0xc0) addr:0x0201e300
+_ZN12ZoneFeatures23AllocateOpcode6aEntriesEiP13SafeAllocator kind:function(arm,size=0x30) addr:0x0201e3c0
 func_0201e3f0 kind:function(arm,size=0x2c) addr:0x0201e3f0
 func_0201e41c kind:function(arm,size=0x44) addr:0x0201e41c
 func_0201e460 kind:function(arm,size=0x3c) addr:0x0201e460
-func_0201e49c kind:function(arm,size=0xfc) addr:0x0201e49c
+_ZN12ZoneFeatures19CreateOpcode6aEntryERKNS_13Opcode6aEntryE kind:function(arm,size=0xfc) addr:0x0201e49c
 func_0201e598 kind:function(arm,size=0x14) addr:0x0201e598
 func_0201e5ac kind:function(arm,size=0x8) addr:0x0201e5ac
 func_0201e5b4 kind:function(arm,size=0x8) addr:0x0201e5b4
 func_0201e5bc kind:function(arm,size=0x8) addr:0x0201e5bc
 func_0201e5c4 kind:function(arm,size=0xc) addr:0x0201e5c4
 func_0201e5d0 kind:function(arm,size=0x34) addr:0x0201e5d0
-func_0201e604 kind:function(arm,size=0x14) addr:0x0201e604
-func_0201e618 kind:function(arm,size=0x70) addr:0x0201e618
+_ZN12ZoneFeatures21SetOpcode7bAllocationEPNS_13Opcode7bEntryEt kind:function(arm,size=0x14) addr:0x0201e604
+_ZN12ZoneFeatures19CreateOpcode7bEntryERKNS_13Opcode7bEntryE kind:function(arm,size=0x70) addr:0x0201e618
 func_0201e688 kind:function(arm,size=0x158) addr:0x0201e688
 _Z25ChooseTileFeaturePositionPK24TileFeaturePlacementData kind:function(arm,size=0x7c) addr:0x0201e7e0
 _Z28ChooseTileFeatureOrientationPK24TileFeaturePlacementDataib kind:function(arm,size=0xf4) addr:0x0201e85c
@@ -4977,7 +4977,7 @@ _Z27RemoveContextFromGlobalListP16ProcessorContext kind:function(arm,size=0x48) 
 _Z13SwitchContextv kind:function(arm,size=0xc8) addr:0x020c8e60
 func_020c8f28 kind:function(arm,size=0x148) addr:0x020c8f28
 func_020c9070 kind:function(arm,size=0x10) addr:0x020c9070
-_Z15PopulateContextP16ProcessorContextjjjjj kind:function(arm,size=0xfc) addr:0x020c9080
+_Z24PopulateProcessorContextP16ProcessorContextjjjjj kind:function(arm,size=0xfc) addr:0x020c9080
 _Z26ContextExecutionReturnProcv kind:function(arm,size=0x20) addr:0x020c917c
 _Z11ExitContextP16ProcessorContexti kind:function(arm,size=0x5c) addr:0x020c919c
 _Z18ExitCurrentContexti kind:function(arm,size=0x38) addr:0x020c91f8
@@ -7101,7 +7101,7 @@ s_nightLength kind:data(any) addr:0x020f0f9c local
 s_lightingOpcodes kind:data(any) addr:0x020f0fa0 local
 s_zoneContainerOpcodes kind:data(any) addr:0x020f0fe0 local
 s_distributionOpcodes kind:data(any) addr:0x020f1008 local
-@stringBase0 kind:data(any) addr:0x020f1030 local
+@stringBase0 kind:data(byte[0x20]) addr:0x020f1030 local
 data_020f1050 kind:data(any) addr:0x020f1050
 data_020f106e kind:data(any) addr:0x020f106e
 data_020f1094 kind:data(any) addr:0x020f1094
@@ -7552,7 +7552,7 @@ data_02108d48 kind:bss addr:0x02108d48
 data_02108d54 kind:bss addr:0x02108d54
 effectScriptData kind:bss addr:0x02108d84 local
 s_sums kind:bss addr:0x02108d90 local
-s_scriptCurrentLightingInfo kind:bss addr:0x02108da4 local 
+s_scriptCurrentLightingInfo kind:bss addr:0x02108da4 local
 s_dayThresholds kind:bss addr:0x02108da8 local
 data_02108dbc kind:bss addr:0x02108dbc
 data_02108dc8 kind:bss addr:0x02108dc8
@@ -7610,6 +7610,7 @@ data_02109c84 kind:bss addr:0x02109c84
 data_02109c98 kind:bss addr:0x02109c98
 data_02109ca0 kind:bss addr:0x02109ca0
 _ZN13AllocatorTree19initializedTopLevelE kind:bss addr:0x02109cb4 local
+_ZN13AllocatorTree8topLevelE kind:bss addr:0x02109cb8 local
 data_02109cc4 kind:bss addr:0x02109cc4
 data_02109cc8 kind:bss addr:0x02109cc8
 data_02109cd0 kind:bss addr:0x02109cd0
@@ -7715,6 +7716,7 @@ data_0211130c kind:bss addr:0x0211130c
 data_02111310 kind:bss addr:0x02111310
 data_02111324 kind:bss addr:0x02111324
 isIPCCommunicationInitialized kind:bss addr:0x02111344 local
+ipcArm9HandlerTable kind:bss addr:0x02111348 local
 data_021113c8 kind:bss addr:0x021113c8
 data_021113cc kind:bss addr:0x021113cc
 data_021113d8 kind:bss addr:0x021113d8

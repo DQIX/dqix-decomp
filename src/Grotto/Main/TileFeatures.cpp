@@ -1,6 +1,5 @@
 #include "Grotto/Main/TileFeatures.h"
 #include "std_library_functions.h"
-//#include "padsection.h"
 
 #ifdef jpn
 #define data_020e7010 data_020e78b4

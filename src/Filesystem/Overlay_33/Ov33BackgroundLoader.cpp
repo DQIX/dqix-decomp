@@ -11,7 +11,6 @@ extern "C"
 {
     // get crc for string
     unsigned int func_01ff860c(const char*);
-
     // alternate version of load overlay
     void func_020a1a40(int);
     // alternate unload overlay
