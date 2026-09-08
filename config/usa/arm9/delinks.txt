@@ -155,6 +155,10 @@ src/Grotto/Main/TreasureMapMetadata.cpp:
     complete
     .text start:0x020a5cb8 end:0x020a6084
 
+src/System/Brightness.cpp:
+    complete
+     .text start:0x0203aee0 end:0x0203b498
+
 src/Memory/SignedAllocator.cpp:
     complete
     .bss start:0x02109ffc end:0x0210a00c
