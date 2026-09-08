@@ -51,7 +51,7 @@ This builds the ROM, verifies every module against the original, generates a dec
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for the full guide.
 
-Work is coordinated on **The Quester's Rest**, the Dragon Quest IX Discord — join at **https://discord.gg/DQIX** and open the **[DQI-haX: SWEs of the Starry Skies](https://discord.com/channels/655390550698098700/1266135635014582332)** thread to claim a function, ask for help, or share a scratch.
+We recommend joining the DQIX discord server **The Quester's Rest** (https://discord.gg/DQIX) so you can participate in discussions in the **[DQI-haX: SWEs of the Starry Skies](https://discord.com/channels/655390550698098700/1266135635014582332)** thread to claim a function, ask for help, or share a scratch.
 
 ### 📤 Submitting Contributions
 
@@ -61,12 +61,10 @@ Work is coordinated on **The Quester's Rest**, the Dragon Quest IX Discord — j
 ### Decompiling code
 See [Decompiling.md](Decompiling.md)
 
----
-
-### 🧑‍💻 Current Goals
-Disassemble and decompile accessible functions to begin mapping out the games code.
-
-Get to the point where the strange function calls referenced on lines 26-28 of ARM9 main relocs.txt and lines 2695-2697 of overlay 1 relocs.txt can be understood
+Contributions are welcome, though make sure you've read the pages linked above first. If you're new to decompilation, some possible tasks to get started with include:
+1. Find and decompile additional uses for [the game's scripting system](src/Resource/Script.cpp). Some existing uses can be found [here](src/World/LootableContainer.cpp) and [here](src/Graphics/AtmosphericEffect.cpp) as a guideline. (You don't need to worry about matching global variables, it's okay to mark everything as extern for the time being - just focus on matching the .text section). You may find [this script disassembler](https://github.com/DQIX/dqix-script-disasm) helpful.
+2. Help to match additional pieces of the Zone3D class. This is very experimental/WIP, so we have [a separate branch](https://github.com/DQIX/dqix-decomp/tree/zone3d-experimental) to work off of for this.
+3. Start decompiling one of the game's standalone overlays/systems, such as overlay 6 (the alchemy pot), overlay 8 (battle records) or overlay 14 (bestiary). This will likely interact with some as of yet unknown systems e.g. input, sound or text processing, but partial progress on the rest would still be very interesting!
 
 ---
 
@@ -89,7 +87,3 @@ Get to the point where the strange function calls referenced on lines 26-28 of A
    - Additionally, it's great for collaboration, as you can share a "scratch" of the function you're working on with others and they can seamlessly fork it and contribute.
    - [Check it out here](https://decomp.me)
 
----
-
-### ✨ Notes
-This project is a work in progress. Community contributions and feedback are welcome to help improve functionality!
