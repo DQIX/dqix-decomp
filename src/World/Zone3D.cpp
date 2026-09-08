@@ -297,7 +297,7 @@ bool Zone3D::UnpackMapAMBL()
                     fileID++;
                     continue;
                 }
-                unsigned int innerFilesize = vm.regbase_abc.c.u32 - vm.regbase_abc.b.u32;
+                unsigned int innerFilesize = vm.fileInfo.endOffset - vm.fileInfo.startOffset;
                 NitroVM_FinishRead(&vm);
                 const void* innerFilePtr = narc.GetFileByIndex(fileID);
                 if (pass == 0)
@@ -515,7 +515,7 @@ bool Zone3D::UnpackMapAMDJ()
                 fileID++;
                 continue;
             }
-            unsigned int innerFilesize = vm.regbase_abc.c.u32 - vm.regbase_abc.b.u32;
+            unsigned int innerFilesize = vm.fileInfo.endOffset - vm.fileInfo.startOffset;
             NitroVM_FinishRead(&vm);
             const void* innerFilePtr = narc.GetFileByIndex(fileID);
             if (strcmp(data_020ef199, extension) == 0)
@@ -657,6 +657,22 @@ bool Zone3D::UnpackATS_AMBL()
     atsAMBLLoadHandle_ = -1;
     LoadMapAMDJ();
     return true;
+}
+
+void BuildArcMemberPath(const char* stem, const char* extension, char* path)
+{
+    sprintf(path, data_020ef1de, stem);
+
+    char* dot = strrchr(path, '.');
+    if (dot)
+    {
+        strcpy(dot + 1, extension);
+    }
+    else
+    {
+        strcat(path, data_020ef1e6);
+        strcat(path, extension);
+    }
 }
 
 #endif

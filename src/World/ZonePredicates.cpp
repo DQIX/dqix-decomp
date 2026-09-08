@@ -2,19 +2,21 @@
 #include "World/ZonePredicates.h"
 
 // usa: func_0201b588
-ARM bool IsGrottoZone(int zoneID)
+bool IsGrottoZone(int zoneID)
 {
-    return zoneID >= 0x9c41 && zoneID <= 0x9c41 + 0x5e0;
+    return zoneID >= 40001 && zoneID <= 41505;
 }
 
 // usa: func_0201b5b0
-ARM bool IsMainGrottoFloorZone(int zoneID)
+bool IsMainGrottoFloorZone(int zoneID)
 {
-    return zoneID >= 0x9c41 && zoneID <= 0x9c41 + 0x5f;
+    // grotto floor n in environ E has id
+    // 40000 + 20*E + n (0 <= E <= 4)
+    return zoneID >= 40001 && zoneID <= 40096;
 }
 
 // usa: func_0201b5d8
-ARM bool IsGrottoBossFloorZone(int zoneID)
+bool IsGrottoBossFloorZone(int zoneID)
 {
-    return zoneID >= 0xa08d && zoneID <= 0xa08d + 0x194;
+    return zoneID >= 41101 && zoneID <= 41505;
 }
