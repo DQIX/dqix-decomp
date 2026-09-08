@@ -1,6 +1,13 @@
 #include <globaldefs.h>
 #include "System/SceneOverlays.h"
 
+#if defined(jpn)
+#define data_01ffd348 data_01ffd368
+#define data_01ffd364 data_01ffd384
+
+#define data_020e8f20 data_020e9034
+#endif
+
 extern const SceneEntry data_020e8f20[];
 
 extern int data_01ffd348;            // current slot bank

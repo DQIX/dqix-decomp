@@ -29,6 +29,10 @@ src/Grotto/Main/GenerateObjectPosition.cpp:
 	complete
 	.text start:0x020194c8 end:0x0201a0a0
 
+src/World/ZonePredicates.cpp:
+    complete
+    .text start:0x0201b300 end:0x0201b378
+
 src/World/MapListLoader.cpp:
     complete
     .text start:0x0201bf30 end:0x0201c528
@@ -149,6 +153,10 @@ src/Grotto/Main/FloorMapGenerator.cpp:
 src/Grotto/Main/FloorMap.cpp:
     complete
     .text start:0x02092f64 end:0x02093394
+
+src/System/SceneOverlays.cpp:
+    complete
+    .text start:0x020a366c end:0x020a36b8
 
 src/Grotto/Main/TreasureMapDataStructs.cpp:
     complete
