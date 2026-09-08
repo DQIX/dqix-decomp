@@ -2,8 +2,14 @@
 
 namespace AllocatorTree
 {
-    int initializedTopLevel;
-    SignedAllocatorList topLevel;
+    // Yes, this is an int and not a bool. It's handled like a bool though.
+    // This makes me think this part might have been written in C, since it
+    // already seems likely to be from an external library (and we know
+    // parts/all of it use different compiler settings)
+    static int initializedTopLevel;
+    // At the root of the tree we don't have an allocator, so we just store a 
+    // global list of 'top-level' allocators. Can also view this as a forest.
+    static SignedAllocatorList topLevel;
 }
 
 // USA: func_020aeec8

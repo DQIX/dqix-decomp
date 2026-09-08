@@ -1,5 +1,6 @@
 #include "Grotto/Main/ActiveGrottoClass.h"
 #include "Combat/Main/BattleList.h"
+#include "Grotto/Main/TreasureMapDataStructs.h"
 #include <globaldefs.h>
 
 #ifdef jpn
@@ -25,16 +26,10 @@ extern "C"
     // Most likely these are the zone IDs corresponding to grottos.
     bool func_0201b588(unsigned short zoneID);
 
-    // No idea what these do, but they seem to be called before and after
-    // each call to func_020a3a34.
+    // Not sure exactly what these do but it involves loading/unloading
+    // data/tmap/tdata.gp2
     void func_020a3720();
     void func_020a395c();
-
-    // Not sure about the last two parameters. This 'exports' a TreasureMapMetadata
-    // out to the detailed struct. Somewhere in this it's running the code to
-    // generate map names. Needs some closer investigation. (Probably a member
-    // function of TreasureMapMetadata)
-    bool func_020a3a34(TreasureMapMetadata*, DetailedTreasureMapData*, bool, void*);
 }
 
 // USA: func_0209fe68
@@ -42,13 +37,13 @@ extern "C"
 bool ActiveGrottoClass::CalculateFloorMap(int floor, int width, int height, FloorMap* pFloorMap)
 {
     if (pFloorMap == NULL)
-        pFloorMap = &floorMap;
+        pFloorMap = &floorMap_;
     
     pFloorMap->Initialize(width, height);
-    pGenerator->Initialize();
-    pGenerator->pFloorMap = pFloorMap;
-    pGenerator->seed = GetActiveGrottoSeed();
-    pGenerator->Calculate(floor, 0);
+    pGenerator_->Initialize();
+    pGenerator_->pFloorMap = pFloorMap;
+    pGenerator_->seed = GetActiveGrottoSeed();
+    pGenerator_->Calculate(floor, 0);
     pFloorMap->ComputeAdjacencyData();
     return true;
 }
@@ -58,15 +53,15 @@ bool ActiveGrottoClass::CalculateFloorMap(int floor, int width, int height, Floo
 int ActiveGrottoClass::CalculateAndStoreFloorWidth(int floor)
 {
     if (floor >= 0 && floor <= 4)
-        floorWidth = GetMapDimensionFromRange(10, 14, floor);
+        floorWidth_ = GetMapDimensionFromRange(10, 14, floor);
     else if (floor >= 5 && floor <= 8)
-        floorWidth = GetMapDimensionFromRange(12, 15, floor);
+        floorWidth_ = GetMapDimensionFromRange(12, 15, floor);
     else if (floor >= 9 && floor <= 12)
-        floorWidth = GetMapDimensionFromRange(14, 16, floor);
+        floorWidth_ = GetMapDimensionFromRange(14, 16, floor);
     else
-        floorWidth = 16;
+        floorWidth_ = 16;
 
-    return floorWidth;
+    return floorWidth_;
 }
 
 // USA: func_0208ff5c
@@ -74,15 +69,15 @@ int ActiveGrottoClass::CalculateAndStoreFloorWidth(int floor)
 int ActiveGrottoClass::CalculateAndStoreFloorHeight(int floor)
 {
     if (floor >= 0 && floor <= 4)
-        floorHeight = GetMapDimensionFromRange(10, 14, floor);
+        floorHeight_ = GetMapDimensionFromRange(10, 14, floor);
     else if (floor >= 5 && floor <= 8)
-        floorHeight = GetMapDimensionFromRange(12, 15, floor);
+        floorHeight_ = GetMapDimensionFromRange(12, 15, floor);
     else if (floor >= 9 && floor <= 12)
-        floorHeight = GetMapDimensionFromRange(14, 16, floor);
+        floorHeight_ = GetMapDimensionFromRange(14, 16, floor);
     else
-        floorHeight = 16;
+        floorHeight_ = 16;
 
-    return floorHeight;
+    return floorHeight_;
 }
 
 // USA: func_0208ffe8
@@ -170,16 +165,16 @@ int ActiveGrottoClass::GetFloorCount() const
     if (grotto->activeMapData.GetMapType() == TreasureMapType_Legacy)
         return 0;
 
-    if (overallMapData.discoveryState == DiscoveryState_Invalid)
+    if (overallMapData_.discoveryState_ == DiscoveryState_Invalid)
     {
         func_020a3720();
         DetailedTreasureMapData data;
-        func_020a3a34(&grotto->activeMapData, &data, true, NULL);
+        ExportDetailedTreasureMapData(&grotto->activeMapData, &data, 1, 0);
         func_020a395c();
-        return data.regular.floorCount;
+        return data.regular_.floorCount_;
     }
 
-    return overallMapData.regular.floorCount;
+    return overallMapData_.regular_.floorCount_;
 }
 
 // USA: func_020901fc
@@ -187,25 +182,25 @@ int ActiveGrottoClass::GetFloorCount() const
 const char* ActiveGrottoClass::GetPopupName() const
 {
     GrottoStruct* grotto = GetGrottoStruct(GetBattleStruct());
-    if (overallMapData.discoveryState != DiscoveryState_Invalid)
+    if (overallMapData_.discoveryState_ != DiscoveryState_Invalid)
     {
-        if (overallMapData.mapType == TreasureMapType_Legacy)
-            return overallMapData.legacy.popupName;
+        if (overallMapData_.mapType_ == TreasureMapType_Legacy)
+            return overallMapData_.legacy_.popupName_;
         else
-            return overallMapData.regular.popupName;
+            return overallMapData_.regular_.popupName_;
     }    
 
     // Returning a temporary, could something go wrong here?
     // Would have to call another function after this which uses the stack.
     func_020a3720();
     DetailedTreasureMapData data;
-    func_020a3a34(&grotto->activeMapData, &data, true, NULL);
+    ExportDetailedTreasureMapData(&grotto->activeMapData, &data, 1, 0);
     func_020a395c();
 
-    if (data.mapType == TreasureMapType_Legacy)
-        return data.legacy.popupName;
+    if (data.mapType_ == TreasureMapType_Legacy)
+        return data.legacy_.popupName_;
     else
-        return data.regular.popupName;
+        return data.regular_.popupName_;
 }
 
 // USA: func_02090268
@@ -222,6 +217,7 @@ unsigned short ActiveGrottoClass::GetActiveGrottoSeed() const
 
 // USA: func_02090290
 // JPN: func_02090bb0
-void ActiveGrottoClass::BlankFunction() const
+DetailedTreasureMapData* ActiveGrottoClass::GetDetailedData()
 {
+    return &overallMapData_;
 }

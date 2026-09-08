@@ -23,7 +23,8 @@ data_ov020_0218d974 kind:data(any) addr:0x0218d974
 data_ov020_0218d990 kind:data(any) addr:0x0218d990
 data_ov020_0218d9b0 kind:data(any) addr:0x0218d9b0
 data_ov020_0218da90 kind:data(any) addr:0x0218da90
-func_ov020_0218db90 kind:function(arm,size=0x18) addr:0x0218db90
+__sinit_ov020_0218db90 kind:function(arm,size=0x18) addr:0x0218db90
+.p__sinit_ov020_0218db90 kind:data(word) addr:0x0218dba8
 data_ov020_0218dbc0 kind:data(any) addr:0x0218dbc0
 data_ov020_0218dbc8 kind:data(any) addr:0x0218dbc8
 data_ov020_0218dbdc kind:data(any) addr:0x0218dbdc

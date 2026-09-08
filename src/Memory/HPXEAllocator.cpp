@@ -1,4 +1,5 @@
 #include "Memory/HPXEAllocator.h"
+#include "std_library_functions.h"
 
 #define BLOCKSIGNATURE_FREE 0x4652 // looks like "RF" in memory
 #define BLOCKSIGNATURE_USED 0x5544 // looks like "DU" in memory
@@ -9,16 +10,11 @@
 #pragma optimize_for_size off
 
 #ifdef jpn
-#define func_020017a4 func_020016c0
 #define func_020ca3ec func_020cbeb8
 #endif
 
 extern "C"
 {
-    // Either abs or labs (they are identical as long == int on this system,
-    // but there are two of them and both get used)
-    int func_020017a4(int);
-
     void func_020ca3ec(int val, void* dst, unsigned int len);
 }
 
@@ -366,7 +362,7 @@ void HPXEAllocator::Free(void* data)
 // JPN: func_020b1280
 unsigned int HPXEAllocator::GetMaxPossibleAllocation(int alignAndDir)
 {
-    unsigned int align = func_020017a4(alignAndDir);
+    unsigned int align = abs(alignAndDir);
 
     unsigned int maxUsableSpace = 0;
     unsigned int minWastedSpace = 0xFFFFFFFF;

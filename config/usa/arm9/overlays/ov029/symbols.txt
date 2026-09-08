@@ -1,15 +1,13 @@
 data_ov029_021d8a68 kind:data(any) addr:0x021d8a68 ambiguous
 func_ov029_021d8e1c kind:data(any) addr:0x021d8e1c
-func_ov029_021d8f0c kind:data(any) addr:0x021d8f0c
-func_ov029_021d8ffc kind:data(any) addr:0x021d8ffc
-
 func_ov029_021d8e94 kind:data(any) addr:0x021d8e94
+func_ov029_021d8f0c kind:data(any) addr:0x021d8f0c
 func_ov029_021d8f84 kind:data(any) addr:0x021d8f84
+func_ov029_021d8ffc kind:data(any) addr:0x021d8ffc
 func_ov029_021d9074 kind:data(any) addr:0x021d9074
-
-func_ov029_021d90ec kind:function(arm,size=0x10) addr:0x021d90ec
-data_ov029_021d9788 kind:data(any) addr:0x021d9788
-data_ov029_021d9a24 kind:data(any) addr:0x021d9a24
+__sinit_ov029_021d90ec kind:function(arm,size=0x10) addr:0x021d90ec
+__sinit_ov029_021d9788 kind:data(any) addr:0x021d9788
+__sinit_ov029_021d9a24 kind:data(any) addr:0x021d9a24
 data_ov029_021d9c40 kind:data(any) addr:0x021d9c40
 data_ov029_021d9ce4 kind:data(any) addr:0x021d9ce4
 data_ov029_021d9d94 kind:data(any) addr:0x021d9d94
@@ -23,14 +21,19 @@ data_ov029_021da184 kind:data(any) addr:0x021da184
 data_ov029_021da1fc kind:data(any) addr:0x021da1fc
 data_ov029_021da274 kind:data(any) addr:0x021da274
 data_ov029_021da338 kind:data(any) addr:0x021da338
-data_ov029_021da374 kind:data(any) addr:0x021da374
+__sinit_ov029_021da374 kind:data(any) addr:0x021da374
 data_ov029_021da454 kind:data(any) addr:0x021da454
 data_ov029_021da570 kind:data(any) addr:0x021da570
 data_ov029_021da68c kind:data(any) addr:0x021da68c
 data_ov029_021da7a8 kind:data(any) addr:0x021da7a8
 data_ov029_021da820 kind:data(any) addr:0x021da820
-data_ov029_021da844 kind:data(any) addr:0x021da844
+__sinit_ov029_021da844 kind:data(any) addr:0x021da844
 data_ov029_021da898 kind:data(any) addr:0x021da898
 data_ov029_021da8ac kind:data(any) addr:0x021da8ac
+.p__sinit_ov029_021d90ec kind:data(word) addr:0x021da8b4
+.p__sinit_ov029_021d9788 kind:data(word) addr:0x021da8b8
+.p__sinit_ov029_021d9a24 kind:data(word) addr:0x021da8bc
+.p__sinit_ov029_021da374 kind:data(word) addr:0x021da8c0
+.p__sinit_ov029_021da844 kind:data(word) addr:0x021da8c4
 data_ov029_021da8e0 kind:bss addr:0x021da8e0
 data_ov029_021da8e1 kind:bss addr:0x021da8e1

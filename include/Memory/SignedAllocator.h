@@ -54,16 +54,6 @@ struct SignedAllocatorHeader
 
 namespace AllocatorTree
 {
-    // Yes, this is an int and not a bool. It's handled like a bool though.
-    // This makes me think this part might have been written in C, since it
-    // already seems likely to be from an external library (and we know
-    // parts/all of it use different compiler settings)
-    extern int initializedTopLevel;
-
-    // At the root of the tree we don't have an allocator, so we just store a 
-    // global list of 'top-level' allocators. Can also view this as a forest.
-    extern SignedAllocatorList topLevel;
-
     // This function works recursively, so you have to pass the top level
     // as its first parameter. The search takes place in the subtree rooted
     // at the node whose children are given in the list you provide.

@@ -2,17 +2,6 @@
 #include "std_library_functions.h"
 #include <globaldefs.h>
 
-#ifdef jpn
-#define func_020c1180 func_020c2c4c
-#define func_020c1280 func_020c2d4c
-#endif
-
-extern "C"
-{
-    void func_020c1180(void*);
-    void func_020c1280(void*, int, int);
-}
-
 // I'm not going to replace tile values with an enum, but here's what
 // they correspond to:
 // 0 = generic walkable tile
@@ -704,22 +693,22 @@ bool FloorMapGenerator::RoutineJ()
             if (tileS != 1 && tileS != 3)
             {
                 map->fpUpStairRotation = 0;
-                func_020c1180(map->unknown1);
+                Mat3x3_WriteIdentity(&map->unknown1);
             }
             else if (tileE != 1 && tileE != 3)
             {
                 map->fpUpStairRotation = 0x1921;
-                func_020c1280(map->unknown1, 0x1000, 0);
+                Mat3x3_WriteRotationY(&map->unknown1, 0x1000, 0);
             }
             else if (tileW != 1 && tileW != 3)
             {
                 map->fpUpStairRotation = 0x3243;
-                func_020c1280(map->unknown1, 0, -0x1000);
+                Mat3x3_WriteRotationY(&map->unknown1, 0, -0x1000);
             }
             else if (tileN != 1 && tileN != 3)
             {
                 map->fpUpStairRotation = 0x4b65;
-                func_020c1280(map->unknown1, -0x1000, 0);
+                Mat3x3_WriteRotationY(&map->unknown1, -0x1000, 0);
             }
             map->upStairWorldX = (int)((float)posX * 8.0f * 4096.0f);
             map->upStairWorldY = 0;
@@ -783,7 +772,7 @@ bool FloorMapGenerator::RoutineJ()
     {
         FloorMap* map = pFloorMap;
         map->fpDownStairRotation = 0;
-        func_020c1180(map->unknown2);
+        Mat3x3_WriteIdentity(&map->unknown2);
         map->downStairWorldX = (int)((float)posX * 8.0f * 4096.0f);
         map->downStairWorldY = 0;
         map->downStairWorldZ = (int)((float)posY * 8.0f * 4096.0f);

@@ -1,5 +1,5 @@
 #include <globaldefs.h>
-#include "System/Random.h"
+#include "Util/Random.h"
 
 #ifdef jpn
 #define data_020f0d5c data_020f0e54

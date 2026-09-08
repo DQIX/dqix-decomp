@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Memory/SafeAllocator.h"
+#include "../../Graphics/Vector.h"
 
 struct GrottoTilePoint
 {
@@ -24,11 +25,11 @@ public:
     GrottoTilePoint stairsUp;
     GrottoTilePoint stairsDown;
 
-    char unknown1[0x24]; // looks like a rotation matrix in fixed point format?
+    Matrix3x3 unknown1; // looks like a rotation matrix in fixed point format?
     int upStairWorldX, upStairWorldY, upStairWorldZ;
     int fpUpStairRotation; // fixed point representation
 
-    char unknown2[0x24]; // looks like a rotation matrix in fixed point format?
+    Matrix3x3 unknown2; // looks like a rotation matrix in fixed point format?
     int downStairWorldX, downStairWorldY, downStairWorldZ;
     int fpDownStairRotation;
 

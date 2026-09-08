@@ -1,5 +1,4 @@
-#include "Grotto/Main/TreasureMapMetadata.h"
-#include "Grotto/Main/RandATRangeModular.h"
+#include "Grotto/Main/TreasureMapDataStructs.h"
 #include "System/Memory.h"
 #include "std_library_functions.h"
 #include "Combat/Main/BattleList.h"
@@ -22,9 +21,8 @@ unsigned int func_020100a8(BattleStruct*);
 // For now we just return a char*, but should probably be a CombatantStruct*.
 char* func_0200ff1c(BattleStruct*, unsigned int);
 
-// This just returns some data. It's also being spam-called in TileFeatures.cpp,
-// discarding the return value.
-int func_02012fe4(void);
+// returns the overland zone instance
+void* func_02012fe4();
 }
 
 // USA: func_020a5cb8
@@ -80,7 +78,7 @@ unsigned short GenerateNewMapQuality()
 
     unsigned short quality;
     // Probably checking if regular map or legacy boss map?
-    if (grotto->unknown2[1] == 2)
+    if (grotto->unknown_9 == 2)
     {
         quality = maxCharLevel + maxNumRevocs * 5 + grotto->activeMapLevel;
     }
@@ -88,7 +86,7 @@ unsigned short GenerateNewMapQuality()
     {
         quality = (unsigned short)(1.5f * (float)maxCharLevel + 5.0f * (float)maxNumRevocs);
     }
-    grotto->unknown2[1] = 0;
+    grotto->unknown_9 = 0;
     float tenth = 0.1f * (float)quality;
     int quotient = 2 * (int)tenth + 1;
     quality += (int)((float)(rand() % quotient) - tenth);
@@ -112,7 +110,7 @@ unsigned short GenerateMapLocation(unsigned int quality)
 
 // USA: func_020a5e7c
 // JPN: func_020a7c20
-ARM void TreasureMapMetadata::InitialiseAsNonLegacyMap(unsigned int quality, int seed)
+void TreasureMapMetadata::InitialiseAsNonLegacyMap(unsigned int quality, int seed)
 {
     VectorizedMemset(this, 0, 28);
     SetDiscoveryState(DiscoveryState_Undiscovered);
@@ -140,7 +138,7 @@ ARM void TreasureMapMetadata::InitialiseAsNonLegacyMap(unsigned int quality, int
 
 // USA: func_020a5efc
 // JPN: func_020a7ca0
-ARM void TreasureMapMetadata::InitialiseAsLegacyBossMap(unsigned int bossID, unsigned int level)
+void TreasureMapMetadata::InitialiseAsLegacyBossMap(unsigned int bossID, unsigned int level)
 {
     VectorizedMemset(this, 0, 28);
     SetDiscoveryState(DiscoveryState_Undiscovered);
@@ -174,7 +172,7 @@ ARM void TreasureMapMetadata::InitialiseAsLegacyBossMap(unsigned int bossID, uns
 
 // USA: func_020a5f88
 // JPN: func_020a7d2c
-ARM void TreasureMapMetadata::SetDiscoveryState(eDiscoveryState state)
+void TreasureMapMetadata::SetDiscoveryState(eDiscoveryState state)
 {
     DiscoveryStateAndMapTypeAndUnknown &= 0xF8;
     if (state == 1)
@@ -193,7 +191,7 @@ ARM void TreasureMapMetadata::SetDiscoveryState(eDiscoveryState state)
 
 // USA: func_020a5fd0
 // JPN: func_020a7d74
-ARM eDiscoveryState TreasureMapMetadata::GetDiscoveryState() const
+eDiscoveryState TreasureMapMetadata::GetDiscoveryState() const
 {
     if (DiscoveryStateAndMapTypeAndUnknown & 0x01)
         return DiscoveryState_Undiscovered;
@@ -206,7 +204,7 @@ ARM eDiscoveryState TreasureMapMetadata::GetDiscoveryState() const
 
 // USA: func_020a5ffc
 // JPN: func_020a7da0
-ARM void TreasureMapMetadata::SetMapType(eTreasureMapType type)
+void TreasureMapMetadata::SetMapType(eTreasureMapType type)
 {
     DiscoveryStateAndMapTypeAndUnknown &= 0xe7;
     if (type == TreasureMapType_Regular)
@@ -221,7 +219,7 @@ ARM void TreasureMapMetadata::SetMapType(eTreasureMapType type)
 
 // USA: func_020a6030
 // JPN: func_020a7dd4
-ARM eTreasureMapType TreasureMapMetadata::GetMapType() const
+eTreasureMapType TreasureMapMetadata::GetMapType() const
 {
     if (DiscoveryStateAndMapTypeAndUnknown & 0x08)
         return TreasureMapType_Regular;
@@ -232,21 +230,21 @@ ARM eTreasureMapType TreasureMapMetadata::GetMapType() const
 
 // USA: func_020a6050
 // JPN: func_020a7df4
-ARM void TreasureMapMetadata::SetInitialByteUnknownBit()
+void TreasureMapMetadata::SetInitialByteUnknownBit()
 {
     DiscoveryStateAndMapTypeAndUnknown |= 0x20;
 }
 
 // USA: func_020a6060
 // JPN: func_020a7e04
-ARM void TreasureMapMetadata::ClearInitialByteUnknownBit()
+void TreasureMapMetadata::ClearInitialByteUnknownBit()
 {
     DiscoveryStateAndMapTypeAndUnknown &= 0xdf;
 }
 
 // USA: func_020a6070
 // JPN: func_020a7e14
-ARM bool TreasureMapMetadata::GetInitialByteUnknownBit() const
+bool TreasureMapMetadata::GetInitialByteUnknownBit() const
 {
     return DiscoveryStateAndMapTypeAndUnknown & 0x20;
 }

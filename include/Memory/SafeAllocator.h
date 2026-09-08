@@ -17,6 +17,7 @@ public:
     // total number of currently existent SafeAllocator instances
     static unsigned int GetLiveCount();
 
+    // This is probably the constructor, if there is one
     void ResetAllocatorPointer();
 
     void CreateTypeB(void* bufferStart, unsigned int bufferSize, int alignAndDir);
