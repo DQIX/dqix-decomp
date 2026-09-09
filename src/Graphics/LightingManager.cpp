@@ -3,7 +3,7 @@
 #include "System/Memory.h"
 #include "System/Graphics.h"
 #include "Combat/Main/BattleList.h"
-#include "Grotto/Overlay_17/Struct44C8.h"
+#include "Resource/GameResources.h"
 
 #if defined(jpn)
 #define func_020100bc func_0200ff18
@@ -101,7 +101,7 @@ extern "C"
     int func_ov000_02160fd4(void*, int);
 
     void* func_ov017_021b8468(void*);
-    void func_ov017_021901ac(Struct_ov017_44C8*);
+    void func_ov017_021901ac(GameResources*);
     void* func_ov017_021b8478(void*);
 }
 
@@ -1046,7 +1046,7 @@ void LightingManager::DrawBackgroundGradient()
     unsigned short outerColor;
     unsigned short innerColor;
     LightingInfo* lightingInfo = &pZone_->lighting_;
-    Struct_ov017_44C8* ov17thing = func_ov017_0218b5b0();
+    GameResources* resources = func_ov017_0218b5b0();
     if (lightingInfo->maybeMode_ == 1)
     {
         int index = timeOfDayIndex_;
@@ -1061,7 +1061,7 @@ void LightingManager::DrawBackgroundGradient()
             return;
         outerColor = gradientOuterColor_;
         innerColor = gradientInnerColor_;
-        void* ov17inner = ov17thing->unknown_ptr_3718;
+        void* ov17inner = resources->unknown_ptr_3718;
         if (ov17inner != NULL)
         {
             void* ov0thing = func_ov017_021b8468(ov17inner);

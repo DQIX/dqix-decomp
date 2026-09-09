@@ -69,6 +69,10 @@ src/World/Object3D.cpp:
     .data start:0x020ef998 end:0x020efa34
     .bss start:0x02104858 end:0x021048a0
 
+src/Resource/Brightness.cpp:
+    complete
+    .text start:0x0203a938 end:0x0203aef0
+
 src/Graphics/LightingManager.cpp:
     complete
     .text start:0x02051924 end:0x02053e28
