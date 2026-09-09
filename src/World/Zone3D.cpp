@@ -1,5 +1,6 @@
 #include "World/Zone3D.h"
 #include "Combat/Main/BattleList.h"
+#include "Combat/Main/BattleStructAccessors.h"
 #include "Filesystem/BackgroundLoader.h"
 #include "Filesystem/NarcHandle.h"
 #include "Filesystem/FileAccessor.h"
@@ -17,7 +18,6 @@
 #if defined(jpn)
 #define func_0200fdcc func_0200fc28
 #define func_0200fddc func_0200fc38
-#define func_02011584 func_020112f4
 #define func_02013750 func_02013518
 #define func_02013490 func_02013258
 #define func_02053c6c func_02054fe4
@@ -34,7 +34,6 @@
 
 extern "C"
 {
-    void* func_02011584(BattleStruct*);
     void func_02013454(void*);
     void* func_0200fdcc(BattleStruct*);
     void* func_0200fddc(BattleStruct*);
@@ -99,7 +98,7 @@ void Zone3D::SwitchZone(unsigned short newID)
     BattleStruct* battle = GetBattleStruct();
     BackgroundLoader* loader = BackgroundLoader::GetInstance();
 
-    void* uVar3 = func_02011584(battle);
+    void* uVar3 = GetWorldData(battle);
     (void)func_ov017_0218b5b0();
     void* iVar4 = func_0200fddc(battle);
 
