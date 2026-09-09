@@ -11,9 +11,9 @@
 // most of the type information comes from atm
 struct GameResources
 {
-    unsigned int flags_00;
-    unsigned int flags_04;
-    unsigned int flags_08;
+    unsigned int brightnessFlags_0;
+    unsigned int brightnessFlags_4;
+    unsigned int brightnessFlags_8;
 
     float mainBrightness;
     int mainBrightnessTarget;

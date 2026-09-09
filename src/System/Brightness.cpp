@@ -18,9 +18,9 @@ static inline int IsTransitioningSub(GameResources* res) { return res->subBright
 
 // func_0203aee0
 extern "C" ARM void InitializeBrightnessState(GameResources* resources) {
-    resources->flags_00 = 0;
-    resources->flags_04 = 0;
-    resources->flags_08 = 0;
+    resources->brightnessFlags_0 = 0;
+    resources->brightnessFlags_4 = 0;
+    resources->brightnessFlags_8 = 0;
 
     resources->mainBrightnessTimeRemaining = 0;
     resources->subBrightnessTimeRemaining  = 0;
@@ -225,9 +225,7 @@ extern "C" ARM int IsSubBrightnessTransitionActive(GameResources* resources) {
 
 // func_0203b3c0
 extern "C" ARM int IsBrightnessTransitionActive(GameResources* resources) {
-    if (IsTransitioningMain(resources) || IsTransitioningSub(resources))
-        return 1;
-    return 0;
+    return IsTransitioningMain(resources) || IsTransitioningSub(resources);
 }
 
 // func_0203b400
