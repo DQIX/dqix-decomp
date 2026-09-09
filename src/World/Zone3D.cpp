@@ -5,7 +5,7 @@
 #include "Filesystem/FileAccessor.h"
 #include "Filesystem/LowNitroHandle.h"
 #include "Filesystem/FileIO.h"
-#include "Grotto/Overlay_17/Struct44C8.h"
+#include "Resource/GameResources.h"
 #include "Graphics/NSBXX/NSBXX.h"
 #include "World/ZonePredicates.h"
 

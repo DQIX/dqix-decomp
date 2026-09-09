@@ -3,7 +3,7 @@
 #include "Grotto/Main/GrottoStruct.h"
 #include "Combat/Main/BattleList.h"
 #include "System/Memory.h"
-#include "Grotto/Overlay_17/Struct44C8.h"
+#include "Resource/GameResources.h"
 
 #ifdef jpn
 #define func_020a1df8 func_020a3b70
@@ -25,7 +25,7 @@ extern "C"
 bool ExportDetailedTreasureMapData(const TreasureMapMetadata* from,
     DetailedTreasureMapData* to, bool computeLegacyStats, const unsigned char* legacyStatsData)
 {
-    Struct_ov017_44C8* oddStruct = func_ov017_0218b5b0();
+    GameResources* resources = func_ov017_0218b5b0();
 
     if (from == NULL || to == NULL)
         return false;
@@ -55,7 +55,7 @@ bool ExportDetailedTreasureMapData(const TreasureMapMetadata* from,
     if (GetTreasureMapLanguageData(GetBattleStruct()) == 0)
         return false;
 
-    int readOffset = oddStruct->pTMapLanguageOffsets->mapLocations;
+    int readOffset = resources->pTMapLanguageOffsets->mapLocations;
     
     unsigned short numEntries;
     TMAPLANGDATA_READ(readOffset, &numEntries, sizeof(numEntries));

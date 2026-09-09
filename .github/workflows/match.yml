@@ -1,0 +1,69 @@
+name: Match
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  merge_group:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: match-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  usa:
+    if: github.event_name != 'pull_request'
+    uses: ./.github/workflows/build.yml
+    with:
+      version: usa
+      label: USA
+      publish-badges: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+    secrets: inherit
+
+  jpn:
+    if: github.event_name != 'pull_request'
+    uses: ./.github/workflows/build.yml
+    with:
+      version: jpn
+      label: JPN
+      publish-badges: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+    secrets: inherit
+
+  badges-usa:
+    needs: usa
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    uses: ./.github/workflows/publish-badges.yml
+    with:
+      version: usa
+    permissions:
+      contents: write
+    concurrency:
+      group: publish-badges
+      cancel-in-progress: false
+
+  badges-jpn:
+    needs: jpn
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    uses: ./.github/workflows/publish-badges.yml
+    with:
+      version: jpn
+    permissions:
+      contents: write
+    concurrency:
+      group: publish-badges
+      cancel-in-progress: false
+
+  match:
+    needs: usa
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          case "${{ needs.usa.result }}" in
+            success|skipped) ;;
+            *) echo "usa: ${{ needs.usa.result }}"; exit 1 ;;
+          esac
