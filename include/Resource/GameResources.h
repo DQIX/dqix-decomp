@@ -27,7 +27,7 @@ struct GameResources
     unsigned char subBrightnessLocked;
     unsigned char mainBrightnessDirty;
     unsigned char subBrightnessDirty;
-    unsigned char allowBrightnessApply;
+    bool allowBrightnessApply;
 
     char unknown_29[0x38 - 0x29];
 
