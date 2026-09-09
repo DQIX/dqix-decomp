@@ -31,6 +31,7 @@ extern "C" ARM void UnlockAndSetBrightness(GameResources* resources, int brightn
 
 extern "C" ARM void SetMainBrightnessWithDurationMs(GameResources* resources, int brightness, unsigned int durationMs);
 
+// might be returning bool instead of int
 extern "C" ARM int IsMainBrightnessTransitionActive(GameResources* resources);
 extern "C" ARM int IsSubBrightnessTransitionActive(GameResources* resources);
 extern "C" ARM int IsBrightnessTransitionActive(GameResources* resources);

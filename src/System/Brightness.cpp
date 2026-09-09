@@ -12,8 +12,12 @@ extern "C" ARM int func_020c39c8(volatile unsigned short *reg);
 #define REG_MASTER_BRIGHT ((volatile unsigned short *) 0x0400006C)
 #define REG_MASTER_BRIGHT_SUB ((volatile unsigned short *) 0x0400106C)
 
+// helper functions to be inlined, needs to return int to get "? 1 : 0" behaviour
+static inline int IsTransitioningMain(GameResources* res) { return res->mainBrightnessTimeRemaining > 0; }
+static inline int IsTransitioningSub(GameResources* res) { return res->subBrightnessTimeRemaining > 0; }
+
 // func_0203aee0
-extern "C" ARM void InitializeBrightnessState(GameResources *resources) {
+extern "C" ARM void InitializeBrightnessState(GameResources* resources) {
     resources->flags_00 = 0;
     resources->flags_04 = 0;
     resources->flags_08 = 0;
@@ -21,10 +25,10 @@ extern "C" ARM void InitializeBrightnessState(GameResources *resources) {
     resources->mainBrightnessTimeRemaining = 0;
     resources->subBrightnessTimeRemaining  = 0;
 
-    resources->mainBrightnessLocked = 0;
-    resources->subBrightnessLocked  = 0;
-    resources->mainBrightnessDirty  = 0;
-    resources->subBrightnessDirty   = 0;
+    resources->mainBrightnessLocked = false;
+    resources->subBrightnessLocked  = false;
+    resources->mainBrightnessDirty  = false;
+    resources->subBrightnessDirty   = false;
 
     resources->allowBrightnessApply = true;
 
@@ -40,39 +44,29 @@ extern "C" ARM void UpdateBrightnessTransitions(GameResources* resources) {
     BattleStruct *battleStruct = GetBattleStruct();
     int delta                  = func_02010208(battleStruct);
 
-    int active;
-
-    if (resources->mainBrightnessTimeRemaining > 0)
-        active = 1;
-    else
-        active = 0;
-
-    if (active != 0) {
-        resources->mainBrightness += (float) delta * (((float) resources->mainBrightnessTarget - resources->mainBrightness) /
-                                                    (float) resources->mainBrightnessTimeRemaining);
-
+    if (IsTransitioningMain(resources))
+    {
+        resources->mainBrightness += (float)delta * (((float)resources->mainBrightnessTarget - resources->mainBrightness) /
+                                                    (float)resources->mainBrightnessTimeRemaining);
         resources->mainBrightnessTimeRemaining -= delta;
 
-        if (resources->mainBrightnessTimeRemaining <= 0) resources->mainBrightness = (float) resources->mainBrightnessTarget;
+        if (resources->mainBrightnessTimeRemaining <= 0)
+            resources->mainBrightness = (float)resources->mainBrightnessTarget;
 
-        resources->mainBrightnessDirty = 1;
+        resources->mainBrightnessDirty = true;
     }
 
-    if (resources->subBrightnessTimeRemaining > 0)
-        active = 1;
-    else
-        active = 0;
+    if (IsTransitioningSub(resources))
+    {
+        resources->subBrightness += (float)delta * (((float)resources->subBrightnessTarget - resources->subBrightness) /
+                                                   (float)resources->subBrightnessTimeRemaining);
+        resources->subBrightnessTimeRemaining -= delta;
 
-    if (active == 0) return;
+        if (resources->subBrightnessTimeRemaining <= 0)
+            resources->subBrightness = (float)resources->subBrightnessTarget;
 
-    resources->subBrightness += (float) delta * (((float) resources->subBrightnessTarget - resources->subBrightness) /
-                                               (float) resources->subBrightnessTimeRemaining);
-
-    resources->subBrightnessTimeRemaining -= delta;
-
-    if (resources->subBrightnessTimeRemaining <= 0) resources->subBrightness = (float) resources->subBrightnessTarget;
-
-    resources->subBrightnessDirty = 1;
+        resources->subBrightnessDirty = true;
+    }
 }
 
 // func_0203b080
@@ -81,17 +75,15 @@ extern "C" ARM void ApplyBrightness(GameResources* resources) {
 
     resources->allowBrightnessApply = 0;
 
-    if (resources->mainBrightnessDirty != 0) {
+    if (resources->mainBrightnessDirty)
         func_020c39a0(REG_MASTER_BRIGHT, (int) resources->mainBrightness);
-    }
 
-    resources->mainBrightnessDirty = 0;
+    resources->mainBrightnessDirty = false;
 
-    if (resources->subBrightnessDirty != 0) {
+    if (resources->subBrightnessDirty)
         func_020c39a0(REG_MASTER_BRIGHT_SUB, (int) resources->subBrightness);
-    }
 
-    resources->subBrightnessDirty = 0;
+    resources->subBrightnessDirty = false;
 }
 
 // func_0203b0f8
@@ -102,42 +94,50 @@ extern "C" ARM void UpdateAndApplyBrightness(GameResources* resources) {
 
 // func_0203b110
 extern "C" ARM void SetMainBrightness(GameResources* resources, int brightness, int duration) {
-    if (resources->mainBrightnessLocked != 0) return;
+    if (resources->mainBrightnessLocked)
+        return;
 
     void *unk = func_020daf90();
 
-    if (func_020db9cc(unk, 0, brightness, duration) == 0) return;
+    if (func_020db9cc(unk, 0, brightness, duration) == 0)
+        return;
 
-    if (duration == 0) {
-        resources->mainBrightness              = (float) brightness;
+    if (duration == 0)
+    {
+        resources->mainBrightness              = (float)brightness;
         resources->mainBrightnessTarget        = brightness;
         resources->mainBrightnessTimeRemaining = 0;
-        resources->mainBrightnessDirty         = 1;
-        return;
+        resources->mainBrightnessDirty         = true;
     }
-
-    resources->mainBrightnessTarget        = brightness;
-    resources->mainBrightnessTimeRemaining = (int) ((float) duration * 16.667f);
+    else
+    {
+        resources->mainBrightnessTarget        = brightness;
+        resources->mainBrightnessTimeRemaining = (int)((float)duration * 16.667f);
+    }
 }
 
 // func_0203b19c
 extern "C" ARM void SetSubBrightness(GameResources* resources, int brightness, int duration) {
-    if (resources->subBrightnessLocked != 0) return;
+    if (resources->subBrightnessLocked)
+        return;
 
     void *unk = func_020daf90();
 
-    if (func_020db9cc(unk, 1, brightness, duration) == 0) return;
+    if (func_020db9cc(unk, 1, brightness, duration) == 0)
+        return;
 
-    if (duration == 0) {
-        resources->subBrightness              = (float) brightness;
+    if (duration == 0)
+    {
+        resources->subBrightness              = (float)brightness;
         resources->subBrightnessTarget        = brightness;
         resources->subBrightnessTimeRemaining = 0;
-        resources->subBrightnessDirty         = 1;
-        return;
+        resources->subBrightnessDirty         = true;
     }
-
-    resources->subBrightnessTarget        = brightness;
-    resources->subBrightnessTimeRemaining = (int) ((float) duration * 16.667f);
+    else
+    {
+        resources->subBrightnessTarget        = brightness;
+        resources->subBrightnessTimeRemaining = (int)((float)duration * 16.667f);
+    }    
 }
 
 // func_0203b228
@@ -149,65 +149,68 @@ extern "C" ARM void SetBrightness(GameResources* resources, int brightness, int 
 // func_0203b250
 extern "C" ARM void SetAndLockMainBrightness(GameResources* resources, int brightness, int duration) {
     SetMainBrightness(resources, brightness, duration);
-    resources->mainBrightnessLocked = 1;
+    resources->mainBrightnessLocked = true;
 }
 
 // func_0203b268
 extern "C" ARM void SetAndLockSubBrightness(GameResources* resources, int brightness, int duration) {
     SetSubBrightness(resources, brightness, duration);
-    resources->subBrightnessLocked = 1;
+    resources->subBrightnessLocked = true;
 }
 
 // func_0203b280
 extern "C" ARM void SetAndLockBrightness(GameResources* resources, int brightness, int duration) {
     SetMainBrightness(resources, brightness, duration);
-    resources->mainBrightnessLocked = 1;
+    resources->mainBrightnessLocked = true;
 
     SetSubBrightness(resources, brightness, duration);
-    resources->subBrightnessLocked = 1;
+    resources->subBrightnessLocked = true;
 }
 
 // func_0203b2b8
 extern "C" ARM void UnlockAndSetMainBrightness(GameResources* resources, int brightness, int duration) {
-    resources->mainBrightnessLocked = 0;
+    resources->mainBrightnessLocked = false;
     SetMainBrightness(resources, brightness, duration);
 }
 
 // func_0203b2cc
 extern "C" ARM void UnlockAndSetSubBrightness(GameResources* resources, int brightness, int duration) {
-    resources->subBrightnessLocked = 0;
+    resources->subBrightnessLocked = false;
     SetSubBrightness(resources, brightness, duration);
 }
 
 // func_0203b2e0
 extern "C" ARM void UnlockAndSetBrightness(GameResources* resources, int brightness, int duration) {
-    resources->mainBrightnessLocked = 0;
+    resources->mainBrightnessLocked = false;
     SetMainBrightness(resources, brightness, duration);
 
-    resources->subBrightnessLocked = 0;
+    resources->subBrightnessLocked = false;
     SetSubBrightness(resources, brightness, duration);
 }
 
 // func_0203b318
 extern "C" ARM void SetMainBrightnessWithDurationMs(GameResources* resources, int brightness, unsigned int durationMs) {
-    if (resources->mainBrightnessLocked != 0) return;
+    if (resources->mainBrightnessLocked)
+        return;
 
     void *unk = func_020daf90();
+    unsigned int numFrames = (durationMs * 3) / 100;
 
-    unsigned int scaledDuration = (durationMs * 3) / 100;
+    if (func_020db9cc(unk, 0, brightness, numFrames) == 0)
+        return;
 
-    if (func_020db9cc(unk, 0, brightness, scaledDuration) == 0) return;
-
-    if (durationMs != 0) {
+    if (durationMs != 0)
+    {
         resources->mainBrightnessTarget        = brightness;
         resources->mainBrightnessTimeRemaining = durationMs;
-        return;
     }
-
-    resources->mainBrightness              = (float) brightness;
-    resources->mainBrightnessTarget        = brightness;
-    resources->mainBrightnessTimeRemaining = 0;
-    resources->mainBrightnessDirty         = 1;
+    else
+    {
+        resources->mainBrightness              = (float) brightness;
+        resources->mainBrightnessTarget        = brightness;
+        resources->mainBrightnessTimeRemaining = 0;
+        resources->mainBrightnessDirty         = true;
+    }    
 }
 
 // func_0203b398
@@ -222,65 +225,37 @@ extern "C" ARM int IsSubBrightnessTransitionActive(GameResources* resources) {
 
 // func_0203b3c0
 extern "C" ARM int IsBrightnessTransitionActive(GameResources* resources) {
-    int active;
-
-    if (resources->mainBrightnessTimeRemaining > 0)
-        active = 1;
-    else
-        active = 0;
-
-    if (active != 0) goto active_transition;
-
-    if (resources->subBrightnessTimeRemaining > 0)
-        active = 1;
-    else
-        active = 0;
-
-    if (active == 0) goto no_transition;
-
-active_transition:
-    return 1;
-
-no_transition:
+    if (IsTransitioningMain(resources) || IsTransitioningSub(resources))
+        return 1;
     return 0;
 }
 
 // func_0203b400
 extern "C" ARM int GetMainBrightnessTransitionState(GameResources* resources) {
-    int active;
-
-    if (resources->mainBrightnessTimeRemaining > 0)
-        active = 1;
-    else
-        active = 0;
-
-    if (active == 0) return 0;
+    if (!IsTransitioningMain(resources))
+        return 0;
 
     int state = 1;
 
-    if (resources->mainBrightnessTarget < 0) state = 2;
-
-    if (resources->mainBrightnessTarget > 0) state = 3;
+    if (resources->mainBrightnessTarget < 0)
+        state = 2;
+    if (resources->mainBrightnessTarget > 0)
+        state = 3;
 
     return state;
 }
 
 // func_0203b438
 extern "C" ARM int GetSubBrightnessTransitionState(GameResources* resources) {
-    int active;
-
-    if (resources->subBrightnessTimeRemaining > 0)
-        active = 1;
-    else
-        active = 0;
-
-    if (active == 0) return 0;
+    if (!IsTransitioningSub(resources))
+        return 0;
 
     int state = 1;
 
-    if (resources->subBrightnessTarget < 0) state = 2;
-
-    if (resources->subBrightnessTarget > 0) state = 3;
+    if (resources->subBrightnessTarget < 0)
+        state = 2;
+    if (resources->subBrightnessTarget > 0)
+        state = 3;
 
     return state;
 }

@@ -23,10 +23,10 @@ struct GameResources
     int subBrightnessTarget;
     int subBrightnessTimeRemaining;
 
-    unsigned char mainBrightnessLocked;
-    unsigned char subBrightnessLocked;
-    unsigned char mainBrightnessDirty;
-    unsigned char subBrightnessDirty;
+    bool mainBrightnessLocked;
+    bool subBrightnessLocked;
+    bool mainBrightnessDirty;
+    bool subBrightnessDirty;
     bool allowBrightnessApply;
 
     char unknown_29[0x38 - 0x29];
