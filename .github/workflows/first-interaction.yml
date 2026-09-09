@@ -1,0 +1,36 @@
+name: First interaction
+
+on:
+  pull_request_target:
+    types: [opened]
+  issues:
+    types: [opened]
+
+permissions:
+  issues: write
+  pull-requests: write
+
+jobs:
+  greet:
+    name: Greet a first-time contributor
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/first-interaction@v3
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          pr_message: |
+            Thanks for the pull request, and welcome to the project!
+
+            Decomp work is coordinated in the [DQI-haX: SWEs of the Starry Skies](https://discord.com/channels/655390550698098700/1266135635014582332)
+            thread on [The Quester's Rest](https://discord.gg/DQIX). Joining and saying which function
+            you're taking keeps two people from matching the same one, and it's the fastest place to get
+            help with a function that's close but won't go byte-exact.
+
+            [CONTRIBUTING.md](${{ github.server_url }}/${{ github.repository }}/blob/HEAD/CONTRIBUTING.md) covers what gets merged.
+          issue_message: |
+            Thanks for opening your first issue here!
+
+            Build and tooling bugs belong in GitHub issues, so this is the right place for those.
+            Questions about a specific function, an idiom that won't reproduce, or how the game works
+            get answered faster in the [DQI-haX: SWEs of the Starry Skies](https://discord.com/channels/655390550698098700/1266135635014582332)
+            thread on [The Quester's Rest](https://discord.gg/DQIX).
