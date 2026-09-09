@@ -85,7 +85,7 @@ uint64_t GetCurrentTimestamp()
 
 unsigned short GetMain16BitTimerCounter()
 {
-    return TIMER_N_COUNTER(0);
+    return TIMER_N_COUNTER(0) + 1;
 }
 
 void MarkNextAlarmToSound(Alarm *timing)
