@@ -3,7 +3,7 @@
 #include "Grotto/Main/GrottoStruct.h"
 #include "Combat/Main/BattleList.h"
 #include "System/Memory.h"
-#include "Grotto/Overlay_17/Struct44C8.h"
+#include "Resource/GameResources.h"
 
 #ifdef jpn
 #define func_020a1df8 func_020a3b70

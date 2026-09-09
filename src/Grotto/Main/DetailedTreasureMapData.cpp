@@ -1,7 +1,7 @@
 #include "Grotto/Main/TreasureMapDataStructs.h"
 #include "Combat/Main/BattleList.h"
 #include "Grotto/Main/GrottoStruct.h"
-#include "Grotto/Overlay_17/Struct44C8.h"
+#include "Resource/GameResources.h"
 #include "Filesystem/FileIO.h"
 #include "Filesystem/BackgroundLoader.h"
 #include "System/Memory.h"

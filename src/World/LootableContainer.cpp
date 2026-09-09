@@ -1,6 +1,6 @@
 #include "World/LootableContainer.h"
 #include "Resource/Script.h"
-#include "Grotto/Overlay_17/Struct44C8.h"
+#include "Resource/GameResources.h"
 #include "Combat/Main/BattleList.h"
 #include "Filesystem/FileIO.h"
 

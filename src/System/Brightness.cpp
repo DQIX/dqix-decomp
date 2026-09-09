@@ -118,7 +118,7 @@ extern "C" ARM void SetMainBrightness(UnknownContext *context, int brightness, i
     }
 
     context->mainBrightnessTarget        = brightness;
-    context->mainBrightnessTimeRemaining = (int) ((float) duration * 16.66699981689453125f);
+    context->mainBrightnessTimeRemaining = (int) ((float) duration * 16.667f);
 }
 
 // func_0203b19c
@@ -138,7 +138,7 @@ extern "C" ARM void SetSubBrightness(UnknownContext *context, int brightness, in
     }
 
     context->subBrightnessTarget        = brightness;
-    context->subBrightnessTimeRemaining = (int) ((float) duration * 16.66699981689453125f);
+    context->subBrightnessTimeRemaining = (int) ((float) duration * 16.667f);
 }
 
 // func_0203b228

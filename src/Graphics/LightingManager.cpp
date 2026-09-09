@@ -3,7 +3,7 @@
 #include "System/Memory.h"
 #include "System/Graphics.h"
 #include "Combat/Main/BattleList.h"
-#include "Grotto/Overlay_17/Struct44C8.h"
+#include "Resource/GameResources.h"
 
 #if defined(jpn)
 #define func_020100bc func_0200ff18
