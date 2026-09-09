@@ -25,14 +25,16 @@ def badge(label: str, percent: float) -> dict:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Turn an objdiff report into shields.io endpoint badges")
-    parser.add_argument("report", type=Path, help="path to report.json produced by 'ninja report'")
+    parser.add_argument("report", type=Path, help="path to report.json produced by 'ninja'")
     parser.add_argument("-o", "--out-dir", type=Path, help="write functions.json and bytes.json here")
+    parser.add_argument("-l", "--label-prefix", default="", help="prefix each badge label, e.g. USA")
     args = parser.parse_args()
 
+    prefix = f"{args.label_prefix} " if args.label_prefix else ""
     measures = json.loads(args.report.read_text())["measures"]
     badges = {
-        "functions": badge("functions", measures["matched_functions_percent"]),
-        "bytes": badge("bytes", measures["matched_code_percent"]),
+        "functions": badge(f"{prefix}functions", measures["matched_functions_percent"]),
+        "bytes": badge(f"{prefix}bytes", measures["matched_code_percent"]),
     }
 
     if args.out_dir is not None:

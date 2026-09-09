@@ -1,7 +1,9 @@
 # Dragon Quest IX: Sentinels of the Starry Skies Decompilation Project
 
-[![Functions](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2FDQIX%2Fdqix-decomp%2Fbadges%2Fusa%2Ffunctions.json)](https://github.com/DQIX/dqix-decomp/actions/workflows/match.yml)
-[![Bytes](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2FDQIX%2Fdqix-decomp%2Fbadges%2Fusa%2Fbytes.json)](https://github.com/DQIX/dqix-decomp/actions/workflows/match.yml)
+[![USA functions](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2FDQIX%2Fdqix-decomp%2Fbadges%2Fusa%2Ffunctions.json)](https://github.com/DQIX/dqix-decomp/actions/workflows/match.yml)
+[![USA bytes](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2FDQIX%2Fdqix-decomp%2Fbadges%2Fusa%2Fbytes.json)](https://github.com/DQIX/dqix-decomp/actions/workflows/match.yml)
+[![JPN functions](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2FDQIX%2Fdqix-decomp%2Fbadges%2Fjpn%2Ffunctions.json)](https://github.com/DQIX/dqix-decomp/actions/workflows/match.yml)
+[![JPN bytes](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2FDQIX%2Fdqix-decomp%2Fbadges%2Fjpn%2Fbytes.json)](https://github.com/DQIX/dqix-decomp/actions/workflows/match.yml)
 
 ## 📖 About
 This project aims to create a **1:1 disassembly and decompilation** of *Dragon Quest IX: Sentinels of the Starry Skies* for the Nintendo DS.  
