@@ -15,22 +15,49 @@ jobs:
     name: Greet a first-time contributor
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/first-interaction@v3
+      - uses: actions/github-script@v7
         with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          pr_message: |
-            Thanks for the pull request, and welcome to the project!
+          script: |
+            const isPullRequest = context.payload.pull_request !== undefined;
+            const number = context.issue.number;
+            const creator = context.payload.sender.login;
 
-            Decomp work is coordinated in the [DQI-haX: SWEs of the Starry Skies](https://discord.com/channels/655390550698098700/1266135635014582332)
-            thread on [The Quester's Rest](https://discord.gg/DQIX). Joining and saying which function
-            you're taking keeps two people from matching the same one, and it's the fastest place to get
-            help with a function that's close but won't go byte-exact.
+            const previous = await github.paginate(github.rest.issues.listForRepo, {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              creator,
+              state: 'all',
+              per_page: 100,
+            });
 
-            [CONTRIBUTING.md](${{ github.server_url }}/${{ github.repository }}/blob/HEAD/CONTRIBUTING.md) covers what gets merged.
-          issue_message: |
-            Thanks for opening your first issue here!
+            const priorOfSameKind = previous.filter(
+              (entry) => (entry.pull_request !== undefined) === isPullRequest && entry.number < number
+            );
 
-            Build and tooling bugs belong in GitHub issues, so this is the right place for those.
-            Questions about a specific function, an idiom that won't reproduce, or how the game works
-            get answered faster in the [DQI-haX: SWEs of the Starry Skies](https://discord.com/channels/655390550698098700/1266135635014582332)
-            thread on [The Quester's Rest](https://discord.gg/DQIX).
+            if (priorOfSameKind.length > 0) {
+              core.info(`Skipping: ${creator} has ${priorOfSameKind.length} earlier ${isPullRequest ? 'pull requests' : 'issues'}`);
+              return;
+            }
+
+            const contributing = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/blob/HEAD/CONTRIBUTING.md`;
+
+            const prMessage = [
+              'Thanks for the pull request, and welcome to the project!',
+              '',
+              "Decomp work is coordinated in the [DQI-haX: SWEs of the Starry Skies](https://discord.com/channels/655390550698098700/1266135635014582332) thread on [The Quester's Rest](https://discord.gg/DQIX). Joining and saying which function you're taking keeps two people from matching the same one, and it's the fastest place to get help with a function that's close but won't go byte-exact.",
+              '',
+              `[CONTRIBUTING.md](${contributing}) covers what gets merged.`,
+            ].join('\n');
+
+            const issueMessage = [
+              'Thanks for opening your first issue here!',
+              '',
+              "Build and tooling bugs belong in GitHub issues, so this is the right place for those. Questions about a specific function, an idiom that won't reproduce, or how the game works get answered faster in the [DQI-haX: SWEs of the Starry Skies](https://discord.com/channels/655390550698098700/1266135635014582332) thread on [The Quester's Rest](https://discord.gg/DQIX).",
+            ].join('\n');
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: number,
+              body: isPullRequest ? prMessage : issueMessage,
+            });
