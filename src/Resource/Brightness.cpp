@@ -1,6 +1,6 @@
 #include "Combat/Main/BattleList.h"
 #include "Resource/GameResources.h"
-#include "System/Brightness.h"
+#include "Resource/Brightness.h"
 #include <globaldefs.h>
 
 // Temporary internal wrappers
