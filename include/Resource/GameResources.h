@@ -1,19 +1,35 @@
 #pragma once
 
-// Absolutely terrible name, but I don't know nearly enough about it
-// to go with anything more sensible. I do know it is of size 0x44C8
-// (maybe minus up to 3 bytes) and seems to hold a huge number of pointers
-// to other data. In JPN version the size is 0x4218.
-//
-// The struct is allocated by func_ov030_021d8a40 (usa) which gives some
-// information about the type of its members. (This is the first function
-// in that overlay).
-
 #include "Memory/SafeAllocator.h"
 
-struct Struct_ov017_44C8
+// sizeof == 0x44c8, or 0x4218 in JPN version.
+// Referenced in a huge number of places, seems to be responsible for all
+// kinds of resource management in game (memory allocation and pointers
+// to persistent data)
+//
+// An instance of it is allocated in func_ov030_021d8a40 (usa) which is where
+// most of the type information comes from atm
+struct GameResources
 {
-    char unknown_0[0x38];
+    unsigned int flags_00;
+    unsigned int flags_04;
+    unsigned int flags_08;
+
+    float mainBrightness;
+    int mainBrightnessTarget;
+    int mainBrightnessTimeRemaining;
+
+    float subBrightness;
+    int subBrightnessTarget;
+    int subBrightnessTimeRemaining;
+
+    unsigned char mainBrightnessLocked;
+    unsigned char subBrightnessLocked;
+    unsigned char mainBrightnessDirty;
+    unsigned char subBrightnessDirty;
+    unsigned char allowBrightnessApply;
+
+    char unknown_29[0x38 - 0x29];
 
     SafeAllocator allocator_array_38[17];
     SafeAllocator lootableContainerAllocator_18c_;
@@ -104,7 +120,8 @@ struct Struct_ov017_44C8
     void* unknown_ptr_44c4;
 };
 
-// size 0x44
+// size 0x44.
+// Needs to be moved back to grotto
 struct TreasureMapLanguageDataOffsets
 {
     unsigned int bossRangesByQuality;
@@ -133,4 +150,4 @@ struct TreasureMapLanguageDataOffsets
 
 // This is the second function in overlay 17 (the first one stores this pointer).
 // So it's possible the struct is some sort of overall struct for the overlay.
-extern "C" Struct_ov017_44C8* func_ov017_0218b5b0();
+extern "C" GameResources* func_ov017_0218b5b0();
