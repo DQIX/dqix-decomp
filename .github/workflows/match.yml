@@ -1,6 +1,8 @@
 name: Match
 
 on:
+  push:
+    branches: [main]
   pull_request:
   merge_group:
   workflow_dispatch:
@@ -55,6 +57,61 @@ jobs:
       - run: python tools/configure.py ${{ matrix.version }}
 
       - run: ninja
+
+      - run: ninja report
+
+      - name: Progress summary
+        run: |
+          {
+            echo '### Progress (${{ matrix.version }})'
+            echo '```'
+            python tools/report_badges.py build/${{ matrix.version }}/report.json
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Generate badge data
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: python tools/report_badges.py build/${{ matrix.version }}/report.json -o badges/${{ matrix.version }}
+
+      - uses: actions/upload-artifact@v4
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        with:
+          name: badges-${{ matrix.version }}
+          path: badges/
+
+  badges:
+    needs: build
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: badges-*
+          merge-multiple: true
+          path: badges
+
+      - name: Publish to badges branch
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          git init -q -b badges publish
+          cd publish
+          git remote add origin "https://x-access-token:$GITHUB_TOKEN@github.com/${{ github.repository }}.git"
+          if git fetch -q --depth=1 origin badges 2>/dev/null; then
+            git reset -q --hard FETCH_HEAD
+          fi
+          cp -r ../badges/. .
+          git add -A
+          if git diff --cached --quiet; then
+            echo "badges unchanged"
+            exit 0
+          fi
+          git -c user.name='github-actions[bot]' \
+              -c user.email='41898282+github-actions[bot]@users.noreply.github.com' \
+              commit -q -m "Update progress badges for ${{ github.sha }}"
+          git push -q origin badges
 
   match:
     needs: build
