@@ -55,3 +55,14 @@ jobs:
       - run: python tools/configure.py ${{ matrix.version }}
 
       - run: ninja
+
+  match:
+    needs: build
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          case "${{ needs.build.result }}" in
+            success|skipped) ;;
+            *) echo "build: ${{ needs.build.result }}"; exit 1 ;;
+          esac
