@@ -3,40 +3,40 @@
 #include "Resource/GameResources.h"
 #include <globaldefs.h>
 
-extern "C" ARM void InitializeBrightnessState(GameResources* resources);
+void InitializeBrightnessState(GameResources* resources);
 
-extern "C" ARM void UpdateBrightnessTransitions(GameResources* resources);
+void UpdateBrightnessTransitions(GameResources* resources);
 
-extern "C" ARM void ApplyBrightness(GameResources* resources);
+void ApplyBrightness(GameResources* resources);
 
-extern "C" ARM void UpdateAndApplyBrightness(GameResources* resources);
+void UpdateAndApplyBrightness(GameResources* resources);
 
-extern "C" ARM void SetMainBrightness(GameResources* resources, int brightness, int duration);
+void SetMainBrightness(GameResources* resources, int brightness, int duration);
 
-extern "C" ARM void SetSubBrightness(GameResources* resources, int brightness, int duration);
+void SetSubBrightness(GameResources* resources, int brightness, int duration);
 
-extern "C" ARM void SetBrightness(GameResources* resources, int brightness, int duration);
+void SetBrightness(GameResources* resources, int brightness, int duration);
 
-extern "C" ARM void SetAndLockMainBrightness(GameResources* resources, int brightness, int duration);
+void SetAndLockMainBrightness(GameResources* resources, int brightness, int duration);
 
-extern "C" ARM void SetAndLockSubBrightness(GameResources* resources, int brightness, int duration);
+void SetAndLockSubBrightness(GameResources* resources, int brightness, int duration);
 
-extern "C" ARM void SetAndLockBrightness(GameResources* resources, int brightness, int duration);
+void SetAndLockBrightness(GameResources* resources, int brightness, int duration);
 
-extern "C" ARM void UnlockAndSetMainBrightness(GameResources* resources, int brightness, int duration);
+void UnlockAndSetMainBrightness(GameResources* resources, int brightness, int duration);
 
-extern "C" ARM void UnlockAndSetSubBrightness(GameResources* resources, int brightness, int duration);
+void UnlockAndSetSubBrightness(GameResources* resources, int brightness, int duration);
 
-extern "C" ARM void UnlockAndSetBrightness(GameResources* resources, int brightness, int duration);
+void UnlockAndSetBrightness(GameResources* resources, int brightness, int duration);
 
-extern "C" ARM void SetMainBrightnessWithDurationMs(GameResources* resources, int brightness, unsigned int durationMs);
+void SetMainBrightnessWithDurationMs(GameResources* resources, int brightness, unsigned int durationMs);
 
 // might be returning bool instead of int
-extern "C" ARM int IsMainBrightnessTransitionActive(GameResources* resources);
-extern "C" ARM int IsSubBrightnessTransitionActive(GameResources* resources);
-extern "C" ARM int IsBrightnessTransitionActive(GameResources* resources);
+int IsMainBrightnessTransitionActive(GameResources* resources);
+int IsSubBrightnessTransitionActive(GameResources* resources);
+int IsBrightnessTransitionActive(GameResources* resources);
 
-extern "C" ARM int GetMainBrightnessTransitionState(GameResources* resources);
-extern "C" ARM int GetSubBrightnessTransitionState(GameResources* resources);
+int GetMainBrightnessTransitionState(GameResources* resources);
+int GetSubBrightnessTransitionState(GameResources* resources);
 
-extern "C" ARM unsigned short GetBrightnessTransitionStates(GameResources* resources);
+unsigned short GetBrightnessTransitionStates(GameResources* resources);
