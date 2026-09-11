@@ -2,9 +2,11 @@
 #include "Combat/Main/BattleList.h"
 #include "Combat/Main/CombatCalculations.h"
 #include "Combat/Overlay_0/GetCombatantByID.h"
+#include "GameState.h"
+
 ARM int GetAttackBaseDamage(int* param_1, int attackerId, int defenderId, int* param_4, int* param_5) {
     unsigned int* RNG;
-	struct BattleStruct* battleStruct = GetBattleStruct();
+	 GameState* gameState = GameState::GetInstance();
     RNG = (unsigned int*)param_1[4];
     if (param_5 == NULL) {
         float defendersDefense;

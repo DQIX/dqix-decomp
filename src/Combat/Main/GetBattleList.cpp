@@ -1,8 +1,11 @@
 #include <globaldefs.h>
-#include "Combat/Main/BattleList.h"
+#include "GameState.h"
+
 #if defined(usa) || defined(jpn)
-extern struct BattleStruct data_020f33d8;
+extern GameState data_020f33d8;
 #endif
-ARM struct BattleStruct* GetBattleStruct() {
+
+GameState* GameState::GetInstance()
+{
 	return &data_020f33d8;
 }

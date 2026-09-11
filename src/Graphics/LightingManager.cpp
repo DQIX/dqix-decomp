@@ -2,7 +2,7 @@
 #include "World/Zone3D.h"
 #include "System/Memory.h"
 #include "System/Graphics.h"
-#include "Combat/Main/BattleList.h"
+#include "GameState.h"
 #include "Resource/GameResources.h"
 
 #if defined(jpn)
@@ -77,11 +77,11 @@ static LightingManager s_lightingManager;
 extern "C"
 {
     // camera data?
-    void* func_020100bc(BattleStruct*);
+    void* func_020100bc(GameState*);
     // one of various deltaTime counters
-    int func_02010208(BattleStruct*);
+    int func_02010208(GameState*);
     // set day/night time
-    void func_02010288(BattleStruct*, float);
+    void func_02010288(GameState*, float);
 
     void func_0202ec84(void*, const Vector3fix*, int*, int*);
 
@@ -290,7 +290,7 @@ bool LightingManager::GetFifoCommandData(int opcode, int* outNumArgs)
 
 unsigned short LightingManager::ColorTransformTintBrightnessContrast(unsigned int inColor)
 {
-    (void)GetBattleStruct();
+    (void)GameState::GetInstance();
     
     int inRed = inColor & 0x1f;
     int inGreen = (inColor & 0x3e0) >> 5;
@@ -414,7 +414,7 @@ void LightingManager::GetCurrentAdvancedLightingValues(unsigned short *outMaybeA
     }
     else
     {
-        (void)GetBattleStruct();
+        (void)GameState::GetInstance();
         currentTimeType = timeOfDayIndex_;
         float endTimes[4] = {
             s_dayThresholds[2], s_dayThresholds[1], s_dayThresholds[0], s_dayThresholds[4]
@@ -555,7 +555,7 @@ void LightingManager::ComputeFogInfo(FogInfo *outFog)
     }
     else
     {
-        (void)GetBattleStruct();
+        (void)GameState::GetInstance();
         int currentTimeType = timeOfDayIndex_;
         float endTimes[4] = {
             s_dayThresholds[2], s_dayThresholds[1], s_dayThresholds[0], s_dayThresholds[4]
@@ -646,7 +646,7 @@ void LightingManager::SetZone(Zone3D *zone) { pZone_ = zone; }
 
 void LightingManager::ModelTransformTintBrightnessContrast(NSBXXInternalModel *model)
 {
-    BattleStruct* battle = GetBattleStruct();
+    GameState* gameState = GameState::GetInstance();
     (void)func_ov017_0218b5b0();
     
     if (pZone_ == NULL)
@@ -688,7 +688,7 @@ void LightingManager::ModelTransformTintBrightnessContrast(NSBXXInternalModel *m
                     s_dayThresholds[3], s_dayThresholds[2], s_dayThresholds[1], s_dayThresholds[0]
                 };
                 dayNightTimer_ = beginTimes[timeOfDayIndex_];
-                func_02010288(battle, dayNightTimer_);
+                func_02010288(gameState, dayNightTimer_);
             }
         }
     }
@@ -767,10 +767,10 @@ void LightingManager::ProcessZoneChange(Zone3D *newZone)
 {
     pZone_ = newZone;
     Zone3D* zone = pZone_; // why make this copy? but we have to!
-    BattleStruct* battle;
+    GameState* gameState;
     int index;
     LightingInfo* info = &zone->lighting_;    
-    battle = GetBattleStruct();
+    gameState = GameState::GetInstance();
     func_ov017_0218b5b0();
     char* struct0205ec34 = func_0205ec34();
 
@@ -810,7 +810,7 @@ void LightingManager::ProcessZoneChange(Zone3D *newZone)
                         s_dayThresholds[3], s_dayThresholds[2], s_dayThresholds[1], s_dayThresholds[0]
                     };
                     dayNightTimer_ = thresholds2[timeOfDayIndex_];
-                    func_02010288(battle, dayNightTimer_);
+                    func_02010288(gameState, dayNightTimer_);
                 }
             }
         }
@@ -864,7 +864,7 @@ void LightingManager::RecomputeAdvancedLighting()
     Zone3D* zone = pZone_;
     if (zone == NULL)
         return;
-    BattleStruct* battle = GetBattleStruct();
+    GameState* gameState = GameState::GetInstance();
     (void)func_ov017_0218b5b0();
     if (zone->lighting_.maybeMode_ == 1 || zone->lighting_.maybeMode_ != 2)
         return;
@@ -917,7 +917,7 @@ void LightingManager::RecomputeAdvancedLighting()
 
     if (lightRGBScaleTransitionDuration_ != 0)
     {
-        int newTimer = lightRGBScaleTransitionTimer_ + func_02010208(battle);
+        int newTimer = lightRGBScaleTransitionTimer_ + func_02010208(gameState);
         if (newTimer >= lightRGBScaleTransitionDuration_)
         {
             lightRGBScaleTransitionDuration_ = 0;
@@ -1001,7 +1001,7 @@ void LightingManager::ApplyAmbientColorToModel(NSBXXInternalModel* model)
 
 void LightingManager::MaybeComputeHorizonPosition()
 {
-    void* maybeCameraData = func_020100bc(GetBattleStruct());
+    void* maybeCameraData = func_020100bc(GameState::GetInstance());
     Vector3fix* maybeCameraTarget = (Vector3fix*)((char*)maybeCameraData + 0x12c);
     Vector3fix* maybeCameraEye = (Vector3fix*)((char*)maybeCameraData + 0x120);
 
@@ -1042,7 +1042,7 @@ void LightingManager::DrawBackgroundGradient()
     GXFIFO_TEXIMAGE_PARAMS = 0;
     // alpha = 31, enable front-face rendering and back-face rendering
     GXFIFO_POLYGON_ATTRIBUTES = (0x1f << 16) | (1 << 7) | (1 << 6);
-    (void*)GetBattleStruct();
+    (void*)GameState::GetInstance();
     unsigned short outerColor;
     unsigned short innerColor;
     LightingInfo* lightingInfo = &pZone_->lighting_;

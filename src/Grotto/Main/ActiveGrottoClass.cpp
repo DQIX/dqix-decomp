@@ -1,6 +1,7 @@
 #include "Grotto/Main/ActiveGrottoClass.h"
 #include "Combat/Main/BattleList.h"
 #include "Grotto/Main/TreasureMapDataStructs.h"
+#include "GameState.h"
 #include <globaldefs.h>
 
 #ifdef jpn
@@ -84,7 +85,7 @@ int ActiveGrottoClass::CalculateAndStoreFloorHeight(int floor)
 // JPN: func_02090900
 int ActiveGrottoClass::GetFloorMonsterRank(int floor) const
 {
-    GrottoStruct* grotto = GetGrottoStruct(GetBattleStruct());
+    GrottoStruct* grotto = GetGrottoStruct((BattleStruct*)GameState::GetInstance());
     if (floor < 1)
         floor = 1;
 
@@ -145,7 +146,7 @@ int ActiveGrottoClass::RandomizeChestRank(int floor)
 // JPN: func_02090a70
 int ActiveGrottoClass::GetActiveGrottoEnviron() const
 {
-    GrottoStruct* grotto = GetGrottoStruct(GetBattleStruct());
+    GrottoStruct* grotto = GetGrottoStruct((BattleStruct*)GameState::GetInstance());
 
     if (grotto->activeMapData.GetMapType() == TreasureMapType_Legacy)
         return 1;
@@ -157,7 +158,7 @@ int ActiveGrottoClass::GetActiveGrottoEnviron() const
 // JPN: func_02090a98
 int ActiveGrottoClass::GetFloorCount() const
 {
-    GrottoStruct* grotto = GetGrottoStruct(GetBattleStruct());
+    GrottoStruct* grotto = GetGrottoStruct((BattleStruct*)GameState::GetInstance());
     void* zone = func_02012fe4();
     if (!func_0201b588(*(unsigned short*)zone))
         return 0;
@@ -181,7 +182,7 @@ int ActiveGrottoClass::GetFloorCount() const
 // JPN: func_02090b14
 const char* ActiveGrottoClass::GetPopupName() const
 {
-    GrottoStruct* grotto = GetGrottoStruct(GetBattleStruct());
+    GrottoStruct* grotto = GetGrottoStruct((BattleStruct*)GameState::GetInstance());
     if (overallMapData_.discoveryState_ != DiscoveryState_Invalid)
     {
         if (overallMapData_.mapType_ == TreasureMapType_Legacy)
@@ -207,7 +208,7 @@ const char* ActiveGrottoClass::GetPopupName() const
 // JPN: func_02090b88
 unsigned short ActiveGrottoClass::GetActiveGrottoSeed() const
 {
-    GrottoStruct* grottoData = GetGrottoStruct(GetBattleStruct());
+    GrottoStruct* grottoData = GetGrottoStruct((BattleStruct*)GameState::GetInstance());
 
     if (grottoData->activeMapData.GetMapType() == TreasureMapType_Legacy)
         return 0;

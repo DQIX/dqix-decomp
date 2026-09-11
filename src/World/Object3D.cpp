@@ -1,7 +1,7 @@
 #include "World/Object3D.h"
 #include "Graphics/NSBXX/RenderConfig.h"
 #include "System/Graphics.h"
-#include "Combat/Main/BattleList.h"
+#include "GameState.h"
 #include "Filesystem/BackgroundLoader.h"
 #include "Filesystem/FileIO.h"
 #include "Graphics/NSBXX/GeometryFifo.h"
@@ -40,14 +40,14 @@ void CreateRotationZ(Matrix3x3* out, fix32_t s, fix32_t c);
 
 extern "C"
 {
-    void* func_020100bc(BattleStruct*);
+    void* func_020100bc(GameState*);
 
     // deltaTime for animation blending
-    fix32_t func_02010208(BattleStruct*);
+    fix32_t func_02010208(GameState*);
     // deltaTime for model animations
-    fix32_t func_02010218(BattleStruct*);
+    fix32_t func_02010218(GameState*);
     // get some kind of deltaTime
-    int func_02010220(BattleStruct*);
+    int func_02010220(GameState*);
     // update world matrix rotation
     void func_02016d8c(const Matrix3x3* rotation);
 
@@ -220,7 +220,7 @@ void Object3D::AdvanceEffects()
     if (flags_ & (1 << OBJECT3D_FLAG_5))
         return;
 
-    int deltaTimeTicks = func_02010208(GetBattleStruct());
+    int deltaTimeTicks = func_02010208(GameState::GetInstance());
     if ((0.0f != alphaTransition_.changePerTick) ? 1 : 0)
     {
         unsigned int inheritedAlphau16 = 65535.0f * (inheritedAlpha_ / 31.0f);
@@ -260,7 +260,7 @@ void Object3D::AdvanceEffects()
 
 void Object3D::AdvanceAnimations()
 {
-    (void)func_02010220(GetBattleStruct());
+    (void)func_02010220(GameState::GetInstance());
     if (activeAnimationPackage_ == NULL)
         return;
     (this->*object3DsData.advanceProcs[activeAnimationPackage_->animationType])();
@@ -268,7 +268,7 @@ void Object3D::AdvanceAnimations()
 
 void Object3D::AdvanceAnimations_v0()
 {
-    fix16_t deltaTime = func_02010218(GetBattleStruct());
+    fix16_t deltaTime = func_02010218(GameState::GetInstance());
     BCFG* activeBCFG = &activeAnimationPackage_->bcfgData;
     if (activeBCFG == NULL || activeAnimationIndex_ < 0 || (flags_ & (1 << OBJECT3D_FLAG_12)))
         return;
@@ -361,8 +361,8 @@ void Object3D::AdvanceAnimations_v0()
 
 void Object3D::AdvanceAnimations_v1()
 {
-    BattleStruct* battle = GetBattleStruct();
-    fix16_t deltaTime = func_02010218(battle);
+    GameState* gameState = GameState::GetInstance();
+    fix16_t deltaTime = func_02010218(gameState);
     if (activeAnimationIndex_ < 0 || activeAnimationPackage_->pAnim3Ds == NULL 
         || activeAnimationPackage_->pAnim3Ds[activeAnimationIndex_].data == NULL)
         return;
@@ -375,7 +375,7 @@ void Object3D::AdvanceAnimations_v1()
         return;
     if (priorAnimationBlend_.blendTimeRemaining > 0)
     {
-        unsigned int blendDeltaTime = func_02010208(battle);
+        unsigned int blendDeltaTime = func_02010208(gameState);
         unsigned int newTimeRemaining;
         if (priorAnimationBlend_.blendTimeRemaining < blendDeltaTime)
         {
@@ -601,7 +601,7 @@ void Object3D::PopulateRenderConfigWorld()
         RenderConfig::SetObjectPosition(&position_);
         if (flags_ & (1 << OBJECT3D_FLAG_19))
         {
-            const Matrix3x3* rotation = func_0202ed74(func_020100bc(GetBattleStruct()));
+            const Matrix3x3* rotation = func_0202ed74(func_020100bc(GameState::GetInstance()));
             func_020ca528(rotation, &data_0210a010.objectRotationPosition.rotation);
             data_0210a010.flags &= ~((1 << RENDER_CONFIG_FLAG_WORLDVIEW_CACHE_VALID) | (1 << RENDER_CONFIG_FLAG_5) | (1 << RENDER_CONFIG_FLAG_2));
         }

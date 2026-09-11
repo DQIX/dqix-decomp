@@ -1,4 +1,4 @@
-#include "Combat/Main/BattleList.h"
+#include "GameState.h"
 #include "Resource/GameResources.h"
 #include "Resource/Brightness.h"
 #include <globaldefs.h>
@@ -15,7 +15,7 @@
 extern "C"
 {
     // get deltaTime / tick length
-    int func_02010208(BattleStruct *battleStruct);
+    int func_02010208(GameState*);
     // write brightness to master register
     void func_020c39a0(volatile unsigned short *reg, int brightness);
     // get brightness from master register
@@ -58,8 +58,8 @@ void Stub(GameResources*) {}
 // usa: func_0203af48
 void UpdateBrightnessTransitions(GameResources* resources)
 {
-    BattleStruct *battleStruct = GetBattleStruct();
-    int delta                  = func_02010208(battleStruct);
+    GameState* gameState = GameState::GetInstance();
+    int delta = func_02010208(gameState);
 
     if (IsTransitioningMain(resources))
     {

@@ -1,18 +1,19 @@
 #include <globaldefs.h>
 #include "Combat/Main/BattleList.h"
 #include "Combat/Main/CombatCalculations.h"
+#include "GameState.h"
 
 ARM void UpdateCombatantAttack(int unused, int combatantId) {
     int maxAttack;
-    struct BattleStruct* battleStruct;
+    GameState* battleStruct;
     struct CombatantStruct* combatant;
     int combatantIsPlayer;
     unsigned int attack;
     unsigned short buffedAttack;
     int attackBuff;
     float buffMultiplier;
-    battleStruct = GetBattleStruct();
-    combatant = GetCombatantFromList(battleStruct, combatantId);
+    battleStruct = GameState::GetInstance();
+    combatant = GetCombatantFromList((BattleStruct*)battleStruct, combatantId);
     if (combatant == NULL) {
         return;
     }
@@ -34,15 +35,15 @@ ARM void UpdateCombatantAttack(int unused, int combatantId) {
 
 ARM void UpdateCombatantDefense(int unused, int combatantId) {
     int maxDefense;
-    struct BattleStruct* battleStruct;
+    struct GameState* battleStruct;
     struct CombatantStruct* combatant;
     int combatantIsPlayer;
     unsigned int defense;
     unsigned short buffedDefense;
     int defenseBuff;
     float buffMultiplier;
-    battleStruct = GetBattleStruct();
-    combatant = GetCombatantFromList(battleStruct, combatantId);
+    battleStruct = GameState::GetInstance();
+    combatant = GetCombatantFromList((BattleStruct*)battleStruct, combatantId);
     if (combatant == NULL) {
         return;
     }
@@ -63,14 +64,14 @@ ARM void UpdateCombatantDefense(int unused, int combatantId) {
 }
 
 ARM void UpdateCombatantAgility(int unused, int combatantId) {
-    struct BattleStruct* battleStruct;
+    struct GameState* battleStruct;
     struct CombatantStruct* combatant;
     unsigned int agility;
     float agilityMultiplier;
     unsigned short agilityBuffed;
     const short maxAgility = 999;
-    battleStruct = GetBattleStruct();
-    combatant = GetCombatantFromList(battleStruct, combatantId);
+    battleStruct = GameState::GetInstance();
+    combatant = GetCombatantFromList((BattleStruct*)battleStruct, combatantId);
     if (combatant == NULL) {
         return;
     }
@@ -85,8 +86,8 @@ ARM void UpdateCombatantAgility(int unused, int combatantId) {
 }
 
 ARM void UpdateCombatantCharm(int unused, int combatantId) {
-    struct BattleStruct *battleStruct = GetBattleStruct();
-    struct CombatantStruct *combatant = GetCombatantFromList(battleStruct, combatantId);
+    struct GameState *battleStruct = GameState::GetInstance();
+    struct CombatantStruct *combatant = GetCombatantFromList((BattleStruct*)battleStruct, combatantId);
     float charmMultiplier;
     unsigned short charm;
     unsigned short charmBuffed;
@@ -112,8 +113,8 @@ ARM void UpdateCombatantMagicalMight(int unused, int combatantId) {
     unsigned short magicalMightBuffed;
     const short maxMagicalMight = 999;
     float buffMultiplier;
-    struct BattleStruct *battleStruct = GetBattleStruct();
-    struct CombatantStruct *combatant = GetCombatantFromList(battleStruct, combatantId);
+    struct GameState *battleStruct = GameState::GetInstance();
+    struct CombatantStruct *combatant = GetCombatantFromList((BattleStruct*)battleStruct, combatantId);
     if (combatant == NULL) {
         return;
     }
@@ -134,8 +135,8 @@ ARM void UpdateCombatantMagicalMending(int unused, int combatantId) {
     unsigned short magicalMendingBuffed;
     const short maxMagicalMending = 999;
     float buffMultiplier;
-    struct BattleStruct *battleStruct = GetBattleStruct();
-    struct CombatantStruct *combatant = GetCombatantFromList(battleStruct, combatantId);
+    struct GameState *battleStruct = GameState::GetInstance();
+    struct CombatantStruct *combatant = GetCombatantFromList((BattleStruct*)battleStruct, combatantId);
     if (combatant == NULL) {
         return;
     }

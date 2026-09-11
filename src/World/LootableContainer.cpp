@@ -1,7 +1,7 @@
 #include "World/LootableContainer.h"
 #include "Resource/Script.h"
 #include "Resource/GameResources.h"
-#include "Combat/Main/BattleList.h"
+#include "GameState.h"
 #include "Filesystem/FileIO.h"
 
 #ifdef jpn
@@ -144,7 +144,7 @@ static Script::OpcodeLookupEntry s_zoneContainerOpcodes[] = {
 void LootableContainerManager::LoadZoneContainers(const void *treasureArchive,
     unsigned int archiveLength, const char *zoneName, SafeAllocator *alloc)
 {
-    (void)GetBattleStruct();
+    (void)GameState::GetInstance();
     char scriptFilename[20];
     sprintf(scriptFilename, "%s.bin", zoneName);
     const void* scriptFile;

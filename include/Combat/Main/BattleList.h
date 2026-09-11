@@ -42,5 +42,5 @@ struct BattleStruct {
     int unk4;
     struct CombatantStruct* combatantList[0xe9]; // TODO: validate this size as well as this struct as a whole
 };
-struct BattleStruct* GetBattleStruct();
+
 struct CombatantStruct* GetCombatantFromList(struct BattleStruct* battleStruct, int id);
