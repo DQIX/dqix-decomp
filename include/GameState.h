@@ -33,4 +33,11 @@ public:
 
 public:
     static GameState* GetInstance();
+
+    // Index into the object array, but only return it if its obj3D.unk_0
+    // has bit 0x80 set. In practice this seems to be for enemies in battle
+    // and party members universally. In a fight with multiple enemies, you can
+    // clear this bit on one enemy and kill the others, and the battle will end
+    // prematurely.
+    GameObject* GetCombatantByIndex(int idx);
 };

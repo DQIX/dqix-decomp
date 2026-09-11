@@ -5,15 +5,15 @@
 
 ARM void UpdateCombatantAttack(int unused, int combatantId) {
     int maxAttack;
-    GameState* battleStruct;
-    struct CombatantStruct* combatant;
+    GameState* gameState;
+    GameObject* combatant;
     int combatantIsPlayer;
     unsigned int attack;
     unsigned short buffedAttack;
     int attackBuff;
     float buffMultiplier;
-    battleStruct = GameState::GetInstance();
-    combatant = GetCombatantFromList((BattleStruct*)battleStruct, combatantId);
+    gameState = GameState::GetInstance();
+    combatant = gameState->GetCombatantByIndex(combatantId);
     if (combatant == NULL) {
         return;
     }
@@ -22,28 +22,28 @@ ARM void UpdateCombatantAttack(int unused, int combatantId) {
     if (combatantIsPlayer != 0) {
         maxAttack = 999;
     }
-    attackBuff = combatant->currentStats->attackBuff;
-    attack = combatant->baseStats->primaryStats.attack;
+    attackBuff = combatant->currentStats_->attackBuff;
+    attack = combatant->baseStats_->primaryStats.attack;
     buffMultiplier = CalculateAttackBuffMultiplier(attackBuff);
     buffedAttack = buffMultiplier * attack;
     if (maxAttack < buffedAttack) {
-        combatant->currentStats->primaryStats.attack = maxAttack;
+        combatant->currentStats_->primaryStats.attack = maxAttack;
     } else {
-        combatant->currentStats->primaryStats.attack = buffedAttack;
+        combatant->currentStats_->primaryStats.attack = buffedAttack;
     }
 }
 
 ARM void UpdateCombatantDefense(int unused, int combatantId) {
     int maxDefense;
-    struct GameState* battleStruct;
-    struct CombatantStruct* combatant;
+    struct GameState* gameState;
+    GameObject* combatant;
     int combatantIsPlayer;
     unsigned int defense;
     unsigned short buffedDefense;
     int defenseBuff;
     float buffMultiplier;
-    battleStruct = GameState::GetInstance();
-    combatant = GetCombatantFromList((BattleStruct*)battleStruct, combatantId);
+    gameState = GameState::GetInstance();
+    combatant = gameState->GetCombatantByIndex(combatantId);
     if (combatant == NULL) {
         return;
     }
@@ -52,42 +52,42 @@ ARM void UpdateCombatantDefense(int unused, int combatantId) {
     if (combatantIsPlayer != 0) {
         maxDefense = 999;
     }
-    defenseBuff = combatant->currentStats->defenseBuff;
-    defense = combatant->baseStats->primaryStats.defense;
+    defenseBuff = combatant->currentStats_->defenseBuff;
+    defense = combatant->baseStats_->primaryStats.defense;
     buffMultiplier = CalculateDefenseBuffMultiplier(defenseBuff);
     buffedDefense = buffMultiplier * defense;
     if (maxDefense < buffedDefense) {
-        combatant->currentStats->primaryStats.defense = maxDefense;
+        combatant->currentStats_->primaryStats.defense = maxDefense;
     } else {
-        combatant->currentStats->primaryStats.defense = buffedDefense;
+        combatant->currentStats_->primaryStats.defense = buffedDefense;
     }
 }
 
 ARM void UpdateCombatantAgility(int unused, int combatantId) {
-    struct GameState* battleStruct;
-    struct CombatantStruct* combatant;
+    GameState* gameState;
+    GameObject* combatant;
     unsigned int agility;
     float agilityMultiplier;
     unsigned short agilityBuffed;
     const short maxAgility = 999;
-    battleStruct = GameState::GetInstance();
-    combatant = GetCombatantFromList((BattleStruct*)battleStruct, combatantId);
+    gameState = GameState::GetInstance();
+    combatant = gameState->GetCombatantByIndex(combatantId);
     if (combatant == NULL) {
         return;
     }
-    agility = combatant->baseStats->primaryStats.agility;
-    agilityMultiplier = CalculateAgilityBuffMultiplier(combatant->currentStats->agilityBuff);
+    agility = combatant->baseStats_->primaryStats.agility;
+    agilityMultiplier = CalculateAgilityBuffMultiplier(combatant->currentStats_->agilityBuff);
     agilityBuffed = agilityMultiplier * agility;
     if (maxAgility < agilityBuffed) {
-        combatant->currentStats->primaryStats.agility = 999;
+        combatant->currentStats_->primaryStats.agility = 999;
     } else {
-        combatant->currentStats->primaryStats.agility = agilityBuffed;
+        combatant->currentStats_->primaryStats.agility = agilityBuffed;
     }
 }
 
 ARM void UpdateCombatantCharm(int unused, int combatantId) {
-    struct GameState *battleStruct = GameState::GetInstance();
-    struct CombatantStruct *combatant = GetCombatantFromList((BattleStruct*)battleStruct, combatantId);
+    GameState *gameState = GameState::GetInstance();
+    GameObject* combatant = gameState->GetCombatantByIndex(combatantId);
     float charmMultiplier;
     unsigned short charm;
     unsigned short charmBuffed;
@@ -96,14 +96,14 @@ ARM void UpdateCombatantCharm(int unused, int combatantId) {
     if (combatant == NULL) {
         return;
     }
-    charmBuffValue = combatant->currentStats->charmBuff;
-    charm = combatant->baseStats->primaryStats.charm;
+    charmBuffValue = combatant->currentStats_->charmBuff;
+    charm = combatant->baseStats_->primaryStats.charm;
     charmMultiplier = CalculateCharmBuffMultiplier(charmBuffValue);
     charmBuffed = charmMultiplier * charm;
     if (maxCharm < charmBuffed) {
-        combatant->currentStats->primaryStats.charm = maxCharm;
+        combatant->currentStats_->primaryStats.charm = maxCharm;
     } else {
-        combatant->currentStats->primaryStats.charm = charmBuffed;
+        combatant->currentStats_->primaryStats.charm = charmBuffed;
     }
 }
 
@@ -113,19 +113,19 @@ ARM void UpdateCombatantMagicalMight(int unused, int combatantId) {
     unsigned short magicalMightBuffed;
     const short maxMagicalMight = 999;
     float buffMultiplier;
-    struct GameState *battleStruct = GameState::GetInstance();
-    struct CombatantStruct *combatant = GetCombatantFromList((BattleStruct*)battleStruct, combatantId);
+    struct GameState *gameState = GameState::GetInstance();
+    GameObject* combatant = gameState->GetCombatantByIndex(combatantId);
     if (combatant == NULL) {
         return;
     }
-    magicalMightBuff = combatant->currentStats->magicalMightBuff;
-    magicalMight = combatant->baseStats->primaryStats.magicalMight;
+    magicalMightBuff = combatant->currentStats_->magicalMightBuff;
+    magicalMight = combatant->baseStats_->primaryStats.magicalMight;
     buffMultiplier = CalculateMagicalMightBuffMultiplier(magicalMightBuff);
     magicalMightBuffed = buffMultiplier * magicalMight;
     if (maxMagicalMight < magicalMightBuffed) {
-        combatant->currentStats->primaryStats.magicalMight = maxMagicalMight;
+        combatant->currentStats_->primaryStats.magicalMight = maxMagicalMight;
     } else {
-        combatant->currentStats->primaryStats.magicalMight = magicalMightBuffed;
+        combatant->currentStats_->primaryStats.magicalMight = magicalMightBuffed;
     }
 }
 
@@ -135,19 +135,19 @@ ARM void UpdateCombatantMagicalMending(int unused, int combatantId) {
     unsigned short magicalMendingBuffed;
     const short maxMagicalMending = 999;
     float buffMultiplier;
-    struct GameState *battleStruct = GameState::GetInstance();
-    struct CombatantStruct *combatant = GetCombatantFromList((BattleStruct*)battleStruct, combatantId);
+    struct GameState *gameState = GameState::GetInstance();
+    GameObject*combatant = gameState->GetCombatantByIndex(combatantId);
     if (combatant == NULL) {
         return;
     }
-    magicalMendingBuff = combatant->currentStats->magicalMendingBuff;
-    magicalMending = combatant->baseStats->primaryStats.magicalMending;
+    magicalMendingBuff = combatant->currentStats_->magicalMendingBuff;
+    magicalMending = combatant->baseStats_->primaryStats.magicalMending;
     buffMultiplier = CalculateMagicalMendingBuffMultiplier(magicalMendingBuff);
     magicalMendingBuffed = buffMultiplier * magicalMending;
     if (maxMagicalMending < magicalMendingBuffed) {
-        combatant->currentStats->primaryStats.magicalMending = maxMagicalMending;
+        combatant->currentStats_->primaryStats.magicalMending = maxMagicalMending;
     } else {
-        combatant->currentStats->primaryStats.magicalMending = magicalMendingBuffed;
+        combatant->currentStats_->primaryStats.magicalMending = magicalMendingBuffed;
     }
 }
 

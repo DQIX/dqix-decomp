@@ -2,6 +2,6 @@
 #include "Combat/Main/BattleList.h"
 #include "GameState.h"
 
-struct CombatantStruct* GetCombatantByID(int unused, int id) {
-	return GetCombatantFromList((BattleStruct*)GameState::GetInstance(),id);
+struct GameObject* GetCombatantByID(int unused, int id) {
+	return GameState::GetInstance()->GetCombatantByIndex(id);
 }

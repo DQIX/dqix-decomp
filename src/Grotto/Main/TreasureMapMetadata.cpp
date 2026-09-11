@@ -15,9 +15,6 @@ extern "C"
 {
 
 unsigned int func_020100a8(GameState*);
-
-// Appears to index into the CombatantList and return the pointer after checking flags.
-// For now we just return a char*, but should probably be a CombatantStruct*.
 char* func_0200ff1c(GameState*, unsigned int);
 
 // returns the overland zone instance
