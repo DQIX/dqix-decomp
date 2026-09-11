@@ -36,7 +36,7 @@ struct GrottoStruct
     void LoadActiveMetadataFromDetailed(DetailedTreasureMapData* detail);
 };
 
-struct BattleStruct;
+class GameState;
 
 // Given the signature of these, it seems likely that the battle struct and
 // grotto struct are actually part of a larger object with the battle struct
@@ -46,7 +46,7 @@ struct BattleStruct;
 // data/tmap/tdata.gp2 (within this, tdata_<LG>.pac, where <LG> = ja, en, ...)
 // Once loaded into memory, use these functions to store/retrieve a pointer
 // to said memory.
-unsigned char* GetTreasureMapLanguageData(BattleStruct* battle);
-void SetTreasureMapLanguageDataPtr(BattleStruct* battle, unsigned char* to);
+unsigned char* GetTreasureMapLanguageData(GameState*);
+void SetTreasureMapLanguageDataPtr(GameState*, unsigned char* to);
 
-GrottoStruct* GetGrottoStruct(BattleStruct* battle);
+GrottoStruct* GetGrottoStruct(GameState*);

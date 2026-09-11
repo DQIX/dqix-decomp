@@ -47,7 +47,7 @@ extern "C"
     (VectorizedInvertedMemcpy((buffer) + (offset), (dst), (len)), offset += (len))
 
 #define TMAPLANGDATA_READ(offset, into, len) \
-    BINARY_READ_AND_ADVANCE(GetTreasureMapLanguageData((BattleStruct*)GameState::GetInstance()), offset, into, len)
+    BINARY_READ_AND_ADVANCE(GetTreasureMapLanguageData(GameState::GetInstance()), offset, into, len)
 
 #ifdef jpn
 
@@ -299,7 +299,7 @@ bool DetailedTreasureMapData::UpdateFollowingCompletion(bool levelledUp, unsigne
     }
 
     legacy_.WriteMapLevelString();
-    GrottoStruct* grotto = GetGrottoStruct((BattleStruct*)GameState::GetInstance());
+    GrottoStruct* grotto = GetGrottoStruct(GameState::GetInstance());
     strcpy(grotto->activeMapNameNoLevel, legacy_.mapNameNoLevel_);
     grotto->activeMapLevel = legacy_.level_;
     return false;
@@ -343,7 +343,7 @@ extern const char data_020f1c36[]; // "%s Lv %d no [ma/ma]"
 void DetailedTreasureMapData::LegacyBossMapData::Populate(
     unsigned char newBossID, unsigned char newLevel, unsigned short newMinTurns)
 {
-    if (GetTreasureMapLanguageData((BattleStruct*)GameState::GetInstance()) == 0)
+    if (GetTreasureMapLanguageData(GameState::GetInstance()) == 0)
         return;
 
     bossMonsterID_ = 0;
@@ -361,7 +361,7 @@ void DetailedTreasureMapData::LegacyBossMapData::Populate(
     unsigned short readStringLen = 0;
 
     TreasureMapLanguageDataOffsets* langData = func_ov017_0218b5b0()->pTMapLanguageOffsets;
-    unsigned char* dataPtr = GetTreasureMapLanguageData((BattleStruct*)GameState::GetInstance());
+    unsigned char* dataPtr = GetTreasureMapLanguageData(GameState::GetInstance());
 
     int readOffset = langData->legacyBossData;
     
@@ -493,7 +493,7 @@ unsigned short DetailedTreasureMapData::LegacyBossMapData::GetLearnedMove(unsign
 // JPN: func_020a63b0
 void DetailedTreasureMapData::RegularMapData::GenerateUnknownData()
 {
-    if (GetTreasureMapLanguageData((BattleStruct*)GameState::GetInstance()) == NULL)
+    if (GetTreasureMapLanguageData(GameState::GetInstance()) == NULL)
         return;
 
     unsigned short numValues = 0;
@@ -529,7 +529,7 @@ void DetailedTreasureMapData::RegularMapData::GenerateUnknownData()
 // JPN: func_020a64d0
 void DetailedTreasureMapData::RegularMapData::GenerateEnviron()
 {
-    if (GetTreasureMapLanguageData((BattleStruct*)GameState::GetInstance()) == NULL)
+    if (GetTreasureMapLanguageData(GameState::GetInstance()) == NULL)
         return;
 
     unsigned short numEntries = 0;
@@ -562,7 +562,7 @@ void DetailedTreasureMapData::RegularMapData::GenerateEnviron()
 // JPN: func_020a65bc
 void DetailedTreasureMapData::RegularMapData::GenerateFloorCount()
 {
-    if (GetTreasureMapLanguageData((BattleStruct*)GameState::GetInstance()) == NULL)
+    if (GetTreasureMapLanguageData(GameState::GetInstance()) == NULL)
         return;
 
     unsigned short numEntries = 0;
@@ -593,7 +593,7 @@ void DetailedTreasureMapData::RegularMapData::GenerateFloorCount()
 // JPN: func_020a66f4
 void DetailedTreasureMapData::RegularMapData::GenerateMonsterRank()
 {
-    if (GetTreasureMapLanguageData((BattleStruct*)GameState::GetInstance()) == NULL)
+    if (GetTreasureMapLanguageData(GameState::GetInstance()) == NULL)
         return;
 
     unsigned short numEntries = 0;
@@ -623,7 +623,7 @@ void DetailedTreasureMapData::RegularMapData::GenerateMonsterRank()
 // JPN: func_020a682c
 void DetailedTreasureMapData::RegularMapData::GenerateBoss()
 {
-    if (GetTreasureMapLanguageData((BattleStruct*)GameState::GetInstance()) == NULL)
+    if (GetTreasureMapLanguageData(GameState::GetInstance()) == NULL)
         return;
 
     unsigned short numEntries = 0;
@@ -687,7 +687,7 @@ void DetailedTreasureMapData::RegularMapData::GenerateBoss()
 // JPN: func_020a6aa0
 void DetailedTreasureMapData::RegularMapData::GenerateUnusedChestRanks()
 {
-    if (GetTreasureMapLanguageData((BattleStruct*)GameState::GetInstance()) == NULL)
+    if (GetTreasureMapLanguageData(GameState::GetInstance()) == NULL)
         return;
 
     unsigned short numEntries = 0;
@@ -716,7 +716,7 @@ void DetailedTreasureMapData::RegularMapData::GenerateUnusedChestRanks()
 // JPN: func_020a5ba0
 void DetailedTreasureMapData::RegularMapData::GeneratePrefix()
 {
-    if (GetTreasureMapLanguageData((BattleStruct*)GameState::GetInstance()) == NULL)
+    if (GetTreasureMapLanguageData(GameState::GetInstance()) == NULL)
         return;
 
     unsigned short numEntries = 0;
@@ -748,7 +748,7 @@ void DetailedTreasureMapData::RegularMapData::GeneratePrefix()
 // JPN: func_020a6cd8
 void DetailedTreasureMapData::RegularMapData::GenerateSuffix()
 {
-    if (GetTreasureMapLanguageData((BattleStruct*)GameState::GetInstance()) == NULL)
+    if (GetTreasureMapLanguageData(GameState::GetInstance()) == NULL)
         return;
 
     unsigned short numEntries = 0;
@@ -780,7 +780,7 @@ void DetailedTreasureMapData::RegularMapData::GenerateSuffix()
 // JPN: func_020a6e10
 void DetailedTreasureMapData::RegularMapData::GenerateLocaleRank()
 {
-    if (GetTreasureMapLanguageData((BattleStruct*)GameState::GetInstance()) == NULL)
+    if (GetTreasureMapLanguageData(GameState::GetInstance()) == NULL)
         return;
 
     unsigned short numEntries = 0;
@@ -822,7 +822,7 @@ void DetailedTreasureMapData::RegularMapData::GenerateNameBuffers()
     if (prefix_ == 0 || suffix_ == 0 || localeRank_ == 0 || level_ == 0)
         return;
 
-    if (GetTreasureMapLanguageData((BattleStruct*)GameState::GetInstance()) == NULL)
+    if (GetTreasureMapLanguageData(GameState::GetInstance()) == NULL)
         return;
 
     nameNoLevel_[0] = '\0';
@@ -837,7 +837,7 @@ void DetailedTreasureMapData::RegularMapData::GenerateNameBuffers()
     int nameIdx;
     int readOffset;
     
-    unsigned char* langData = GetTreasureMapLanguageData((BattleStruct*)GameState::GetInstance());
+    unsigned char* langData = GetTreasureMapLanguageData(GameState::GetInstance());
     int* offsetArray = (int*)(func_ov017_0218b5b0()->pTMapLanguageOffsets);   
 
     // choose the order of the words based on the language
@@ -935,7 +935,7 @@ void DetailedTreasureMapData::RegularMapData::GeneratePopupName()
     if (prefix_ == 0 || suffix_ == 0 || localeRank_ == 0 || level_ == 0)
         return;
 
-    if (GetTreasureMapLanguageData((BattleStruct*)GameState::GetInstance()) == NULL)
+    if (GetTreasureMapLanguageData(GameState::GetInstance()) == NULL)
         return;
 
     popupName_[0] = '\0';
@@ -950,7 +950,7 @@ void DetailedTreasureMapData::RegularMapData::GeneratePopupName()
     int nameIdx;
     int readOffset;
     
-    unsigned char* langData = GetTreasureMapLanguageData((BattleStruct*)GameState::GetInstance());
+    unsigned char* langData = GetTreasureMapLanguageData(GameState::GetInstance());
     int* offsetArray = (int*)(func_ov017_0218b5b0()->pTMapLanguageOffsets);   
 
     // choose the order of the words based on the language
@@ -1299,7 +1299,7 @@ void DetailedTreasureMapData::LoadLegacyBossStats(bool compute, const unsigned c
 
 void DetailedTreasureMapData::LoadTreasures()
 {
-    if (!GetTreasureMapLanguageData((BattleStruct*)GameState::GetInstance()))
+    if (!GetTreasureMapLanguageData(GameState::GetInstance()))
         return;
 
     TreasureMapLanguageDataOffsets* offsets = func_ov017_0218b5b0()->pTMapLanguageOffsets;

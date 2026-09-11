@@ -8,14 +8,14 @@
 
 // USA: func_02011644
 // JPN: func_020113b4
-unsigned char* GetTreasureMapLanguageData(BattleStruct* battle)
+unsigned char* GetTreasureMapLanguageData(GameState* state)
 {
-    return *(unsigned char**)((char*)battle + GROTTO_NAME_DATA_OFFSET);
+    return *(unsigned char**)((char*)state + GROTTO_NAME_DATA_OFFSET);
 }
 
 // USA: func_02011650
 // JPN: func_020113b4
-void SetTreasureMapLanguageDataPtr(BattleStruct* battle, unsigned char* to)
+void SetTreasureMapLanguageDataPtr(GameState* state, unsigned char* to)
 {
-    *(unsigned char**)((char*)battle + GROTTO_NAME_DATA_OFFSET) = to;
+    *(unsigned char**)((char*)state + GROTTO_NAME_DATA_OFFSET) = to;
 }

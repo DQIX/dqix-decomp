@@ -333,7 +333,7 @@ extern "C" void* ExtractFileFromGP2(const char* gp2Path, const char* innerFilePa
         *outSize = 0;
 
     func_0202f7a8();
-    BattleStruct* battle = GetBattleStruct();
+    GameState* battle = GameState::GetInstance();
     char innerFileReplacedPath[128] = { 0 };
 
     int language = func_0200fb08(battle);

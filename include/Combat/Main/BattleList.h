@@ -29,9 +29,3 @@ struct ModifiableCombatStats {
     signed int magicalMightBuff : 3;
     signed int magicalMendingBuff : 3;
 };
-
-struct BattleStruct {
-    int unk0;
-    int unk4;
-    struct GameObject* combatantList[0xe9]; // TODO: validate this size as well as this struct as a whole
-};
