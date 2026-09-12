@@ -1,7 +1,7 @@
 #include "World/ZoneFeatures.h"
 #include "World/Zone3D.h"
 #include "Resource/Script.h"
-#include "Combat/Main/BattleList.h"
+#include "GameState/GameState.h"
 #include "System/Memory.h"
 
 #if defined(jpn)
@@ -23,7 +23,7 @@ struct Struct_020fdc20
 
 extern "C"
 {
-    void* func_02011584(BattleStruct*);
+    void* func_02011584(GameState*);
     // probably get zone data by name
     unsigned short* func_0209998c(void*, const char*);
 }
@@ -144,7 +144,7 @@ int WarpScript_Opcode_68(Script::Parameter* params, int numParams)
 bool ProcessExtraOpcode69Params(Script::Parameter* param, int numParams, ZoneFeatures::Opcode68Entry& entry)
 {
     Script::Parameter* paramStart = param;
-    void* worldData = func_02011584(GetBattleStruct());
+    void* worldData = func_02011584(GameState::GetInstance());
     
     entry.unk_0 = (param++)->ToInt();
     if (paramStart[1].type == 0)
@@ -479,7 +479,7 @@ int WarpScript_Opcode_74(Script::Parameter* params, int numParams)
 {
     if (data_020fdc20.currentEntry == NULL)
         return 0;
-    void* worldData = func_02011584(GetBattleStruct());
+    void* worldData = func_02011584(GameState::GetInstance());
     switch (data_020fdc20.currentEntry->maybeType)
     {
     case 0:

@@ -1,7 +1,7 @@
 #include <globaldefs.h>
 #include "Grotto/Main/TileFeatures.h"
 #include "World/Zone3D.h"
-#include "Combat/Main/BattleList.h"
+#include "GameState/GameState.h"
 #include "std_library_functions.h"
 
 #ifdef jpn
@@ -30,7 +30,7 @@
 extern "C"
 {
     // get timer (seconds since game start?)
-    void func_020105a8(BattleStruct*, int*);
+    void func_020105a8(GameState*, int*);
     Zone3D_BMDJStruct* func_020196fc(Zone3D*, int);
     void* func_0202ae18();
 }
