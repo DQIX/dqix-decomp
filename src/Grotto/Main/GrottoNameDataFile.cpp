@@ -1,10 +1,4 @@
-#include "GameState.h"
-
-#ifdef jpn
-#define GROTTO_NAME_DATA_OFFSET 0x6180
-#else
-#define GROTTO_NAME_DATA_OFFSET 0x63e0
-#endif
+#include "GameState/GameState.h"
 
 // USA: func_02011644
 // JPN: func_020113b4

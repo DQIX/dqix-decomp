@@ -1,4 +1,4 @@
-#include "GameState.h"
+#include "GameState/GameState.h"
 
 // not correct, they're separate but we need the full TU before we can do this properly
 extern float data_020f33b4[6];

@@ -1,4 +1,4 @@
-#include "GameState.h"
+#include "GameState/GameState.h"
 #include "Resource/GameResources.h"
 #include "Resource/Brightness.h"
 #include <globaldefs.h>

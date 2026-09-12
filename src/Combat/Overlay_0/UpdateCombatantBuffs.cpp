@@ -1,7 +1,7 @@
 #include <globaldefs.h>
 #include "Combat/Main/BattleList.h"
 #include "Combat/Main/CombatCalculations.h"
-#include "GameState.h"
+#include "GameState/GameState.h"
 
 ARM void UpdateCombatantAttack(int unused, int combatantId) {
     int maxAttack;

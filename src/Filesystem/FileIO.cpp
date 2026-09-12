@@ -4,7 +4,7 @@
 #include "Filesystem/LowNitroHandle.h"
 #include "Filesystem/FileAccessor.h"
 #include "Filesystem/GPC.h"
-#include "GameState.h"
+#include "GameState/GameState.h"
 #include "Filesystem/NarcHandle.h"
 #include "Filesystem/BackgroundLoader.h"
 #include "System/Memory.h"

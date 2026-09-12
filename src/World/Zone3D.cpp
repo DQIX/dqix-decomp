@@ -1,5 +1,5 @@
 #include "World/Zone3D.h"
-#include "GameState.h"
+#include "GameState/GameState.h"
 #include "Filesystem/BackgroundLoader.h"
 #include "Filesystem/NarcHandle.h"
 #include "Filesystem/FileAccessor.h"

@@ -1,4 +1,4 @@
 #pragma once
-#include "GameState.h"
+#include "GameState/GameState.h"
 
 GameObject* GetCombatantByID(int unused, int id);

@@ -1,7 +1,7 @@
 #include "World/Object3D.h"
 #include "Graphics/NSBXX/RenderConfig.h"
 #include "System/Graphics.h"
-#include "GameState.h"
+#include "GameState/GameState.h"
 #include "Filesystem/BackgroundLoader.h"
 #include "Filesystem/FileIO.h"
 #include "Graphics/NSBXX/GeometryFifo.h"

@@ -1,4 +1,4 @@
-#include "GameState.h"
+#include "GameState/GameState.h"
 
 // USA: func_02011738
 // JPN: func_020114a8

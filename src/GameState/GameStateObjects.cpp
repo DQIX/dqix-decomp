@@ -1,5 +1,5 @@
 #include <globaldefs.h>
-#include "GameState.h"
+#include "GameState/GameState.h"
 
 GameObject* GameState::GetGameObjectByIndex(int idx)
 {

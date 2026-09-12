@@ -1,5 +1,5 @@
 #include "Grotto/Main/TreasureMapDataStructs.h"
-#include "GameState.h"
+#include "GameState/GameState.h"
 #include "Grotto/Main/GrottoStruct.h"
 #include "Resource/GameResources.h"
 #include "Filesystem/FileIO.h"

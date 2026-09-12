@@ -2,7 +2,7 @@
 #include "Combat/Main/BattleList.h"
 #include "Combat/Main/CombatCalculations.h"
 #include "Combat/Overlay_0/GetCombatantByID.h"
-#include "GameState.h"
+#include "GameState/GameState.h"
 
 ARM int GetAttackBaseDamage(int* param_1, int attackerId, int defenderId, int* param_4, int* param_5) {
     unsigned int* RNG;

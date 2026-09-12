@@ -1,6 +1,6 @@
 #include "Filesystem/BackgroundLoader.h"
 #include "std_library_functions.h"
-#include "GameState.h"
+#include "GameState/GameState.h"
 #include "Filesystem/FileIO.h"
 #include "Resource/ResourceMutex.h"
 

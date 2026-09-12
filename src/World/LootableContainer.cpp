@@ -1,7 +1,7 @@
 #include "World/LootableContainer.h"
 #include "Resource/Script.h"
 #include "Resource/GameResources.h"
-#include "GameState.h"
+#include "GameState/GameState.h"
 #include "Filesystem/FileIO.h"
 
 #ifdef jpn

@@ -24,7 +24,8 @@ public:
 // For upper bound, note an instance of this occurs at 0x020f33d8, constructed
 // in the static initializer at 0x020e5920, while data at 0x020fb3d0 is initialized
 // by the next static initializer at 0x020e59c8. data_020fb3cc is explicitly written
-// to so size is probably 0x7ff4
+// to so size is probably 0x7ff4.
+// Generic game class used for pretty much everything. 
 class GameState
 {
 public:
@@ -64,7 +65,10 @@ public:
     char unk_6fc0[0x7ff4 - 0x6fc0];
 
 public:
+    // --- GameStateInstance.cpp ---
     static GameState* GetInstance();
+
+    // -- GameStateObjects.cpp ---
 
     GameObject* GetGameObjectByIndex(int idx);
     // Like GetCombatantByIndex() but checks for bitmask 0x2 instead. This is set
@@ -122,10 +126,10 @@ public:
     // Mirage Mahal/Stornway Castle etc. Not used for town music
     bool IsMorningDayOrEvening() const;
 
-    // --- GrottoNameDataFile.cpp ---
+    // --- Grotto/Main/GrottoNameDataFile.cpp ---
     unsigned char* GetTreasureMapLanguageData();
     void SetTreasureMapLanguageDataPtr(unsigned char*);
 
-    // --- GrottoStruct.cpp ---
+    // --- Grotto/Main/GrottoStruct.cpp ---
     GrottoStruct* GetGrottoStruct();
 };

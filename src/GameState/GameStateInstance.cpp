@@ -1,5 +1,5 @@
 #include <globaldefs.h>
-#include "GameState.h"
+#include "GameState/GameState.h"
 
 #if defined(usa) || defined(jpn)
 extern GameState data_020f33d8;

@@ -9,7 +9,7 @@
 #include "Graphics/NSBXX/RenderConfig.h"
 #include "Graphics/NSBXX/GeometryFifo.h"
 #include "Graphics/NSBXX/NSBXX.h"
-#include "GameState.h"
+#include "GameState/GameState.h"
 #include "Graphics/LightingManager.h"
 
 // This keeps showing up in multiple translation units: in every case, we have
