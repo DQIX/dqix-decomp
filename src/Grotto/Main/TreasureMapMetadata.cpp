@@ -29,7 +29,7 @@ unsigned short GenerateNewMapQuality()
     char* maybeMainCharDataPtr = func_0200ff1c(gameState, func_020100a8(gameState));
     // Another pointless function call
     (void)func_02012fe4();
-    GrottoStruct* grotto = GetGrottoStruct(gameState);
+    GrottoStruct* grotto = gameState->GetGrottoStruct();
 
 #ifdef jpn
     #define MAIN_CHAR_DATA_PTR_OFFSET 0x144

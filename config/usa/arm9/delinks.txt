@@ -11,7 +11,7 @@ src/Combat/Main/GetBattleList.cpp:
 
 src/Combat/Main/GetCombatantFromList.cpp:
 	complete
-	.text start:0x0200fe68 end:0x0200fea4
+	.text start:0x0200fd70 end:0x0200fea4
 
 src/GameState/GameTime.cpp:
     complete

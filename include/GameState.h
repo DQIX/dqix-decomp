@@ -5,6 +5,7 @@
 #include "World/Object3D.h"
 #include "Filesystem/NitroVM.h"
 #include "GameState/TimeOfDay.h"
+#include "Grotto/Main/GrottoStruct.h"
 
 // Represents a party member, monster in battle, monster on the field
 // or grotto boss. 
@@ -30,11 +31,11 @@ public:
     GameResources* pResources_;
     char unk_4[4];
     GameObject* objects_[0xe9];
-    int playerObjectIndex_;
+    int protagonistObjectIndex_;
     void* unknown_3b0_; // see func_020100bc, LightingManager::MaybeComputeHorizonPosition
     unsigned int effectiveDeltaTimeMilliseconds_;
     unsigned int trueDeltaTimeMilliseconds_;
-    fix16_t gameSpeed_;
+    fix16_t gameSpeed_; // effective delta time is true delta time rescaled by this
     fix32_t animationDeltaTime_; // for use with frame-based things such as nsbca
     unsigned int numTicks_;
     unsigned int currentNumTicks_;
@@ -48,17 +49,43 @@ public:
     uint64_t mainTimestamp_; // current timestamp - this one is used for chest timer
     uint64_t altTimestamp_; // not sure about usage
 
-    char unk_3f8[0x7ff4 - 0x3f8];
+    char unk_3f8[0x397c - 0x3f8];
+
+    unsigned char unknownObjectIndex_397c_;
+    char unk_397d[0x63e0 - 0x397d];
+
+    unsigned char* treasureMapLanguageData_;
+    GrottoStruct grottoInfo_;
+
+    char unk_6fc0[0x7ff4 - 0x6fc0];
 
 public:
     static GameState* GetInstance();
 
+    GameObject* GetGameObjectByIndex(int idx);
+    // Like GetCombatantByIndex() but checks for bitmask 0x2 instead. This is set
+    // in the same cases as 0x20, but replacing this function to always return null
+    // only disables wandering monsters, while keeping whistle spawns and grotto
+    // bosses in tact
+    GameObject* GetMaybeWanderingMonsterByIndex(int idx);
+    GameObject* GetProtagonist();
+    // Seems to also be the protagonist, checks the bit at 0x397c
+    GameObject* GetUnknownGameObject();
+    // Like GetCombatantByIndex() but checks for bitmask 0x800 instead.
+    GameObject* GetPartyMemberByIndex(int idx);
+    // Like GetCombatantByIndex() but checks for bitmask 0x20 instead. In practice
+    // this bit is set for monsters out of battle, and replacing this function to
+    // always return null disables monster spawns, including through whistle, and
+    // removes grotto bosses.
+    GameObject* GetMaybeFieldMonsterByIndex(int idx);
     // Index into the object array, but only return it if its obj3D.unk_0
     // has bit 0x80 set. In practice this seems to be for enemies in battle
     // and party members universally. In a fight with multiple enemies, you can
     // clear this bit on one enemy and kill the others, and the battle will end
     // prematurely.
     GameObject* GetCombatantByIndex(int idx);
+
+    // --- GameTime.cpp ---
 
     // usa: func_02010150
     void CalculateDeltaTime(uint64_t microseconds);
@@ -90,4 +117,11 @@ public:
     // used for determining inn dialogue, whether you can enter
     // Mirage Mahal/Stornway Castle etc. Not used for town music
     bool IsMorningDayOrEvening() const;
+
+    // --- GrottoNameDataFile.cpp ---
+    unsigned char* GetTreasureMapLanguageData();
+    void SetTreasureMapLanguageDataPtr(unsigned char*);
+
+    // --- GrottoStruct.cpp ---
+    GrottoStruct* GetGrottoStruct();
 };

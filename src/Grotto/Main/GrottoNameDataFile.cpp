@@ -1,4 +1,4 @@
-#include "Grotto/Main/GrottoStruct.h"
+#include "GameState.h"
 
 #ifdef jpn
 #define GROTTO_NAME_DATA_OFFSET 0x6180
@@ -8,14 +8,14 @@
 
 // USA: func_02011644
 // JPN: func_020113b4
-unsigned char* GetTreasureMapLanguageData(GameState* state)
+unsigned char* GameState::GetTreasureMapLanguageData()
 {
-    return *(unsigned char**)((char*)state + GROTTO_NAME_DATA_OFFSET);
+    return treasureMapLanguageData_;
 }
 
 // USA: func_02011650
 // JPN: func_020113b4
-void SetTreasureMapLanguageDataPtr(GameState* state, unsigned char* to)
+void GameState::SetTreasureMapLanguageDataPtr(unsigned char* to)
 {
-    *(unsigned char**)((char*)state + GROTTO_NAME_DATA_OFFSET) = to;
+    treasureMapLanguageData_ = to;
 }
