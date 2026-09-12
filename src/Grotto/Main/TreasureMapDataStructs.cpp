@@ -1,7 +1,7 @@
 #include "Grotto/Main/TreasureMapDataStructs.h"
 #include "std_library_functions.h"
 #include "Grotto/Main/GrottoStruct.h"
-#include "Combat/Main/BattleList.h"
+#include "GameState/GameState.h"
 #include "System/Memory.h"
 #include "Resource/GameResources.h"
 
@@ -20,7 +20,7 @@ extern "C"
 }
 
 #define TMAPLANGDATA_READ(offset, into, len) \
-    (VectorizedInvertedMemcpy(GetTreasureMapLanguageData(GetBattleStruct()) + (offset), (into), (len)), offset += (len))
+    (VectorizedInvertedMemcpy(GameState::GetInstance()->GetTreasureMapLanguageData() + (offset), (into), (len)), offset += (len))
 
 bool ExportDetailedTreasureMapData(const TreasureMapMetadata* from,
     DetailedTreasureMapData* to, bool computeLegacyStats, const unsigned char* legacyStatsData)
@@ -52,7 +52,7 @@ bool ExportDetailedTreasureMapData(const TreasureMapMetadata* from,
     VectorizedInvertedMemcpy(from->DiscoveredBy, to->discoveredBy_, 10);
     VectorizedInvertedMemcpy(from->ClearedBy, to->clearedBy_, 10);
 
-    if (GetTreasureMapLanguageData(GetBattleStruct()) == 0)
+    if (GameState::GetInstance()->GetTreasureMapLanguageData() == NULL)
         return false;
 
     int readOffset = resources->pTMapLanguageOffsets->mapLocations;

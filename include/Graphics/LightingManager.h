@@ -3,6 +3,7 @@
 #include "NSBXX/NSBXX.h"
 #include "NSBXX/RenderConfig.h"
 #include "Vector.h"
+#include "../GameState/TimeOfDay.h"
 
 class Zone3D;
 
@@ -11,15 +12,6 @@ struct Vector3float
     float x;
     float y;
     float z;
-};
-
-enum TimeOfDay
-{
-    TimeOfDay_Invalid = -1,
-    TimeOfDay_Night = 0,
-    TimeOfDay_Morning = 1,
-    TimeOfDay_Day = 2,
-    TimeOfDay_Evening = 3
 };
 
 // sizeof == 0x9c.

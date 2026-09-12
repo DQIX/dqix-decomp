@@ -1,13 +1,8 @@
-#include "Grotto/Main/GrottoStruct.h"
-#include "Combat/Main/BattleList.h"
+#include "GameState/GameState.h"
 
 // USA: func_02011738
 // JPN: func_020114a8
-GrottoStruct* GetGrottoStruct(BattleStruct* battle)
+GrottoStruct* GameState::GetGrottoStruct()
 {
-#ifdef jpn
-    return (GrottoStruct*)((char*)battle + 0x6184);
-#else
-    return (GrottoStruct*)((char*)battle + 0x63E4);
-#endif
+    return &grottoInfo_;
 }

@@ -1,8 +1,7 @@
 #include "Grotto/Main/TreasureMapDataStructs.h"
 #include "System/Memory.h"
 #include "std_library_functions.h"
-#include "Combat/Main/BattleList.h"
-#include "Grotto/Main/GrottoStruct.h"
+#include "GameState/GameState.h"
 #include <globaldefs.h>
 
 #ifdef jpn
@@ -13,13 +12,9 @@
 
 extern "C"
 {
-// Seems to return a u32 whose address is just past the end of the BattleStruct.
-// Maybe BattleStruct is just the beginning of some larger struct?
-unsigned int func_020100a8(BattleStruct*);
 
-// Appears to index into the CombatantList and return the pointer after checking flags.
-// For now we just return a char*, but should probably be a CombatantStruct*.
-char* func_0200ff1c(BattleStruct*, unsigned int);
+unsigned int func_020100a8(GameState*);
+char* func_0200ff1c(GameState*, unsigned int);
 
 // returns the overland zone instance
 void* func_02012fe4();
@@ -29,11 +24,11 @@ void* func_02012fe4();
 // JPN: func_020a7a5c
 unsigned short GenerateNewMapQuality()
 {
-    BattleStruct* battle = GetBattleStruct();
-    char* maybeMainCharDataPtr = func_0200ff1c(battle, func_020100a8(battle));
+    GameState* gameState = GameState::GetInstance();
+    char* maybeMainCharDataPtr = func_0200ff1c(gameState, func_020100a8(gameState));
     // Another pointless function call
-    func_02012fe4();
-    GrottoStruct* grotto = GetGrottoStruct(battle);
+    (void)func_02012fe4();
+    GrottoStruct* grotto = gameState->GetGrottoStruct();
 
 #ifdef jpn
     #define MAIN_CHAR_DATA_PTR_OFFSET 0x144

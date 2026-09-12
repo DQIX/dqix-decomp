@@ -1,6 +1,6 @@
 #include "Filesystem/BackgroundLoader.h"
 #include "std_library_functions.h"
-#include "Combat/Main/BattleList.h"
+#include "GameState/GameState.h"
 #include "Filesystem/FileIO.h"
 #include "Resource/ResourceMutex.h"
 
@@ -27,7 +27,7 @@ struct Struct_02104304
 extern "C"
 {
     // get system language
-    int func_0200fb08(BattleStruct*);
+    int func_0200fb08(GameState*);
 
     // abort() or similar
     void func_020c9be0();
@@ -193,7 +193,7 @@ int BackgroundLoader::QueueFileTask(const char* filename, int type, const char* 
     int newID = -1;
     LockResourceMutex();
 #if defined(usa)
-    int language = func_0200fb08(GetBattleStruct());
+    int language = func_0200fb08(GameState::GetInstance());
     char replacedFilename[80] = { 0 };
     StringReplaceLanguageTag(filename, replacedFilename, language);
 #endif
