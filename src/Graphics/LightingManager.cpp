@@ -7,8 +7,6 @@
 
 #if defined(jpn)
 #define func_020100bc func_0200ff18
-#define func_02010208 func_02010064
-#define func_02010288 func_020100e4
 #define func_0202ec84 func_0202e7f4
 #define func_0205ec34 func_0205ff20
 #define func_0206dfb0 func_0206f104
@@ -78,10 +76,6 @@ extern "C"
 {
     // camera data?
     void* func_020100bc(GameState*);
-    // one of various deltaTime counters
-    int func_02010208(GameState*);
-    // set day/night time
-    void func_02010288(GameState*, float);
 
     void func_0202ec84(void*, const Vector3fix*, int*, int*);
 
@@ -688,7 +682,7 @@ void LightingManager::ModelTransformTintBrightnessContrast(NSBXXInternalModel *m
                     s_dayThresholds[3], s_dayThresholds[2], s_dayThresholds[1], s_dayThresholds[0]
                 };
                 dayNightTimer_ = beginTimes[timeOfDayIndex_];
-                func_02010288(gameState, dayNightTimer_);
+                gameState->SetDayTimer(dayNightTimer_);
             }
         }
     }
@@ -810,7 +804,7 @@ void LightingManager::ProcessZoneChange(Zone3D *newZone)
                         s_dayThresholds[3], s_dayThresholds[2], s_dayThresholds[1], s_dayThresholds[0]
                     };
                     dayNightTimer_ = thresholds2[timeOfDayIndex_];
-                    func_02010288(gameState, dayNightTimer_);
+                    gameState->SetDayTimer(dayNightTimer_);
                 }
             }
         }
@@ -917,7 +911,7 @@ void LightingManager::RecomputeAdvancedLighting()
 
     if (lightRGBScaleTransitionDuration_ != 0)
     {
-        int newTimer = lightRGBScaleTransitionTimer_ + func_02010208(gameState);
+        int newTimer = lightRGBScaleTransitionTimer_ + gameState->GetEffectiveDeltaTime();
         if (newTimer >= lightRGBScaleTransitionDuration_)
         {
             lightRGBScaleTransitionDuration_ = 0;

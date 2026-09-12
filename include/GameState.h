@@ -3,6 +3,8 @@
 #include "Combat/Main/BattleList.h"
 #include "Resource/GameResources.h"
 #include "World/Object3D.h"
+#include "Filesystem/NitroVM.h"
+#include "GameState/TimeOfDay.h"
 
 // Represents a party member, monster in battle, monster on the field
 // or grotto boss. 
@@ -29,7 +31,24 @@ public:
     char unk_4[4];
     GameObject* objects_[0xe9];
     int playerObjectIndex_;
-    char unk_3b0[0x7ff4 - 0x3b0];
+    void* unknown_3b0_; // see func_020100bc, LightingManager::MaybeComputeHorizonPosition
+    unsigned int effectiveDeltaTimeMilliseconds_;
+    unsigned int trueDeltaTimeMilliseconds_;
+    fix16_t gameSpeed_;
+    fix32_t animationDeltaTime_; // for use with frame-based things such as nsbca
+    unsigned int numTicks_;
+    unsigned int currentNumTicks_;
+    float dayTimer_;
+    float dayLength_;
+    float daySpeed_;
+    CBool dayTimerRunning_;
+    TimeOfDay timeOfDay_;
+    float unknown_3e0_;
+    char unk_3e4[4];
+    uint64_t mainTimestamp_; // current timestamp - this one is used for chest timer
+    uint64_t altTimestamp_; // not sure about usage
+
+    char unk_3f8[0x7ff4 - 0x3f8];
 
 public:
     static GameState* GetInstance();
@@ -40,4 +59,35 @@ public:
     // clear this bit on one enemy and kill the others, and the battle will end
     // prematurely.
     GameObject* GetCombatantByIndex(int idx);
+
+    // usa: func_02010150
+    void CalculateDeltaTime(uint64_t microseconds);
+    // usa: func_02010208
+    unsigned int GetEffectiveDeltaTime() const;
+    // usa: func_02010210
+    unsigned int GetTrueDeltaTime() const;
+    // usa: func_02010218
+    fix32_t GetAnimationDeltaTime() const;
+    // usa: func_02010220
+    unsigned int GetTickCount() const;
+    // usa: func_02010228
+    void SetGameSpeed(fix32_t speed);
+    // usa: func_02010234
+    fix32_t GetGameSpeed() const;
+    // usa: func_02010240
+    void AdvanceDayTimer();
+    // usa: func_02010280
+    float GetDayTimer() const;
+    // usa: func_02010288
+    void SetDayTimer(float to);
+    // usa: func_02010354
+    void SetDayTimerRunning(CBool to);
+    // usa: func_0201035c
+    TimeOfDay GetTimeOfDay() const;
+    // usa: func_02010364
+    void SetTimeOfDay(TimeOfDay);
+    // usa: func_020103b4
+    // used for determining inn dialogue, whether you can enter
+    // Mirage Mahal/Stornway Castle etc. Not used for town music
+    bool IsMorningDayOrEvening() const;
 };

@@ -13,6 +13,10 @@ src/Combat/Main/GetCombatantFromList.cpp:
 	complete
 	.text start:0x0200fe68 end:0x0200fea4
 
+src/GameState/GameTime.cpp:
+    complete
+    .text start:0x02010150 end:0x020103c8
+
 src/Grotto/Main/GrottoNameDataFile.cpp:
     complete
     .text start:0x02011644 end:0x0201165c

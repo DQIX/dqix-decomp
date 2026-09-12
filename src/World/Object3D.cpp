@@ -13,9 +13,6 @@
 
 #if defined(jpn)
 #define func_020100bc func_0200ff18
-#define func_02010208 func_02010064
-#define func_02010218 func_02010074
-#define func_02010220 func_0201007c
 #define func_02016d8c func_02016b2c
 #define func_0202ed74 func_0202e8e4
 #define func_02030e2c func_02030964
@@ -41,13 +38,6 @@ void CreateRotationZ(Matrix3x3* out, fix32_t s, fix32_t c);
 extern "C"
 {
     void* func_020100bc(GameState*);
-
-    // deltaTime for animation blending
-    fix32_t func_02010208(GameState*);
-    // deltaTime for model animations
-    fix32_t func_02010218(GameState*);
-    // get some kind of deltaTime
-    int func_02010220(GameState*);
     // update world matrix rotation
     void func_02016d8c(const Matrix3x3* rotation);
 
@@ -220,7 +210,7 @@ void Object3D::AdvanceEffects()
     if (flags_ & (1 << OBJECT3D_FLAG_5))
         return;
 
-    int deltaTimeTicks = func_02010208(GameState::GetInstance());
+    int deltaTimeTicks = GameState::GetInstance()->GetEffectiveDeltaTime();
     if ((0.0f != alphaTransition_.changePerTick) ? 1 : 0)
     {
         unsigned int inheritedAlphau16 = 65535.0f * (inheritedAlpha_ / 31.0f);
@@ -260,7 +250,7 @@ void Object3D::AdvanceEffects()
 
 void Object3D::AdvanceAnimations()
 {
-    (void)func_02010220(GameState::GetInstance());
+    (void)GameState::GetInstance()->GetTickCount();
     if (activeAnimationPackage_ == NULL)
         return;
     (this->*object3DsData.advanceProcs[activeAnimationPackage_->animationType])();
@@ -268,7 +258,7 @@ void Object3D::AdvanceAnimations()
 
 void Object3D::AdvanceAnimations_v0()
 {
-    fix16_t deltaTime = func_02010218(GameState::GetInstance());
+    fix16_t deltaTime = GameState::GetInstance()->GetAnimationDeltaTime();
     BCFG* activeBCFG = &activeAnimationPackage_->bcfgData;
     if (activeBCFG == NULL || activeAnimationIndex_ < 0 || (flags_ & (1 << OBJECT3D_FLAG_12)))
         return;
@@ -362,7 +352,7 @@ void Object3D::AdvanceAnimations_v0()
 void Object3D::AdvanceAnimations_v1()
 {
     GameState* gameState = GameState::GetInstance();
-    fix16_t deltaTime = func_02010218(gameState);
+    fix16_t deltaTime = gameState->GetAnimationDeltaTime();
     if (activeAnimationIndex_ < 0 || activeAnimationPackage_->pAnim3Ds == NULL 
         || activeAnimationPackage_->pAnim3Ds[activeAnimationIndex_].data == NULL)
         return;
@@ -375,7 +365,7 @@ void Object3D::AdvanceAnimations_v1()
         return;
     if (priorAnimationBlend_.blendTimeRemaining > 0)
     {
-        unsigned int blendDeltaTime = func_02010208(gameState);
+        unsigned int blendDeltaTime = gameState->GetEffectiveDeltaTime();
         unsigned int newTimeRemaining;
         if (priorAnimationBlend_.blendTimeRemaining < blendDeltaTime)
         {

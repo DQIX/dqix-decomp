@@ -4,7 +4,6 @@
 #include <globaldefs.h>
 
 #if defined(jpn)
-#define func_02010208 func_02010064
 #define func_020c39a0 func_020c546c
 #define func_020c39c8 func_020c5494
 #define func_020daf90 func_020dc998
@@ -14,8 +13,6 @@
 // Temporary internal wrappers
 extern "C"
 {
-    // get deltaTime / tick length
-    int func_02010208(GameState*);
     // write brightness to master register
     void func_020c39a0(volatile unsigned short *reg, int brightness);
     // get brightness from master register
@@ -58,8 +55,7 @@ void Stub(GameResources*) {}
 // usa: func_0203af48
 void UpdateBrightnessTransitions(GameResources* resources)
 {
-    GameState* gameState = GameState::GetInstance();
-    int delta = func_02010208(gameState);
+    int delta = GameState::GetInstance()->GetEffectiveDeltaTime();
 
     if (IsTransitioningMain(resources))
     {
