@@ -1,5 +1,5 @@
 #include "World/Zone3D.h"
-#include "Combat/Main/BattleList.h"
+#include "GameState/GameState.h"
 #include "Filesystem/BackgroundLoader.h"
 #include "Filesystem/NarcHandle.h"
 #include "Filesystem/FileAccessor.h"
@@ -9,8 +9,6 @@
 #include "Graphics/NSBXX/NSBXX.h"
 
 #if defined(jpn)
-#define func_0200fdcc func_0200fc28
-#define func_0200fddc func_0200fc38
 #define func_02011584 func_020112f4
 #define func_0201e248 func_0201dfd4
 #define func_02013750 func_02013518
@@ -30,10 +28,8 @@
 
 extern "C"
 {
-    void* func_02011584(BattleStruct*);
+    void* func_02011584(GameState*);
     void func_02013454(void*);
-    void* func_0200fdcc(BattleStruct*);
-    void* func_0200fddc(BattleStruct*);
 
     void* func_02053c6c(void*);
     void func_0205e104(const char*, SafeAllocator*, const void*, unsigned int);
@@ -99,12 +95,12 @@ extern char data_020ef22c[]; // "ARC:%s"
 
 void Zone3D::SwitchZone(unsigned short newID)
 {
-    BattleStruct* battle = GetBattleStruct();
+    GameState* gameState = GameState::GetInstance();
     BackgroundLoader* loader = BackgroundLoader::GetInstance();
 
-    void* uVar3 = func_02011584(battle);
+    void* uVar3 = func_02011584(gameState);
     (void)func_ov017_0218b5b0();
-    void* iVar4 = func_0200fddc(battle);
+    GameObject* iVar4 = gameState->GetUnknownGameObject();
 
     pAllocator_68_ = pAllocator_4c_;
     pAllocator_68_->Reset();
@@ -158,7 +154,7 @@ void Zone3D::SwitchZone(unsigned short newID)
     unknown_4_ = pUnknownStruct_8_->unknown_2_;
     if (pUnknownStruct_8_->unknown_c_low_ == 0)
     {
-        void* iVar5 = func_0200fdcc(battle);
+        GameObject* iVar5 = gameState->GetProtagonist();
         if (iVar5 != NULL)
         {
             void* iVar6 = func_02053c6c(iVar5);
@@ -199,7 +195,7 @@ void Zone3D::SwitchZone(unsigned short newID)
         if (currentGrottoFloor_23ba_ != -1)
         {
             copyOfCurrentGrottoFloor_23bb_ = currentGrottoFloor_23ba_;
-            position_23c0_ = *(Vector3i*)((int)iVar4 + 0x44);
+            position_23c0_ = iVar4->obj3D_.position_;
             unknown_23cc_ = *(short*)((int)iVar4 + 0xae);
         }
         isInMainGrottoFloor_23b8_ = false;

@@ -36,17 +36,4 @@ struct GrottoStruct
     void LoadActiveMetadataFromDetailed(DetailedTreasureMapData* detail);
 };
 
-struct BattleStruct;
-
-// Given the signature of these, it seems likely that the battle struct and
-// grotto struct are actually part of a larger object with the battle struct
-// occupying the first bytes.
-
-// Data about the names of grottos is language-dependent and stored within
-// data/tmap/tdata.gp2 (within this, tdata_<LG>.pac, where <LG> = ja, en, ...)
-// Once loaded into memory, use these functions to store/retrieve a pointer
-// to said memory.
-unsigned char* GetTreasureMapLanguageData(BattleStruct* battle);
-void SetTreasureMapLanguageDataPtr(BattleStruct* battle, unsigned char* to);
-
-GrottoStruct* GetGrottoStruct(BattleStruct* battle);
+class GameState;

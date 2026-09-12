@@ -1,4 +1,4 @@
 #pragma once
-#include "Combat/Main/BattleList.h"
+#include "GameState/GameState.h"
 
-struct CombatantStruct* GetCombatantByID(int unused, int id);
+GameObject* GetCombatantByID(int unused, int id);

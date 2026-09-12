@@ -9,7 +9,7 @@
 #include "Graphics/NSBXX/RenderConfig.h"
 #include "Graphics/NSBXX/GeometryFifo.h"
 #include "Graphics/NSBXX/NSBXX.h"
-#include "Combat/Main/BattleList.h"
+#include "GameState/GameState.h"
 #include "Graphics/LightingManager.h"
 
 // This keeps showing up in multiple translation units: in every case, we have
@@ -42,7 +42,6 @@ struct EffectScriptData
 } static effectScriptData;
 
 #if defined(jpn)
-#define func_0200fddc func_0200fc38 
 #define func_02033fa0 func_02033ad8 
 #define func_0204be20 func_0204cc40 
 #define func_0207df90 func_0207ed10 
@@ -51,7 +50,6 @@ struct EffectScriptData
 
 extern "C"
 {
-    void* func_0200fddc(BattleStruct*);
     void* func_02033fa0(void*);
     bool func_0204be20(void*);
 
@@ -753,7 +751,7 @@ void AtmosphericEffectSet::DetermineVisibilityFromTimeOfDay()
 
 void AtmosphericEffectSet::DetermineVisibilityFromUnknown()
 {
-    bool inputShouldHide = func_0204be20(func_02033fa0(func_0200fddc(GetBattleStruct())));
+    bool inputShouldHide = func_0204be20(func_02033fa0(GameState::GetInstance()->GetUnknownGameObject()));
 
     if (inputShouldHide != unknown_14_bit_2_ || visibilityDirty_)
     {

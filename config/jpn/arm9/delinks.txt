@@ -5,13 +5,17 @@
     .data       start:0x020eeb40 end:0x020f2e60 kind:data align:32
     .bss        start:0x020f2e60 end:0x02154e60 kind:bss align:32
 
-src/Combat/Main/GetBattleList.cpp:
+src/GameState/GameStateInstance.cpp:
 	complete
 	.text start:0x0200f25c end:0x0200f268
 
-src/Combat/Main/GetCombatantFromList.cpp:
+src/GameState/GameStateObjects.cpp:
 	complete
-	.text start:0x0200fcc4 end:0x0200fd00
+	.text start:0x0200fbcc end:0x0200fd00
+
+src/GameState/GameTime.cpp:
+    complete
+    .text start:0x0200ffac end:0x02010224
 
 src/Grotto/Main/GrottoNameDataFile.cpp:
     complete
