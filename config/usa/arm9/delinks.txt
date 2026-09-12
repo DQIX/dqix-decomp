@@ -368,3 +368,11 @@ src/Graphics/VRAMStaging.cpp:
     complete
     .bss start:0x0214e5e4 end:0x02153628
     .text start:0x020dc07c end:0x020dc214
+
+src/Util/GetMaskedSubfield.cpp:
+    complete
+    .text start:0x0200dbdc end:0x0200dbf8
+
+src/System/MaybeReleaseDefaultIRQSlotOuter.cpp:
+    complete
+    .text start:0x0200edb4 end:0x0200edc8
