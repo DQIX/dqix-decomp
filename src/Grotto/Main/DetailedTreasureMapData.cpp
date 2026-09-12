@@ -264,7 +264,7 @@ bool DetailedTreasureMapData::UpdateFollowingCompletion(bool levelledUp, unsigne
     func_020426bc(playerRelatedPtr, asciiName, 1);
 #else
     // 0200fc28 is the address in the japanese version
-    char* asciiName = *(char**)(func_0200fc28(GameState::GetInstance()) + 0x134);
+    char* asciiName = *(char**)((intptr_t)GameState::GetInstance()->GetProtagonist() + 0x134);
 #endif
 
     discoveryState_ = DiscoveryState_Cleared;
@@ -1049,7 +1049,7 @@ void DetailedTreasureMapData::RegularMapData::GenerateNameBuffers()
     if (prefix_ == 0 || suffix_ == 0 || localeRank_ == 0 || level_ == 0)
         return;
 
-    if (GetTreasureMapLanguageData(GameState::GetInstance()) == NULL)
+    if (GameState::GetInstance()->GetTreasureMapLanguageData() == NULL)
         return;
 
     nameNoLevel_[0] = '\0';
@@ -1063,7 +1063,7 @@ void DetailedTreasureMapData::RegularMapData::GenerateNameBuffers()
     unsigned short stringLength = 0;
     char tempBuffer[256];
     
-    unsigned char* langData = GetTreasureMapLanguageData(GameState::GetInstance());
+    unsigned char* langData = GameState::GetInstance()->GetTreasureMapLanguageData();
     TreasureMapLanguageDataOffsets* offsetArray = func_ov017_0218b5b0()->pTMapLanguageOffsets;
     
     readOffset = offsetArray->prefixNames;
@@ -1116,7 +1116,7 @@ void DetailedTreasureMapData::RegularMapData::GeneratePopupName()
     if (prefix_ == 0 || suffix_ == 0 || localeRank_ == 0 || level_ == 0)
         return;
 
-    if (GetTreasureMapLanguageData(GameState::GetInstance()) == NULL)
+    if (GameState::GetInstance()->GetTreasureMapLanguageData() == NULL)
         return;
 
     popupName_[0] = '\0';
@@ -1130,7 +1130,7 @@ void DetailedTreasureMapData::RegularMapData::GeneratePopupName()
     unsigned short stringLength = 0;
     char tempBuffer[64];
     
-    unsigned char* langData = GetTreasureMapLanguageData(GameState::GetInstance());
+    unsigned char* langData = GameState::GetInstance()->GetTreasureMapLanguageData();
     TreasureMapLanguageDataOffsets* offsetArray = func_ov017_0218b5b0()->pTMapLanguageOffsets;
 
     readOffset = offsetArray->prefixNames;

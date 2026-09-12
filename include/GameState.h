@@ -32,7 +32,7 @@ public:
     char unk_4[4];
     GameObject* objects_[0xe9];
     int protagonistObjectIndex_;
-    void* unknown_3b0_; // see func_020100bc, LightingManager::MaybeComputeHorizonPosition
+    void* unknown_3b0_; // see func_020100bc, LightingManager::MaybeComputeHorizonPosition. Probably a high level camera
     unsigned int effectiveDeltaTimeMilliseconds_;
     unsigned int trueDeltaTimeMilliseconds_;
     fix16_t gameSpeed_; // effective delta time is true delta time rescaled by this
@@ -49,9 +49,13 @@ public:
     uint64_t mainTimestamp_; // current timestamp - this one is used for chest timer
     uint64_t altTimestamp_; // not sure about usage
 
+#if defined(usa)
     char unk_3f8[0x397c - 0x3f8];
+#elif defined(jpn)
+    char unk_3f8[0x371c - 0x3f8];
+#endif
 
-    unsigned char unknownObjectIndex_397c_;
+    unsigned char unknownObjectIndex_397c_; // jpn: offset 0x731c instead
     char unk_397d[0x63e0 - 0x397d];
 
     unsigned char* treasureMapLanguageData_;

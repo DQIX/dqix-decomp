@@ -47,7 +47,11 @@ void GameState::SetDayTimer(float to)
     if (dayTimer_ >= dayLength_)
         dayTimer_ -= dayLength_;
 
+#if defined(usa) // this is diabolical
     if (dayTimer_ >= data_020f33b4[2])
+#elif defined(jpn)
+    if (dayTimer_ >= data_020f33b4[1])
+#endif
         timeOfDay_ = TimeOfDay_Evening;
     else if (dayTimer_ >= data_020f33b4[3])
         timeOfDay_ = TimeOfDay_Day;
@@ -69,7 +73,11 @@ void GameState::SetTimeOfDay(TimeOfDay to)
             data_020f33b4[5],
             data_020f33b4[4],
             data_020f33b4[3],
+#if defined(usa)
             data_020f33b4[2]
+#elif defined(jpn)
+            data_020f33b4[1]
+#endif
         };
         SetDayTimer(thresholds[to]);
     }
