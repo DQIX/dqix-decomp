@@ -56,7 +56,7 @@ This builds the ROM, verifies every module against the original, generates a dec
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for the full guide.
 
-We recommend joining the DQIX discord server **The Quester's Rest** (https://discord.gg/DQIX) so you can participate in discussions in the **[DQI-haX: SWEs of the Starry Skies](https://discord.com/channels/655390550698098700/1266135635014582332)** thread to claim a function, ask for help, or share a scratch.
+We recommend joining the DQIX discord server **The Quester's Rest** (https://discord.gg/DQIX) so you can participate in discussions in the **[DQI-haX: Decompiling, Reverse engineering, Programming](https://discord.com/channels/655390550698098700/1266135635014582332)** thread to claim a function, ask for help, or share a scratch.
 
 ### 📤 Submitting Contributions
 
