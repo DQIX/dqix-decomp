@@ -99,7 +99,7 @@ void Zone3D::SwitchZone(unsigned short newID)
     BackgroundLoader* loader = BackgroundLoader::GetInstance();
 
     void* uVar3 = func_02011584(gameState);
-    (void)func_ov017_0218b5b0();
+    (void)GetGameResources();
     GameObject* iVar4 = gameState->GetUnknownGameObject();
 
     pAllocator_68_ = pAllocator_4c_;

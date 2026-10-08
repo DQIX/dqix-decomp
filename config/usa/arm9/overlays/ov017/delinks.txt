@@ -5,3 +5,6 @@
     .data       start:0x021d7340 end:0x021d82e0 kind:data align:32
     .bss        start:0x021d82e0 end:0x021d8a40 kind:bss align:32
 
+
+src/Resource/GameResources.cpp:
+    .text start:0x0218b5a0 end:0x0218b5c0

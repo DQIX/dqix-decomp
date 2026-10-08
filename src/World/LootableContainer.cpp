@@ -41,7 +41,7 @@ int LootManager_Unknown_66(Script::Parameter* params, int numParams)
 
 int LootManager_CreateContainer(Script::Parameter* params, int numParams)
 {
-    (void)func_ov017_0218b5b0();
+    (void)GetGameResources();
     LootableContainerManager::Container* container =
         (LootableContainerManager::Container*)data_02108e78.allocator->Allocate(sizeof(LootableContainerManager::Container));
     if (container == NULL)
@@ -124,7 +124,7 @@ void LootableContainerManager::Reset()
 
 void LootableContainerManager::ResetAllocator(SafeAllocator *alloc)
 {
-    data_02108e78.allocator = &func_ov017_0218b5b0()->lootableContainerAllocator_18c_;
+    data_02108e78.allocator = &GetGameResources()->lootableContainerAllocator_18c_;
     if (alloc != NULL)
         alloc->Reset();
     else
@@ -152,7 +152,7 @@ void LootableContainerManager::LoadZoneContainers(const void *treasureArchive,
     if (!GetFileInNarcPermissive(treasureArchive, scriptFilename, &scriptFile, &scriptFileLength))
         return;
     data_02108e78.manager = this;
-    GameResources* resources = func_ov017_0218b5b0();
+    GameResources* resources = GetGameResources();
 
     if (alloc != NULL)
         data_02108e78.allocator = alloc;

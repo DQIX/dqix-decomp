@@ -1,5 +1,5 @@
-func_ov017_0218b5a0 kind:function(arm,size=0x10) addr:0x0218b5a0
-func_ov017_0218b5b0 kind:function(arm,size=0x10) addr:0x0218b5b0
+_Z16SetGameResourcesP13GameResources kind:function(arm,size=0x10) addr:0x0218b5a0
+_Z16GetGameResourcesv kind:function(arm,size=0x10) addr:0x0218b5b0
 func_ov017_0218b5c0 kind:function(arm,size=0x38) addr:0x0218b5c0
 func_ov017_0218b5f8 kind:function(arm,size=0x30) addr:0x0218b5f8
 func_ov017_0218b628 kind:function(arm,size=0x3c) addr:0x0218b628
