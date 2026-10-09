@@ -416,7 +416,7 @@ func_ov023_021f3fbc kind:function(arm,size=0xdc) addr:0x021f3fbc
 func_ov023_021f4098 kind:function(arm,size=0x3a0) addr:0x021f4098
 func_ov023_021f4438 kind:function(arm,size=0x98) addr:0x021f4438
 func_ov023_021f44d0 kind:function(arm,size=0x7c) addr:0x021f44d0
-func_ov023_021f454c kind:function(arm,size=0x6b8) addr:0x021f454c
+RollMonsterDrops kind:function(arm,size=0x6b8) addr:0x021f454c
 func_ov023_021f4c04 kind:function(arm,size=0x3c4) addr:0x021f4c04
 func_ov023_021f4fc8 kind:function(arm,size=0x134) addr:0x021f4fc8
 func_ov023_021f50fc kind:function(arm,size=0x54) addr:0x021f50fc
@@ -868,7 +868,7 @@ data_ov023_021fd844 kind:data(any) addr:0x021fd844
 data_ov023_021fd850 kind:data(any) addr:0x021fd850
 data_ov023_021fd862 kind:data(any) addr:0x021fd862
 data_ov023_021fd870 kind:data(any) addr:0x021fd870
-data_ov023_021fd888 kind:data(any) addr:0x021fd888
+dropChanceTable kind:data(any) addr:0x021fd888
 data_ov023_021fd8a8 kind:data(any) addr:0x021fd8a8
 data_ov023_021fd8d8 kind:data(any) addr:0x021fd8d8
 data_ov023_021fd8fc kind:data(any) addr:0x021fd8fc
