@@ -101,6 +101,7 @@ if platform is None:
     exit(1)
 EXE = platform.exe
 WINE = args.wine if platform.system != "windows" else ""
+WINE_DEP = [WINE] if platform.system != "windows" and WINE == DEFAULT_WIBO_PATH else []
 DSD = str(args.dsd or os.path.join('.', str(root_path / f"dsd{EXE}")))
 OBJDIFF = os.path.join('.', str(root_path / f"objdiff-cli{EXE}"))
 CC = os.path.join('.', str(mwcc_path / "mwccarm.exe"))
@@ -206,7 +207,7 @@ def main():
 
         # -MMD excludes all includes instead of just system includes for some reason, so use -MD instead.
         mwcc_cmd = f'{WINE} "{CC}" {CC_FLAGS} {CC_INCLUDES} $cc_flags -d $game_version -MD -c $in -o $basedir'
-        mwcc_implicit = [CC]
+        mwcc_implicit = [CC] + WINE_DEP
         if platform.system != "windows":
             transform_dep = "tools/transform_dep.py"
             mwcc_cmd += f" && $python {transform_dep} $basefile.d $basefile.d"
@@ -358,7 +359,7 @@ def add_mwld_and_rom_builds(n: ninja_syntax.Writer, project: Project):
     elf_file = str(project.arm9_o())
     n.build(
         inputs=project.source_object_files() + [lcf_file, objects_file, delink_file],
-        implicit=LD,
+        implicit=[LD] + WINE_DEP,
         rule="mwld",
         outputs=elf_file,
         variables={
@@ -551,7 +552,7 @@ def add_objdiff_builds(n: ninja_syntax.Writer, project: Project):
 
     n.build(
         inputs=["objdiff.json"],
-        implicit=[OBJDIFF] + project.source_object_files(),
+        implicit=[OBJDIFF, str(project.arm9_delink_yaml())] + project.source_object_files(),
         rule="objdiff_report",
         outputs=str(project.objdiff_report()),
     )
