@@ -163,33 +163,33 @@ src/Grotto/Main/TreasureMapMetadata.cpp:
     complete
     .text start:0x020a5cb8 end:0x020a6084
 
-src/Memory/SignedAllocator.cpp:
+src/NitroSDK/Memory/SignedAllocator.cpp:
     complete
     .bss start:0x02109ffc end:0x0210a00c
     .text start:0x020aeec8 end:0x020af20c
 
-src/Memory/HPXEAllocator.cpp:
+src/NitroSDK/Memory/HPXEAllocator.cpp:
     complete
     .text start:0x020af20c end:0x020af838
 
-src/Memory/HMRFAllocator.cpp:
+src/NitroSDK/Memory/HMRFAllocator.cpp:
     complete
     .text start:0x020af838 end:0x020afaf0
 
-src/Memory/UnusedSignedAllocator.cpp:
+src/NitroSDK/Memory/UnusedSignedAllocator.cpp:
     complete
     .text start:0x020afaf0 end:0x020afb58
 
-src/Filesystem/NarcHandle.cpp:
+src/NitroSDK/Filesystem/NarcHandle.cpp:
     complete
     .text start:0x020afb58 end:0x020afdc8
 
-src/Memory/AllocatorTypes.cpp:
+src/NitroSDK/Memory/AllocatorTypes.cpp:
     complete
     .rodata start:0x020e9160 end:0x020e9178
     .text start:0x020afdc8 end:0x020afe34
 
-src/Memory/AllocatorUnion.cpp:
+src/NitroSDK/Memory/AllocatorUnion.cpp:
     complete
     .text start:0x020afe6c end:0x020afec4
 
@@ -322,32 +322,32 @@ src/NitroSDK/IPC.cpp:
     .bss start:0x021116a4 end:0x02111728
     .text start:0x020cad18 end:0x020cb034
 
-src/Filesystem/NitroVM.cpp:
+src/NitroSDK/Filesystem/NitroVM.cpp:
     complete
     .rodata start:0x020ed6c8 end:0x020ed6ec
     .text start:0x020cb034 end:0x020cc0fc
 
-src/Filesystem/LowNitroHandle.cpp:
+src/NitroSDK/Filesystem/LowNitroHandle.cpp:
     complete
     .text start:0x020cc0fc end:0x020cc940
 
-src/Filesystem/FileAccessor.cpp:
+src/NitroSDK/Filesystem/FileAccessor.cpp:
     complete
     .text start:0x020cc940 end:0x020ccf7c
 
-src/Filesystem/OverlayFSManagement.cpp:
+src/NitroSDK/Filesystem/OverlayFSManagement.cpp:
     complete
     .text start:0x020ccf7c end:0x020cd494
 
-src/Filesystem/CardReadManagerInit.cpp:
+src/NitroSDK/Filesystem/CardReadManagerInit.cpp:
     complete
     .text start:0x020cfcbc end:0x020cffcc
 
-src/Filesystem/CardReadManagerAcquireBus.cpp:
+src/NitroSDK/Filesystem/CardReadManagerAcquireBus.cpp:
     complete
     .text start:0x020cffcc end:0x020d0040
 
-src/Filesystem/CardReadManager.cpp:
+src/NitroSDK/Filesystem/CardReadManager.cpp:
     complete
     .text start:0x020d084c end:0x020d0fc4
 

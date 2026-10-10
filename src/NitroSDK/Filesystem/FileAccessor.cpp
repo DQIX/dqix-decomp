@@ -5,8 +5,6 @@
 #include "System/GamecardBusOwnership.h"
 #include <globaldefs.h>
 
-#pragma optimize_for_size off
-
 #if defined(jpn)
 #define data_020f228c data_020f23f8
 #endif

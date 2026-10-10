@@ -12,8 +12,6 @@
 #include "Animation.h"
 #include <asmhacks.h>
 
-#pragma optimize_for_size off
-
 #if defined(jpn)
 #define data_020e9240 data_020e934c
 #define data_020e9260 data_020e936c

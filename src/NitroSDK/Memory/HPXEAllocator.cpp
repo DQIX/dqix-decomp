@@ -4,11 +4,6 @@
 #define BLOCKSIGNATURE_FREE 0x4652 // looks like "RF" in memory
 #define BLOCKSIGNATURE_USED 0x5544 // looks like "DU" in memory
 
-// Sets the optimization level to O2,p instead of O2. It performs a small
-// optimization in FreeMemoryRange().
-// Every other function in this file is unaffected by this.
-#pragma optimize_for_size off
-
 #ifdef jpn
 #define func_020ca3ec func_020cbeb8
 #endif

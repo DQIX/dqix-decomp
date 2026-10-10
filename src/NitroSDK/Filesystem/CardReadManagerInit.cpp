@@ -7,7 +7,7 @@
 #include "Filesystem/FSInnerDefs.h"
 #include <asmhacks.h>
 
-#pragma optimize_for_size off
+#pragma optimization_level 2
 
 #if defined(jpn)
 #define func_020ca458 func_020cbf24

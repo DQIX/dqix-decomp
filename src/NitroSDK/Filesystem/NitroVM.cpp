@@ -4,9 +4,6 @@
 #include <globaldefs.h>
 #include <asmhacks.h>
 
-// -O2,p optimization seems to be needed here
-#pragma optimize_for_size off
-
 typedef int(*FixedCommand)(NitroVM*);
 
 #if defined(jpn)

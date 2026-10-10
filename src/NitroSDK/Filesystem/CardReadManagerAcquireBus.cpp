@@ -3,8 +3,6 @@
 #include "System/Interrupts.h"
 #include "System/GamecardBusOwnership.h"
 
-#pragma optimize_for_size off
-
 unsigned int SetReadContextPriority(unsigned int priority)
 {
     CardReadManager* manager = (CardReadManager*)&data_021118e0;

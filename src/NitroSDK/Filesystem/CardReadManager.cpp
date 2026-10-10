@@ -7,7 +7,7 @@
 #include <globaldefs.h>
 #include <asmhacks.h>
 
-#pragma optimize_for_size off
+#pragma optimization_level 2
 
 #define ADDR_ITCM_START 0x01ff8000
 #define ADDR_ITCM_END 0x02000000

@@ -5,7 +5,6 @@
 #include "std_library_functions.h"
 #include <globaldefs.h>
 
-//#pragma optimize_for_size off
 #if defined(jpn)
 #define func_020d84f8 func_020d9e5c
 #define func_020d8524 func_020d9e88
