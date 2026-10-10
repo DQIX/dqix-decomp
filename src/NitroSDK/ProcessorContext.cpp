@@ -6,7 +6,6 @@
 #include <asmhacks.h>
 
 #pragma dont_inline on
-#pragma optimize_for_size off
 
 #if defined(jpn)
 #define func_020c9bf0 func_020cb6bc

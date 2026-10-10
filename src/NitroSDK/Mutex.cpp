@@ -1,8 +1,6 @@
 #include "System/Mutex.h"
 #include "System/Interrupts.h"
 
-#pragma optimize_for_size off
-
 extern "C"
 {
 }

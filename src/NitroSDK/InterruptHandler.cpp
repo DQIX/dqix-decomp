@@ -5,8 +5,6 @@
 #include <globaldefs.h>
 #include <asmhacks.h>
 
-#pragma optimize_for_size off
-
 #if defined(jpn)
 #define data_0211127c data_02110f1c
 #define data_020f2274 data_020f23e0

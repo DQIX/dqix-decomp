@@ -17,8 +17,6 @@ int GenerateUniqueContextID()
     return ++(data_021112e0.contextUniqueIDCounter);
 }
 
-#pragma optimize_for_size off
-
 void BlockedContextList::Insert(ProcessorContext* insertion)
 {
     ProcessorContext* elementAfter = this->first;

@@ -3,8 +3,6 @@
 #include <globaldefs.h>
 #include <asmhacks.h>
 
-#pragma optimize_for_size off
-
 #define IPC_FIFO_SYNC (*(volatile unsigned short*)0x04000180)
 #define IPC_FIFO_CONTROL (*(volatile unsigned short*)0x04000184)
 #define IPC_FIFO_SEND (*(volatile unsigned int*)0x04000188)

@@ -293,9 +293,9 @@ src/NitroSDK/ContextList.cpp:
     complete
     .text start:0x020c71a4 end:0x020c745c
 
-//src/NitroSDK/ProcessorContext.cpp:
-//    complete
-//    .text start:0x020c75b4 end:0x020c7d34
+src/NitroSDK/ProcessorContext.cpp:
+    complete
+    .text start:0x020c75b4 end:0x020c7d34
 
 src/NitroSDK/Mutex.cpp:
     complete

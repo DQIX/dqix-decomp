@@ -18,8 +18,6 @@ extern int data_021112dc;
 #define PTR_GBA_BUS_LOCK ((GamecardBusLock*)0x027fffe8)
 #define PTR_UNKNOWN_BUS_LOCK ((GamecardBusLock*)0x027ffff0)
 
-#pragma optimize_for_size off
-
 #if defined(jpn)
 #define func_020ca7e0 func_020cc2ac
 #endif

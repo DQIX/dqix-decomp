@@ -2,8 +2,9 @@
 #include "System/ColorEffects.h"
 #include <asmhacks.h>
 
-// despite seeming like an sdk function, this matches better at O2 than O2,p
-//#pragma optimize_for_size off
+// despite seeming like an sdk function, this matches better at O4,s than O4,p
+// will look into this more carefully later
+#pragma optimize_for_size on
 
 void ColorEffect_ConfigureAlphaBlend(intptr_t control,
     unsigned int pixel1Source, unsigned int pixel2Source,
