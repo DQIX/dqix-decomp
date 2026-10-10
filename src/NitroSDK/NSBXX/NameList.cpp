@@ -1,7 +1,5 @@
 #include "Graphics/NSBXX/NSBXX.h"
 
-#pragma optimize_for_size off
-
 extern "C" void* NSBXXNameList_Search(NSBXXNameList* nameList, const char* name)
 {
     volatile NSBXXNameList* volList = nameList;

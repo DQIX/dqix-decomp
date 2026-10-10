@@ -5,8 +5,6 @@
 #include "System/DMA.h"
 #include <globaldefs.h>
 
-#pragma optimize_for_size off
-
 #if defined(jpn)
 #define func_020c2034 func_020c3b00
 #define func_020c2208 func_020c3cd4

@@ -193,71 +193,71 @@ src/Memory/AllocatorUnion.cpp:
     complete
     .text start:0x020afe6c end:0x020afec4
 
-src/Graphics/NSBXX/Animation.cpp:
+src/NitroSDK/NSBXX/Animation.cpp:
     complete
     .text start:0x020b2acc end:0x020b2e3c
 
-src/Graphics/NSBXX/TEX.cpp:
+src/NitroSDK/NSBXX/TEX.cpp:
     complete
     .text start:0x020b2e3c end:0x020b36c0
 
-src/Graphics/NSBXX/RenderConfig.cpp:
+src/NitroSDK/NSBXX/RenderConfig.cpp:
     complete
     .text start:0x020b36c0 end:0x020b3ad0
 
-src/Graphics/NSBXX/AnimationProcessing.cpp:
+src/NitroSDK/NSBXX/AnimationProcessing.cpp:
     complete
     .text start:0x020b3ad0 end:0x020b4020
 
-src/Graphics/NSBXX/RenderCommands.cpp:
+src/NitroSDK/NSBXX/RenderCommands.cpp:
     complete
     .text start:0x020b4020 end:0x020b5758
 
-//src/Graphics/NSBXX/RenderCommand_9.cpp:
+//src/NitroSDK/NSBXX/RenderCommand_9.cpp:
 //    complete
 //    .text start:0x020b5758 end:0x020b5eb4
 
-src/Graphics/NSBXX/RenderCommands_10_13.cpp:
+src/NitroSDK/NSBXX/RenderCommands_10_13.cpp:
     complete
     .text start:0x020b5eb4 end:0x020b6998
 
-src/Graphics/NSBXX/GeometryFifo.cpp:
+src/NitroSDK/NSBXX/GeometryFifo.cpp:
     complete
     .text start:0x020b6998 end:0x020b6e98
 
-src/Graphics/NSBXX/NSBXX.cpp:
+src/NitroSDK/NSBXX/NSBXX.cpp:
     complete
     .text start:0x020b6e98 end:0x020b736c
 
-//src/Graphics/NSBXX/NameList.cpp:
+//src/NitroSDK/NSBXX/NameList.cpp:
 //    complete
 //    .text start:0x020b736c end:0x020b7694
 
-src/Graphics/NSBXX/PatternAnimation.cpp:
+src/NitroSDK/NSBXX/PatternAnimation.cpp:
     complete
     .text start:0x020b7694 end:0x020b7840
 
-//src/Graphics/NSBXX/JAC.cpp:
+//src/NitroSDK/NSBXX/JAC.cpp:
 //    complete
 //    .text start:0x020b7840 end:0x020b8e60
 
-src/Graphics/NSBXX/MAM.cpp:
+src/NitroSDK/NSBXX/MAM.cpp:
     complete
     .text start:0x020b8e60 end:0x020b9278
 
-src/Graphics/NSBXX/MAT.cpp:
+src/NitroSDK/NSBXX/MAT.cpp:
     complete
     .text start:0x020b9278 end:0x020b969c
 
-src/Graphics/NSBXX/MPT.cpp:
+src/NitroSDK/NSBXX/MPT.cpp:
     complete
     .text start:0x020b969c end:0x020b992c
 
-src/Graphics/NSBXX/VAV.cpp:
+src/NitroSDK/NSBXX/VAV.cpp:
     complete
     .text start:0x020b992c end:0x020b99b0
 
-src/Graphics/NSBXX/RenderCommandProcs.cpp:
+src/NitroSDK/NSBXX/RenderCommandProcs.cpp:
     complete
     .text start:0x020b99b0 end:0x020bb424
 

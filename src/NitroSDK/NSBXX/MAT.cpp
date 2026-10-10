@@ -2,7 +2,7 @@
 #include "Graphics/NSBXX/RenderCommands_Common.h"
 #include "Graphics/NSBXX/Animation.h"
 
-#pragma optimize_for_size off
+#pragma optimization_level 2
 
 #if defined(jpn)
 #define func_020ca390 func_020cbe5c

@@ -1,8 +1,6 @@
 #include "Graphics/NSBXX/NSBXX.h"
 #include <asmhacks.h>
 
-#pragma optimize_for_size off
-
 #define SUBFILE_OFFSETS(nsb) ((uint32_t*)((intptr_t)(nsb) + nsb->headerSize_))
 
 void* NSBXX_GetFirstSubfile(NSBXXContainer* nsbxx)

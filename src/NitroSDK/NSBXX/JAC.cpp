@@ -2,8 +2,6 @@
 #include "Graphics/NSBXX/Animation.h"
 #include "Graphics/NSBXX/RenderCommands_Common.h"
 
-#pragma optimize_for_size off
-
 #if defined(jpn)
 #define func_020ca390 func_020cbe5c
 

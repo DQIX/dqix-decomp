@@ -14,7 +14,7 @@ extern "C"
     unsigned int func_020b2a6c(const void* rawAnim, NSBXXInternalModel* model);
 }
 
-#pragma optimize_for_size off
+#pragma optimization_level 2
 
 extern "C" AnimationData* NSBXX_Model_AllocateAnimationData(AllocatorUnion* alloc, const void* rawAnim, NSBXXInternalModel* model)
 {

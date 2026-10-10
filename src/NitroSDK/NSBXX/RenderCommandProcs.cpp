@@ -67,7 +67,7 @@
 #define data_020f1ec8 data_020f2034
 #endif
 
-#pragma optimize_for_size off
+#pragma optimization_level 2
 
 extern void (*data_020f1e88[8])(Matrix4x4*, MaterialRenderData*);
 extern void (*data_020f1ea8[8])(Matrix4x4*, MaterialRenderData*);

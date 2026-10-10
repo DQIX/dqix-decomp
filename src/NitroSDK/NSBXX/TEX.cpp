@@ -3,7 +3,7 @@
 #include <globaldefs.h>
 #include <asmhacks.h>
 
-#pragma optimize_for_size off
+#pragma optimization_level 2
 
 int NSBXX_Tex_GetBlock1Length(NSBXXTex* tex)
 {
