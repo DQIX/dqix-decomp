@@ -261,63 +261,63 @@ src/Graphics/NSBXX/RenderCommandProcs.cpp:
     complete
     .text start:0x020b99b0 end:0x020bb424
 
-src/System/VRAM.cpp:
+src/NitroSDK/VRAM.cpp:
     complete
     .text start:0x020c3a4c end:0x020c4c74
 
-src/System/BGBases.cpp:
+src/NitroSDK/BGBases.cpp:
     complete
     .text start:0x020c4c74 end:0x020c50e4
 
-src/System/ColorEffects.cpp:
+src/NitroSDK/ColorEffects.cpp:
     complete
     .text start:0x020c50e4 end:0x020c516c
 
-src/System/LoadToVRAM.cpp:
+src/NitroSDK/LoadToVRAM.cpp:
     complete
     .text start:0x020c5820 end:0x020c6914
 
-//src/System/InterruptHandler.cpp:
+//src/NitroSDK/InterruptHandler.cpp:
 //    complete
 //    .text start:0x020c6954 end:0x020c6c90
 
-src/System/InterruptEnableDisable.cpp:
+src/NitroSDK/InterruptEnableDisable.cpp:
     complete
     .text start:0x020c6c90 end:0x020c6d48
 
-src/System/GamecardBusOwnership.cpp:
+src/NitroSDK/GamecardBusOwnership.cpp:
     complete
     .text start:0x020c6e48 end:0x020c7080
 
-src/System/ContextList.cpp:
+src/NitroSDK/ContextList.cpp:
     complete
     .text start:0x020c71a4 end:0x020c745c
 
-//src/System/ProcessorContext.cpp:
+//src/NitroSDK/ProcessorContext.cpp:
 //    complete
 //    .text start:0x020c75b4 end:0x020c7d34
 
-src/System/Mutex.cpp:
+src/NitroSDK/Mutex.cpp:
     complete
     .text start:0x020c805c end:0x020c824c
 
-src/System/Cache.cpp:
+src/NitroSDK/Cache.cpp:
     complete
     .text start:0x020c824c end:0x020c8348
 
-src/System/Timing.cpp:
+src/NitroSDK/Timing.cpp:
     complete
     .text start:0x020c8c50 end:0x020c9288
 
-src/System/CPSRInterruptState.cpp:
+src/NitroSDK/CPSRInterruptState.cpp:
     complete
     .text start:0x020c96e8 end:0x020c976c
 
-src/System/DMA.cpp:
+src/NitroSDK/DMA.cpp:
     complete
     .text start:0x020c9c0c end:0x020ca0a8
 
-src/System/IPC.cpp:
+src/NitroSDK/IPC.cpp:
     complete
     .bss start:0x021116a4 end:0x02111728
     .text start:0x020cad18 end:0x020cb034
