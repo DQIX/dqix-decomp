@@ -1,7 +1,5 @@
 #include "Graphics/NSBXX/Animation.h"
 
-#pragma optimization_level 2
-
 #if defined(jpn)
 #define func_020ca3ec func_020cbeb8
 
@@ -32,7 +30,6 @@ struct AnimationTypeDescription
 
 void InitializeModelAnimation(AnimationData *anim, void *pRawData, NSBXXInternalModel *model, NSBXXTex *tex)
 {
-    unsigned int animType = 0;
     anim->time_ = 0;
     anim->pRawData_ = pRawData;
     anim->pNext_ = NULL;
@@ -43,32 +40,16 @@ void InitializeModelAnimation(AnimationData *anim, void *pRawData, NSBXXInternal
     anim->callback_ = NULL;
 
     NSBXXAnimationSignature* signature = (NSBXXAnimationSignature*)pRawData;
-
-    unsigned int numAnimationTypes = data_020f1c6c;
-    if (animType < numAnimationTypes)
+    int numAnimationTypes = data_020f1c6c;
+    for (unsigned int animType = 0; animType < numAnimationTypes; animType++)
     {
-        int thisInitial = signature->signatureInitial_;
-        while (true)
-        {
-            NSBXXAnimationSignature* targetSig = &data_020f1c90[animType].signature;
-            int targetInitial = targetSig->signatureInitial_;
-            
-            if (thisInitial == targetInitial)
-            {
-                // annoying but necessary for matching assembly
-                NSBXXAnimationSignature* foo = (NSBXXAnimationSignature*)((intptr_t)data_020f1c90 + animType * sizeof(AnimationTypeDescription));
-                int targetEnd = foo->signatureEnd_;
-                if (signature->signatureEnd_ == targetEnd)
-                {
-                    if (data_020f1c90[animType].initializer != NULL)
-                        data_020f1c90[animType].initializer(anim, pRawData, model);
-                    return;
-                }
-            }
-            animType++;
-            if (animType >= numAnimationTypes)
-                return;
-        }
+        if (signature->signatureInitial_ != data_020f1c90[animType].signature.signatureInitial_ ||
+            signature->signatureEnd_ != data_020f1c90[animType].signature.signatureEnd_)
+            continue;
+        
+        if (data_020f1c90[animType].initializer != NULL)
+            data_020f1c90[animType].initializer(anim, pRawData, model);
+        break;
     }
 }
 

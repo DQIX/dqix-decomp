@@ -67,7 +67,7 @@
 #define data_020f1ec8 data_020f2034
 #endif
 
-#pragma optimization_level 2
+//#pragma optimization_level 2
 
 extern void (*data_020f1e88[8])(Matrix4x4*, MaterialRenderData*);
 extern void (*data_020f1ea8[8])(Matrix4x4*, MaterialRenderData*);
@@ -319,7 +319,8 @@ extern "C" void CreateTextureMatrix_v0_Rotate(Matrix4x4* matrix, MaterialRenderD
     // stupid way to write forces correct assembly, as a real number this
     // is m_41 = 8w(1 - sin(u) - cos(u))
     fix32_t foo = renderData->materialWidth_;
-    fix32_t negsum = -(renderData->rotationSine_ + renderData->rotationCosine_);
+    fix32_t negsum = (renderData->rotationSine_ + renderData->rotationCosine_);
+    negsum = -negsum;
     negsum += (1 << 12);
     foo = foo * negsum * 8;
     matrix->entries[12] = foo;
@@ -572,9 +573,8 @@ extern "C" void CreateTextureMatrix_v2_TranslateRotateScale(Matrix4x4* matrix, M
 
     fix32_QueueComputeQuotient(matWidth, matHeight);
 
-    int shiftedTx = -renderData->materialWidth_ * (1 << 11);
+    int shiftedTx = -renderData->materialWidth_ * (1 << 11) - renderData->translateX_ * renderData->materialWidth_;
     int shiftedTy = -renderData->materialHeight_ * (1 << 11) + renderData->translateY_ * renderData->materialHeight_;
-    shiftedTx -= renderData->translateX_ * renderData->materialWidth_;
 
     matrix->entries[12] = (fix32_t)((((int64_t)scaleXcos * shiftedTx) 
         - ((int64_t)scaleXsin * shiftedTy)) >> 8)
@@ -604,11 +604,9 @@ extern "C" void CreateTextureMatrix_v2_TranslateRotate(Matrix4x4* matrix, Materi
     fix32_QueueComputeQuotient(matWidth, matHeight);
 
     // these hold (-w/2 - w * t_x) and (-h/2 + h * t_y) respectively
-    fix32_t shiftedTx = -renderData->materialWidth_ * (1 << 11);
+    fix32_t shiftedTx = -renderData->materialWidth_ * (1 << 11) - renderData->translateX_ * renderData->materialWidth_;
     fix32_t shiftedTy = -renderData->materialHeight_ * (1 << 11) + renderData->translateY_ * renderData->materialHeight_;
-    shiftedTx -= renderData->translateX_ * renderData->materialWidth_;
-
-
+    
     matrix->entries[12] = (fix32_t)((((int64_t)renderData->rotationCosine_ * shiftedTx) 
         - ((int64_t)renderData->rotationSine_ * shiftedTy)) >> 8)
         + renderData->materialWidth_ * (8 << 12);
