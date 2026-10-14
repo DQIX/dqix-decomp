@@ -25,7 +25,7 @@ extern "C"
 bool ExportDetailedTreasureMapData(const TreasureMapMetadata* from,
     DetailedTreasureMapData* to, bool computeLegacyStats, const unsigned char* legacyStatsData)
 {
-    GameResources* resources = func_ov017_0218b5b0();
+    GameResources* resources = GetGameResources();
 
     if (from == NULL || to == NULL)
         return false;

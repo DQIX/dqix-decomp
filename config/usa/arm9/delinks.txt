@@ -75,7 +75,7 @@ src/World/Object3D.cpp:
 
 src/Resource/Brightness.cpp:
     complete
-    .text start:0x0203aee0 end:0x0203b498
+    .text start:0x0203aee0 end:0x0203b628
 
 src/Graphics/LightingManager.cpp:
     complete
