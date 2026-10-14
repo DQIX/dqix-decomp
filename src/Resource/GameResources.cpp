@@ -6,16 +6,20 @@ struct Overlay17GlobalData
     GameResources* gameResources;
 };
 
-extern Overlay17GlobalData* data_ov017_021d82e0;
+#ifdef jpn
+#define data_ov017_021d82e0 data_ov017_021d8ba0
+#endif
+
+extern Overlay17GlobalData data_ov017_021d82e0;
 
 // USA: func_ov017_0218b5a0
 void SetGameResources(GameResources* gameResources)
 {
-    data_ov017_021d82e0->gameResources = gameResources;
+    data_ov017_021d82e0.gameResources = gameResources;
 }
 
 // USA: func_ov017_0218b5b0
 GameResources* GetGameResources()
 {
-    return data_ov017_021d82e0->gameResources;
+    return data_ov017_021d82e0.gameResources;
 }

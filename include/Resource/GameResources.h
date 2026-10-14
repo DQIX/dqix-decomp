@@ -198,16 +198,9 @@ struct TreasureMapLanguageDataOffsets {
 
 // GameResources global-instance accessors (Overlay 17)
 
-#ifdef jpn
-    // JPN accessors still use their original symbols.
-    #define SetGameResources func_ov017_0218c1c0
-    #define GetGameResources func_ov017_0218c1d0
-extern "C" void SetGameResources(GameResources* gameResources);
-extern "C" GameResources* GetGameResources();
-#else
+
 // USA: 0x0218b5a0
 void SetGameResources(GameResources* gameResources);
 
 // USA: 0x0218b5b0
 GameResources* GetGameResources();
-#endif
