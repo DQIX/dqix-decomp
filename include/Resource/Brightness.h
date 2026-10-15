@@ -3,6 +3,9 @@
 #include "Resource/GameResources.h"
 #include <globaldefs.h>
 
+#define REG_MASTER_BRIGHT (*(volatile unsigned short*)0x0400006c)
+#define REG_MASTER_BRIGHT_SUB (*(volatile unsigned short*)0x0400106c)
+
 void InitializeBrightnessState(GameResources* resources);
 
 void UpdateBrightnessTransitions(GameResources* resources);
