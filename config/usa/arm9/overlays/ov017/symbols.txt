@@ -127,7 +127,7 @@ func_ov017_02196c08 kind:function(arm,size=0x44) addr:0x02196c08
 func_ov017_02196c4c kind:function(arm,size=0x20c) addr:0x02196c4c
 func_ov017_02196e58 kind:function(arm,size=0x170) addr:0x02196e58
 func_ov017_02196fc8 kind:function(arm,size=0xd8) addr:0x02196fc8
-func_ov017_021970a0 kind:function(arm,size=0x124) addr:0x021970a0
+RollSurpriseRound kind:function(arm,size=0x124) addr:0x021970a0
 func_ov017_021971c4 kind:function(arm,size=0x108) addr:0x021971c4
 func_ov017_021972cc kind:function(arm,size=0x2c) addr:0x021972cc
 func_ov017_021972f8 kind:function(arm,size=0x2c) addr:0x021972f8
@@ -286,7 +286,7 @@ func_ov017_021a4358 kind:function(arm,size=0x10) addr:0x021a4358
 func_ov017_021a4368 kind:function(arm,size=0x2f0) addr:0x021a4368
 func_ov017_021a4658 kind:function(arm,size=0xa8) addr:0x021a4658
 func_ov017_021a4700 kind:function(arm,size=0x54) addr:0x021a4700
-func_ov017_021a4754 kind:function(arm,size=0x18) addr:0x021a4754
+GetFacingAngleDifference kind:function(arm,size=0x18) addr:0x021a4754
 func_ov017_021a476c kind:function(arm,size=0x584) addr:0x021a476c
 func_ov017_021a4cf0 kind:function(arm,size=0xe0) addr:0x021a4cf0
 func_ov017_021a4dd0 kind:function(arm,size=0x3c) addr:0x021a4dd0
@@ -532,7 +532,7 @@ func_ov017_021b3444 kind:function(arm,size=0x108) addr:0x021b3444
 func_ov017_021b354c kind:function(arm,size=0x14) addr:0x021b354c
 func_ov017_021b3560 kind:function(arm,size=0x118) addr:0x021b3560
 func_ov017_021b3678 kind:function(arm,size=0x108) addr:0x021b3678
-func_ov017_021b3780 kind:function(arm,size=0x148) addr:0x021b3780
+LoadEquipmentBattleParams kind:function(arm,size=0x148) addr:0x021b3780
 func_ov017_021b38c8 kind:function(arm,size=0x54c) addr:0x021b38c8
 func_ov017_021b3e14 kind:function(arm,size=0x8c4) addr:0x021b3e14
 func_ov017_021b46d8 kind:function(arm,size=0x38) addr:0x021b46d8
@@ -1215,7 +1215,7 @@ data_ov017_021d6484 kind:data(any) addr:0x021d6484
 data_ov017_021d64a0 kind:data(any) addr:0x021d64a0
 data_ov017_021d64b0 kind:data(any) addr:0x021d64b0
 data_ov017_021d64f4 kind:data(any) addr:0x021d64f4
-data_ov017_021d656c kind:data(any) addr:0x021d656c
+fieldSpriteFiles kind:data(any) addr:0x021d656c
 data_ov017_021d65ec kind:data(any) addr:0x021d65ec
 data_ov017_021d65f4 kind:data(any) addr:0x021d65f4
 data_ov017_021d6600 kind:data(any) addr:0x021d6600
