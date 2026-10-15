@@ -22,9 +22,6 @@ void* func_020daf90();
 int func_020db9cc(void* unk, int screen, int brightness, unsigned int duration);
 }
 
-#define REG_MASTER_BRIGHT ((volatile unsigned short*)0x0400006C)
-#define REG_MASTER_BRIGHT_SUB ((volatile unsigned short*)0x0400106C)
-
 // helper functions to be inlined, needs to return int to get "? 1 : 0" behaviour
 static inline int IsTransitioningMain(GameResources* res)
 {
@@ -52,8 +49,8 @@ void InitializeBrightnessState(GameResources* resources)
 
     resources->allowBrightnessApply = true;
 
-    resources->mainBrightness = (float)func_020c39c8(REG_MASTER_BRIGHT);
-    resources->subBrightness  = (float)func_020c39c8(REG_MASTER_BRIGHT_SUB);
+    resources->mainBrightness = (float)func_020c39c8(&REG_MASTER_BRIGHT);
+    resources->subBrightness  = (float)func_020c39c8(&REG_MASTER_BRIGHT_SUB);
 }
 
 // usa: func_0203af44
@@ -100,12 +97,12 @@ void ApplyBrightness(GameResources* resources)
     resources->allowBrightnessApply = 0;
 
     if (resources->mainBrightnessDirty)
-        func_020c39a0(REG_MASTER_BRIGHT, (int)resources->mainBrightness);
+        func_020c39a0(&REG_MASTER_BRIGHT, (int)resources->mainBrightness);
 
     resources->mainBrightnessDirty = false;
 
     if (resources->subBrightnessDirty)
-        func_020c39a0(REG_MASTER_BRIGHT_SUB, (int) resources->subBrightness);
+        func_020c39a0(&REG_MASTER_BRIGHT_SUB, (int) resources->subBrightness);
 
     resources->subBrightnessDirty = false;
 }
@@ -380,8 +377,8 @@ unsigned int TestFlags08(GameResources* resources, unsigned int mask)
 
 // usa: func_0203b540
 void WriteBrightnessToHardware(GameResources* gameResources) {
-    func_020c39a0(REG_MASTER_BRIGHT, (int)gameResources->mainBrightness);
-    func_020c39a0(REG_MASTER_BRIGHT_SUB, (int)gameResources->subBrightness);
+    func_020c39a0(&REG_MASTER_BRIGHT, (int)gameResources->mainBrightness);
+    func_020c39a0(&REG_MASTER_BRIGHT_SUB, (int)gameResources->subBrightness);
 }
 
 // usa: func_0203b57c
