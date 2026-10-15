@@ -7927,7 +7927,7 @@ data_02114e04 kind:bss addr:0x02114e04
 data_02114e08 kind:bss addr:0x02114e08
 data_02114e14 kind:bss addr:0x02114e14
 data_02114e20 kind:bss addr:0x02114e20
-data_02114e30 kind:bss addr:0x02114e30
+g_keyManager kind:bss addr:0x02114e30
 data_02114e50 kind:bss addr:0x02114e50
 data_02114e54 kind:bss addr:0x02114e54
 data_02114ec4 kind:bss addr:0x02114ec4

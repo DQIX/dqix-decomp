@@ -13,6 +13,8 @@
 #define KEY_X 0x400
 #define KEY_Y 0x800
 
+extern class KeyManager g_keyManager;
+
 class KeyManager
 {
 public:
@@ -75,4 +77,6 @@ public:
     void Clear();
 
     void SetInputEnabled(bool enabled);
+
+    static inline KeyManager* GetInstance() { return &g_keyManager; }
 };
