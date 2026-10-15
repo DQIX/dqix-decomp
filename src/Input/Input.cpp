@@ -5,14 +5,19 @@
 
 unsigned short ComputeCurrentKeys();
 
+#if defined(jpn)
+#define func_0205ec34 func_0205ff20
+#define func_0206df6c func_0206f0c0
+#define func_020c39c8 func_020c5494
+#endif
+
 extern "C"
 {
-    // get signed brightness
-    int func_020c39c8(volatile unsigned short*);
-
     void* func_0205ec34();
     // set flag in some big flag mask
     void func_0206df6c(void*, void*, int, bool);
+    // get signed brightness
+    int func_020c39c8(volatile unsigned short*);
 }
 
 void KeyManager::Initialize()
@@ -39,7 +44,7 @@ void KeyManager::RefreshKeys()
     bool ignoreInput = false;
     int subBrightness, mainBrightness;
 
-    if (!receivingInput_ || Arm7IsLidDown())
+    if (!receivingInput_ || IsLidDown())
         goto do_ignore;
 
     subBrightness = func_020c39c8(&REG_MASTER_BRIGHT_SUB);

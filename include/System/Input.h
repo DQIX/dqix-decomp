@@ -8,7 +8,7 @@
 // when the lid is down (from testing)
 #define ARM7_KEYINDATA (*(volatile unsigned short*)0x027fffa8)
 
-inline int Arm7IsLidDown()
+inline int IsLidDown()
 {
     return (ARM7_KEYINDATA & 0x8000) >> 15;
 }

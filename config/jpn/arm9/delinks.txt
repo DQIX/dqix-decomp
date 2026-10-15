@@ -25,6 +25,10 @@ src/Grotto/Main/GrottoStruct.cpp:
     complete
     .text start:0x020114a8 end:0x020114b4
 
+src/Input/Input.cpp:
+    complete
+    .text start:0x02011fc0 end:0x020122ac
+
 src/World/Zone3D.cpp:
     complete
     .text start:0x02013604 end:0x0201393c
