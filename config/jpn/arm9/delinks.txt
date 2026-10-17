@@ -167,191 +167,191 @@ src/Grotto/Main/TreasureMapMetadata.cpp:
 	complete
 	.text start:0x020a7a5c end:0x020a7e28
 
-src/Memory/SignedAllocator.cpp:
+src/NitroSDK/Memory/SignedAllocator.cpp:
     complete
     .bss start:0x02109cb4 end:0x02109cc4
     .text start:0x020b0994 end:0x020b0cd8
 
-src/Memory/HPXEAllocator.cpp:
+src/NitroSDK/Memory/HPXEAllocator.cpp:
     complete
     .text start:0x020b0cd8 end:0x020b1304
 
-src/Memory/HMRFAllocator.cpp:
+src/NitroSDK/Memory/HMRFAllocator.cpp:
     complete
     .text start:0x020b1304 end:0x020b15bc
 
-src/Memory/UnusedSignedAllocator.cpp:
+src/NitroSDK/Memory/UnusedSignedAllocator.cpp:
     complete
     .text start:0x020b15bc end:0x020b1624
 
-src/Filesystem/NarcHandle.cpp:
+src/NitroSDK/Filesystem/NarcHandle.cpp:
     complete
     .text start:0x020b1624 end:0x020b1894
 
-src/Memory/AllocatorTypes.cpp:
+src/NitroSDK/Memory/AllocatorTypes.cpp:
     complete
     .rodata start:0x020e926c end:0x020e9284
     .text start:0x020b1894 end:0x020b1900
 
-src/Memory/AllocatorUnion.cpp:
+src/NitroSDK/Memory/AllocatorUnion.cpp:
     complete
     .text start:0x020b1938 end:0x020b1990
 
-src/Graphics/NSBXX/Animation.cpp:
+src/NitroSDK/NSBXX/Animation.cpp:
     complete
     .text start:0x020b4598 end:0x020b4908
 
-src/Graphics/NSBXX/TEX.cpp:
+src/NitroSDK/NSBXX/TEX.cpp:
     complete
     .text start:0x020b4908 end:0x020b518c
 
-src/Graphics/NSBXX/RenderConfig.cpp:
+src/NitroSDK/NSBXX/RenderConfig.cpp:
     complete
     .text start:0x020b518c end:0x020b559c
 
-src/Graphics/NSBXX/AnimationProcessing.cpp:
+src/NitroSDK/NSBXX/AnimationProcessing.cpp:
     complete
     .text start:0x020b559c end:0x020b5aec
 
-src/Graphics/NSBXX/RenderCommands.cpp:
+src/NitroSDK/NSBXX/RenderCommands.cpp:
     complete
     .text start:0x020b5aec end:0x020b7224
 
-//src/Graphics/NSBXX/RenderCommand_9.cpp:
+//src/NitroSDK/NSBXX/RenderCommand_9.cpp:
 //    complete
 //    .text start:0x020b7224 end:0x020b7980
 
-src/Graphics/NSBXX/RenderCommands_10_13.cpp:
+src/NitroSDK/NSBXX/RenderCommands_10_13.cpp:
     complete
     .text start:0x020b7980 end:0x020b8464
 
-src/Graphics/NSBXX/GeometryFifo.cpp:
+src/NitroSDK/NSBXX/GeometryFifo.cpp:
     complete
     .text start:0x020b8464 end:0x020b8964
 
-src/Graphics/NSBXX/NSBXX.cpp:
+src/NitroSDK/NSBXX/NSBXX.cpp:
     complete
     .text start:0x020b8964 end:0x020b8e38
 
-//src/Graphics/NSBXX/NameList.cpp:
+//src/NitroSDK/NSBXX/NameList.cpp:
 //    complete
 //    .text start:0x020b8e38 end:0x020b9160
 
-src/Graphics/NSBXX/PatternAnimation.cpp:
+src/NitroSDK/NSBXX/PatternAnimation.cpp:
     complete
     .text start:0x020b9160 end:0x020b930c
 
-//src/Graphics/NSBXX/JAC.cpp:
-//    complete
-//    .text start:0x020b930c end:0x020ba92c
+src/NitroSDK/NSBXX/JAC.cpp:
+    complete
+    .text start:0x020b930c end:0x020ba92c
 
-src/Graphics/NSBXX/MAM.cpp:
+src/NitroSDK/NSBXX/MAM.cpp:
     complete
     .text start:0x020ba92c end:0x020bad44
 
-src/Graphics/NSBXX/MAT.cpp:
+src/NitroSDK/NSBXX/MAT.cpp:
     complete
     .text start:0x020bad44 end:0x020bb168
 
-src/Graphics/NSBXX/MPT.cpp:
+src/NitroSDK/NSBXX/MPT.cpp:
     complete
     .text start:0x020bb168 end:0x020bb3f8
 
-src/Graphics/NSBXX/VAV.cpp:
+src/NitroSDK/NSBXX/VAV.cpp:
     complete
     .text start:0x020bb3f8 end:0x020bb47c
 
-src/Graphics/NSBXX/RenderCommandProcs.cpp:
+src/NitroSDK/NSBXX/RenderCommandProcs.cpp:
     complete
     .text start:0x020bb47c end:0x020bcef0
 
-src/System/VRAM.cpp:
+src/NitroSDK/VRAM.cpp:
     complete
     .text start:0x020c5518 end:0x020c6740
 
-src/System/BGBases.cpp:
+src/NitroSDK/BGBases.cpp:
     complete
     .text start:0x020c6740 end:0x020c6bb0
 
-src/System/ColorEffects.cpp:
+src/NitroSDK/ColorEffects.cpp:
     complete
     .text start:0x020c6bb0 end:0x020c6c38
 
-src/System/LoadToVRAM.cpp:
+src/NitroSDK/LoadToVRAM.cpp:
     complete
     .text start:0x020c72ec end:0x020c83e0
 
-//src/System/InterruptHandler.cpp:
+//src/NitroSDK/InterruptHandler.cpp:
 //    complete
 //    .text start:0x020c8420 end:0x020c875c
 
-src/System/InterruptEnableDisable.cpp:
+src/NitroSDK/InterruptEnableDisable.cpp:
     complete
     .text start:0x020c875c end:0x020c8814
 
-src/System/GamecardBusOwnership.cpp:
+src/NitroSDK/GamecardBusOwnership.cpp:
     complete
     .text start:0x020c8914 end:0x020c8b4c
 
-src/System/ContextList.cpp:
+src/NitroSDK/ContextList.cpp:
     complete
     .text start:0x020c8c70 end:0x020c8f28
 
-//src/System/ProcessorContext.cpp:
-//    complete
-//    .text start:0x020c9080 end:0x020c9800
+src/NitroSDK/ProcessorContext.cpp:
+    complete
+    .text start:0x020c9080 end:0x020c9800
 
-src/System/Mutex.cpp:
+src/NitroSDK/Mutex.cpp:
     complete
     .text start:0x020c9b28 end:0x020c9d18
 
-src/System/Cache.cpp:
+src/NitroSDK/Cache.cpp:
     complete
     .text start:0x020c9d18 end:0x020c9e14
 
-src/System/Timing.cpp:
+src/NitroSDK/Timing.cpp:
     complete
     .text start:0x020ca71c end:0x020cad54
 
-src/System/CPSRInterruptState.cpp:
+src/NitroSDK/CPSRInterruptState.cpp:
     complete
     .text start:0x020cb1b4 end:0x020cb238
 
-src/System/DMA.cpp:
+src/NitroSDK/DMA.cpp:
     complete
     .text start:0x020cb6d8 end:0x020cbb74
 
-src/System/IPC.cpp:
+src/NitroSDK/IPC.cpp:
     complete
     .bss start:0x02111344 end:0x021113c8
     .text start:0x020cc7e4 end:0x020ccb00
 
-src/Filesystem/NitroVM.cpp:
+src/NitroSDK/Filesystem/NitroVM.cpp:
     complete
     .rodata start:0x020ed7d4 end:0x020ed7f8
     .text start:0x020ccb00 end:0x020cdbc8
 
-src/Filesystem/LowNitroHandle.cpp:
+src/NitroSDK/Filesystem/LowNitroHandle.cpp:
     complete
     .text start:0x020cdbc8 end:0x020ce40c
 
-src/Filesystem/FileAccessor.cpp:
+src/NitroSDK/Filesystem/FileAccessor.cpp:
     complete
     .text start:0x020ce40c end:0x020cea48
 
-src/Filesystem/OverlayFSManagement.cpp:
+src/NitroSDK/Filesystem/OverlayFSManagement.cpp:
     complete
     .text start:0x020cea48 end:0x020cef60
 
-src/Filesystem/CardReadManagerInit.cpp:
+src/NitroSDK/Filesystem/CardReadManagerInit.cpp:
     complete
     .text start:0x020d1788 end:0x020d1a98
 
-src/Filesystem/CardReadManagerAcquireBus.cpp:
+src/NitroSDK/Filesystem/CardReadManagerAcquireBus.cpp:
     complete
     .text start:0x020d1a98 end:0x020d1b0c
 
-src/Filesystem/CardReadManager.cpp:
+src/NitroSDK/Filesystem/CardReadManager.cpp:
     complete
     .text start:0x020d2318 end:0x020d2a90
 
