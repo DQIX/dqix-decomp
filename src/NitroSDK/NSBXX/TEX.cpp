@@ -3,8 +3,6 @@
 #include <globaldefs.h>
 #include <asmhacks.h>
 
-#pragma optimization_level 2
-
 int NSBXX_Tex_GetBlock1Length(NSBXXTex* tex)
 {
     return (tex != NULL) ? tex->block1NumEightBytes_ << 3 : 0;
@@ -89,39 +87,32 @@ extern "C" void AttachTextureImageToModelMaterials(
     NSBXXModelMaterialData* materialData, NSBXXMaterialPairing* pairing,
     NSBXXTex* tex0, NSBXXTexTexture* texture)
 {
-    unsigned int pairedMaterialCounter = 0;
     uint8_t* indexArray = (uint8_t*)materialData + pairing->offsetToIndexArray_;
-    int trueTextureWidth;
-    int trueTextureHeight;
-    
     unsigned int tex0VramLoadOffset;
+
     if ((texture->paramTEXIMAGE_PARAMS_ & 0x1c000000) != 0x14000000)
         tex0VramLoadOffset = (unsigned short)tex0->block1VRAMLoadOffset_ & ~0xe0000000;
     else
         tex0VramLoadOffset = (unsigned short)tex0->block2Or3VRAMLoadOffset_ & ~0xe0000000;
 
-    if (pairing->arraySize_ > UNSIGNED_ZERO())
+    
+    for (unsigned int i = 0; i < pairing->arraySize_; i++)
     {
-        do
-        {
-            unsigned int materialIdx = indexArray[pairedMaterialCounter];
-            NSBXXMaterial* material = materialData->GetMaterialByIndex(materialIdx);
-            material->paramTEXIMAGE_PARAMS_ |= (texture->paramTEXIMAGE_PARAMS_ + tex0VramLoadOffset);
-            trueTextureWidth = texture->unk_4 & 0x7ff;
-            trueTextureHeight = (texture->unk_4 & 0x3ff800) >> 11;
+        NSBXXMaterial* material = materialData->GetMaterialByIndex(indexArray[i]);
+        material->paramTEXIMAGE_PARAMS_ |= (texture->paramTEXIMAGE_PARAMS_ + tex0VramLoadOffset);
+        
+        int trueTextureWidth = texture->unk_4 & 0x7ff;
+        int trueTextureHeight = (texture->unk_4 & 0x3ff800) >> 11;
 
-            if (trueTextureWidth == material->width_)
-                material->xScale_ = 1 << 12;
-            else
-                material->xScale_ = fix32_Divide(trueTextureWidth << 12, material->width_ << 12);
+        if (trueTextureWidth == material->width_)
+            material->xScale_ = 1 << 12;
+        else
+            material->xScale_ = fix32_Divide(trueTextureWidth << 12, material->width_ << 12);
 
-            if (trueTextureHeight == material->height_)
-                material->yScale_ = 1 << 12;
-            else
-                material->yScale_ = fix32_Divide(trueTextureHeight << 12, material->height_ << 12);
-
-            pairedMaterialCounter++;
-        } while (pairedMaterialCounter < pairing->arraySize_);
+        if (trueTextureHeight == material->height_)
+            material->yScale_ = 1 << 12;
+        else
+            material->yScale_ = fix32_Divide(trueTextureHeight << 12, material->height_ << 12);
     }
     
     pairing->flags_ |= 1;
@@ -130,93 +121,57 @@ extern "C" void AttachTextureImageToModelMaterials(
 extern "C" void DetachTextureImageFromModelMaterials(NSBXXModelMaterialData* materialData, NSBXXMaterialPairing* pairing)
 {
     uint8_t* indexArray = (uint8_t*)materialData + pairing->offsetToIndexArray_;
-    unsigned int counter = 0;
-    if (pairing->arraySize_ > UNSIGNED_ZERO())
+    for (unsigned int i = 0; i < pairing->arraySize_; i++)
     {
-        do
-        {
-            NSBXXMaterial* material = materialData->GetMaterialByIndex(indexArray[counter]);
-            counter++;
-            // keep only bits 30-31 and 16,17,18,19
-            material->paramTEXIMAGE_PARAMS_ &= 0xc00f0000;
-            material->xScale_ = 1 << 12;
-            material->yScale_ = 1 << 12;
-        } while (counter < pairing->arraySize_);
+        NSBXXMaterial* material = materialData->GetMaterialByIndex(indexArray[i]);
+        // keep only bits 30-31 and 16,17,18,19
+        material->paramTEXIMAGE_PARAMS_ &= 0xc00f0000;
+        material->xScale_ = 1 << 12;
+        material->yScale_ = 1 << 12;
     }
     pairing->flags_ &= ~1;
 }
 
 extern "C" bool NSBXX_AttachTextureImageToModel(NSBXXInternalModel* model, NSBXXTex* tex0)
 {
-    NSBXXNameList* imagePairingsList;
-    unsigned int pairCounter;
-    bool success = true;
-    NSBXXModelMaterialData* materialData;
-    if (model != NULL && model->materialsOffset_ != 0)
-        materialData = (NSBXXModelMaterialData*)((intptr_t)model + model->materialsOffset_);
-    else
-        materialData = NULL;
+    NSBXXModelMaterialData* materialData = model->GetMaterialData();
+    NSBXXNameList* imagePairingsList = (NSBXXNameList*)((const char*)materialData + materialData->texturePairingsOffset_);
     
-    pairCounter = 0;
-    imagePairingsList = (NSBXXNameList*)((intptr_t)materialData + materialData->texturePairingsOffset_);
-    if (imagePairingsList->numEntries_ > UNSIGNED_ZERO())
+    unsigned int i;
+    bool success = true;
+    for (i = 0; i < imagePairingsList->numEntries_; i++)
     {
-        int nameOffsetInBuffer = 0;
-        do
+        const char* textureName = imagePairingsList->GetNameByIndex(i);
+        NSBXXTexTexture* texture = (tex0 != NULL) ?
+            (NSBXXTexTexture*)NSBXXNameList_Search(&tex0->textureList_, textureName) : NULL;
+        if (texture != NULL)
         {
-            const char* textureName = imagePairingsList->GetNameByIndexAndOffset(pairCounter, nameOffsetInBuffer);
-            NSBXXTexTexture* texture;
-            if (tex0 != NULL)
-                texture = (NSBXXTexTexture*)NSBXXNameList_Search(&tex0->textureList_, textureName);
-            else
-                texture = NULL;
+            NSBXXMaterialPairing* pairing = imagePairingsList->GetEntryByIndex_notVolatile<NSBXXMaterialPairing>(i);
 
-            if (texture != NULL)
-            {
-                NSBXXMaterialPairing* pairing = imagePairingsList->GetEntryByIndex<NSBXXMaterialPairing>(pairCounter);
-
-                if ((pairing->flags_ & 1) == 0)
-                    AttachTextureImageToModelMaterials(materialData, pairing, tex0, texture);
-            }
-            else
-                success = false;
-
-            pairCounter++;
-            nameOffsetInBuffer += 16;
-        } while (pairCounter < imagePairingsList->numEntries_);
+            if (!(pairing->flags_ & 1))
+                AttachTextureImageToModelMaterials(materialData, pairing, tex0, texture);
+        }
+        else
+            success = false;
     }
     return success;
 }
 
 extern "C" void NSBXX_DetachTextureImageFromModel(NSBXXInternalModel* model)
 {
-    NSBXXNameList* pairingList;
-    unsigned int pairingCounter;
+    NSBXXModelMaterialData* materialData = model->GetMaterialData();
+    NSBXXNameList* pairingList = (NSBXXNameList*)((intptr_t)materialData + materialData->texturePairingsOffset_);
 
-    NSBXXModelMaterialData* materialData;
-    if (model != NULL && model->materialsOffset_ != 0)
-        materialData = (NSBXXModelMaterialData*)((intptr_t)model + model->materialsOffset_);
-    else
-        materialData = NULL;    
-    
-    pairingList = (NSBXXNameList*)((intptr_t)materialData + materialData->texturePairingsOffset_);
-
-    pairingCounter = 0;
-    if (pairingList->numEntries_ > UNSIGNED_ZERO())
+    for (unsigned int i = 0; i < pairingList->numEntries_; i++)
     {
-        do
+        NSBXXMaterialPairing* pairing = pairingList->GetEntryByIndex_notVolatile<NSBXXMaterialPairing>(i);
+        if (pairing->flags_ & 1)
         {
-            NSBXXMaterialPairing* pairing = pairingList->GetEntryByIndex<NSBXXMaterialPairing>(pairingCounter);
-            if (pairing->flags_ & 1)
-            {
-                DetachTextureImageFromModelMaterials(materialData, pairing);
-            }
-            pairingCounter++;
-        } while (pairingCounter < pairingList->numEntries_);
+            DetachTextureImageFromModelMaterials(materialData, pairing);
+        }
     }
 }
 
-// not a match
 extern "C" void AttachTexturePaletteToModelMaterials(
     NSBXXModelMaterialData* materialData, NSBXXMaterialPairing* pairing,
     NSBXXTex* tex0, NSBXXTexPalette* palette)
@@ -235,123 +190,78 @@ extern "C" void AttachTexturePaletteToModelMaterials(
         tex0vramOffset /= 2;
     }
 
-    unsigned int pairedMaterialCounter = 0;
-    if (pairing->arraySize_ > UNSIGNED_ZERO())
-    { 
-        do 
-        {
-            unsigned int materialIdx = indexArray[pairedMaterialCounter];
-            NSBXXMaterial* material = materialData->GetMaterialByIndex(materialIdx);
-            material->texturePaletteVRAMOffset_ = paletteVramOffset + tex0vramOffset;
-            pairedMaterialCounter++;
-        } while (pairedMaterialCounter < pairing->arraySize_);
+    for (unsigned int i = 0; i < pairing->arraySize_; i++)
+    {
+        unsigned int materialIdx = indexArray[i];
+        NSBXXMaterial* material = materialData->GetMaterialByIndex(materialIdx);
+        material->texturePaletteVRAMOffset_ = paletteVramOffset + tex0vramOffset;
     }
     pairing->flags_ |= 1;
 }
 
 bool NSBXX_AttachTexturePaletteToModel(NSBXXInternalModel* model, NSBXXTex* tex0)
 {
-    NSBXXNameList* palettePairingsList;
-    unsigned int pairCounter;
+    NSBXXModelMaterialData* materialData = model->GetMaterialData();
+    NSBXXNameList* palettePairingsList = (NSBXXNameList*)((const char*)materialData + materialData->palettePairingsOffset_);
+    unsigned int i;
     bool success = true;
-    NSBXXModelMaterialData* materialData;
-    if (model != NULL && model->materialsOffset_ != 0)
-        materialData = (NSBXXModelMaterialData*)((intptr_t)model + model->materialsOffset_);
-    else
-        materialData = NULL;
 
-    pairCounter = 0;
-    palettePairingsList = (NSBXXNameList*)((intptr_t)materialData + materialData->palettePairingsOffset_);
-    if (palettePairingsList->numEntries_ > UNSIGNED_ZERO())
+    for (i = 0; i < palettePairingsList->numEntries_; i++)
     {
-        int nameOffsetInBuffer = 0;
-        do
+        const char* paletteName = palettePairingsList->GetNameByIndex(i);
+
+        NSBXXTexPalette* palette;
+        if (tex0 != NULL && tex0->paletteListOffset_ != 0)
+            palette = (NSBXXTexPalette*)NSBXXNameList_Search((NSBXXNameList*)((const char*)tex0 + tex0->paletteListOffset_), paletteName);
+        else
+            palette = NULL;
+
+        if (palette != NULL)
         {
-            const char* paletteName = palettePairingsList->GetNameByIndexAndOffset(pairCounter, nameOffsetInBuffer);
-
-            NSBXXTexPalette* palette;
-            if (tex0 != NULL && tex0->paletteListOffset_ != 0)
-            {
-                palette = (NSBXXTexPalette*)NSBXXNameList_Search((NSBXXNameList*)((intptr_t)tex0 + tex0->paletteListOffset_), paletteName);
-            }
-            else
-            {
-                palette = NULL;
-            }
-
-            if (palette != NULL)
-            {
-                NSBXXMaterialPairing* pairing = palettePairingsList->GetEntryByIndex<NSBXXMaterialPairing>(pairCounter);
-                if ((pairing->flags_ & 1) == 0)
-                    AttachTexturePaletteToModelMaterials(materialData, pairing, tex0, palette);
-            }
-            else
-                success = false;
-
-            pairCounter++;
-            nameOffsetInBuffer += 16;
-        } while (pairCounter < palettePairingsList->numEntries_);
+            NSBXXMaterialPairing* pairing = palettePairingsList->GetEntryByIndex_notVolatile<NSBXXMaterialPairing>(i);
+            if ((pairing->flags_ & 1) == 0)
+                AttachTexturePaletteToModelMaterials(materialData, pairing, tex0, palette);
+        }
+        else
+            success = false;
     }
     return success;
 }
 
 extern "C" void NSBXX_DetachTexturePaletteFromModel(NSBXXInternalModel* model)
 {
-    NSBXXNameList* pairingList;
-    unsigned int pairingCounter;
+    NSBXXModelMaterialData* materialData = model->GetMaterialData();
+    NSBXXNameList* pairingList = (NSBXXNameList*)((const char*)materialData + materialData->palettePairingsOffset_);
 
-    NSBXXModelMaterialData* materialData;
-    if (model != NULL && model->materialsOffset_ != 0)
-        materialData = (NSBXXModelMaterialData*)((intptr_t)model + model->materialsOffset_);
-    else
-        materialData = NULL;    
-    
-    pairingList = (NSBXXNameList*)((intptr_t)materialData + materialData->palettePairingsOffset_);
-
-    pairingCounter = 0;
-    if (pairingList->numEntries_ > UNSIGNED_ZERO())
+    unsigned int i = 0;
+    for (unsigned int i = 0; i < pairingList->numEntries_; i++)
     {
-        do
-        {
-            NSBXXMaterialPairing* pairing = pairingList->GetEntryByIndex<NSBXXMaterialPairing>(pairingCounter);
-            if (pairing->flags_ & 1)
-            {
-                pairing->flags_ &= ~1;
-            }
-            pairingCounter++;
-        } while (pairingCounter < pairingList->numEntries_);
+        NSBXXMaterialPairing* pairing = pairingList->GetEntryByIndex_notVolatile<NSBXXMaterialPairing>(i);
+        if (pairing->flags_ & 1)
+            pairing->flags_ &= ~1;
     }
 }
 
 extern "C" int NSBXX_LinkTEX0ToMDL0(NSBXXMdl* mdl0, NSBXXTex* tex0)
 {
-    unsigned int modelCounter;
+    unsigned int i;
     int success = true;
-    modelCounter = 0;
-    if (mdl0->nameList_.numEntries_ > UNSIGNED_ZERO())
+    
+    for (i = 0; i < mdl0->nameList_.numEntries_; i++)
     {
-        do
-        {
-            NSBXXInternalModel* internalModel = mdl0->GetInternalModelByIndex(modelCounter);
-            success &= NSBXX_AttachTextureImageToModel(internalModel, tex0);
-            success &= NSBXX_AttachTexturePaletteToModel(internalModel, tex0);
-            modelCounter++;
-        } while (modelCounter < mdl0->nameList_.numEntries_);
+        NSBXXInternalModel* internalModel = mdl0->GetInternalModelByIndex(i);
+        success &= NSBXX_AttachTextureImageToModel(internalModel, tex0);
+        success &= NSBXX_AttachTexturePaletteToModel(internalModel, tex0);
     }
     return success;
 }
 
 extern "C" void NSBXX_UnlinkTEX0FromMDL0(NSBXXMdl* mdl0)
 {
-    unsigned int modelCounter = 0;
-    if (mdl0->nameList_.numEntries_ > UNSIGNED_ZERO())
+    for (unsigned int i = 0; i < mdl0->nameList_.numEntries_; i++)
     {
-        do
-        {
-            NSBXXInternalModel* internalModel = mdl0->GetInternalModelByIndex(modelCounter);
-            NSBXX_DetachTextureImageFromModel(internalModel);
-            NSBXX_DetachTexturePaletteFromModel(internalModel);
-            modelCounter++;
-        } while (modelCounter < mdl0->nameList_.numEntries_);
+        NSBXXInternalModel* internalModel = mdl0->GetInternalModelByIndex(i);
+        NSBXX_DetachTextureImageFromModel(internalModel);
+        NSBXX_DetachTexturePaletteFromModel(internalModel);
     }
 }
