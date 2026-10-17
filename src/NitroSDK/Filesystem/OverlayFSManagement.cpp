@@ -6,8 +6,6 @@
 #include <globaldefs.h>
 #include <asmhacks.h>
 
-#pragma optimization_level 2
-
 #if defined(jpn)
 #define data_020f2e44 data_020f2e58
 #define data_020f2290 data_020f23fc
@@ -223,21 +221,21 @@ bool LoadCompressedOverlay(const OverlayMetadata& overlay)
 bool VerifyDownloadPlayStruct(const UnknownDownloadPlayStruct& data,
     unsigned int loadAddress, unsigned int size)
 {
+    int offsetCounter;
     UnknownDownloadPlayStruct clone;
     VectorizedMemset(&clone, 0, sizeof(UnknownDownloadPlayStruct));
 
     unsigned char buffer[64];
     VectorizedInvertedMemcpy(data_020f2290.pointer, buffer, data_020f2290.length);
     func_020c0c3c(&clone, loadAddress, size, buffer, data_020f2290.length);
-
-    unsigned int offsetCounter = 0;
-    unsigned int* cloneReader = &clone.unknown[0];
-    do {
-        if (*cloneReader != *(unsigned int*)((int)&data + offsetCounter))
+    
+    const unsigned char* source = (const unsigned char*)&data;
+    for (offsetCounter = 0; offsetCounter < sizeof(UnknownDownloadPlayStruct); offsetCounter += 4)
+    {
+        if (*(const unsigned int*)((const unsigned char*)&clone + offsetCounter) !=
+            *(const unsigned int*)(source + offsetCounter))
             break;
-        offsetCounter += 4;
-        cloneReader++;
-    } while (offsetCounter < sizeof(UnknownDownloadPlayStruct));
+    }
 
     return offsetCounter == sizeof(UnknownDownloadPlayStruct);
 }

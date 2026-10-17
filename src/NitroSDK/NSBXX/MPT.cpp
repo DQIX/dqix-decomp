@@ -2,8 +2,6 @@
 #include "Graphics/NSBXX/RenderCommands_Common.h"
 #include "Graphics/NSBXX/Animation.h"
 
-#pragma optimization_level 2
-
 #if defined(jpn)
 #define func_020ca390 func_020cbe5c
 #define data_020f1c7c data_020f1de8
@@ -34,27 +32,18 @@ void InitializeModelAnimationFromMPT(AnimationData* anim, void* pvMPT, NSBXXInte
     anim->pRawData_ = mpt;
     func_020ca390(0, &anim->entries_[0], anim->numEntries_ * 2);
     
-    track = 0;
-    if (track < mpt->tracks_.numEntries_)
+    for (track = 0; track < mpt->tracks_.numEntries_; track++)
     {
-        unsigned int bufferOffset = 0;
-        do
-        {
-            const char* trackName = mpt->tracks_.GetNameByIndexAndOffset(track, bufferOffset);
-            int idx;
+        const char* trackName = mpt->tracks_.GetNameByIndex(track);
+        int idx;
 
-            if (materials == NULL)
-                idx = -1;
-            else
-                idx = NSBXXNameList_SearchIndex(&materials->materialOffsetList_, trackName);
+        if (materials == NULL)
+            idx = -1;
+        else
+            idx = NSBXXNameList_SearchIndex(&materials->materialOffsetList_, trackName);
 
-            if (idx >= 0)
-            {
-                anim->entries_[idx] = track | 0x100;
-            }
-            track++;
-            bufferOffset += 16;
-        } while (track < mpt->tracks_.numEntries_);
+        if (idx >= 0)
+            anim->entries_[idx] = track | 0x100;
     }
 }
 
