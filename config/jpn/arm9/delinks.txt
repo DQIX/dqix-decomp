@@ -217,9 +217,9 @@ src/NitroSDK/NSBXX/RenderCommands.cpp:
     complete
     .text start:0x020b5aec end:0x020b7224
 
-//src/NitroSDK/NSBXX/RenderCommand_9.cpp:
-//    complete
-//    .text start:0x020b7224 end:0x020b7980
+src/NitroSDK/NSBXX/RenderCommand_9.cpp:
+    complete
+    .text start:0x020b7224 end:0x020b7980
 
 src/NitroSDK/NSBXX/RenderCommands_10_13.cpp:
     complete
