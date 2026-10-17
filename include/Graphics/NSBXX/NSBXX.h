@@ -99,7 +99,7 @@ struct NSBXXNameList
         {
             uint32_t* pOffset = GetEntryByIndex_notVolatile<uint32_t>(n);
             if (pOffset != NULL)
-                return (T*)((intptr_t)this + *pOffset);
+                return (T*)((const char*)this + *pOffset);
         }
         return NULL;
     }

@@ -241,9 +241,9 @@ src/NitroSDK/NSBXX/PatternAnimation.cpp:
     complete
     .text start:0x020b7694 end:0x020b7840
 
-//src/NitroSDK/NSBXX/JAC.cpp:
-//    complete
-//    .text start:0x020b7840 end:0x020b8e60
+src/NitroSDK/NSBXX/JAC.cpp:
+    complete
+    .text start:0x020b7840 end:0x020b8e60
 
 src/NitroSDK/NSBXX/MAM.cpp:
     complete
