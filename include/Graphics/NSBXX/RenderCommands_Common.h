@@ -12,8 +12,6 @@
 #include "Animation.h"
 #include <asmhacks.h>
 
-#pragma optimize_for_size off
-
 #if defined(jpn)
 #define data_020e9240 data_020e934c
 #define data_020e9260 data_020e936c
@@ -28,6 +26,7 @@
 #define data_0210a274 data_02109f2c
 #define data_0210a278 data_02109f30
 #define data_0210b078 data_0210ad30
+#define data_0210b678 data_0210b330
 
 #define func_020c1868 func_020c3334
 #define func_020c223c func_020c3d08
@@ -35,7 +34,11 @@
 #define func_020c2cf0 func_020c47bc
 #define func_020c2eb8 func_020c4984
 #define func_020c2f18 func_020c49e4
+#define func_020c5188 func_020c6c54
+#define func_020c51a4 func_020c6c70
+#define func_020c51c0 func_020c6c8c
 #define func_020c54fc func_020c6fc8
+#define func_020c552c func_020c6ff8
 #define func_020ca3ec func_020cbeb8
 #define func_020ca408 func_020cbed4
 #define func_020ca430 func_020cbefc
@@ -121,13 +124,19 @@ struct Struct_0210b078
 {
     Vector3fix vec0_;
     BoneMatrixRenderData::Scale vec1_;
-} extern data_0210b078[64];
+};
 
 struct Struct_0210b678
 {
     Matrix4x4 mat4x4;
     Matrix3x3 mat3x3;
-} extern data_0210b678[];
+};
+
+extern struct
+{
+    Struct_0210b078 vectorData[64];
+    Struct_0210b678 matrixData[64];
+} data_0210b078;
 
 extern "C"
 {  

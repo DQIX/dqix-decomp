@@ -26,6 +26,12 @@ struct NSBXXContainer
     uint16_t numSubfiles_;
 };
 
+struct DictEntryHeader
+{
+    uint16_t sizeUnit;
+    uint16_t ofsName;
+};
+
 struct NSBXXNameList
 {
     uint8_t unknown_0_;
@@ -70,7 +76,7 @@ struct NSBXXNameList
     {
         if (this != NULL && n < numEntries_)
         {
-            intptr_t dataStart = (intptr_t)this + offsetToDataStart_;
+            const char* dataStart = (const char*)this + offsetToDataStart_;
             uint16_t stride = *(uint16_t*)dataStart;
             return (T*)(dataStart + 4 + stride * n);
         }
@@ -93,11 +99,24 @@ struct NSBXXNameList
         {
             uint32_t* pOffset = GetEntryByIndex_notVolatile<uint32_t>(n);
             if (pOffset != NULL)
-                return (T*)((intptr_t)this + *pOffset);
+                return (T*)((const char*)this + *pOffset);
         }
         return NULL;
     }
 
+    inline const char* GetNameByIndex(unsigned int n) const
+    {
+        const uint16_t* dataStart;
+        if (this != NULL && n < numEntries_)
+        {
+            dataStart = (const uint16_t*)((const char*)this + offsetToDataStart_);
+            return (const char*)((const char*)dataStart + dataStart[1] + 16 * n);
+        }
+        else
+            return NULL;
+    }
+
+    // this one needs to be scrapped
     inline const char* GetNameByIndexAndOffset(unsigned int n, unsigned int offsetInBuffer) const
     {
         if (this != NULL && n < numEntries_)
@@ -461,6 +480,20 @@ struct NSBXXMaterial
     };
 };
 
+static inline void* GetResDataByIdx(const NSBXXNameList* dict, unsigned int idx)
+{
+    const DictEntryHeader* hdr;
+    if (dict != NULL && idx < dict->numEntries_)
+    {
+        hdr = (const DictEntryHeader*)((const uint8_t*)dict + dict->offsetToDataStart_);
+        return (void*)((const uint8_t*)hdr + sizeof(DictEntryHeader) + hdr->sizeUnit * idx);
+    }
+    else
+    {
+        return NULL;
+    }
+}
+
 struct NSBXXModelMaterialData
 {
     // offset to a NameList of MaterialPairing structs
@@ -474,8 +507,7 @@ struct NSBXXModelMaterialData
     {
         if (this != NULL)
         {
-            uint32_t* materialOffset = materialOffsetList_.GetEntryByIndex<uint32_t>(n);
-            
+            uint32_t* materialOffset = (uint32_t*)materialOffsetList_.GetEntryByIndex_notVolatile<uint32_t>(n);
             if (materialOffset != NULL)
             {
                 return (NSBXXMaterial*)((intptr_t)this + *materialOffset);
@@ -605,7 +637,7 @@ struct NSBXXMdl
         NSBXXInternalModel* internalModel;
         if (this != NULL)
         {
-            uint32_t* pModelOffset = nameList_.GetEntryByIndex<uint32_t>(n);
+            uint32_t* pModelOffset = nameList_.GetEntryByIndex_notVolatile<uint32_t>(n);
 
             if (pModelOffset != NULL)
             {
@@ -720,7 +752,7 @@ void NSBXX_Model_SetAllMaterialFlags(NSBXXInternalModel* model, int value, unsig
 // usa: func_020b6f64
 // applies to all materials of the model. If value == 0 then the bits specified
 // by mask will be cleared, otherwise they will be set
-void NSBXX_Model_AdjustPolygonAttrMask(NSBXXInternalModel* model, bool setBits, unsigned int mask);
+void NSBXX_Model_AdjustPolygonAttrMask(NSBXXInternalModel* model, int setBits, unsigned int mask);
 
 // usa: func_020b7184
 // The alpha value can be between 0-31.
@@ -746,13 +778,13 @@ void NSBXX_Model_SetAlpha(NSBXXInternalModel* model, int alpha);
 // Gets the entry in a NameList given its string.
 // The string passed should be a 16-byte buffer padded with zeros, a regular
 // null-terminated string is not sufficient.
-void* NSBXXNameList_Search(NSBXXNameList* nameList, const char* name);
+void* NSBXXNameList_Search(const NSBXXNameList* nameList, const char* name);
 
 // usa: func_020b752c
 // Gets the index of an entry in a NameList given its string.
 // The string passed should be a 16-byte buffer padded with zeros, a regular
 // null-terminated string is not sufficient.
-int NSBXXNameList_SearchIndex(NSBXXNameList* nameList, const char* name);
+int NSBXXNameList_SearchIndex(const NSBXXNameList* nameList, const char* name);
 
 // usa: func_020b7694
 // Returns a pointer to the first file within the file provided.

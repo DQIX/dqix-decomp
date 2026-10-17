@@ -26,10 +26,16 @@ GAME = "dqix"
 DSD_VERSION = 'v0.10.2'
 WIBO_VERSION = '0.6.16'
 OBJDIFF_VERSION = 'v2.7.1'
-MWCC_VERSION = "2.0/sp2p2" # minimum version required to match fixed point s64 arithmetic around 0x02030f30 (not sdk code). might need p3 or p4?
+
+DEFAULT_MWCC_VERSION = "2.0/sp2p2"
+SDK_MWCC_VERSION = "2.0/sp1p2"
+
+DEFAULT_OPT_LEVEL = "-O2"
+SDK_OPT_LEVEL = "-O4,p"
+
 DECOMP_ME_COMPILER = "mwcc_30_137"
 CC_FLAGS = " ".join([
-    "-O2",                  # Optimize maximally, omit p: it optimizes out things that the game doesn't normally
+    ## Optimization level removed here, as it needs to be specified per file
     "-enum int",            # Use int-sized enums
     "-char signed",         # Char type is signed
     "-str noreuse",         # Equivalent strings are different objects
@@ -81,8 +87,6 @@ libs_path        = root_path / "libs"
 extract_path     = root_path / "extract"
 tools_path       = root_path / "tools"
 mwcc_root        = args.compiler or tools_path / "mwccarm"
-mwcc_path        = mwcc_root / MWCC_VERSION
-
 
 # Includes
 includes = [
@@ -104,8 +108,7 @@ WINE = args.wine if platform.system != "windows" else ""
 WINE_DEP = [WINE] if platform.system != "windows" and WINE == DEFAULT_WIBO_PATH else []
 DSD = str(args.dsd or os.path.join('.', str(root_path / f"dsd{EXE}")))
 OBJDIFF = os.path.join('.', str(root_path / f"objdiff-cli{EXE}"))
-CC = os.path.join('.', str(mwcc_path / "mwccarm.exe"))
-LD = os.path.join('.', str(mwcc_path / "mwldarm.exe"))
+LD = os.path.join('.', str(mwcc_root / DEFAULT_MWCC_VERSION / "mwldarm.exe"))
 PYTHON = sys.executable
 
 
@@ -205,9 +208,11 @@ def main():
         )
         n.newline()
 
+        
+        n.variable("opt_level", "-O2")
         # -MMD excludes all includes instead of just system includes for some reason, so use -MD instead.
-        mwcc_cmd = f'{WINE} "{CC}" {CC_FLAGS} {CC_INCLUDES} $cc_flags -d $game_version -MD -c $in -o $basedir'
-        mwcc_implicit = [CC] + WINE_DEP
+        mwcc_cmd = f'{WINE} "$mwcc_version" $opt_level {CC_FLAGS} {CC_INCLUDES} $cc_flags -d $game_version -MD -c $in -o $basedir'
+        mwcc_implicit = [get_compiler_version("")] + WINE_DEP
         if platform.system != "windows":
             transform_dep = "tools/transform_dep.py"
             mwcc_cmd += f" && $python {transform_dep} $basefile.d $basefile.d"
@@ -316,7 +321,7 @@ def add_download_tool_builds(n: ninja_syntax.Writer):
     if args.compiler is None:
         n.build(
             rule="download_tool",
-            outputs=[CC, LD],
+            outputs=[get_compiler_version(""), LD],
             variables={
                 "tool": "mwccarm",
                 "tag": "latest",
@@ -428,6 +433,8 @@ def add_mwcc_builds(n: ninja_syntax.Writer, project: Project, mwcc_implicit: lis
             rule="mwcc",
             outputs=str(src_obj_path.with_suffix(".o")),
             variables={
+                "mwcc_version": get_compiler_version(source_file),
+                "opt_level": get_opt_level(source_file),
                 "game_version": project.game_version,
                 "cc_flags": " ".join(cc_flags),
                 "basedir": os.path.dirname(src_obj_path),
@@ -445,6 +452,20 @@ def add_mwcc_builds(n: ninja_syntax.Writer, project: Project, mwcc_implicit: lis
         )
         n.newline()
 
+def is_source_file_sdk(src: Path):
+    sdk_dir = src_path / "NitroSDK"
+    return sdk_dir in src.parents
+
+def get_opt_level(src: Path):
+    if is_source_file_sdk(src):
+        return SDK_OPT_LEVEL
+    return DEFAULT_OPT_LEVEL
+
+def get_compiler_version(src: Path):
+    version = DEFAULT_MWCC_VERSION
+    if src != "" and is_source_file_sdk(src):
+        version = SDK_MWCC_VERSION
+    return os.path.join('.', str(mwcc_root / version / "mwccarm.exe"))
 
 def get_c_cpp_files(dirs: list[Path]):
     for dir in dirs:
