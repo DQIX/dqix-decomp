@@ -778,13 +778,13 @@ void NSBXX_Model_SetAlpha(NSBXXInternalModel* model, int alpha);
 // Gets the entry in a NameList given its string.
 // The string passed should be a 16-byte buffer padded with zeros, a regular
 // null-terminated string is not sufficient.
-void* NSBXXNameList_Search(NSBXXNameList* nameList, const char* name);
+void* NSBXXNameList_Search(const NSBXXNameList* nameList, const char* name);
 
 // usa: func_020b752c
 // Gets the index of an entry in a NameList given its string.
 // The string passed should be a 16-byte buffer padded with zeros, a regular
 // null-terminated string is not sufficient.
-int NSBXXNameList_SearchIndex(NSBXXNameList* nameList, const char* name);
+int NSBXXNameList_SearchIndex(const NSBXXNameList* nameList, const char* name);
 
 // usa: func_020b7694
 // Returns a pointer to the first file within the file provided.

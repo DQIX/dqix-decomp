@@ -1,108 +1,56 @@
 #include "Graphics/NSBXX/NSBXX.h"
 
-extern "C" void* NSBXXNameList_Search(NSBXXNameList* nameList, const char* name)
+extern "C" void* NSBXXNameList_Search(const NSBXXNameList* nameList, const char* name)
 {
-    volatile NSBXXNameList* volList = nameList;
-    const uint32_t* targetIntArray = (const uint32_t*)name;
+    const uint32_t* target = (const uint32_t*)name;
     if (name == NULL)
         return NULL;
 
-    unsigned int numEntries = nameList->numEntries_;
-    if (numEntries < 16) // list is short, do linear search
+    if (nameList->numEntries_ < 16) // list is short, do linear search
     {
-        unsigned int searchIndex = 0;
-        uint32_t target0 = targetIntArray[0];
-        uint32_t target1 = targetIntArray[1];
-        uint32_t target2 = targetIntArray[2];
-        uint32_t target3 = targetIntArray[3];
+        unsigned int searchIndex;
+        uint32_t target0 = target[0];
+        uint32_t target1 = target[1];
+        uint32_t target2 = target[2];
+        uint32_t target3 = target[3];
         
-        unsigned int zero = 0;
-        if (numEntries > zero)
+        for (searchIndex = 0; searchIndex < nameList->numEntries_; searchIndex++)
         {
-            int offsetWithinNameData = 0;
-            do
+            const uint32_t* source = (const uint32_t*)nameList->GetNameByIndex(searchIndex);
+            if (source[0] == target0 && source[1] == target1 &&
+                source[2] == target2 && source[3] == target3)
             {
-                intptr_t sourcePtr;
-                if (nameList != NULL && searchIndex < volList->numEntries_)
-                {
-                    intptr_t dataStart = (intptr_t)nameList + nameList->offsetToDataStart_;
-                    // dataStart + 2 holds the distance between dataStart and the start
-                    // of the name data
-                    sourcePtr = dataStart + *(uint16_t*)(dataStart + 2);
-                    sourcePtr += offsetWithinNameData;
-                }
-                else
-                    sourcePtr = 0;
-
-                // Compare 16-byte strings by comparing ints
-                const uint32_t* source = (const uint32_t*)sourcePtr;
-                if (source[0] == target0 && source[1] == target1 &&
-                    source[2] == target2 && source[3] == target3)
-                {
-                    if (nameList != NULL && searchIndex < nameList->numEntries_)
-                    {
-                        intptr_t dataStart = (intptr_t)nameList + nameList->offsetToDataStart_;
-                        int stride = *(uint16_t*)dataStart;
-                        return (void*)(dataStart + 4 + stride * searchIndex);
-                    }
-                    return NULL;
-                }
-
-                searchIndex++;
-                offsetWithinNameData += 16;
-            } while (searchIndex < volList->numEntries_);
+                return nameList->GetEntryByIndex_notVolatile<void>(searchIndex);
+            }
         }
     }
     else // list is long, use the binary search tree
     {   
         NSBXXNameList::SearchTreeEntry* entryArray = (NSBXXNameList::SearchTreeEntry*)&nameList->treeRoot_8_;
         int firstChild = entryArray[0].children_[0];
-        
         if (firstChild != 0)
         {
             NSBXXNameList::SearchTreeEntry* searchCursor = &entryArray[firstChild];
             int bitIndex = entryArray[firstChild].bitIndex_;
             unsigned int prevBitIndex = entryArray[0].bitIndex_;
-            if (prevBitIndex > bitIndex)
+            while (prevBitIndex > bitIndex)
             {
-                do
-                {
-                    
-                    int integerToQuery = bitIndex >> 5;
-                    int bitToQuery = bitIndex & 0x1f;
-                    int bitValue = (targetIntArray[integerToQuery] >> bitToQuery) & 1;
-                    int childID = searchCursor->children_[bitValue];
-                    prevBitIndex = searchCursor->bitIndex_;
-                    searchCursor = &entryArray[childID];
-                    bitIndex = entryArray[childID].bitIndex_;
-                    
-                } while (prevBitIndex > bitIndex);
+                int integerToQuery = bitIndex >> 5;
+                int bitToQuery = bitIndex & 0x1f;
+                int bitValue = (target[integerToQuery] >> bitToQuery) & 1;
+                int childID = searchCursor->children_[bitValue];
+                bitIndex = entryArray[childID].bitIndex_;
+                prevBitIndex = searchCursor->bitIndex_;
+                searchCursor = &entryArray[childID];
             }
-
             
             unsigned int candidateIndex = searchCursor->resourceIndex_;
-            intptr_t sourcePtr;
-            if (nameList != NULL && candidateIndex < numEntries)
+            const uint32_t* source = (const uint32_t*)nameList->GetNameByIndex(candidateIndex);
+            
+            if (source[0] == target[0] && source[1] == target[1] &&
+                source[2] == target[2] && source[3] == target[3])
             {
-                intptr_t dataStart = (intptr_t)nameList + nameList->offsetToDataStart_;
-                // dataStart + 2 holds the distance between dataStart and the start
-                // of the name data
-                sourcePtr = dataStart + *(uint16_t*)(dataStart + 2) + (candidateIndex * 16);
-            }
-            else
-                sourcePtr = 0;
-
-            const uint32_t* sourceIntArray = (const uint32_t*)sourcePtr;
-            if (sourceIntArray[0] == targetIntArray[0] && sourceIntArray[1] == targetIntArray[1] &&
-                sourceIntArray[2] == targetIntArray[2] && sourceIntArray[3] == targetIntArray[3])
-            {
-                if (nameList != NULL && candidateIndex < numEntries)
-                {
-                    intptr_t dataStart = (intptr_t)nameList + nameList->offsetToDataStart_;
-                    int stride = *(uint16_t*)dataStart;
-                    return (void*)(dataStart + 4 + stride * candidateIndex);
-                }
-                return NULL;
+                return nameList->GetEntryByIndex_notVolatile<void>(candidateIndex);
             }
         }
     }
@@ -110,49 +58,27 @@ extern "C" void* NSBXXNameList_Search(NSBXXNameList* nameList, const char* name)
     return NULL;
 }
 
-// this doesn't quite match, register issues
-extern "C" int NSBXXNameList_SearchIndex(NSBXXNameList* nameList, const char* name)
+extern "C" int NSBXXNameList_SearchIndex(const NSBXXNameList* nameList, const char* name)
 {
-    volatile NSBXXNameList* volList = nameList;
-    const uint32_t* targetIntArray = (const uint32_t*)name;
+    const uint32_t* target = (const uint32_t*)name;
     if (name == NULL)
         return -1;
 
-    unsigned int numEntries = nameList->numEntries_;
-    if (numEntries < 16) // list is short, do linear search
+    if (nameList->numEntries_ < 16) // list is short, do linear search
     {
-        unsigned int searchIndex = 0;
-        uint32_t target0 = targetIntArray[0];
-        uint32_t target1 = targetIntArray[1];
-        uint32_t target2 = targetIntArray[2];
-        uint32_t target3 = targetIntArray[3];
-        unsigned int zero = 0;
-        if (numEntries > zero)
+        unsigned int searchIndex;
+        uint32_t target0 = target[0];
+        uint32_t target1 = target[1];
+        uint32_t target2 = target[2];
+        uint32_t target3 = target[3];
+        for (searchIndex = 0; searchIndex < nameList->numEntries_; searchIndex++)
         {
-            int offsetWithinNameData = 0;
-            do
+            const uint32_t* source = (const uint32_t*)nameList->GetNameByIndex(searchIndex);
+            if (source[0] == target0 && source[1] == target1 &&
+                source[2] == target2 && source[3] == target3)
             {
-                intptr_t sourcePtr;
-                if (nameList != NULL && searchIndex < volList->numEntries_)
-                {
-                    intptr_t dataStart = (intptr_t)nameList + nameList->offsetToDataStart_;
-                    // dataStart + 2 holds the distance between dataStart and the start
-                    // of the name data
-                    sourcePtr = dataStart + *(uint16_t*)(dataStart + 2);
-                    sourcePtr += offsetWithinNameData;
-                }
-                else
-                    sourcePtr = 0;
-
-                // Compare 16-byte strings by comparing ints
-                const uint32_t* source = (const uint32_t*)sourcePtr;
-                if (source[0] == target0 && source[1] == target1 &&
-                    source[2] == target2 && source[3] == target3)
-                    return searchIndex;
-
-                searchIndex++;
-                offsetWithinNameData += 16;
-            } while (searchIndex < volList->numEntries_);
+                return searchIndex;
+            }
         }
     }
     else // list is long, use the binary search tree
@@ -164,37 +90,21 @@ extern "C" int NSBXXNameList_SearchIndex(NSBXXNameList* nameList, const char* na
             NSBXXNameList::SearchTreeEntry* searchCursor = &entryArray[firstChild];
             int bitIndex = entryArray[firstChild].bitIndex_;   
             unsigned int prevBitIndex = entryArray[0].bitIndex_;
-            if (prevBitIndex > bitIndex)
+            while (prevBitIndex > bitIndex)
             {
-                do
-                {
-                    int integerToQuery = bitIndex >> 5;
-                    int bitToQuery = bitIndex & 0x1f;
-                    int bitValue = (targetIntArray[integerToQuery] >> bitToQuery) & 1;
-                    int childID = searchCursor->children_[bitValue];
-                    prevBitIndex = searchCursor->bitIndex_;
-                    searchCursor = &entryArray[childID];
-                    bitIndex = entryArray[childID].bitIndex_;
-                    
-                } while (prevBitIndex > bitIndex);
+                int integerToQuery = bitIndex >> 5;
+                int bitToQuery = bitIndex & 0x1f;
+                int bitValue = (target[integerToQuery] >> bitToQuery) & 1;
+                int childID = searchCursor->children_[bitValue];
+                bitIndex = entryArray[childID].bitIndex_;
+                prevBitIndex = searchCursor->bitIndex_;
+                searchCursor = &entryArray[childID];
             }
             
-            unsigned int candidateIndex = searchCursor->resourceIndex_;
-            intptr_t sourcePtr;
-            if (nameList != NULL && candidateIndex < nameList->numEntries_)
-            {
-                intptr_t dataStart = (intptr_t)nameList + nameList->offsetToDataStart_;
-                // dataStart + 2 holds the distance between dataStart and the start
-                // of the name data
-                sourcePtr = dataStart + *(uint16_t*)(dataStart + 2) + (candidateIndex * 16);
-            }
-            else
-                sourcePtr = 0;
-
-            const uint32_t* sourceIntArray = (const uint32_t*)sourcePtr;
-            if (sourceIntArray[0] == targetIntArray[0] && sourceIntArray[1] == targetIntArray[1] &&
-                sourceIntArray[2] == targetIntArray[2] && sourceIntArray[3] == targetIntArray[3])
-                return candidateIndex;
+            const uint32_t* sourceIntArray = (const uint32_t*)nameList->GetNameByIndex(searchCursor->resourceIndex_);
+            if (sourceIntArray[0] == target[0] && sourceIntArray[1] == target[1] &&
+                sourceIntArray[2] == target[2] && sourceIntArray[3] == target[3])
+                return searchCursor->resourceIndex_;
             
         }
     }

@@ -233,9 +233,9 @@ src/NitroSDK/NSBXX/NSBXX.cpp:
     complete
     .text start:0x020b6e98 end:0x020b736c
 
-//src/NitroSDK/NSBXX/NameList.cpp:
-//    complete
-//    .text start:0x020b736c end:0x020b7694
+src/NitroSDK/NSBXX/NameList.cpp:
+    complete
+    .text start:0x020b736c end:0x020b7694
 
 src/NitroSDK/NSBXX/PatternAnimation.cpp:
     complete
