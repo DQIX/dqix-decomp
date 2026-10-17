@@ -553,28 +553,20 @@ int NitroVM_DefaultCommand_GetPath(NitroVM* vm)
         return NITRO_RESULT_FAILURE;
 
     {
-        // Ignore the weird assembly, there was a weird quirk of the code that
-        // the compiler never produces unless you do something stupid like this.
-        // tl;dr signature holds the value nitroHandle->signature, and
-        // uselessZero is just 0 and used for a pointless operation later
-        unsigned int uselessZero;
-        unsigned int signature = (unsigned int)nitroHandle;
-        __asm("mov uselessZero, 0");
-        signature = *(unsigned int*)signature;
-        DECLARE_ASM_NOP();
+    unsigned int pos = 0;
 
-        int signatureLength;
-        if (signature <= 0xff)
-            signatureLength = 1;
-        else if (signature <= 0xff00) // shouldn't this really be 0xffff?
-            signatureLength = 2;
-        else
-            signatureLength = 3;
-    
-        VectorizedInvertedMemcpy(&nitroHandle->signature, writeDst, signatureLength);
-        signatureLength = uselessZero + signatureLength;
-        // copy ":/"
-        VectorizedInvertedMemcpy(data_020f2288, writeDst + signatureLength, 2);
+    int signatureLength;
+    if (nitroHandle->signature <= 0xff)
+        signatureLength = 1;
+    else if (nitroHandle->signature <= 0xff00) // shouldn't this really be 0xffff?
+        signatureLength = 2;
+    else
+        signatureLength = 3;
+
+    VectorizedInvertedMemcpy(&nitroHandle->signature, writeDst + pos, signatureLength);
+    pos += signatureLength;
+    // copy ":/"
+    VectorizedInvertedMemcpy(data_020f2288, writeDst + pos, 2);
     }
 
     NitroVM_LoadDirectoryDataByIndex(&tempVM, targetDirID);

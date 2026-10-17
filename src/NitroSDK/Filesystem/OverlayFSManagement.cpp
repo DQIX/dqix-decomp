@@ -27,8 +27,9 @@ extern struct UnknownDownloadPlayStruct
 #define ADDR_FIRST_DOWNLOAD_PLAY_STRUCT 0x020f2e58
 #endif
 
-extern struct {
-    const void* pointer;
+extern struct
+{
+    const void* start;
     unsigned int length;
 } data_020f2290;
 
@@ -77,20 +78,21 @@ bool LoadOverlayMetadataFromNitro(OverlayMetadata *into, bool isArm7,
 {
     unsigned int offset;
     unsigned int start;
-    unsigned int size;
-    
+    unsigned int length;
+
     if (!isArm7)
     {
         start = arm9OverlayTableStart;
-        size = arm9OverlayTableSize;
+        length = arm9OverlayTableSize;
     }
     else
     {
         start = arm7OverlayTableStart;
-        size = arm7OverlayTableSize;
+        length = arm7OverlayTableSize;
     }
 
-    if (size <= (offset = overlayIdx * 0x20))
+    offset = overlayIdx * 0x20;
+    if (offset >= length)
         return false;
 
     NitroVM machine;
@@ -98,24 +100,10 @@ bool LoadOverlayMetadataFromNitro(OverlayMetadata *into, bool isArm7,
     // The compiler loves combining shifts into additions, so elides offset by
     // just using start + (overlayIdx << 5). But the target assembly performs
     // the shift early, so some inline assembly can forcefully cancel this optimization
-    {
-    NitroVM* arg_machine;
-    NitroHandle* arg_handle;
-    unsigned int arg_readStart;
-    unsigned int arg_readEnd;
-    unsigned int arg_capacity;
-
-    __asm("mvn arg_capacity, 0");
-    arg_machine = &machine;
-    __asm("mov arg_handle, romHandle");
-    __asm("add arg_readStart, start, offset");
-    arg_readEnd = start + size;
-    DECLARE_ASM_NOP();
 
     // equiv to NitroVM_PrepareRead(&machine, romHandle, start + (overlayIdx << 5), start + size, -1)
-    if (!NitroVM_PrepareRead(arg_machine, arg_handle, arg_readStart, arg_readEnd, arg_capacity))
+    if (!NitroVM_PrepareRead(&machine, romHandle, start + offset, start + length, -1))
         return false;
-    }
 
     if (NitroVM_ReadSync(&machine, into, 0x20) != 0x20)
     {
@@ -139,21 +127,18 @@ bool LoadOverlayMetadataFromNitro(OverlayMetadata *into, bool isArm7,
 
 bool LoadOverlayMetadata(OverlayMetadata* into, bool isArm7, unsigned int idx)
 {
-    Struct_0211173c::ArmOverlayDataTableData* armData;
-    armData = (!isArm7) ? &data_0211173c.arm9Data : &data_0211173c.arm7Data;
+    Struct_0211173c::ArmOverlayDataTableData* armData = (!isArm7) ? &data_0211173c.arm9Data : &data_0211173c.arm7Data;
 
-    unsigned int offset;
+    
     const char* source = (const char*)armData->start;
     if (source != NULL)
     {
-        if (armData->size <= (offset = idx * 0x20))
+        unsigned int offset = idx * 0x20;
+        if (offset >= armData->size)
             return false;
         const char* shifted;
         OverlayMetadata* copyDst;
-        __asm("mov copyDst, into");
-        __asm("add shifted, source, offset");
-        DECLARE_ASM_NOP();
-        VectorizedInvertedMemcpy(shifted, copyDst, 0x20);
+        VectorizedInvertedMemcpy(source + offset, into, 0x20);
         into->isArm7 = isArm7;
 
         NitroVM machine;
@@ -226,7 +211,7 @@ bool VerifyDownloadPlayStruct(const UnknownDownloadPlayStruct& data,
     VectorizedMemset(&clone, 0, sizeof(UnknownDownloadPlayStruct));
 
     unsigned char buffer[64];
-    VectorizedInvertedMemcpy(data_020f2290.pointer, buffer, data_020f2290.length);
+    VectorizedInvertedMemcpy(data_020f2290.start, buffer, data_020f2290.length);
     func_020c0c3c(&clone, loadAddress, size, buffer, data_020f2290.length);
     
     const unsigned char* source = (const unsigned char*)&data;
