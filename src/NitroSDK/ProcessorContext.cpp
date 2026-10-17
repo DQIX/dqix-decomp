@@ -262,15 +262,10 @@ void CycleCurrentPriorityContexts()
         return;
     }
     
-    if (contextBeforeActive != NULL)
-    {
-        contextBeforeActive->pNext = active->pNext;
-    }
-    else
-    {
-        DECLARE_ASM_NOP();
+    if (contextBeforeActive == NULL)
         data_021112e0.substruct_24.firstContext = active->pNext;
-    }
+    else
+        contextBeforeActive->pNext = active->pNext;
 
     active->pNext = lastEqualPriorityContext->pNext;
     lastEqualPriorityContext->pNext = active;
@@ -308,13 +303,10 @@ bool ChangeContextPriority(ProcessorContext* context, unsigned int newPriority)
     if (loopContext->priority != newPriority)
     {
         // Remove context from the list
-        if (prevContext != NULL)
-            prevContext->pNext = context->pNext;
-        else
-        {
-            DECLARE_ASM_NOP();
+        if (prevContext == NULL)
             data_021112e0.substruct_24.firstContext = context->pNext;
-        }
+        else
+            prevContext->pNext = context->pNext;
         
         context->priority = newPriority;
         InsertContextIntoGlobalList(context);

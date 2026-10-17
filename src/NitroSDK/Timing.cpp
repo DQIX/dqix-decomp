@@ -17,8 +17,6 @@
 
 #define INTERRUPT_REQUEST_FLAGS (*(volatile unsigned int*)0x04000214)
 
-#pragma dont_inline on
-
 #if defined(jpn)
 #define func_020c9be0 func_020cb6ac
 #endif
@@ -88,22 +86,22 @@ unsigned short GetMain16BitTimerCounter()
     return TIMER_N_COUNTER(0);
 }
 
+static inline unsigned short ComputeCounterValue(int64_t timeRemaining)
+{
+    if (timeRemaining < 0)
+        return 0xfffe;
+    else if (timeRemaining < 0x10000)
+        return ~(timeRemaining);
+    return 0;
+}
+
 void MarkNextAlarmToSound(Alarm *timing)
 {
     uint64_t now = GetCurrentTimestamp();
     TIMER_N_CONTROL(1) = 0;
     int64_t timeRemaining = timing->alarmTime - now;
     SetTimerOverflowCallback(1, &Timer1OverflowInterruptRoutine, 0);
-    unsigned short counterValue = 0;
-    if (timeRemaining < 0)
-    {
-        counterValue = 0xfffe;
-    }
-    else if (timeRemaining < 0x10000)
-    {
-        DECLARE_ASM_NOP();
-        counterValue = ~timeRemaining;
-    }
+    unsigned short counterValue = ComputeCounterValue(timeRemaining);
     TIMER_N_COUNTER(1) = counterValue;
     TIMER_N_CONTROL(1) = TIMER_CONTROL_FLAGS_START | TIMER_CONTROL_FLAGS_ENABLE_IRQ_ON_OVERFLOW | TIMER_CONTROL_FLAGS_PRESCALE_64X;
     EnableSpecificInterrupts(IRQ_MASK_TIMER_1_OVERFLOW);
@@ -232,13 +230,10 @@ void CancelAlarm(Alarm *alarm)
     }
 
     Alarm* nextAlarm = alarm->pNext;
-    if (alarm->pNext != NULL)
-        alarm->pNext->pPrev = alarm->pPrev;
-    else
-    {
-        DECLARE_ASM_NOP();
+    if (nextAlarm == NULL)
         data_02111648.pLastAlarm = alarm->pPrev;
-    }
+    else
+        nextAlarm->pPrev = alarm->pPrev;
 
     if (alarm->pPrev != NULL)
         alarm->pPrev->pNext = nextAlarm;

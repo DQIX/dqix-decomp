@@ -39,11 +39,7 @@ void ConfigureDMATransferSafeAtomic(int channel, unsigned src, unsigned dst, uns
     (void)DMARegisters(0).sourceAddr;
     (void)DMARegisters(0).sourceAddr;
 
-    if (channel != 0)
-    {
-        DECLARE_ASM_NOP();
-    }
-    else
+    if (channel == 0)
     {
         regs.sourceAddr = 0;
         regs.destAddr = 0;
@@ -72,11 +68,7 @@ void ConfigureDMATransferSafe(int channel, unsigned src, unsigned dst, unsigned 
     (void)DMARegisters(0).sourceAddr;
     (void)DMARegisters(0).sourceAddr;
 
-    if (channel != 0)
-    {
-        DECLARE_ASM_NOP();
-    }
-    else
+    if (channel == 0)
     {
         regs.sourceAddr = 0;
         regs.destAddr = 0;

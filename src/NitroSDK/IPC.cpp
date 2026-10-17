@@ -139,7 +139,6 @@ IPCResult SendCommandToArm7(int channel, int argument, bool flag)
 
     if (IPC_FIFO_CONTROL & FIFO_CONTROL_MASK_ERROR)
     {
-        DECLARE_ASM_NOP();
         IPC_FIFO_CONTROL |=
             FIFO_CONTROL_MASK_ERROR // acknowledge the error
             | FIFO_CONTROL_MASK_ENABLE;

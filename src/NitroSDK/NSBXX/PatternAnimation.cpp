@@ -51,7 +51,6 @@ const char* NSBXX_PatternAnimation_GetTextureName(NSBXXAnimationMPT* anim, unsig
 {
     if (anim != NULL && idx < anim->numTextureNames_)
     {
-        DECLARE_ASM_NOP();
         return (const char*)((intptr_t)anim + anim->textureNamesOffset_ + idx * 0x10);
     }
     return NULL;
@@ -61,7 +60,6 @@ const char* NSBXX_PatternAnimation_GetPaletteName(NSBXXAnimationMPT* anim, unsig
 {
     if (anim != NULL && idx < anim->numPaletteNames_)
     {
-        DECLARE_ASM_NOP();
         return (const char*)((intptr_t)anim + anim->paletteNamesOffset_ + idx * 0x10);
     }
     return NULL;
