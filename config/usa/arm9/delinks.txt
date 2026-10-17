@@ -25,6 +25,10 @@ src/Grotto/Main/GrottoStruct.cpp:
     complete
     .text start:0x02011738 end:0x02011744
 
+src/Input/Input.cpp:
+    complete
+    .text start:0x02012244 end:0x02012530
+
 src/World/Zone3D.cpp:
     complete
     .text start:0x0201383c end:0x02013b70
@@ -75,7 +79,7 @@ src/World/Object3D.cpp:
 
 src/Resource/Brightness.cpp:
     complete
-    .text start:0x0203aee0 end:0x0203b498
+    .text start:0x0203aee0 end:0x0203b628
 
 src/Graphics/LightingManager.cpp:
     complete

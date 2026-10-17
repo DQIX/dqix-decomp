@@ -40,7 +40,7 @@ from:0x021d92e4 kind:arm_call to:0x0204693c module:main
 from:0x021d9310 kind:arm_call to:0x02012dbc module:main
 from:0x021d9328 kind:arm_call to:0x02012dbc module:main
 from:0x021d9338 kind:arm_call to:0x02012de4 module:main
-from:0x021d9348 kind:arm_call to:0x0218b5a0 module:overlays(15,16,17,19,20,21)
+from:0x021d9348 kind:arm_call to:0x0218b5a0 module:overlay(17)
 from:0x021d9350 kind:arm_call to:0x0203aee0 module:main
 from:0x021d9368 kind:arm_call to:0x020c6cbc module:main
 from:0x021d936c kind:arm_call to:0x0200f398 module:main

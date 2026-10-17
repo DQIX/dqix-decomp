@@ -17,3 +17,4 @@ build.ninja
 .ninja_lock
 /wibo
 ninja.exe
+.clang-format
