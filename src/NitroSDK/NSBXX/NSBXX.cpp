@@ -14,8 +14,6 @@ extern "C"
     unsigned int func_020b2a6c(const void* rawAnim, NSBXXInternalModel* model);
 }
 
-#pragma optimization_level 2
-
 extern "C" AnimationData* NSBXX_Model_AllocateAnimationData(AllocatorUnion* alloc, const void* rawAnim, NSBXXInternalModel* model)
 {
     unsigned int size = func_020b2a6c(rawAnim, model);
@@ -24,63 +22,32 @@ extern "C" AnimationData* NSBXX_Model_AllocateAnimationData(AllocatorUnion* allo
 
 extern "C" void NSBXX_Model_SetAllMaterialFlags(NSBXXInternalModel *model, int value, unsigned int mask)
 {
-    unsigned int numMaterials;
-    unsigned int materialIdx;
-    NSBXXModelMaterialData* materialList;
-    
-    numMaterials = model->numMaterials_;
-    if (model != NULL && model->materialsOffset_ != 0)
-    {
-        materialList = (NSBXXModelMaterialData*)((intptr_t)model + model->materialsOffset_);
-    }
-    else
-        materialList = NULL;
+    unsigned int numMaterials = model->numMaterials_;
+    NSBXXModelMaterialData* materialList = model->GetMaterialData();
 
-    materialIdx = 0;
-    if (materialIdx < numMaterials)
+    for (unsigned int i = 0; i < numMaterials; i++)
     {
-        int antimask = ~mask;
-        do
-        {
-            NSBXXMaterial* material = materialList->GetMaterialByIndex(materialIdx);
-            materialIdx++;
-            if (value)
-                material->flags_ |= mask;
-            else
-                material->flags_ &= antimask;
-        } while (materialIdx < numMaterials);
+        NSBXXMaterial* material = materialList->GetMaterialByIndex(i);
+        if (value)
+            material->flags_ |= mask;
+        else
+            material->flags_ &= ~mask;
     }
 }
 
 // 020b6f64
-extern "C" void NSBXX_Model_AdjustPolygonAttrMask(NSBXXInternalModel* model, bool setBits, unsigned int mask)
+extern "C" void NSBXX_Model_AdjustPolygonAttrMask(NSBXXInternalModel* model, int setBits, unsigned int mask)
 {
-    unsigned int numMaterials;
-    unsigned int materialIdx;
-    NSBXXModelMaterialData* materialData;
-    
-    numMaterials = model->numMaterials_;
-    if (model != NULL && model->materialsOffset_ != 0)
-    {
-        materialData = (NSBXXModelMaterialData*)((intptr_t)model + model->materialsOffset_);
-    }
-    else
-        materialData = NULL;
-    
-    materialIdx = 0;
-    if (numMaterials > UNSIGNED_ZERO())
-    { 
-        int antimask = ~mask;
-        do
-        {
-            NSBXXMaterial* material = materialData->GetMaterialByIndex(materialIdx);
+    unsigned int numMaterials = model->numMaterials_;
+    NSBXXModelMaterialData* materialList = model->GetMaterialData();
 
-            if (setBits)
-                material->maskPOLYGON_ATTR_ |= mask;
-            else
-                material->maskPOLYGON_ATTR_ &= antimask;
-            materialIdx++;
-        } while (materialIdx < numMaterials);
+    for (unsigned int i = 0; i < numMaterials; i++)
+    {
+        NSBXXMaterial* material = materialList->GetMaterialByIndex(i);
+        if (setBits)
+            material->maskPOLYGON_ATTR_ |= mask;
+        else
+            material->maskPOLYGON_ATTR_ &= ~mask;
     }
 }
 
@@ -127,54 +94,26 @@ extern "C" int NSBXX_Model_GetMaterialPolygonID(NSBXXInternalModel* model, unsig
 // 020b726c
 extern "C" void NSBXX_Model_SetDiffuseReflectionColor(NSBXXInternalModel* model, int col)
 {
-    unsigned int matIdx = 0;
-    if (model->numMaterials_ > UNSIGNED_ZERO())
-    {
-        do 
-        {
-            NSBXX_Model_SetMaterialDiffuseReflectionColor(model, matIdx, col);
-            matIdx++;
-        } while (matIdx < model->numMaterials_);
-    }
+    for (unsigned int matIdx = 0; matIdx < model->numMaterials_; matIdx++)
+        NSBXX_Model_SetMaterialDiffuseReflectionColor(model, matIdx, col);
 }
 
 // 020b72ac
 extern "C" void NSBXX_Model_SetAmbientReflectionColor(NSBXXInternalModel* model, int col)
 {
-    unsigned int matIdx = 0;
-    if (model->numMaterials_ > UNSIGNED_ZERO())
-    {
-        do 
-        {
-            NSBXX_Model_SetMaterialAmbientReflectionColor(model, matIdx, col);
-            matIdx++;
-        } while (matIdx < model->numMaterials_);
-    }
+    for (unsigned int matIdx = 0; matIdx < model->numMaterials_; matIdx++)
+        NSBXX_Model_SetMaterialAmbientReflectionColor(model, matIdx, col);
 }
 
 // 020b72ec
 extern "C" void NSBXX_Model_SetPolygonID(NSBXXInternalModel* model, int id)
 {
-    unsigned int matIdx = 0;
-    if (model->numMaterials_ > UNSIGNED_ZERO())
-    {
-        do 
-        {
-            NSBXX_Model_SetMaterialPolygonID(model, matIdx, id);
-            matIdx++;
-        } while (matIdx < model->numMaterials_);
-    }
+    for (unsigned int matIdx = 0; matIdx < model->numMaterials_; matIdx++)
+        NSBXX_Model_SetMaterialPolygonID(model, matIdx, id);
 }
 
 extern "C" void NSBXX_Model_SetAlpha(NSBXXInternalModel* model, int alpha)
 {
-    unsigned int materialIndex = 0;
-    if (model->numMaterials_ > UNSIGNED_ZERO())
-    {
-        do 
-        {
-            NSBXX_Model_SetMaterialAlpha(model, materialIndex, alpha);
-            materialIndex++;
-        } while (materialIndex < model->numMaterials_);
-    }
+    for (unsigned int matIdx = 0; matIdx < model->numMaterials_; matIdx++)
+        NSBXX_Model_SetMaterialAlpha(model, matIdx, alpha);
 }

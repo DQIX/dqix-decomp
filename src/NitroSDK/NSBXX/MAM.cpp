@@ -2,8 +2,6 @@
 #include "Graphics/NSBXX/RenderCommands_Common.h"
 #include "Graphics/NSBXX/Animation.h"
 
-#pragma optimization_level 2
-
 #if defined(jpn)
 #define func_020ca390 func_020cbe5c
 #define data_020f1c80 data_020f1dec
@@ -163,40 +161,26 @@ unsigned short GetAlphaFromMaterialAnimation(NSBXXAnimationMAM* mam, unsigned in
 
 void InitializeModelAnimationFromMAM(AnimationData* anim, void* pvMAM, NSBXXInternalModel* model)
 {   
-    unsigned int track;
-    NSBXXModelMaterialData* materials;
-    if (model != NULL && model->materialsOffset_ != 0)
-        materials = (NSBXXModelMaterialData*)((intptr_t)model + model->materialsOffset_);
-    else
-        materials = NULL;
+    
+    NSBXXModelMaterialData* materials = model->GetMaterialData();
     anim->callback_ = data_020f1c80;
 
     anim->numEntries_ = model->numMaterials_;
     func_020ca390(0, &anim->entries_[0], anim->numEntries_ * 2);
 
     NSBXXAnimationMAM* mam = (NSBXXAnimationMAM*)pvMAM;
-    
-    track = 0;
-    if (track < mam->tracks_.numEntries_)
-    {
-        unsigned int bufferOffset = 0;
-        do
-        {   
-            const char* str = mam->tracks_.GetNameByIndexAndOffset(track, bufferOffset);
-            int idx;
+    for (unsigned int track = 0; track < mam->tracks_.numEntries_; track++)
+    {   
+        const char* str = mam->tracks_.GetNameByIndex(track);
+        int idx;
 
-            if (materials == NULL)
-                idx = -1;
-            else
-                idx = NSBXXNameList_SearchIndex(&materials->materialOffsetList_, str);
+        if (materials == NULL)
+            idx = -1;
+        else
+            idx = NSBXXNameList_SearchIndex(&materials->materialOffsetList_, str);
 
-            if (idx >= 0)
-            {
-                anim->entries_[idx] = track | 0x100;
-            }
-            track++;
-            bufferOffset += 16;
-        } while (track < mam->tracks_.numEntries_);
+        if (idx >= 0)
+            anim->entries_[idx] = track | 0x100;
     }
 }
 

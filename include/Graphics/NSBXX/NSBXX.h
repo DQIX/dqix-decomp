@@ -752,7 +752,7 @@ void NSBXX_Model_SetAllMaterialFlags(NSBXXInternalModel* model, int value, unsig
 // usa: func_020b6f64
 // applies to all materials of the model. If value == 0 then the bits specified
 // by mask will be cleared, otherwise they will be set
-void NSBXX_Model_AdjustPolygonAttrMask(NSBXXInternalModel* model, bool setBits, unsigned int mask);
+void NSBXX_Model_AdjustPolygonAttrMask(NSBXXInternalModel* model, int setBits, unsigned int mask);
 
 // usa: func_020b7184
 // The alpha value can be between 0-31.
