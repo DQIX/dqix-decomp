@@ -30,6 +30,7 @@ void SetUpRenderCommandHandler(RenderCommandHandler* handler, ModelRenderContext
     if (commands == NULL)
         commands = (uint8_t*)modelData->internalModel_ + modelData->internalModel_->renderCommandsOffset_;
     *(uint8_t* volatile*)&handler->instructionPointer_ = commands;
+    
     handler->modelContext_ = modelData;
 
     if (modelData->internalModel_ != NULL)
@@ -74,25 +75,15 @@ void SetUpRenderCommandHandler(RenderCommandHandler* handler, ModelRenderContext
 
 void PopulateBitfieldFromAnimData(unsigned int* bitfield, AnimationData* anim)
 {
-    if (anim == NULL)
-        return;
-
-    do
+    while (anim != NULL)
     {
-        int counter = 0;
-        if (counter < anim->numEntries_)
+        for (int counter = 0; counter < anim->numEntries_; counter++)
         {
-            do
-            {
-                if (anim->entries_[counter] & 0x100)
-                {
-                    bitfield[counter >> 5] |= 1 << (counter & 0x1f);
-                }
-                counter++;
-            } while (counter < anim->numEntries_);
+            if (anim->entries_[counter] & 0x100)
+                bitfield[counter >> 5] |= 1 << (counter & 0x1f);
         }
         anim = anim->pNext_;
-    } while (anim != NULL);
+    }
 }
 
 void RenderModelFromRenderData(ModelRenderContext* renderData)
@@ -170,7 +161,7 @@ void RenderCommand_2(RenderCommandHandler* handler, int modifier)
         {
             ModelRenderContext* modelData = handler->modelContext_;
             if (modelData->visibilityAnimations_ == NULL ||
-                !(modelData->animatedVisibilityConditions_[conditionIdx >> 5] & (1 << (conditionIdx & 0x1f))) ||
+                !TestBitfieldBit(modelData->animatedVisibilityConditions_, conditionIdx) ||
                 !modelData->pfnProcessVisibilityAnimations_(handler->pCommand2Word_, modelData->visibilityAnimations_, conditionIdx))
             {
                 *handler->pCommand2Word_ = handler->instructionPointer_[2] & 1;
@@ -227,9 +218,7 @@ void RenderCommand_3(RenderCommandHandler* handler, int modifier)
         {
             uint32_t stackPos = handler->instructionPointer_[1];
             if (!(handler->flags_ & (1 << RCH_FLAG_8)))
-            {
                 SubmitCommandToGeometryFifo(GXFifoCommand_GetMatrix, &stackPos, 1);
-            }
         }
 
         if (callbackStage == 3)
@@ -265,10 +254,8 @@ void MaterialBindProc(RenderCommandHandler* handler, int modifier, NSBXXMaterial
         MaterialRenderData* targetData;
         MaterialRenderData* modelMaterialArray = handler->modelContext_->materialRenderDataArray_;
         if (modelMaterialArray != NULL && !(handler->flags_ & (1 << RCH_FLAG_7)))
-        {
             targetData = &modelMaterialArray[idx];
-        }
-        else if ((modifier == 0x20 || modifier == 0x40) && (handler->materialBitfield_[idx >> 5] & (1 << (idx & 0x1f))))
+        else if ((modifier == 0x20 || modifier == 0x40) && TestBitfieldBit(handler->materialBitfield_, idx))
         {
             if (modelMaterialArray != NULL)
                 targetData = &modelMaterialArray[idx];
@@ -279,14 +266,14 @@ void MaterialBindProc(RenderCommandHandler* handler, int modifier, NSBXXMaterial
         {
             if (modelMaterialArray != NULL)
             {
-                handler->materialBitfield_[idx >> 5] |= (1 << (idx & 0x1f));
+                SetBitfieldBit(handler->materialBitfield_, idx);
                 targetData = &handler->modelContext_->materialRenderDataArray_[idx];
             }
             else
             {
                 if (!(modifier != 0x40))
                 {
-                    handler->materialBitfield_[idx >> 5] |= (1 << (idx & 0x1f));
+                    SetBitfieldBit(handler->materialBitfield_, idx);
                     targetData = &data_0210a278[idx];
                 }
                 else
@@ -296,9 +283,8 @@ void MaterialBindProc(RenderCommandHandler* handler, int modifier, NSBXXMaterial
             targetData->flags_ = 0;
             NSBXXMaterial* lookupMaterial = handler->modelMaterials_->GetMaterialByIndex(idx);
             if (lookupMaterial->flags_ & 0x20)
-            {
                 targetData->flags_ |= 0x20;
-            }
+            
             int difambMask = data_020e9240[(material->flags_ >> 6) & 7];
             targetData->paramDIF_AMB_ = (data_0210a010.diffuseAmbientArg & ~difambMask) |
                 (material->paramDIF_AMB_ & difambMask);
@@ -351,12 +337,10 @@ void MaterialBindProc(RenderCommandHandler* handler, int modifier, NSBXXMaterial
             }
 
             ModelRenderContext* modelData = handler->modelContext_;
-            if (modelData->materialAnimations_ != NULL && (modelData->animatedMaterials_[idx >> 5] & (1 << (idx & 0x1f))))
-            {
+            if (modelData->materialAnimations_ != NULL && TestBitfieldBit(modelData->animatedMaterials_, idx))
                 modelData->pfnProcessMaterialAnimations_(targetData, modelData->materialAnimations_, idx);
-            }
 
-            if (targetData->flags_ & 0x18)
+            if (targetData->flags_ & (0x10 | 0x08))
             {
                 targetData->materialWidth_ = material->width_;
                 targetData->materialHeight_ = material->height_;
@@ -402,7 +386,7 @@ void MaterialBindProc(RenderCommandHandler* handler, int modifier, NSBXXMaterial
                 commands[6] = targetData->texturePaletteBase_;
                 SubmitCommandToGeometryFifo(commands[0], &commands[1], 6);
 
-                if (targetData->flags_ & 0x18)
+                if (targetData->flags_ & (0x10 | 0x08))
                     handler->textureMatrixCreateProc_(targetData);
             }
         }
@@ -575,12 +559,9 @@ void RenderCommand_6(RenderCommandHandler* handler, int modifier)
                     targetData->translate_.z = translation->z;
                     boneMatrixExtraPtr += sizeof(*translation);
                 }
-                    
 
                 if (boneMatrix->flags_ & 2) // does not have any kind of rotation
-                {
                     targetData->flags_ |= 2;
-                }
                 else if (boneMatrix->flags_ & 8) // use pivot matrix
                 {
                     int form = (boneMatrix->flags_ & 0xf0) >> 4;
@@ -631,7 +612,9 @@ void RenderCommand_6(RenderCommandHandler* handler, int modifier)
                     boneMatrixExtraPtr += sizeof(*rotation);
                 }
 
-                handler->boneMatrixRenderDataScalePopulateProc_(targetData, (NSBXXBoneMatrix::Scaling*)boneMatrixExtraPtr, handler->instructionPointer_, boneMatrix->flags_);
+                handler->boneMatrixRenderDataScalePopulateProc_(targetData,
+                    (NSBXXBoneMatrix::Scaling*)boneMatrixExtraPtr,
+                    handler->instructionPointer_, boneMatrix->flags_);
             }
         }
         handler->pBoneMatrixRenderData_ = targetData;
@@ -679,7 +662,7 @@ void RenderCommand_6(RenderCommandHandler* handler, int modifier)
 // seems to be used for free billboarding, i.e. making stuff turn in any
 // direction to face the camera. Noticeable with evac animation.
 // parameters:
-// 1) 
+// 1) ???
 // if modifier & 0x20: stack position to store result at the end
 // if modifier & 0x40: stack position of matrix to retrieve at the start, i.e. 
 // you'll retrieve a matrix off the stack and pre-multiply that by the bone matrix
@@ -967,10 +950,9 @@ void RenderCommand_9(RenderCommandHandler* handler, int modifier)
     NSBXXInternalModel* model = handler->modelContext_->internalModel_;    
     const NSBXXInvBindMatrix* invBindMatrices = (NSBXXInvBindMatrix*)((intptr_t)model + model->inverseBindsOffset_);
     unsigned int numTerms = handler->instructionPointer_[2];
-    NSBXXInvBindMatrix localCopy;
-    
     uint8_t* instructionPtr = handler->instructionPointer_ + 3;
     
+    NSBXXInvBindMatrix localCopy;
     func_020ca458(0, &localCopy, sizeof(NSBXXInvBindMatrix));
     SendQueuedDataToGeometryFifo();
 
@@ -979,17 +961,15 @@ void RenderCommand_9(RenderCommandHandler* handler, int modifier)
     GXFIFO_MATRIX_IDENTITY = 0;
     GXFIFO_MATRIX_MODE = 2; // position+vector
 
-    Struct_0210b678* ptr_r7;
-    fix32_t* mat3x3_unaffr8;
+    Matrix4x4* cachedPosMatrix;
+    Matrix3x3* cachedDirMatrix;
     
-    unsigned int termCounter = 0;
-    for (termCounter = 0; termCounter < numTerms; termCounter++)
+    for (unsigned int termCounter = 0; termCounter < numTerms; termCounter++)
     {
         unsigned int inverseBindIndex = instructionPtr[1];
-        unsigned int offset = inverseBindIndex * sizeof(Struct_0210b678);
         
         int inBitfield = TestBitfieldBit(handler->invBindBitfield_, inverseBindIndex);
-        ptr_r7 = (Struct_0210b678*)((char*)data_0210b678 + offset);
+        cachedPosMatrix = &data_0210b078.matrixData[inverseBindIndex].mat4x4;
         if (!inBitfield)
         {
             SetBitfieldBit(handler->invBindBitfield_, inverseBindIndex);
@@ -1001,55 +981,53 @@ void RenderCommand_9(RenderCommandHandler* handler, int modifier)
 
         if (termCounter != 0)
         {
-            localCopy.mat3x3.entries[0] += (weight * mat3x3_unaffr8[0]) >> 12;
-            localCopy.mat3x3.entries[1] += (weight * mat3x3_unaffr8[1]) >> 12;
-            localCopy.mat3x3.entries[2] += (weight * mat3x3_unaffr8[2]) >> 12;
-            localCopy.mat3x3.entries[3] += (weight * mat3x3_unaffr8[3]) >> 12;
-            localCopy.mat3x3.entries[4] += (weight * mat3x3_unaffr8[4]) >> 12;
-            localCopy.mat3x3.entries[5] += (weight * mat3x3_unaffr8[5]) >> 12;
-            localCopy.mat3x3.entries[6] += (weight * mat3x3_unaffr8[6]) >> 12;
-            localCopy.mat3x3.entries[7] += (weight * mat3x3_unaffr8[7]) >> 12;
-            localCopy.mat3x3.entries[8] += (weight * mat3x3_unaffr8[8]) >> 12;
+            localCopy.mat3x3.entries[0] += (weight * cachedDirMatrix->entries[0]) >> 12;
+            localCopy.mat3x3.entries[1] += (weight * cachedDirMatrix->entries[1]) >> 12;
+            localCopy.mat3x3.entries[2] += (weight * cachedDirMatrix->entries[2]) >> 12;
+            localCopy.mat3x3.entries[3] += (weight * cachedDirMatrix->entries[3]) >> 12;
+            localCopy.mat3x3.entries[4] += (weight * cachedDirMatrix->entries[4]) >> 12;
+            localCopy.mat3x3.entries[5] += (weight * cachedDirMatrix->entries[5]) >> 12;
+            localCopy.mat3x3.entries[6] += (weight * cachedDirMatrix->entries[6]) >> 12;
+            localCopy.mat3x3.entries[7] += (weight * cachedDirMatrix->entries[7]) >> 12;
+            localCopy.mat3x3.entries[8] += (weight * cachedDirMatrix->entries[8]) >> 12;
         }
         if (!inBitfield)
         {
-            while (func_020c54fc(&ptr_r7->mat4x4) != 0) {}
+            while (func_020c54fc(cachedPosMatrix) != 0) {}
             GXFIFO_MATRIX_MODE = 2; // position+vector
             func_020c51c0(invBindMatrices[inverseBindIndex].mat3x3.entries);
         }
         weight = instructionPtr[2] << 4; // as int -> fixed point this is division by 256
-        localCopy.mat4x3.entries[0] +=  (weight * ptr_r7->mat4x4.entries[ 0]) >> 12;
-        localCopy.mat4x3.entries[1] +=  (weight * ptr_r7->mat4x4.entries[ 1]) >> 12;
-        localCopy.mat4x3.entries[2] +=  (weight * ptr_r7->mat4x4.entries[ 2]) >> 12;
-        localCopy.mat4x3.entries[3] +=  (weight * ptr_r7->mat4x4.entries[ 4]) >> 12;
-        localCopy.mat4x3.entries[4] +=  (weight * ptr_r7->mat4x4.entries[ 5]) >> 12;
-        localCopy.mat4x3.entries[5] +=  (weight * ptr_r7->mat4x4.entries[ 6]) >> 12;
-        localCopy.mat4x3.entries[6] +=  (weight * ptr_r7->mat4x4.entries[ 8]) >> 12;
-        localCopy.mat4x3.entries[7] +=  (weight * ptr_r7->mat4x4.entries[ 9]) >> 12;
-        localCopy.mat4x3.entries[8] +=  (weight * ptr_r7->mat4x4.entries[10]) >> 12;
-        localCopy.mat4x3.entries[9] +=  (weight * ptr_r7->mat4x4.entries[12]) >> 12;
-        localCopy.mat4x3.entries[10] += (weight * ptr_r7->mat4x4.entries[13]) >> 12;
-        localCopy.mat4x3.entries[11] += (weight * ptr_r7->mat4x4.entries[14]) >> 12;
+        localCopy.mat4x3.entries[0] +=  (weight * cachedPosMatrix->entries[ 0]) >> 12;
+        localCopy.mat4x3.entries[1] +=  (weight * cachedPosMatrix->entries[ 1]) >> 12;
+        localCopy.mat4x3.entries[2] +=  (weight * cachedPosMatrix->entries[ 2]) >> 12;
+        localCopy.mat4x3.entries[3] +=  (weight * cachedPosMatrix->entries[ 4]) >> 12;
+        localCopy.mat4x3.entries[4] +=  (weight * cachedPosMatrix->entries[ 5]) >> 12;
+        localCopy.mat4x3.entries[5] +=  (weight * cachedPosMatrix->entries[ 6]) >> 12;
+        localCopy.mat4x3.entries[6] +=  (weight * cachedPosMatrix->entries[ 8]) >> 12;
+        localCopy.mat4x3.entries[7] +=  (weight * cachedPosMatrix->entries[ 9]) >> 12;
+        localCopy.mat4x3.entries[8] +=  (weight * cachedPosMatrix->entries[10]) >> 12;
+        localCopy.mat4x3.entries[9] +=  (weight * cachedPosMatrix->entries[12]) >> 12;
+        localCopy.mat4x3.entries[10] += (weight * cachedPosMatrix->entries[13]) >> 12;
+        localCopy.mat4x3.entries[11] += (weight * cachedPosMatrix->entries[14]) >> 12;
 
         instructionPtr += 3;
-        // very stupid but this was the only way to avoid optimizing out
-        // the data_0210b678+0x40 reference
-        mat3x3_unaffr8 = (fix32_t*)((char*)&data_0210b678[0].mat3x3.entries[0] + offset);
+        cachedDirMatrix = &data_0210b078.matrixData[inverseBindIndex].mat3x3;
         if (!inBitfield)
         {
-            while (func_020c552c(mat3x3_unaffr8) != 0) {}
+            while (func_020c552c(cachedDirMatrix) != 0) {}
         }
     }
 
-    localCopy.mat3x3.entries[0] += (weight * mat3x3_unaffr8[0]) >> 12;
-    localCopy.mat3x3.entries[1] += (weight * mat3x3_unaffr8[1]) >> 12;
-    localCopy.mat3x3.entries[2] += (weight * mat3x3_unaffr8[2]) >> 12;
-    localCopy.mat3x3.entries[3] += (weight * mat3x3_unaffr8[3]) >> 12;
-    localCopy.mat3x3.entries[4] += (weight * mat3x3_unaffr8[4]) >> 12;
-    localCopy.mat3x3.entries[5] += (weight * mat3x3_unaffr8[5]) >> 12;
-    localCopy.mat3x3.entries[6] += (weight * mat3x3_unaffr8[6]) >> 12;
-    localCopy.mat3x3.entries[7] += (weight * mat3x3_unaffr8[7]) >> 12;
-    localCopy.mat3x3.entries[8] += (weight * mat3x3_unaffr8[8]) >> 12;
+    localCopy.mat3x3.entries[0] += (weight * cachedDirMatrix->entries[0]) >> 12;
+    localCopy.mat3x3.entries[1] += (weight * cachedDirMatrix->entries[1]) >> 12;
+    localCopy.mat3x3.entries[2] += (weight * cachedDirMatrix->entries[2]) >> 12;
+    localCopy.mat3x3.entries[3] += (weight * cachedDirMatrix->entries[3]) >> 12;
+    localCopy.mat3x3.entries[4] += (weight * cachedDirMatrix->entries[4]) >> 12;
+    localCopy.mat3x3.entries[5] += (weight * cachedDirMatrix->entries[5]) >> 12;
+    localCopy.mat3x3.entries[6] += (weight * cachedDirMatrix->entries[6]) >> 12;
+    localCopy.mat3x3.entries[7] += (weight * cachedDirMatrix->entries[7]) >> 12;
+    localCopy.mat3x3.entries[8] += (weight * cachedDirMatrix->entries[8]) >> 12;
 
     func_020c5188(localCopy.mat3x3.entries); // isn't this supposed to take a 3x4 matrix?
     GXFIFO_MATRIX_MODE = 1;

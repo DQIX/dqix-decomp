@@ -124,13 +124,19 @@ struct Struct_0210b078
 {
     Vector3fix vec0_;
     BoneMatrixRenderData::Scale vec1_;
-} extern data_0210b078[64];
+};
 
 struct Struct_0210b678
 {
     Matrix4x4 mat4x4;
     Matrix3x3 mat3x3;
-} extern data_0210b678[];
+};
+
+extern struct
+{
+    Struct_0210b078 vectorData[64];
+    Struct_0210b678 matrixData[64];
+} data_0210b078;
 
 extern "C"
 {  
