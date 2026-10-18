@@ -14,6 +14,7 @@
 #define KEY_Y 0x800
 
 extern class KeyManager g_keyManager;
+extern class TouchInput g_touchInput;
 
 class KeyManager
 {
@@ -79,4 +80,56 @@ public:
     void SetInputEnabled(bool enabled);
 
     static inline KeyManager* GetInstance() { return &g_keyManager; }
+};
+
+// sizeof <= 0x70
+class TouchInput
+{
+public:
+    char unk_0[0x20];
+    // first two args are x and y coords
+    unsigned short sdkData_20_[4];
+    unsigned short sdkData_28_[4];
+    int unknown_30_;
+    int unknown_34_;
+    int prevX_38_;
+    int prevY_3c_;
+    int unknown_40_;
+    int unknown_44_;
+    int unknown_48_;
+    int unknown_4c_;
+    bool movedUp_50_;
+    bool movedLeft_51_;
+    bool movedDown_52_;
+    bool movedRight_53_;
+    char unk_54[2];
+    unsigned char unknown_56_;
+    char pad_57[1];
+    int unknown_58_;
+    char unk_5c[1];
+    unsigned char unknown_5d_;
+    char unk_5e[1];
+    unsigned char unknown_5f_;
+    unsigned char unknown_60_;
+    bool unknown_61_;
+    bool unknown_62_;
+    char pad_63[1];
+    int unknown_64_;
+    int unknown_68_;
+    int unknown_6c_;
+
+public:
+    // (blank) usa: func_02012530
+    TouchInput();
+    // (blank) usa: func_02012534
+    ~TouchInput();
+
+    static inline TouchInput* GetInstance() { return &g_touchInput; }
+
+    bool TestTouchRectangle(int x, int y, int w, int h) const;
+    void ClearMoveFlags();
+    int GetMovementLength() const;
+    void ComputeMoveFlags();
+
+    void Initialize();
 };

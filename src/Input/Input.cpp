@@ -13,12 +13,30 @@ unsigned short ComputeCurrentKeys();
 
 extern "C"
 {
+    // calculates a square root, but not sure if this is libc sqrt?
+    // could it be a compiler intrinsic (it's between other compiler intrinsics)?
+    double func_0200b454(double);
+
+    void func_0201289c(TouchInput*);
+    void func_02012938(TouchInput*);
+
     void* func_0205ec34();
     // set flag in some big flag mask
     void func_0206df6c(void*, void*, int, bool);
     // get signed brightness
     int func_020c39c8(volatile unsigned short*);
+
+    // abort() or similar
+    void func_020c9be0();
+
+    // set up IPC channel 6 (input related?)
+    void func_020cd890();
+
+    int func_020cd908(void*);
+    int func_020cd99c(void*);
 }
+
+extern TouchInput* data_020fb3cc;
 
 void KeyManager::Initialize()
 {
@@ -182,4 +200,75 @@ void KeyManager::Clear()
 void KeyManager::SetInputEnabled(bool enabled)
 {
     receivingInput_ = enabled;
+}
+
+TouchInput::TouchInput()
+{
+}
+
+TouchInput::~TouchInput()
+{
+}
+
+bool TouchInput::TestTouchRectangle(int x, int y, int w, int h) const
+{
+    unsigned short pointX = sdkData_20_[0];
+    unsigned short pointY = sdkData_20_[1];
+    if (pointX < x)
+        return false;
+    if (pointX > x + w)
+        return false;
+    if (pointY < y)
+        return false;
+    if (pointY > y + h)
+        return false;
+    return true;
+}
+
+void TouchInput::ClearMoveFlags()
+{
+    movedDown_52_ = false;
+    movedRight_53_ = false;
+    movedLeft_51_ = false;
+    movedUp_50_ = false;
+}
+
+int TouchInput::GetMovementLength() const
+{
+    int dx = prevX_38_ - sdkData_20_[0];
+    int dy = prevY_3c_ - sdkData_20_[1];
+    return func_0200b454(dx * dx + dy * dy);
+}
+
+void TouchInput::ComputeMoveFlags() 
+{
+    ClearMoveFlags();
+    if (prevX_38_ < sdkData_20_[0])
+        movedRight_53_ = true;
+    if (prevX_38_ > sdkData_20_[0])
+        movedLeft_51_ = true;
+    if (prevY_3c_ < sdkData_20_[1])
+        movedDown_52_ = true;
+    if (prevY_3c_ > sdkData_20_[1])
+        movedUp_50_ = true;
+}
+
+void TouchInput::Initialize()
+{
+    data_020fb3cc = this;
+    func_0201289c(this);
+    unknown_61_ = true;
+    func_020cd890();
+    if (!func_020cd908(sdkData_28_))
+        func_020c9be0();
+
+    func_020cd99c(sdkData_28_);
+    func_02012938(this);
+    unknown_60_ = 0;
+    unknown_64_ = 0;
+    unknown_68_ = -1;
+    unknown_6c_ = -1;
+    unknown_62_ = false;
+    unknown_30_ = -1;
+    unknown_34_ = -1;
 }
