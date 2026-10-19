@@ -2,6 +2,15 @@
 
 #include "../NitroSDK/TouchScreen.h"
 
+// Input notation:
+// - 'held': the key is currently being held down, or the stylus is currently
+//   making physical contact with the screen, and it has been this way for some
+//   number of frmaes;
+// - 'pressed': you just pressed the key/screen now, it wasn't held down last frame
+//   but this frame it is
+// - 'released': you just released the key/screen now, it was held down last frame
+//   and this frame it isn't
+
 #define KEY_A 0x1
 #define KEY_B 0x2
 #define KEY_SELECT 0x4
@@ -84,7 +93,7 @@ public:
     static inline KeyManager* GetInstance() { return &g_keyManager; }
 };
 
-// sizeof <= 0x70
+// sizeof == 0x70
 class TouchInput
 {
 public:
@@ -92,38 +101,38 @@ public:
     // first two args are x and y coords
     TouchScreenSample currentReading_;
     TouchScreenCalibration calibration_;
-    int unknown_30_;
-    int unknown_34_;
+    int pressX_;
+    int pressY_;
     int prevX_;
     int prevY_;
-    int timeHeld_;
-    int prevTimeHeld_;
-    int timeSinceLastTouch_;
-    int timeHeldStill_;
+    int timeHeld_; // accumulates while holding, resets on release
+    int prevTimeHeld_; // value of timeHeld at last release
+    int timeSinceLastTouch_; // accumulates while not holding, resets while holding
+    int timeHeldStill_; 
     bool movedUp_;
     bool movedLeft_;
     bool movedDown_;
     bool movedRight_;
-    // set for one frame immediately when the screen is released
-    bool released_;
-    bool pressed_;
-    unsigned char unknown_56_;
+    bool released_; // +0x54
+    bool pressed_; // +0x55, accessed publicly by other functions
+    // this seems weirdly specific
+    bool resetStillTimerOnMove_;
     char pad_57[1];
     int repeatTimer_;
     bool repeatFired_;
-    bool isHeld_;
-    bool wasHeld_;
+    bool heldThisFrame_;
+    bool heldLastFrame_;
     // starts out as false and set as soon as the screen spends a frame
     // not being held, prevents touch repeat from firing if you're holding
     // the screen down at the start
-    bool repeatValid_;
+    bool isRepeatValid_;
     bool paused_;
     bool enabled_;
-    bool unknown_62_;
-    bool savedRepeatValid_;
-    int unknown_64_;
-    int saved30_68_;
-    int saved34_6c_;
+    bool isSavedPressPointValid_;
+    bool savedIsRepeatValid_;
+    int savedTimeHeld_;
+    int savedPressX_;
+    int savedPressY_;
 
 public:
     // (blank) usa: func_02012530
@@ -147,7 +156,9 @@ public:
     void Unpause();
 
     bool UpdateCurrentReading();
-    void GetLastTouchPoint(int* outX, int* outY) const;
+    // gets data from current frame if held and previous frame otherwise
+    // (so you get valid data on the release frame too)
+    void GetTouchPoint(int* outX, int* outY) const;
     // returns true if you've just pressed the screen, i.e. you weren't
     // touching last frame
     bool IsPressed() const;

@@ -229,14 +229,14 @@ bool TouchInput::RefreshState()
         prevY_ = currentReading_.y;
         if (!UpdateCurrentReading())
             return false;
-        wasHeld_ = isHeld_;
+        heldLastFrame_ = heldThisFrame_;
         if (!currentReading_.isHeld)
         {
             released_ = true;
-            isHeld_ = false;
+            heldThisFrame_ = false;
         }
         else
-            isHeld_ = true;
+            heldThisFrame_ = true;
         ComputeMoveFlags();
         repeatFired_ = TestTouchRepeat();
         return currentReading_.isHeld;
@@ -245,8 +245,8 @@ bool TouchInput::RefreshState()
     {
         prevX_ = currentReading_.x;
         prevY_ = currentReading_.y;
-        wasHeld_ = isHeld_;
-        isHeld_ = true;
+        heldLastFrame_ = heldThisFrame_;
+        heldThisFrame_ = true;
         released_ = false;
         if (!UpdateCurrentReading())
             return false;
@@ -254,25 +254,25 @@ bool TouchInput::RefreshState()
         if (currentReading_.isHeld)
         {
             pressed_ = true;
-            if (saved30_68_ >= 0 || saved34_6c_ >= 0)
+            if (savedPressX_ >= 0 || savedPressY_ >= 0)
             {
-                unknown_30_ = saved30_68_;
-                unknown_34_ = saved34_6c_;
+                pressX_ = savedPressX_;
+                pressY_ = savedPressY_;
             }
             else
-                GetLastTouchPoint(&unknown_30_, &unknown_34_);
-            isHeld_ = true;
+                GetTouchPoint(&pressX_, &pressY_);
+            heldThisFrame_ = true;
         }
         else
         {
             prevX_ = currentReading_.x;
             prevY_ = currentReading_.y;
-            isHeld_ = false;
+            heldThisFrame_ = false;
         }
 
-        if (!unknown_62_)
-            saved30_68_ = saved34_6c_ = -1;
-        savedRepeatValid_ = false;
+        if (!isSavedPressPointValid_)
+            savedPressX_ = savedPressY_ = -1;
+        savedIsRepeatValid_ = false;
         repeatFired_ = TestTouchRepeat();
         return currentReading_.isHeld;
     }
@@ -333,35 +333,35 @@ void TouchInput::Initialize()
     SaveTouchScreenCalibration(&calibration_);
     Unpause();
     paused_ = 0;
-    unknown_64_ = 0;
-    saved30_68_ = -1;
-    saved34_6c_ = -1;
-    unknown_62_ = false;
-    unknown_30_ = -1;
-    unknown_34_ = -1;
+    savedTimeHeld_ = 0;
+    savedPressX_ = -1;
+    savedPressY_ = -1;
+    isSavedPressPointValid_ = false;
+    pressX_ = -1;
+    pressY_ = -1;
 }
 
 void TouchInput::InternalClearCurrentInput()
 {
-    unknown_30_ = unknown_34_ = -1;
+    pressX_ = pressY_ = -1;
     ClearMoveFlags();
     timeSinceLastTouch_ = 0;
     timeHeld_ = 0;
     prevTimeHeld_ = 0;
-    unknown_56_ = 0;
+    resetStillTimerOnMove_ = false;
     repeatTimer_ = 0;
-    isHeld_ = false;
-    repeatValid_ = false;
+    heldThisFrame_ = false;
+    isRepeatValid_ = false;
 }
 
 void TouchInput::Pause()
 {
-    savedRepeatValid_ = repeatValid_;
-    unknown_64_ = timeHeld_;
-    if (unknown_30_ >= 0)
-        saved30_68_ = unknown_30_;
-    if (unknown_34_ >= 0)
-        saved34_6c_ = unknown_34_;
+    savedIsRepeatValid_ = isRepeatValid_;
+    savedTimeHeld_ = timeHeld_;
+    if (pressX_ >= 0)
+        savedPressX_ = pressX_;
+    if (pressY_ >= 0)
+        savedPressY_ = pressY_;
     DisableTouchScreen();
     WaitForTouchScreenOperations(4);
     (void)GetTouchScreenErrors(4);
@@ -373,36 +373,36 @@ void TouchInput::Pause()
 void TouchInput::Unpause()
 {
     SetTouchScreenCallback(&TouchInputMessageHandler);
-    unknown_62_ = true;
+    isSavedPressPointValid_ = true;
     InternalClearCurrentInput();
     EnableTouchScreen(0, 1, sampleBuffer_, 4);
     WaitForTouchScreenOperations(2);
     (void)GetTouchScreenErrors(2);
     paused_ = false;
-    repeatValid_ = savedRepeatValid_;
-    timeHeld_ = unknown_64_;
+    isRepeatValid_ = savedIsRepeatValid_;
+    timeHeld_ = savedTimeHeld_;
 
-    if (saved30_68_ >= 0)
-        unknown_30_ = saved30_68_;
-    if (saved34_6c_ >= 0)
-        unknown_34_ = saved34_6c_;
+    if (savedPressX_ >= 0)
+        pressX_ = savedPressX_;
+    if (savedPressY_ >= 0)
+        pressY_ = savedPressY_;
 }
 
 bool TouchInput::UpdateCurrentReading()
 {
     GetTouchScreenDataAsPixels(&currentReading_);
-    if (!repeatValid_)
+    if (!isRepeatValid_)
     {
         if (currentReading_.isHeld)
             return false;
-        repeatValid_ = true;
+        isRepeatValid_ = true;
     }
 
     if (currentReading_.isHeld && currentReading_.missingCoordFlags == 0)
     {
         timeHeld_++;
         timeSinceLastTouch_ = 0;
-        if (unknown_56_ != 0 && GetMovementLength() > 1)
+        if (resetStillTimerOnMove_ && GetMovementLength() > 1)
             timeHeldStill_ = 0;
         else if (GetMovementLength() < 1)
             timeHeldStill_++;
@@ -419,7 +419,7 @@ bool TouchInput::UpdateCurrentReading()
     return true;
 }
 
-void TouchInput::GetLastTouchPoint(int* outX, int* outY) const 
+void TouchInput::GetTouchPoint(int* outX, int* outY) const 
 {
     if (currentReading_.isHeld)
     {
@@ -435,7 +435,7 @@ void TouchInput::GetLastTouchPoint(int* outX, int* outY) const
 
 bool TouchInput::IsPressed() const
 {
-    if (isHeld_ && !wasHeld_)
+    if (heldThisFrame_ && !heldLastFrame_)
         return true;
     return false;
 }
@@ -443,7 +443,7 @@ bool TouchInput::IsPressed() const
 bool TouchInput::TestTouchRepeat()
 {
     bool validHold = false;
-    if (repeatValid_ && currentReading_.isHeld)
+    if (isRepeatValid_ && currentReading_.isHeld)
         validHold = true;
 
     if (validHold)
@@ -463,7 +463,7 @@ bool TouchInput::TestTouchRepeat()
         }
         repeatTimer_--;
     }
-    else if (!repeatValid_ || !currentReading_.isHeld)
+    else if (!isRepeatValid_ || !currentReading_.isHeld)
         repeatTimer_ = 0;
 
     return false;
@@ -472,7 +472,7 @@ bool TouchInput::TestTouchRepeat()
 bool TouchInput::IsTouchPointAtEdge() const
 {
     int x, y;
-    GetLastTouchPoint(&x, &y);
+    GetTouchPoint(&x, &y);
     if (x < 2)
         return true;
     if (x > 253)
@@ -498,6 +498,6 @@ void TouchInputMessageHandler(int type, unsigned char, unsigned char)
 {
     if (type == 16)
     {
-        data_020fb3cc->unknown_62_ = false;
+        data_020fb3cc->isSavedPressPointValid_ = false;
     }
 }
