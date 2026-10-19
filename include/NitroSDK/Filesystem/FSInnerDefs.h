@@ -4,7 +4,7 @@
 #include "LowNitroHandle.h"
 #include "FileAccessor.h"
 #include "CardReadManager.h"
-#include "System/ProcessorContext.h"
+#include "../ProcessorContext.h"
 
 #if defined(jpn)
 #define func_020d1198 func_020d2c64

@@ -1,8 +1,8 @@
-#include "Filesystem/OverlayFSManagement.h"
-#include "Filesystem/FSInnerDefs.h"
-#include "System/Cache.h"
-#include "System/Memory.h"
-#include "System/BiosData.h"
+#include "NitroSDK/Filesystem/OverlayFSManagement.h"
+#include "NitroSDK/Filesystem/FSInnerDefs.h"
+#include "NitroSDK/Cache.h"
+#include "NitroSDK/Memory.h"
+#include "NitroSDK/BiosData.h"
 #include <globaldefs.h>
 #include <asmhacks.h>
 

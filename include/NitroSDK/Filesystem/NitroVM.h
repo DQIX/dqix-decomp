@@ -1,6 +1,7 @@
 #pragma once
 
-#include "System/ProcessorContext.h"
+#include "../ProcessorContext.h"
+#include <std_library_functions.h>
 
 template<class T>
 struct FSListHeader
@@ -11,8 +12,6 @@ struct FSListHeader
 
 struct NitroHandle;
 struct NitroVM;
-
-typedef int CBool;
 
 // The FS72 struct seems to hold a bunch of values that are used
 // for various different purposes by different commands. It seems they're

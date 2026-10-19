@@ -1,6 +1,6 @@
-#include "System/Timing.h"
-#include "System/Interrupts.h"
-#include "System/DTCM.h"
+#include "NitroSDK/Timing.h"
+#include "NitroSDK/Interrupts.h"
+#include "NitroSDK/DTCM.h"
 #include <globaldefs.h>
 #include <asmhacks.h>
 

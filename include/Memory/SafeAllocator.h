@@ -1,6 +1,6 @@
 #pragma once
 
-#include "AllocatorUnion.h"
+#include "../NitroSDK/Memory/AllocatorUnion.h"
 
 // This appears to be the most abstracted form of a memory allocator,
 // and also the one used in the most high-level code. It seems to be a wrapper

@@ -56,29 +56,27 @@
 
 #define GXSTATUS (*(volatile unsigned int*)0x04000600)
 
-#define BLEND_TARGET_BG0 1
-#define BLEND_TARGET_BG1 2
-#define BLEND_TARGET_BG2 4
-#define BLEND_TARGET_BG3 8
-#define BLEND_TARGET_OBJ 0x10
-#define BLEND_TARGET_BACKDROP 0x20
+#define DIVCNT (*(volatile unsigned short*)0x04000280)
 
-#define DISPCNT_MASK_BG_MODE 7
-// right shift by 24 for numerical value
-#define DISPCNT_MASK_CHARACTER_BASE_64K 0x07000000
-// right shift by 27 for numerical value
-#define DISPCNT_MASK_SCREEN_BASE_64K 0x38000000
-#define DISPCNT_ENABLE_BG_EXTENDED_PALETTE 0x40000000
-#define DISPCNT_ENABLE_OBJ_EXTENDED_PALETTE 0x80000000
+// Not volatile, see func_020cddec
+#define DIV_NUMER_64 (*(unsigned long long*)0x04000290)
+#define DIV_NUMER_LOW (*(unsigned int*)0x04000290)
+#define DIV_NUMER_HIGH (*(unsigned int*)0x04000294)
 
-#define DISP3DCNT_USE_CLEAR_TEXTURES 0x4000
+#define DIV_DENOM_64 (*(unsigned long long*)0x04000298)
+#define DIV_DENOM_LOW (*(unsigned int*)0x04000298)
+#define DIV_DENOM_HIGH (*(unsigned int*)0x0400029c)
 
-#define BGCNT_MASK_PRIORITY 3
-// right shift by 2 for numerical value
-#define BGCNT_MASK_CHARACTER_BASE_16K 0x3c
-#define BGCNT_MASK_MOSAIC 0x40
-#define BGCNT_MASK_PALETTE_256 0x80
-// right shift by 8 for numerical value
-#define BGCNT_MASK_SCREEN_BASE_2K 0x1f00
-#define BGCNT_MASK_BG01_EXTENDED_PALETTE 0x2000
-#define BGCNT_MASK_SCREEN_SIZE 0xc000
+#define DIV_RESULT_64 (*(volatile unsigned long long*)0x040002a0)
+#define DIV_RESULT_LOW (*(volatile unsigned int*)0x040002a0)
+#define DIV_RESULT_HIGH (*(volatile unsigned int*)0x040002a4)
+
+#define DIVREM_RESULT_64 (*(volatile unsigned long long*)0x040002a8)
+#define DIVREM_RESULT_LOW (*(volatile unsigned int*)0x040002a8)
+#define DIVREM_RESULT_HIGH (*(volatile unsigned int*)0x040002ac)
+
+#define SQRTCNT (*(volatile unsigned short*)0x040002b0)
+#define SQRT_RESULT (*(volatile unsigned int*)0x040002b4)
+#define SQRT_PARAM_64 (*(volatile unsigned long long*)0x040002b8)
+#define SQRT_PARAM_LOW (*(volatile unsigned int*)0x040002b8)
+#define SQRT_PARAM_HIGH (*(volatile unsigned int*)0x040002bc)

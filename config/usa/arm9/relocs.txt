@@ -23548,7 +23548,7 @@ from:0x020cdef8 kind:arm_call to:0x020c9710 module:main
 from:0x020cdf3c kind:arm_call to:0x020c9710 module:main
 from:0x020cdf68 kind:arm_call to:0x020c9710 module:main
 from:0x020ce0f4 kind:load to:0x021117b0 module:main
-from:0x020ce0f8 kind:load to:0x021117cc module:main
+from:0x020ce0f8 kind:load to:0x021117b0 add:0x1c module:main
 from:0x020ce110 kind:load to:0x021117b0 module:main
 from:0x020ce124 kind:load to:0x021117b0 module:main
 from:0x020ce144 kind:load to:0x021117ec module:main

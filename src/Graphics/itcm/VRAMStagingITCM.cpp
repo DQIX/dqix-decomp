@@ -1,8 +1,8 @@
 #include "Graphics/itcm/VRAMStaging.h"
-#include "System/VRAM.h"
-#include "System/LoadToVRAM.h"
-#include "System/Cache.h"
-#include "System/Graphics.h"
+#include "NitroSDK/VRAM.h"
+#include "NitroSDK/LoadToVRAM.h"
+#include "NitroSDK/Cache.h"
+#include "NitroSDK/Graphics.h"
 #include "Resource/ResourceMutex.h"
 #include "std_library_functions.h"
 #include <globaldefs.h>

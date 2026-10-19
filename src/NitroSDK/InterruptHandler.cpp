@@ -1,7 +1,7 @@
-#include "System/Interrupts.h"
-#include "System/DMA.h"
-#include "System/BiosData.h"
-#include "System/DTCM.h"
+#include "NitroSDK/Interrupts.h"
+#include "NitroSDK/DMA.h"
+#include "NitroSDK/BiosData.h"
+#include "NitroSDK/DTCM.h"
 #include <globaldefs.h>
 #include <asmhacks.h>
 

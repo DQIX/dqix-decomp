@@ -1,8 +1,8 @@
-#include "Filesystem/NarcHandle.h"
+#include "NitroSDK/Filesystem/NarcHandle.h"
 #include "std_library_functions.h"
-#include "Filesystem/NitroVM.h"
-#include "Filesystem/LowNitroHandle.h"
-#include "Filesystem/FileAccessor.h"
+#include "NitroSDK/Filesystem/NitroVM.h"
+#include "NitroSDK/Filesystem/LowNitroHandle.h"
+#include "NitroSDK/Filesystem/FileAccessor.h"
 #include <globaldefs.h>
 
 #define NARC_HEADER 0x4352414e

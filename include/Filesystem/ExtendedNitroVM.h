@@ -1,6 +1,6 @@
 #pragma once
 
-#include "NitroVM.h"
+#include "../NitroSDK/Filesystem/NitroVM.h"
 
 class Decompressor;
 

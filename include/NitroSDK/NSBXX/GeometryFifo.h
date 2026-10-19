@@ -1,8 +1,8 @@
 #pragma once
 
 #include "std_library_functions.h"
-#include "../Vector.h"
-#include "Memory/AllocatorUnion.h"
+#include "../Matrix.h"
+#include "../Memory/AllocatorUnion.h"
 
 // Note: the convention seems to be that matrices act on *row vectors*
 // by right multiplication, rather than the more common setting of

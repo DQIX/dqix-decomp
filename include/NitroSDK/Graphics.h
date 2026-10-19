@@ -1,0 +1,30 @@
+#pragma once
+
+#include "../NitroSDK/HWRegisters.h"
+
+#define BLEND_TARGET_BG0 1
+#define BLEND_TARGET_BG1 2
+#define BLEND_TARGET_BG2 4
+#define BLEND_TARGET_BG3 8
+#define BLEND_TARGET_OBJ 0x10
+#define BLEND_TARGET_BACKDROP 0x20
+
+#define DISPCNT_MASK_BG_MODE 7
+// right shift by 24 for numerical value
+#define DISPCNT_MASK_CHARACTER_BASE_64K 0x07000000
+// right shift by 27 for numerical value
+#define DISPCNT_MASK_SCREEN_BASE_64K 0x38000000
+#define DISPCNT_ENABLE_BG_EXTENDED_PALETTE 0x40000000
+#define DISPCNT_ENABLE_OBJ_EXTENDED_PALETTE 0x80000000
+
+#define DISP3DCNT_USE_CLEAR_TEXTURES 0x4000
+
+#define BGCNT_MASK_PRIORITY 3
+// right shift by 2 for numerical value
+#define BGCNT_MASK_CHARACTER_BASE_16K 0x3c
+#define BGCNT_MASK_MOSAIC 0x40
+#define BGCNT_MASK_PALETTE_256 0x80
+// right shift by 8 for numerical value
+#define BGCNT_MASK_SCREEN_BASE_2K 0x1f00
+#define BGCNT_MASK_BG01_EXTENDED_PALETTE 0x2000
+#define BGCNT_MASK_SCREEN_SIZE 0xc000

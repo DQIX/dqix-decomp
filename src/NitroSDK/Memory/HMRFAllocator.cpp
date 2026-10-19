@@ -1,4 +1,4 @@
-#include "Memory/HMRFAllocator.h"
+#include "NitroSDK/Memory/HMRFAllocator.h"
 #include "std_library_functions.h"
 
 #ifdef jpn

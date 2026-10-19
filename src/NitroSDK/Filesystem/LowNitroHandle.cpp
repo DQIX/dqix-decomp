@@ -1,6 +1,6 @@
-#include "Filesystem/FSInnerDefs.h"
-#include "System/Memory.h"
-#include "System/Interrupts.h"
+#include "NitroSDK/Filesystem/FSInnerDefs.h"
+#include "NitroSDK/Memory.h"
+#include "NitroSDK/Interrupts.h"
 #include <globaldefs.h>
 
 int DefaultNitroReadProc(NitroHandle* handle, void* dst, unsigned int offset, unsigned int len);

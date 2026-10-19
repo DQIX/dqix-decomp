@@ -27,7 +27,7 @@ src/Grotto/Main/GrottoStruct.cpp:
 
 src/Input/Input.cpp:
     complete
-    .text start:0x02011fc0 end:0x020122ac
+    .text start:0x02011fc0 end:0x020129a0
 
 src/World/Zone3D.cpp:
     complete
@@ -334,6 +334,11 @@ src/NitroSDK/Filesystem/FileAccessor.cpp:
 src/NitroSDK/Filesystem/OverlayFSManagement.cpp:
     complete
     .text start:0x020cea48 end:0x020cef60
+
+src/NitroSDK/TouchScreen.cpp:
+    complete
+    .text start:0x020cf0dc end:0x020cfbf4
+    .bss start:0x02111450 end:0x0211148c
 
 src/NitroSDK/Filesystem/CardReadManagerInit.cpp:
     complete

@@ -1,6 +1,6 @@
-#include "Graphics/NSBXX/NSBXX.h"
-#include "Graphics/NSBXX/RenderCommands_Common.h"
-#include "Graphics/NSBXX/Animation.h"
+#include "NitroSDK/NSBXX/NSBXX.h"
+#include "NitroSDK/NSBXX/RenderCommands_Common.h"
+#include "NitroSDK/NSBXX/Animation.h"
 
 #if defined(jpn)
 #define data_020f1c70 data_020f1ddc

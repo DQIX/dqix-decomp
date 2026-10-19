@@ -1,5 +1,5 @@
-#include "System/Mutex.h"
-#include "System/Interrupts.h"
+#include "NitroSDK/Mutex.h"
+#include "NitroSDK/Interrupts.h"
 
 extern "C"
 {

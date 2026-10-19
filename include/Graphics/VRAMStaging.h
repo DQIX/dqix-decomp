@@ -1,7 +1,7 @@
 #pragma once
 
 #include "itcm/VRAMStaging.h"
-#include "NSBXX/NSBXX.h"
+#include "../NitroSDK/NSBXX/NSBXX.h"
 
 void LockStagedTextureVRAMCopying();
 void UnlockStagedTextureVRAMCopying();

@@ -1,5 +1,5 @@
-#include "Graphics/NSBXX/RenderConfig.h"
-#include "Graphics/NSBXX/GeometryFifo.h"
+#include "NitroSDK/NSBXX/RenderConfig.h"
+#include "NitroSDK/NSBXX/GeometryFifo.h"
 #include <globaldefs.h>
 
 #define BUILD_LIGHT_VECTOR(idx, x, y, z) (((unsigned)(idx) << 30) | ((unsigned)(z) << 20) | ((unsigned)(y) << 10) | ((unsigned)(x)))

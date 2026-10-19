@@ -1,8 +1,8 @@
-#include "Graphics/NSBXX/NSBXX.h"
+#include "NitroSDK/NSBXX/NSBXX.h"
 #include <globaldefs.h>
 #include <asmhacks.h>
-#include "Graphics/NSBXX/Animation.h"
-#include "Memory/AllocatorUnion.h"
+#include "NitroSDK/NSBXX/Animation.h"
+#include "NitroSDK/Memory/AllocatorUnion.h"
 
 #if defined(jpn)
 #define func_020b2a6c func_020b4538

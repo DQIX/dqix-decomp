@@ -1,4 +1,4 @@
-#include "System/Interrupts.h"
+#include "NitroSDK/Interrupts.h"
 
 // https://problemkaputt.de/gbatek.htm#armcpuflagsconditionfieldcond
 // Notably: 

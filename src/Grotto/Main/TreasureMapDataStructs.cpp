@@ -2,7 +2,7 @@
 #include "std_library_functions.h"
 #include "Grotto/Main/GrottoStruct.h"
 #include "GameState/GameState.h"
-#include "System/Memory.h"
+#include "NitroSDK/Memory.h"
 #include "Resource/GameResources.h"
 
 #ifdef jpn

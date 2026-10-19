@@ -1,7 +1,7 @@
 #include "Filesystem/ExtendedNitroVM.h"
-#include "Filesystem/FSInnerDefs.h"
+#include "NitroSDK/Filesystem/FSInnerDefs.h"
 #include "Resource/ResourceMutex.h"
-#include "System/Cache.h"
+#include "NitroSDK/Cache.h"
 #include "std_library_functions.h"
 #include <globaldefs.h>
 

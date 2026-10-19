@@ -1,5 +1,7 @@
 #pragma once
 
+#include <std_library_functions.h>
+
 #define REG_KEYINPUT (*(volatile unsigned short*)0x04000130)
 
 // this seems to hold bits 0-3 of EXTKEYIN from the arm7 left-shifted
@@ -8,7 +10,10 @@
 // when the lid is down (from testing)
 #define ARM7_KEYINDATA (*(volatile unsigned short*)0x027fffa8)
 
-inline int IsLidDown()
+#define ARM7_TOUCHDATAA (*(volatile unsigned short*)0x027fffaa)
+#define ARM7_TOUCHDATAB (*(volatile unsigned short*)0x027fffac)
+
+inline CBool IsLidDown()
 {
     return (ARM7_KEYINDATA & 0x8000) >> 15;
 }

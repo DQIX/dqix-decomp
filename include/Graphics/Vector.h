@@ -3,7 +3,7 @@
 // The SDK provides a number of matrix operations and some basic vector
 // stuff (add, subtract, normalize), but there are some additional ones earlier
 // in the binary
-#include "../System/Matrix.h"
+#include "../NitroSDK/Matrix.h"
 
 fix32_t fix32sin(fix32_t x);
 fix32_t fix32cos(fix32_t x);

@@ -1,4 +1,4 @@
-#include "Memory/HPXEAllocator.h"
+#include "NitroSDK/Memory/HPXEAllocator.h"
 #include "std_library_functions.h"
 
 #define BLOCKSIGNATURE_FREE 0x4652 // looks like "RF" in memory

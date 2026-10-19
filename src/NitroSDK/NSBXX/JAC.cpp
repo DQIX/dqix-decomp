@@ -1,6 +1,6 @@
-#include "Graphics/NSBXX/NSBXX.h"
-#include "Graphics/NSBXX/Animation.h"
-#include "Graphics/NSBXX/RenderCommands_Common.h"
+#include "NitroSDK/NSBXX/NSBXX.h"
+#include "NitroSDK/NSBXX/Animation.h"
+#include "NitroSDK/NSBXX/RenderCommands_Common.h"
 
 #if defined(jpn)
 #define func_020ca390 func_020cbe5c

@@ -1,6 +1,6 @@
-#include "Filesystem/FSInnerDefs.h"
-#include "System/Interrupts.h"
-#include "System/Memory.h"
+#include "NitroSDK/Filesystem/FSInnerDefs.h"
+#include "NitroSDK/Interrupts.h"
+#include "NitroSDK/Memory.h"
 #include <globaldefs.h>
 #include <asmhacks.h>
 

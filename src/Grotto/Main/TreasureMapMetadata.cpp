@@ -1,5 +1,5 @@
 #include "Grotto/Main/TreasureMapDataStructs.h"
-#include "System/Memory.h"
+#include "NitroSDK/Memory.h"
 #include "std_library_functions.h"
 #include "GameState/GameState.h"
 #include <globaldefs.h>

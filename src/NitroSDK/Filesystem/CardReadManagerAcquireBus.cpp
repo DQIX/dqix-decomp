@@ -1,7 +1,7 @@
-#include "Filesystem/CardReadManager.h"
-#include "Filesystem/FSInnerDefs.h"
-#include "System/Interrupts.h"
-#include "System/GamecardBusOwnership.h"
+#include "NitroSDK/Filesystem/CardReadManager.h"
+#include "NitroSDK/Filesystem/FSInnerDefs.h"
+#include "NitroSDK/Interrupts.h"
+#include "NitroSDK/GamecardBusOwnership.h"
 
 unsigned int SetReadContextPriority(unsigned int priority)
 {
