@@ -1,4 +1,4 @@
-#include "System/Interrupts.h"
+#include "NitroSDK/Interrupts.h"
 
 #define INTERRUPT_MASTER_ENABLE (*(volatile unsigned short*)0x04000208)
 #define INTERRUPT_ENABLE (*(volatile unsigned int*)0x04000210)

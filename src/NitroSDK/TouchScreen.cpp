@@ -1,9 +1,9 @@
 #include "NitroSDK/TouchScreen.h"
-#include "System/IPC.h"
-#include "System/Interrupts.h"
-#include "System/BiosData.h"
+#include "NitroSDK/IPC.h"
+#include "NitroSDK/Interrupts.h"
+#include "NitroSDK/BiosData.h"
 #include "NitroSDK/HWRegisters.h"
-#include "System/Input.h"
+#include "NitroSDK/Input.h"
 
 #if defined(jpn)
 #define func_020c9be0 func_020cb6ac

@@ -1,5 +1,5 @@
-#include "System/IPC.h"
-#include "System/Interrupts.h"
+#include "NitroSDK/IPC.h"
+#include "NitroSDK/Interrupts.h"
 #include <globaldefs.h>
 #include <asmhacks.h>
 

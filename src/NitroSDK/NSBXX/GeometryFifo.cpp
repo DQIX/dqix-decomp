@@ -1,8 +1,8 @@
-#include "Graphics/NSBXX/GeometryFifo.h"
-#include "System/Graphics.h"
-#include "Graphics/NSBXX/RenderCommands.h"
-#include "Graphics/NSBXX/RenderConfig.h"
-#include "System/DMA.h"
+#include "NitroSDK/NSBXX/GeometryFifo.h"
+#include "NitroSDK/Graphics.h"
+#include "NitroSDK/NSBXX/RenderCommands.h"
+#include "NitroSDK/NSBXX/RenderConfig.h"
+#include "NitroSDK/DMA.h"
 #include <globaldefs.h>
 
 #if defined(jpn)

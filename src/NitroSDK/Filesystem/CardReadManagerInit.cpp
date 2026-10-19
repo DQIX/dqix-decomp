@@ -1,10 +1,10 @@
-#include "Filesystem/CardReadManager.h"
-#include "System/BiosData.h"
-#include "System/Interrupts.h"
-#include "System/Cache.h"
-#include "System/IPC.h"
-#include "System/Memory.h"
-#include "Filesystem/FSInnerDefs.h"
+#include "NitroSDK/Filesystem/CardReadManager.h"
+#include "NitroSDK/BiosData.h"
+#include "NitroSDK/Interrupts.h"
+#include "NitroSDK/Cache.h"
+#include "NitroSDK/IPC.h"
+#include "NitroSDK/Memory.h"
+#include "NitroSDK/Filesystem/FSInnerDefs.h"
 #include <asmhacks.h>
 
 #pragma optimization_level 2

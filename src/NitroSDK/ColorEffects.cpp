@@ -1,5 +1,5 @@
-#include "System/Graphics.h"
-#include "System/ColorEffects.h"
+#include "NitroSDK/Graphics.h"
+#include "NitroSDK/ColorEffects.h"
 #include <asmhacks.h>
 
 // despite seeming like an sdk function, this matches better at O4,s than O4,p

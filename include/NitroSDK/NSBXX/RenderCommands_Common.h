@@ -5,7 +5,7 @@
 // this in instead
 
 #include "NSBXX.h"
-#include "../../System/Graphics.h"
+#include "../../NitroSDK/Graphics.h"
 #include "GeometryFifo.h"
 #include "RenderCommands.h"
 #include "RenderConfig.h"

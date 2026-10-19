@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../System/ProcessorContext.h"
-#include "../System/Mutex.h"
+#include "../NitroSDK/ProcessorContext.h"
+#include "../NitroSDK/Mutex.h"
 
 // Provides a global instance of a mutex to be locked/unlocked by
 // various different resource-related operations. For example, it's used

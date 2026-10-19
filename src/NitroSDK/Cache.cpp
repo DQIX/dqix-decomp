@@ -1,4 +1,4 @@
-#include "System/Cache.h"
+#include "NitroSDK/Cache.h"
 
 #define CACHE_LINE_LENGTH 32
 #define CACHE_LINE_LENGTH_BITMASK 0x1f

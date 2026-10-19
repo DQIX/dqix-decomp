@@ -1,9 +1,9 @@
-#include "Filesystem/FSInnerDefs.h"
-#include "System/BiosData.h"
-#include "System/Memory.h"
-#include "System/Interrupts.h"
-#include "System/Cache.h"
-#include "System/DMA.h"
+#include "NitroSDK/Filesystem/FSInnerDefs.h"
+#include "NitroSDK/BiosData.h"
+#include "NitroSDK/Memory.h"
+#include "NitroSDK/Interrupts.h"
+#include "NitroSDK/Cache.h"
+#include "NitroSDK/DMA.h"
 #include <globaldefs.h>
 #include <asmhacks.h>
 

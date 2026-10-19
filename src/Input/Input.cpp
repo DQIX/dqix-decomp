@@ -1,5 +1,5 @@
 #include "Input/Input.h"
-#include "System/Input.h"
+#include "NitroSDK/Input.h"
 #include "Resource/Brightness.h"
 #include <std_library_functions.h>
 

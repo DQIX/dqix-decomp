@@ -1,5 +1,5 @@
-#include "System/BGBases.h"
-#include "System/Graphics.h"
+#include "NitroSDK/BGBases.h"
+#include "NitroSDK/Graphics.h"
 
 // from gbatek:
 // BG Mode

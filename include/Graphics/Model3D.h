@@ -3,8 +3,8 @@
 #include "std_library_functions.h"
 #include "Vector.h"
 #include "Memory/SafeAllocator.h"
-#include "NSBXX/RenderCommands.h"
-#include "NSBXX/Animation.h"
+#include "../NitroSDK/NSBXX/RenderCommands.h"
+#include "../NitroSDK/NSBXX/Animation.h"
 #include "Animation3D.h"
 
 // sizeof == 0xac

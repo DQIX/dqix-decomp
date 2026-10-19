@@ -1,7 +1,7 @@
 #include "Graphics/LightingManager.h"
 #include "World/Zone3D.h"
-#include "System/Memory.h"
-#include "System/Graphics.h"
+#include "NitroSDK/Memory.h"
+#include "NitroSDK/Graphics.h"
 #include "GameState/GameState.h"
 #include "Resource/GameResources.h"
 

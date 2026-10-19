@@ -1,8 +1,8 @@
 #pragma once
 
 #include "ExtendedNitroVM.h"
-#include "System/ProcessorContext.h"
-#include "Memory/SafeAllocator.h"
+#include "../NitroSDK/ProcessorContext.h"
+#include "../Memory/SafeAllocator.h"
 
 // sizeof == 0x794 == 1940 bytes. This struct is passed as the first
 // parameter to various functions in the 0202fxxx range, and an instance

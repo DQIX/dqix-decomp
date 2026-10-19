@@ -1,7 +1,7 @@
-#include "System/LoadToVRAM.h"
-#include "System/DMA.h"
-#include "System/BGBases.h"
-#include "System/VRAM.h"
+#include "NitroSDK/LoadToVRAM.h"
+#include "NitroSDK/DMA.h"
+#include "NitroSDK/BGBases.h"
+#include "NitroSDK/VRAM.h"
 #include <globaldefs.h>
 #include <asmhacks.h>
 

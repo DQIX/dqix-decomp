@@ -1,7 +1,7 @@
 #pragma once
 
-#include "NSBXX/NSBXX.h"
-#include "NSBXX/RenderConfig.h"
+#include "../NitroSDK/NSBXX/NSBXX.h"
+#include "../NitroSDK/NSBXX/RenderConfig.h"
 #include "Vector.h"
 #include "../GameState/TimeOfDay.h"
 

@@ -1,4 +1,4 @@
-#include "Memory/AllocatorTypes.h"
+#include "NitroSDK/Memory/AllocatorTypes.h"
 
 // USA: data_020e9168
 // JPN: data_020e9274

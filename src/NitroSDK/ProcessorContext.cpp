@@ -1,7 +1,7 @@
-#include "System/ProcessorContext.h"
-#include "System/Mutex.h"
-#include "System/Timing.h"
-#include "System/Interrupts.h"
+#include "NitroSDK/ProcessorContext.h"
+#include "NitroSDK/Mutex.h"
+#include "NitroSDK/Timing.h"
+#include "NitroSDK/Interrupts.h"
 #include <globaldefs.h>
 #include <asmhacks.h>
 

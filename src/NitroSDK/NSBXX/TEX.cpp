@@ -1,5 +1,5 @@
-#include "Graphics/NSBXX/NSBXX.h"
-#include "System/LoadToVRAM.h"
+#include "NitroSDK/NSBXX/NSBXX.h"
+#include "NitroSDK/LoadToVRAM.h"
 #include <globaldefs.h>
 #include <asmhacks.h>
 

@@ -1,5 +1,5 @@
-#include "System/DMA.h"
-#include "System/Interrupts.h"
+#include "NitroSDK/DMA.h"
+#include "NitroSDK/Interrupts.h"
 #include <asmhacks.h>
 
 // configuration is such that

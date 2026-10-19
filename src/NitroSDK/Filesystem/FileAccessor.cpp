@@ -1,8 +1,8 @@
-#include "Filesystem/FSInnerDefs.h"
-#include "Filesystem/CardReadManager.h"
-#include "System/Interrupts.h"
-#include "System/BiosData.h"
-#include "System/GamecardBusOwnership.h"
+#include "NitroSDK/Filesystem/FSInnerDefs.h"
+#include "NitroSDK/Filesystem/CardReadManager.h"
+#include "NitroSDK/Interrupts.h"
+#include "NitroSDK/BiosData.h"
+#include "NitroSDK/GamecardBusOwnership.h"
 #include <globaldefs.h>
 
 #if defined(jpn)

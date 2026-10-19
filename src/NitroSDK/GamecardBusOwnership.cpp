@@ -1,5 +1,5 @@
-#include "System/GamecardBusOwnership.h"
-#include "System/Interrupts.h"
+#include "NitroSDK/GamecardBusOwnership.h"
+#include "NitroSDK/Interrupts.h"
 #include <globaldefs.h>
 #include <asmhacks.h>
 #include "std_library_functions.h"
