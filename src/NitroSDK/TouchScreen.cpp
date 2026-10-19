@@ -7,7 +7,6 @@
 
 #if defined(jpn)
 #define func_020c9be0 func_020cb6ac
-#define data_021117b0 data_02111450
 #endif
 
 struct LinearCoefficients
@@ -17,7 +16,7 @@ struct LinearCoefficients
     int invScale;
 };
 
-struct Struct_021117b0
+struct
 {
     unsigned short isInitialized;
     char pad_2[2];
@@ -36,7 +35,7 @@ struct Struct_021117b0
     unsigned short unknown_36;
     unsigned short errors;
     volatile unsigned short currentOperations;
-} extern data_021117b0;
+} static s_touchData;
 
 extern "C"
 {
@@ -97,22 +96,22 @@ void TouchScreenIPCCommandReceiveProc(unsigned int a, unsigned int b, unsigned i
 
     if (c != 0)
     {
-        data_021117b0.errors |= 1 << arg2WordUpper;
-        if (data_021117b0.callback != NULL)
-            data_021117b0.callback(arg2WordUpper, 4, 0);
+        s_touchData.errors |= 1 << arg2WordUpper;
+        if (s_touchData.callback != NULL)
+            s_touchData.callback(arg2WordUpper, 4, 0);
         return;
     }
 
     if (arg2WordUpper == 16)
     {
-        data_021117b0.currentSampleIndex++;
-        if (data_021117b0.currentSampleIndex >= data_021117b0.sampleCapacity)
-            data_021117b0.currentSampleIndex = 0;
+        s_touchData.currentSampleIndex++;
+        if (s_touchData.currentSampleIndex >= s_touchData.sampleCapacity)
+            s_touchData.currentSampleIndex = 0;
 
-        GetTouchScreenSampleFromArm7(&data_021117b0.sampleBuffer[data_021117b0.currentSampleIndex]);
+        GetTouchScreenSampleFromArm7(&s_touchData.sampleBuffer[s_touchData.currentSampleIndex]);
 
-        if (data_021117b0.callback != NULL)
-            data_021117b0.callback(arg2WordUpper, 0, data_021117b0.currentSampleIndex);
+        if (s_touchData.callback != NULL)
+            s_touchData.callback(arg2WordUpper, 0, s_touchData.currentSampleIndex);
         return;
     }
 
@@ -126,20 +125,20 @@ void TouchScreenIPCCommandReceiveProc(unsigned int a, unsigned int b, unsigned i
         switch (arg2WordUpper)
         {
         case 0:
-            GetTouchScreenSampleFromArm7(&data_021117b0.scratchSample);
-            data_021117b0.unknown_36 = 0;
+            GetTouchScreenSampleFromArm7(&s_touchData.scratchSample);
+            s_touchData.unknown_36 = 0;
             break;
         case 1:
-            data_021117b0.unknown_36 = 2;
+            s_touchData.unknown_36 = 2;
             break;
         case 2:
-            data_021117b0.unknown_36 = 0;
+            s_touchData.unknown_36 = 0;
             break;
         }
 
-        data_021117b0.currentOperations &= ~(1 << arg2WordUpper);
-        if (data_021117b0.callback != NULL)
-            data_021117b0.callback(arg2WordUpper, 0, 0);
+        s_touchData.currentOperations &= ~(1 << arg2WordUpper);
+        if (s_touchData.callback != NULL)
+            s_touchData.callback(arg2WordUpper, 0, 0);
         break;
     case 4:
         callbackArg2 = 3;
@@ -151,11 +150,11 @@ void TouchScreenIPCCommandReceiveProc(unsigned int a, unsigned int b, unsigned i
         callbackArg2 = 2;
         goto common;
     common:
-        data_021117b0.errors |= 1 << arg2WordUpper;
-        data_021117b0.currentOperations &= ~(1 << arg2WordUpper);
+        s_touchData.errors |= 1 << arg2WordUpper;
+        s_touchData.currentOperations &= ~(1 << arg2WordUpper);
 
-        if (data_021117b0.callback != NULL)
-            data_021117b0.callback(arg2WordUpper, callbackArg2, 0);
+        if (s_touchData.callback != NULL)
+            s_touchData.callback(arg2WordUpper, callbackArg2, 0);
         break;
     case 1:
     default:
@@ -166,18 +165,18 @@ void TouchScreenIPCCommandReceiveProc(unsigned int a, unsigned int b, unsigned i
 
 void InitializeTouchSystem()
 {
-    if (data_021117b0.isInitialized)
+    if (s_touchData.isInitialized)
         return;
 
-    data_021117b0.isInitialized = true;
+    s_touchData.isInitialized = true;
     InitializeInterProcessorCommunication();
-    data_021117b0.currentSampleIndex = 0;
-    data_021117b0.callback = 0;
-    data_021117b0.sampleBuffer = 0;
-    data_021117b0.unknown_36 = 0;
-    data_021117b0.isCalibrated = false;
-    data_021117b0.currentOperations = 0;
-    data_021117b0.errors = 0;
+    s_touchData.currentSampleIndex = 0;
+    s_touchData.callback = 0;
+    s_touchData.sampleBuffer = 0;
+    s_touchData.unknown_36 = 0;
+    s_touchData.isCalibrated = false;
+    s_touchData.currentOperations = 0;
+    s_touchData.errors = 0;
 
     while (!IsIPCCommandHandlerRegistered(6, IPCSide_Arm7)) {}
     SetArm9IPCCommandHandler(6, TouchScreenIPCCommandReceiveProc);
@@ -213,7 +212,7 @@ void SaveTouchScreenCalibration(TouchScreenCalibration* tsc)
 {
     if (tsc == NULL)
     {
-        data_021117b0.isCalibrated = false;
+        s_touchData.isCalibrated = false;
         return;
     }
 
@@ -222,51 +221,51 @@ void SaveTouchScreenCalibration(TouchScreenCalibration* tsc)
     if (tsc->xScale != 0)
     {
         QueueDivision(1 << 28, tsc->xScale);
-        data_021117b0.coeffs[0].offset = tsc->xOffset;
-        data_021117b0.coeffs[0].scale = tsc->xScale;
-        data_021117b0.coeffs[0].invScale = GetDivisionResult();
+        s_touchData.coeffs[0].offset = tsc->xOffset;
+        s_touchData.coeffs[0].scale = tsc->xScale;
+        s_touchData.coeffs[0].invScale = GetDivisionResult();
     }
     else
     {
-        data_021117b0.coeffs[0].offset = 0;
-        data_021117b0.coeffs[0].scale = 0;
-        data_021117b0.coeffs[0].invScale = 0;
+        s_touchData.coeffs[0].offset = 0;
+        s_touchData.coeffs[0].scale = 0;
+        s_touchData.coeffs[0].invScale = 0;
     }
 
     if (tsc->yScale != 0)
     {
         QueueDivision(1 << 28, tsc->yScale);
-        data_021117b0.coeffs[1].offset = tsc->yOffset;
-        data_021117b0.coeffs[1].scale = tsc->yScale;
-        data_021117b0.coeffs[1].invScale = GetDivisionResult();
+        s_touchData.coeffs[1].offset = tsc->yOffset;
+        s_touchData.coeffs[1].scale = tsc->yScale;
+        s_touchData.coeffs[1].invScale = GetDivisionResult();
     }
     else
     {
-        data_021117b0.coeffs[1].offset = 0;
-        data_021117b0.coeffs[1].scale = 0;
-        data_021117b0.coeffs[1].invScale = 0;
+        s_touchData.coeffs[1].offset = 0;
+        s_touchData.coeffs[1].scale = 0;
+        s_touchData.coeffs[1].invScale = 0;
     }
 
     SetIRQInterruptState(priorState);
-    data_021117b0.isCalibrated = true;
+    s_touchData.isCalibrated = true;
 }
 
 void SetTouchScreenCallback(TouchScreenCallback callback)
 {
     int priorState = DisableIRQInterrupts();
-    data_021117b0.callback = callback;
+    s_touchData.callback = callback;
     SetIRQInterruptState(priorState);
 }
 
 void EnableTouchScreen(int arg1, int arg2, TouchScreenSample* sampleBuffer, int sampleCount)
 {
-    data_021117b0.sampleBuffer = sampleBuffer;
-    data_021117b0.currentSampleIndex = 0;
-    data_021117b0.numActiveSamples = arg2;
-    data_021117b0.sampleCapacity = sampleCount;
+    s_touchData.sampleBuffer = sampleBuffer;
+    s_touchData.currentSampleIndex = 0;
+    s_touchData.numActiveSamples = arg2;
+    s_touchData.sampleCapacity = sampleCount;
 
     for (unsigned int i = 0; i < sampleCount; i++)
-        data_021117b0.sampleBuffer[i].isHeld = false;
+        s_touchData.sampleBuffer[i].isHeld = false;
 
     int priorState = DisableIRQInterrupts();
 
@@ -281,14 +280,14 @@ void EnableTouchScreen(int arg1, int arg2, TouchScreenSample* sampleBuffer, int 
     if (!(unsigned char)success)
     {
         SetIRQInterruptState(priorState);
-        data_021117b0.errors |= 2;
-        if (data_021117b0.callback != NULL)
-            data_021117b0.callback(1, 4, 0);
+        s_touchData.errors |= 2;
+        if (s_touchData.callback != NULL)
+            s_touchData.callback(1, 4, 0);
         return;
     }
 
-    data_021117b0.currentOperations |= 2;
-    data_021117b0.errors &= ~2;
+    s_touchData.currentOperations |= 2;
+    s_touchData.errors &= ~2;
     SetIRQInterruptState(priorState);
 }
 
@@ -305,14 +304,14 @@ void DisableTouchScreen()
     if (!success)
     {
         SetIRQInterruptState(priorState);
-        data_021117b0.errors |= 4;
-        if (data_021117b0.callback != NULL)
-            data_021117b0.callback(2, 4, 0);
+        s_touchData.errors |= 4;
+        if (s_touchData.callback != NULL)
+            s_touchData.callback(2, 4, 0);
         return;
     }
 
-    data_021117b0.currentOperations |= 4;
-    data_021117b0.errors &= ~4;
+    s_touchData.currentOperations |= 4;
+    s_touchData.errors &= ~4;
     SetIRQInterruptState(priorState);
 }
 
@@ -321,20 +320,20 @@ void GetTouchScreenData(TouchScreenSample* output)
     int i;
     
     output->missingCoordFlags = 3;
-    int current = data_021117b0.currentSampleIndex;
-    if (data_021117b0.numActiveSamples == 1 || data_021117b0.sampleCapacity == 1)
+    int current = s_touchData.currentSampleIndex;
+    if (s_touchData.numActiveSamples == 1 || s_touchData.sampleCapacity == 1)
     {
-        CopyTouchScreenSample(output, &data_021117b0.sampleBuffer[current]);
+        CopyTouchScreenSample(output, &s_touchData.sampleBuffer[current]);
         return;
     }
 
-    for (i = 0; i < data_021117b0.numActiveSamples && i < data_021117b0.sampleCapacity - 1; i++)
+    for (i = 0; i < s_touchData.numActiveSamples && i < s_touchData.sampleCapacity - 1; i++)
     {
         int sourceIndex = current - i;
         if (sourceIndex < 0)
-            sourceIndex += data_021117b0.sampleCapacity;
+            sourceIndex += s_touchData.sampleCapacity;
         
-        TouchScreenSample* entry = &data_021117b0.sampleBuffer[sourceIndex];
+        TouchScreenSample* entry = &s_touchData.sampleBuffer[sourceIndex];
         if (!entry->isHeld)
         {
             CopyTouchScreenSample(output, entry);
@@ -374,7 +373,7 @@ void GetTouchScreenDataAsPixels(TouchScreenSample* output)
 
 unsigned short GetCurrentTouchScreenSampleIndex()
 {
-    return data_021117b0.currentSampleIndex;
+    return s_touchData.currentSampleIndex;
 }
 
 int ComputeCalibrationCoefficients(TouchScreenCalibration* dst,
@@ -436,13 +435,13 @@ int ComputeCalibrationCoefficients(TouchScreenCalibration* dst,
 
 void ConvertTouchScreenSampleToPixels(TouchScreenSample* dst, const TouchScreenSample* src)
 {
-    if (!data_021117b0.isCalibrated)
+    if (!s_touchData.isCalibrated)
     {
         CopyTouchScreenSample(dst, src);
         return;
     }
 
-    LinearCoefficients* coeffs = data_021117b0.coeffs;
+    LinearCoefficients* coeffs = s_touchData.coeffs;
     dst->isHeld = src->isHeld;
     dst->missingCoordFlags = src->missingCoordFlags;
 
@@ -468,10 +467,10 @@ void ConvertTouchScreenSampleToPixels(TouchScreenSample* dst, const TouchScreenS
 
 void WaitForTouchScreenOperations(int mask)
 {
-    while (data_021117b0.currentOperations & mask) {}
+    while (s_touchData.currentOperations & mask) {}
 }
 
 int GetTouchScreenErrors(int mask)
 {
-    return data_021117b0.errors & mask;
+    return s_touchData.errors & mask;
 }

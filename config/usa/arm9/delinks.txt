@@ -338,6 +338,7 @@ src/NitroSDK/Filesystem/OverlayFSManagement.cpp:
 src/NitroSDK/TouchScreen.cpp:
     complete
     .text start:0x020cd610 end:0x020ce128
+    .bss start:0x021117b0 end:0x021117ec
 
 src/NitroSDK/Filesystem/CardReadManagerInit.cpp:
     complete

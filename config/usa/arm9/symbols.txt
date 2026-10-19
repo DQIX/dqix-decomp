@@ -7881,8 +7881,7 @@ data_0211173c kind:bss addr:0x0211173c
 data_02111744 kind:bss addr:0x02111744
 data_0211174c kind:bss addr:0x0211174c
 data_02111754 kind:bss addr:0x02111754
-data_021117b0 kind:bss addr:0x021117b0
-data_021117cc kind:bss addr:0x021117cc
+s_touchData kind:bss addr:0x021117b0 local
 data_021117ec kind:bss addr:0x021117ec
 data_02111800 kind:bss addr:0x02111800
 data_02111804 kind:bss addr:0x02111804
