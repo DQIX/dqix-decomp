@@ -6,9 +6,13 @@
 unsigned short ComputeCurrentKeys();
 
 #if defined(jpn)
+#define func_0200b454 func_0200b318
 #define func_0205ec34 func_0205ff20
 #define func_0206df6c func_0206f0c0
 #define func_020c39c8 func_020c5494
+#define func_020c9be0 func_020cb6ac
+
+#define data_020fb3cc data_020fb0f8
 #endif
 
 extern "C"
@@ -278,7 +282,22 @@ bool TouchInput::RefreshState()
     }
 }
 
-bool TouchInput::TestTouchRectangle(int x, int y, int w, int h) const
+bool TouchInput::TestPressInRectangle(int x, int y, int w, int h) const
+{
+    int pointX = pressX_;
+    int pointY = pressY_;
+    if (pointX < x)
+        return false;
+    if (pointX > x + w)
+        return false;
+    if (pointY < y)
+        return false;
+    if (pointY > y + h)
+        return false;
+    return true;
+}
+
+bool TouchInput::TestHoldInRectangle(int x, int y, int w, int h) const
 {
     unsigned short pointX = currentReading_.x;
     unsigned short pointY = currentReading_.y;

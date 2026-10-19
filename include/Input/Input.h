@@ -144,7 +144,10 @@ public:
 
     bool RefreshState();
 
-    bool TestTouchRectangle(int x, int y, int w, int h) const;
+    // optimized out in usa version
+    bool TestPressInRectangle(int x, int y, int w, int h) const;
+
+    bool TestHoldInRectangle(int x, int y, int w, int h) const;
     void ClearMoveFlags();
     int GetMovementLength() const;
     void ComputeMoveFlags();

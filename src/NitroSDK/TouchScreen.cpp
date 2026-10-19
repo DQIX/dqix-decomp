@@ -5,6 +5,11 @@
 #include "NitroSDK/HWRegisters.h"
 #include "System/Input.h"
 
+#if defined(jpn)
+#define func_020c9be0 func_020cb6ac
+#define data_021117b0 data_02111450
+#endif
+
 struct LinearCoefficients
 {
     int offset;
