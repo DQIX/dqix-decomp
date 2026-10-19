@@ -71,7 +71,7 @@ static inline void GetTouchScreenSampleFromArm7(TouchScreenSample* dst)
             unsigned int x : 12;
             unsigned int y : 12;
             unsigned int pressed : 1;
-            unsigned int unknown_6 : 2;
+            unsigned int missingCoords : 2;
         };
         unsigned short words[2];
     } arm7data;
@@ -81,8 +81,8 @@ static inline void GetTouchScreenSampleFromArm7(TouchScreenSample* dst)
 
     dst->x = arm7data.x;
     dst->y = arm7data.y;
-    dst->isPressed = (unsigned char)arm7data.pressed;
-    dst->missingCoordFlags = (unsigned char)arm7data.unknown_6;
+    dst->isHeld = (unsigned char)arm7data.pressed;
+    dst->missingCoordFlags = (unsigned char)arm7data.missingCoords;
 }
 
 void TouchScreenIPCCommandReceiveProc(unsigned int a, unsigned int b, unsigned int c)
@@ -253,15 +253,15 @@ void SetTouchScreenCallback(TouchScreenCallback callback)
     SetIRQInterruptState(priorState);
 }
 
-void EnableTouchScreen(int arg1, int arg2, TouchScreenSample* data, int numEntries)
+void EnableTouchScreen(int arg1, int arg2, TouchScreenSample* sampleBuffer, int sampleCount)
 {
-    data_021117b0.sampleBuffer = data;
+    data_021117b0.sampleBuffer = sampleBuffer;
     data_021117b0.currentSampleIndex = 0;
     data_021117b0.numActiveSamples = arg2;
-    data_021117b0.sampleCapacity = numEntries;
+    data_021117b0.sampleCapacity = sampleCount;
 
-    for (unsigned int i = 0; i < numEntries; i++)
-        data_021117b0.sampleBuffer[i].isPressed = false;
+    for (unsigned int i = 0; i < sampleCount; i++)
+        data_021117b0.sampleBuffer[i].isHeld = false;
 
     int priorState = DisableIRQInterrupts();
 
@@ -330,7 +330,7 @@ void GetTouchScreenData(TouchScreenSample* output)
             sourceIndex += data_021117b0.sampleCapacity;
         
         TouchScreenSample* entry = &data_021117b0.sampleBuffer[sourceIndex];
-        if (!entry->isPressed)
+        if (!entry->isHeld)
         {
             CopyTouchScreenSample(output, entry);
             return;
@@ -354,11 +354,11 @@ void GetTouchScreenData(TouchScreenSample* output)
 
         if (output->missingCoordFlags == 0)
         {
-            output->isPressed = true;
+            output->isHeld = true;
             return;
         }
     }
-    output->isPressed = true;
+    output->isHeld = true;
 }
 
 void GetTouchScreenDataAsPixels(TouchScreenSample* output)
@@ -438,10 +438,10 @@ void ConvertTouchScreenSampleToPixels(TouchScreenSample* dst, const TouchScreenS
     }
 
     LinearCoefficients* coeffs = data_021117b0.coeffs;
-    dst->isPressed = src->isPressed;
+    dst->isHeld = src->isHeld;
     dst->missingCoordFlags = src->missingCoordFlags;
 
-    if (!src->isPressed)
+    if (!src->isHeld)
     {
         dst->x = 0;
         dst->y = 0;

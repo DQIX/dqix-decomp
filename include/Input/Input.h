@@ -1,5 +1,7 @@
 #pragma once
 
+#include "../NitroSDK/TouchScreen.h"
+
 #define KEY_A 0x1
 #define KEY_B 0x2
 #define KEY_SELECT 0x4
@@ -86,37 +88,42 @@ public:
 class TouchInput
 {
 public:
-    char unk_0[0x20];
+    TouchScreenSample sampleBuffer_[4];
     // first two args are x and y coords
-    unsigned short sdkData_20_[4];
-    unsigned short sdkData_28_[4];
+    TouchScreenSample currentReading_;
+    TouchScreenCalibration calibration_;
     int unknown_30_;
     int unknown_34_;
-    int prevX_38_;
-    int prevY_3c_;
-    int unknown_40_;
-    int unknown_44_;
-    int unknown_48_;
-    int unknown_4c_;
-    bool movedUp_50_;
-    bool movedLeft_51_;
-    bool movedDown_52_;
-    bool movedRight_53_;
-    char unk_54[2];
+    int prevX_;
+    int prevY_;
+    int timeHeld_;
+    int prevTimeHeld_;
+    int timeSinceLastTouch_;
+    int timeHeldStill_;
+    bool movedUp_;
+    bool movedLeft_;
+    bool movedDown_;
+    bool movedRight_;
+    // set for one frame immediately when the screen is released
+    bool released_;
+    bool pressed_;
     unsigned char unknown_56_;
     char pad_57[1];
-    int unknown_58_;
-    char unk_5c[1];
-    unsigned char unknown_5d_;
-    char unk_5e[1];
-    unsigned char unknown_5f_;
-    unsigned char unknown_60_;
-    bool unknown_61_;
+    int repeatTimer_;
+    bool repeatFired_;
+    bool isHeld_;
+    bool wasHeld_;
+    // starts out as false and set as soon as the screen spends a frame
+    // not being held, prevents touch repeat from firing if you're holding
+    // the screen down at the start
+    bool repeatValid_;
+    bool paused_;
+    bool enabled_;
     bool unknown_62_;
-    char pad_63[1];
+    bool savedRepeatValid_;
     int unknown_64_;
-    int unknown_68_;
-    int unknown_6c_;
+    int saved30_68_;
+    int saved34_6c_;
 
 public:
     // (blank) usa: func_02012530
@@ -126,10 +133,28 @@ public:
 
     static inline TouchInput* GetInstance() { return &g_touchInput; }
 
+    bool RefreshState();
+
     bool TestTouchRectangle(int x, int y, int w, int h) const;
     void ClearMoveFlags();
     int GetMovementLength() const;
     void ComputeMoveFlags();
 
     void Initialize();
+    void InternalClearCurrentInput();
+    // pause only persists while both screens are faded to black/white
+    void Pause();
+    void Unpause();
+
+    bool UpdateCurrentReading();
+    void GetLastTouchPoint(int* outX, int* outY) const;
+    // returns true if you've just pressed the screen, i.e. you weren't
+    // touching last frame
+    bool IsPressed() const;
+
+    bool TestTouchRepeat();
+    bool IsTouchPointAtEdge() const;
+
+    void SetInputEnabled(bool enabled);
+    void ClearCurrentInput();
 };
