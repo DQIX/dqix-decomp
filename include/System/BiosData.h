@@ -61,6 +61,22 @@ struct BootIndicator
     CartridgeHeader cartHeader;
 };
 
+struct FirmwareSettings
+{
+    char irrelevant[0x58];
+    unsigned short rawCalibrationPointX1;
+    unsigned short rawCalibrationPointY1;
+    unsigned char calibrationPixelX1;
+    unsigned char calibrationPixelY1;
+    unsigned short rawCalibrationPointX2;
+    unsigned short rawCalibrationPointY2;
+    unsigned char calibrationPixelX2;
+    unsigned char calibrationPixelY2;
+    unsigned short languageAndFlags;
+};
+
+#define CURRENT_FIRMWARE_SETTINGS (*(const FirmwareSettings*)0x027ffc80)
+
 #define BIOS_ADDR_BOOT_INDICATOR 0x027FFC40
 #define BIOS_ADDR_CARTRIDGE_HEADER 0x027FFE00
 #define BIOS_ADDR_OVERLAY_TABLE_VALUES 0x027FFE50 
