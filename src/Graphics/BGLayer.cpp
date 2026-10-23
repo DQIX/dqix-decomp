@@ -399,7 +399,7 @@ void BGLayer::Sprite::SwitchPaletteInRectangle(unsigned short paletteIdx,
     }
 }
 
-BGLayer::Sprite* BGLayer::GetScreenObject(unsigned int idx)
+BGLayer::Sprite* BGLayer::GetSprite(unsigned int idx)
 {
     if (sprites_ == NULL)
         return NULL;
@@ -409,7 +409,7 @@ BGLayer::Sprite* BGLayer::GetScreenObject(unsigned int idx)
         return &sprites_[idx];
 }
 
-void BGLayer::AllocateScreenObjects(unsigned int count, SafeAllocator* alloc)
+void BGLayer::AllocateSprites(unsigned int count, SafeAllocator* alloc)
 {
     if (alloc == NULL)
         return;

@@ -8,13 +8,14 @@ VRAMLoadProc GetCharVRAMLoadProc(int engine, int bgIndex);
 VRAMLoadProc GetScreenVRAMLoadProc(int engine, int bgIndex);
 
 // sizeof == 0x20
-struct BGLayer
+class BGLayer
 {
+public:
     struct CharacterData
     {
         unsigned int vramOffset;
         short numTileEntries;
-        // these look like width & height but this isn't relevant
+        // these look like width & height in #tiles but this isn't relevant
         // for character data! Is it just useless?
         short unknown_6;
         short unknown_8;
@@ -77,8 +78,9 @@ struct BGLayer
     unsigned char spriteCapacity_;
     unsigned char unknown_1f_;
 
-    Sprite* GetScreenObject(unsigned int idx);
-    void AllocateScreenObjects(unsigned int count, SafeAllocator* alloc);
+public:
+    Sprite* GetSprite(unsigned int idx);
+    void AllocateSprites(unsigned int count, SafeAllocator* alloc);
     void Reset();
     void MaybeDestroy();
     void PrepareIndexBuffer(void* buffer);
