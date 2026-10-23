@@ -98,27 +98,27 @@ struct BGLayer
     void SetPriority(int);
     void SetOffset(int x, int y);
 
-    void BlitObjectToBuffer(unsigned short* destIdxBuffer, const Sprite* obj, 
+    void BlitSpriteToBuffer(unsigned short* destIdxBuffer, const Sprite* obj, 
         short sourceTileX, short sourceTileY,
         short destTileX, short destTileY,
         short width, short height, unsigned short palette);
     
-    void BlitObject(const Sprite* obj, short sourceTileX, short sourceTileY,
+    void BlitSprite(const Sprite* obj, short sourceTileX, short sourceTileY,
         short destTileX, short destTileY,
         short width, short height, unsigned short palette);
 
-    void BlitObjectByIndex(unsigned int objIdx, short sourceTileX, short sourceTileY,
+    void BlitSpriteByIndex(unsigned int objIdx, short sourceTileX, short sourceTileY,
         short destTileX, short destTileY,
         short width, short height, unsigned short palette);
 
-    void BlitObject(const Sprite* obj, short destTileX, short destTileY, unsigned short palette);
-    void BlitObjectByIndex(unsigned int objIdx, short destTileX, short destTileY, unsigned short palette);
+    void BlitSprite(const Sprite* obj, short destTileX, short destTileY, unsigned short palette);
+    void BlitSpriteByIndex(unsigned int objIdx, short destTileX, short destTileY, unsigned short palette);
 
     void SetPaletteInRegion(short x, short y, short width, short height, unsigned short palette);
 
-    void BlitObjectRepeated(const Sprite* obj, short width, short height,
+    void BlitSpriteRepeated(const Sprite* obj, short width, short height,
         short destTileX, short destTileY, short countX, short countY, unsigned short palette);
-    void BlitObjectByIndexRepeated(unsigned int objIdx, short width, short height,
+    void BlitSpriteByIndexRepeated(unsigned int objIdx, short width, short height,
         short destTileX, short destTileY, short countX, short countY, unsigned short palette);
 
     // Function looks like it handles extended palette setting, but it

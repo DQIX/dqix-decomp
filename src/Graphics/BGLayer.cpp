@@ -591,7 +591,7 @@ void BGLayer::SetOffset(int x, int y)
     GetOffsetSetterProc(engine_, bgIndex_)(x, y);
 }
 
-void BGLayer::BlitObjectToBuffer(unsigned short *destIdxBuffer, const Sprite *obj,
+void BGLayer::BlitSpriteToBuffer(unsigned short *destIdxBuffer, const Sprite *obj,
     short sourceTileX, short sourceTileY, short destTileX, short destTileY,
     short width, short height, unsigned short palette)
 {
@@ -689,17 +689,17 @@ void BGLayer::BlitObjectToBuffer(unsigned short *destIdxBuffer, const Sprite *ob
     }
 }
 
-void BGLayer::BlitObject(const Sprite* obj, short sourceTileX, short sourceTileY,
+void BGLayer::BlitSprite(const Sprite* obj, short sourceTileX, short sourceTileY,
     short destTileX, short destTileY, short width, short height, unsigned short palette)
 {
     if (indexBuffer_ == NULL)
         return;
        
-    BlitObjectToBuffer(indexBuffer_, obj, sourceTileX, sourceTileY, 
+    BlitSpriteToBuffer(indexBuffer_, obj, sourceTileX, sourceTileY, 
         destTileX, destTileY, width, height, palette);
 }
 
-void BGLayer::BlitObjectByIndex(unsigned int objIdx, short sourceTileX, short sourceTileY,
+void BGLayer::BlitSpriteByIndex(unsigned int objIdx, short sourceTileX, short sourceTileY,
     short destTileX, short destTileY, short width, short height, unsigned short palette)
 {
     if (numSprites_ <= objIdx)
@@ -713,12 +713,12 @@ void BGLayer::BlitObjectByIndex(unsigned int objIdx, short sourceTileX, short so
     if (indexBuffer_ == NULL)
         return;
 
-    BlitObjectToBuffer(indexBuffer_, obj, 
+    BlitSpriteToBuffer(indexBuffer_, obj, 
         sourceTileX , sourceTileY, destTileX, destTileY,
         width, height, palette);
 }
 
-void BGLayer::BlitObject(const Sprite* obj,
+void BGLayer::BlitSprite(const Sprite* obj,
     short destTileX, short destTileY, unsigned short palette)
 {
     if (obj == NULL)
@@ -727,17 +727,17 @@ void BGLayer::BlitObject(const Sprite* obj,
     short h = obj->height;
     if (indexBuffer_ == NULL)
         return;
-    BlitObjectToBuffer(indexBuffer_, obj, 0, 0, destTileX, destTileY, w, h, palette);
+    BlitSpriteToBuffer(indexBuffer_, obj, 0, 0, destTileX, destTileY, w, h, palette);
 }
 
-void BGLayer::BlitObjectByIndex(unsigned int objIdx,
+void BGLayer::BlitSpriteByIndex(unsigned int objIdx,
     short destTileX, short destTileY, unsigned short palette)
 {
     if (numSprites_ <= objIdx)
         return;
     if (sprites_ == NULL)
         return;
-    BlitObject(&sprites_[objIdx], destTileX, destTileY, palette);
+    BlitSprite(&sprites_[objIdx], destTileX, destTileY, palette);
 }
 
 void BGLayer::SetPaletteInRegion(short left, short top, short width, short height, unsigned short palette)
@@ -782,7 +782,7 @@ void BGLayer::SetPaletteInRegion(short left, short top, short width, short heigh
     }
 }
 
-void BGLayer::BlitObjectRepeated(const Sprite* obj, short width, short height,
+void BGLayer::BlitSpriteRepeated(const Sprite* obj, short width, short height,
         short destTileX, short destTileY, short countX, short countY, unsigned short palette)
 {
     if (width <= 0 || height <= 0)
@@ -805,20 +805,20 @@ void BGLayer::BlitObjectRepeated(const Sprite* obj, short width, short height,
         for (unsigned short x = 0; x < countX; x++)
         {
             if (indexBuffer_ != NULL)
-                BlitObjectToBuffer(indexBuffer_, obj, 0, 0, thisDrawX, thisDrawY, width, height, palette);
+                BlitSpriteToBuffer(indexBuffer_, obj, 0, 0, thisDrawX, thisDrawY, width, height, palette);
             thisDrawX += width;
         }
         thisDrawY += height;
     }
 }
 
-void BGLayer::BlitObjectByIndexRepeated(unsigned int objIdx, short width, short height,
+void BGLayer::BlitSpriteByIndexRepeated(unsigned int objIdx, short width, short height,
         short destTileX, short destTileY, short countX, short countY, unsigned short palette)
 {
     if (numSprites_ <= objIdx || sprites_ == NULL)
         return;
 
-    BlitObjectRepeated(&sprites_[objIdx], width, height,
+    BlitSpriteRepeated(&sprites_[objIdx], width, height,
         destTileX, destTileY, countX, countY, palette);
 }
 
