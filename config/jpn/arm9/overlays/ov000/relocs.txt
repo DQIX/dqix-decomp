@@ -6435,8 +6435,6 @@ from:0x02183af8 kind:load to:0x0218478c module:overlay(0)
 from:0x02183b0c kind:load to:0x02183348 module:overlay(0)
 from:0x02183e34 kind:load to:0x020f000b module:main
 from:0x021844b8 kind:load to:0x0212020d module:main
-from:0x021845a4 kind:load to:0x020f0202 module:main
-from:0x02184728 kind:load to:0x020f0202 module:main
 from:0x021847e0 kind:load to:0x021852d2 module:overlay(0)
 from:0x021847e8 kind:load to:0x021852d0 module:overlay(0)
 from:0x021847f0 kind:load to:0x021852d4 module:overlay(0)

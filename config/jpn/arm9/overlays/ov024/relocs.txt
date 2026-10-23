@@ -4382,7 +4382,6 @@ from:0x021fee1c kind:arm_call to:0x021fa040 module:overlay(24)
 from:0x021fee2c kind:arm_call to:0x020019c8 module:main
 from:0x021fee54 kind:load to:0x021ff7b7 module:overlay(24)
 from:0x021fee58 kind:load to:0x021ff7b6 module:overlay(24)
-from:0x021fef88 kind:load to:0x020f0202 module:main
 from:0x021ff820 kind:load to:0x021f8910 module:overlay(24)
 from:0x021ff828 kind:load to:0x021f89a8 module:overlay(24)
 from:0x021ff830 kind:load to:0x021f8cbc module:overlay(24)
