@@ -6496,9 +6496,6 @@ from:0x02182a40 kind:load to:0x021836d6 module:overlay(0)
 from:0x02182a54 kind:load to:0x021820fc module:overlay(0)
 from:0x02182d7c kind:load to:0x020f000b module:main
 from:0x0218343c kind:load to:0x0212020d module:main
-from:0x02183458 kind:load to:0x020f0202 module:main
-from:0x02183524 kind:load to:0x020f0202 module:main
-from:0x0218366c kind:load to:0x020f0202 module:main
 from:0x0218371c kind:arm_call to:0x0200b9bc module:main
 from:0x0218372c kind:arm_call to:0x0200b9bc module:main
 from:0x0218373c kind:arm_call to:0x0200b9bc module:main

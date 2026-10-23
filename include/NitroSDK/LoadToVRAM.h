@@ -59,3 +59,5 @@ extern "C"
     void LoadClearDepthBuffer(const void* data, unsigned int length);
     void MemoryUnmapClearTexture();
 }
+
+typedef void (*VRAMLoadProc)(const void*, unsigned int, unsigned int);

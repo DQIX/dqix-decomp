@@ -21,10 +21,20 @@
 #define BG2CNT (*(volatile unsigned short*)(0x0400000c))
 #define BG3CNT (*(volatile unsigned short*)(0x0400000e))
 
+#define BG0OFS (*(volatile unsigned int*)0x04000010)
+#define BG1OFS (*(volatile unsigned int*)0x04000014)
+#define BG2OFS (*(volatile unsigned int*)0x04000018)
+#define BG3OFS (*(volatile unsigned int*)0x0400001c)
+
 #define BG0CNTSUB (*(volatile unsigned short*)(0x04001008))
 #define BG1CNTSUB (*(volatile unsigned short*)(0x0400100a))
 #define BG2CNTSUB (*(volatile unsigned short*)(0x0400100c))
 #define BG3CNTSUB (*(volatile unsigned short*)(0x0400100e))
+
+#define BG0OFSSUB (*(volatile unsigned int*)0x04001010)
+#define BG1OFSSUB (*(volatile unsigned int*)0x04001014)
+#define BG2OFSSUB (*(volatile unsigned int*)0x04001018)
+#define BG3OFSSUB (*(volatile unsigned int*)0x0400101c)
 
 #define GX_FOG_COLOR (*(volatile unsigned int*)0x04000358)
 #define GX_FOG_OFFSET (*(volatile unsigned int*)0x0400035c)
