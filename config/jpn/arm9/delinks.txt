@@ -81,6 +81,16 @@ src/Resource/Brightness.cpp:
     complete
     .text start:0x0203a938 end:0x0203b080
 
+src/Resource/PAC.cpp:
+    complete
+    .text start:0x0204755c end:0x0204775c
+
+src/Graphics/BGLayer.cpp:
+    complete
+    .text start:0x0204b404 end:0x0204cb9c
+    .rodata start:0x020e855c end:0x020e85b4
+    .data start:0x020f01d8 end:0x020f0270
+
 src/Graphics/LightingManager.cpp:
     complete
     .text start:0x02051924 end:0x02053e28

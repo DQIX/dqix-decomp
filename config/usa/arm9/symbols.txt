@@ -45,8 +45,8 @@ func_020019c8 kind:function(arm,size=0x78) addr:0x020019c8
 memcpy kind:function(arm,size=0x20) addr:0x02001a40
 memmove kind:function(arm,size=0x4c) addr:0x02001a60
 memset kind:function(arm,size=0x14) addr:0x02001aac
-func_02001ac0 kind:function(arm,size=0x2c) addr:0x02001ac0
-func_02001aec kind:function(arm,size=0x40) addr:0x02001aec
+memchr kind:function(arm,size=0x2c) addr:0x02001ac0
+memcmp kind:function(arm,size=0x40) addr:0x02001aec
 func_02001b2c kind:function(arm,size=0xb0) addr:0x02001b2c
 func_02001bdc kind:function(arm,size=0x590) addr:0x02001bdc
 func_0200216c kind:function(arm,size=0x24c) addr:0x0200216c
@@ -1725,11 +1725,11 @@ func_02046708 kind:function(arm,size=0x14) addr:0x02046708
 func_0204671c kind:function(arm,size=0x8) addr:0x0204671c
 func_02046724 kind:function(arm,size=0xc) addr:0x02046724
 func_02046730 kind:function(arm,size=0xc) addr:0x02046730
-func_0204673c kind:function(arm,size=0x84) addr:0x0204673c
-func_020467c0 kind:function(arm,size=0x30) addr:0x020467c0
-func_020467f0 kind:function(arm,size=0x5c) addr:0x020467f0
-func_0204684c kind:function(arm,size=0xb4) addr:0x0204684c
-func_02046900 kind:function(arm,size=0x3c) addr:0x02046900
+_Z21GetPACInnerFileHeaderPvPKc kind:function(arm,size=0x84) addr:0x0204673c
+_Z12GetFileInPACPvPKcPj kind:function(arm,size=0x30) addr:0x020467c0
+_Z19GetFileInPACByIndexPvjPPKcPj kind:function(arm,size=0x5c) addr:0x020467f0
+_Z24GetFilesInPACByExtensionPvPKcPS_iPjPS1_ kind:function(arm,size=0xb4) addr:0x0204684c
+_Z16GetNumFilesInPACPKv kind:function(arm,size=0x3c) addr:0x02046900
 func_0204693c kind:function(arm,size=0x1c) addr:0x0204693c
 func_02046958 kind:function(arm,size=0x10) addr:0x02046958
 func_02046968 kind:function(arm,size=0x4c) addr:0x02046968
@@ -1879,69 +1879,69 @@ func_0204a488 kind:function(arm,size=0x24) addr:0x0204a488
 func_0204a4ac kind:function(arm,size=0x128) addr:0x0204a4ac
 func_0204a5d4 kind:function(arm,size=0x8) addr:0x0204a5d4
 func_0204a5dc kind:function(arm,size=0x8) addr:0x0204a5dc
-func_0204a5e4 kind:function(arm,size=0x14) addr:0x0204a5e4
-func_0204a5f8 kind:function(arm,size=0x14) addr:0x0204a5f8
-func_0204a60c kind:function(arm,size=0x1c) addr:0x0204a60c
-func_0204a628 kind:function(arm,size=0x1c) addr:0x0204a628
-func_0204a644 kind:function(arm,size=0x1c) addr:0x0204a644
-func_0204a660 kind:function(arm,size=0x1c) addr:0x0204a660
-func_0204a67c kind:function(arm,size=0x1c) addr:0x0204a67c
-func_0204a698 kind:function(arm,size=0x1c) addr:0x0204a698
-func_0204a6b4 kind:function(arm,size=0x1c) addr:0x0204a6b4
-func_0204a6d0 kind:function(arm,size=0x1c) addr:0x0204a6d0
-func_0204a6ec kind:function(arm,size=0x28) addr:0x0204a6ec
-func_0204a714 kind:function(arm,size=0x28) addr:0x0204a714
-func_0204a73c kind:function(arm,size=0x28) addr:0x0204a73c
-func_0204a764 kind:function(arm,size=0x28) addr:0x0204a764
-func_0204a78c kind:function(arm,size=0x28) addr:0x0204a78c
-func_0204a7b4 kind:function(arm,size=0x28) addr:0x0204a7b4
-func_0204a7dc kind:function(arm,size=0x28) addr:0x0204a7dc
-func_0204a804 kind:function(arm,size=0x28) addr:0x0204a804
-func_0204a82c kind:function(arm,size=0x1c) addr:0x0204a82c
-func_0204a848 kind:function(arm,size=0xac) addr:0x0204a848
-func_0204a8f4 kind:function(arm,size=0x90) addr:0x0204a8f4
-func_0204a984 kind:function(arm,size=0x40) addr:0x0204a984
-func_0204a9c4 kind:function(arm,size=0x64) addr:0x0204a9c4
-func_0204aa28 kind:function(arm,size=0x20) addr:0x0204aa28
-func_0204aa48 kind:function(arm,size=0x1c) addr:0x0204aa48
-func_0204aa64 kind:function(arm,size=0xe8) addr:0x0204aa64
-func_0204ab4c kind:function(arm,size=0x80) addr:0x0204ab4c
-func_0204abcc kind:function(arm,size=0x94) addr:0x0204abcc
-func_0204ac60 kind:function(arm,size=0x50) addr:0x0204ac60
-func_0204acb0 kind:function(arm,size=0x20) addr:0x0204acb0
-func_0204acd0 kind:function(arm,size=0xc) addr:0x0204acd0
-func_0204acdc kind:function(arm,size=0xac) addr:0x0204acdc
-func_0204ad88 kind:function(arm,size=0x2c) addr:0x0204ad88
-func_0204adb4 kind:function(arm,size=0x34) addr:0x0204adb4
-func_0204ade8 kind:function(arm,size=0x5c) addr:0x0204ade8
-func_0204ae44 kind:function(arm,size=0x38) addr:0x0204ae44
-func_0204ae7c kind:function(arm,size=0x98) addr:0x0204ae7c
-func_0204af14 kind:function(arm,size=0x24) addr:0x0204af14
-func_0204af38 kind:function(arm,size=0x2c) addr:0x0204af38
-func_0204af64 kind:function(arm,size=0x50) addr:0x0204af64
-func_0204afb4 kind:function(arm,size=0x5c) addr:0x0204afb4
-func_0204b010 kind:function(arm,size=0x3c) addr:0x0204b010
-func_0204b04c kind:function(arm,size=0x3c) addr:0x0204b04c
-func_0204b088 kind:function(arm,size=0x60) addr:0x0204b088
-func_0204b0e8 kind:function(arm,size=0x34) addr:0x0204b0e8
-func_0204b11c kind:function(arm,size=0x10) addr:0x0204b11c
-func_0204b12c kind:function(arm,size=0x48) addr:0x0204b12c
-func_0204b174 kind:function(arm,size=0x16c) addr:0x0204b174
-func_0204b2e0 kind:function(arm,size=0xc0) addr:0x0204b2e0
-func_0204b3a0 kind:function(arm,size=0x120) addr:0x0204b3a0
-func_0204b4c0 kind:function(arm,size=0xf4) addr:0x0204b4c0
-func_0204b5b4 kind:function(arm,size=0x34) addr:0x0204b5b4
-func_0204b5e8 kind:function(arm,size=0x38) addr:0x0204b5e8
-func_0204b620 kind:function(arm,size=0x258) addr:0x0204b620
-func_0204b878 kind:function(arm,size=0x58) addr:0x0204b878
-func_0204b8d0 kind:function(arm,size=0x68) addr:0x0204b8d0
-func_0204b938 kind:function(arm,size=0x50) addr:0x0204b938
-func_0204b988 kind:function(arm,size=0x30) addr:0x0204b988
-func_0204b9b8 kind:function(arm,size=0xfc) addr:0x0204b9b8
-func_0204bab4 kind:function(arm,size=0x100) addr:0x0204bab4
-func_0204bbb4 kind:function(arm,size=0x54) addr:0x0204bbb4
-func_0204bc08 kind:function(arm,size=0x6c) addr:0x0204bc08
-func_0204bc74 kind:function(arm,size=0x108) addr:0x0204bc74
+_Z19GetCharVRAMLoadProcii kind:function(arm,size=0x14) addr:0x0204a5e4
+_Z21GetScreenVRAMLoadProcii kind:function(arm,size=0x14) addr:0x0204a5f8
+_Z17SetBG3SubPriorityi kind:function(arm,size=0x1c) addr:0x0204a60c local
+_Z17SetBG2SubPriorityi kind:function(arm,size=0x1c) addr:0x0204a628 local
+_Z17SetBG1SubPriorityi kind:function(arm,size=0x1c) addr:0x0204a644 local
+_Z17SetBG0SubPriorityi kind:function(arm,size=0x1c) addr:0x0204a660 local
+_Z14SetBG3Priorityi kind:function(arm,size=0x1c) addr:0x0204a67c local
+_Z14SetBG2Priorityi kind:function(arm,size=0x1c) addr:0x0204a698 local
+_Z14SetBG1Priorityi kind:function(arm,size=0x1c) addr:0x0204a6b4 local
+_Z14SetBG0Priorityi kind:function(arm,size=0x1c) addr:0x0204a6d0 local
+_Z15SetBG3SubOffsetii kind:function(arm,size=0x28) addr:0x0204a6ec local
+_Z15SetBG2SubOffsetii kind:function(arm,size=0x28) addr:0x0204a714 local
+_Z15SetBG1SubOffsetii kind:function(arm,size=0x28) addr:0x0204a73c local
+_Z15SetBG0SubOffsetii kind:function(arm,size=0x28) addr:0x0204a764 local
+_Z12SetBG3Offsetii kind:function(arm,size=0x28) addr:0x0204a78c local
+_Z12SetBG2Offsetii kind:function(arm,size=0x28) addr:0x0204a7b4 local
+_Z12SetBG1Offsetii kind:function(arm,size=0x28) addr:0x0204a7dc local
+_Z12SetBG0Offsetii kind:function(arm,size=0x28) addr:0x0204a804 local
+_ZN7BGLayer13CharacterData5ResetEv kind:function(arm,size=0x1c) addr:0x0204a82c
+_ZN7BGLayer13CharacterData20LoadAndStageFromBNCGEPFvPKvjjES2_P13SafeAllocator kind:function(arm,size=0xac) addr:0x0204a848
+_ZN7BGLayer13CharacterData20LoadMetadataFromBNCGEPKv kind:function(arm,size=0x90) addr:0x0204a8f4
+_ZN7BGLayer13CharacterData9StageBNCGEPFvPKvjjES2_ kind:function(arm,size=0x40) addr:0x0204a984
+_ZN7BGLayer13CharacterData9StageBNCGEiiPKv kind:function(arm,size=0x64) addr:0x0204a9c4
+_ZNK7BGLayer13CharacterData16GetEndVRAMOffsetEv kind:function(arm,size=0x20) addr:0x0204aa28
+_ZNK7BGLayer13CharacterData11GetVRAMSizeEv kind:function(arm,size=0x1c) addr:0x0204aa48
+_ZN7BGLayer11PaletteData20LoadAndStageFromBNCLEPFvPKvjjES2_P13SafeAllocator kind:function(arm,size=0xe8) addr:0x0204aa64
+_ZN7BGLayer11PaletteData20LoadMetadataFromBNCLEPKv kind:function(arm,size=0x80) addr:0x0204ab4c
+_ZN7BGLayer11PaletteData9StageBNCLEPFvPKvjjES2_ kind:function(arm,size=0x94) addr:0x0204abcc
+_ZN7BGLayer11PaletteData9StageBNCLEiPKv kind:function(arm,size=0x50) addr:0x0204ac60
+_ZN7BGLayer6Sprite5ResetEv kind:function(arm,size=0x20) addr:0x0204acb0
+_ZN7BGLayer6Sprite12MaybeDestroyEv kind:function(arm,size=0xc) addr:0x0204acd0
+_ZN7BGLayer6Sprite12LoadFromBNSCEPFvPKvjjES2_P13SafeAllocator kind:function(arm,size=0xac) addr:0x0204acdc
+_ZN7BGLayer6Sprite22GetLengthAndClearCacheEPKv kind:function(arm,size=0x2c) addr:0x0204ad88
+_ZN7BGLayer6Sprite9StageBNSCEPFvPKvjjES2_ kind:function(arm,size=0x34) addr:0x0204adb4
+_ZN7BGLayer6Sprite9StageBNSCEiiPKv kind:function(arm,size=0x5c) addr:0x0204ade8
+_ZN7BGLayer6Sprite13SwitchPaletteEt kind:function(arm,size=0x38) addr:0x0204ae44
+_ZN7BGLayer6Sprite24SwitchPaletteInRectangleEtssss kind:function(arm,size=0x98) addr:0x0204ae7c
+_ZN7BGLayer9GetSpriteEj kind:function(arm,size=0x24) addr:0x0204af14
+_ZN7BGLayer15AllocateSpritesEjP13SafeAllocator kind:function(arm,size=0x2c) addr:0x0204af38
+_ZN7BGLayer5ResetEv kind:function(arm,size=0x50) addr:0x0204af64
+_ZN7BGLayer12MaybeDestroyEv kind:function(arm,size=0x5c) addr:0x0204afb4
+_ZN7BGLayer18PrepareIndexBufferEPv kind:function(arm,size=0x3c) addr:0x0204b010
+_ZN7BGLayer21CleanIndexBufferCacheEPKv kind:function(arm,size=0x3c) addr:0x0204b04c
+_ZN7BGLayer17UploadIndexBufferEPKv kind:function(arm,size=0x60) addr:0x0204b088
+_ZN7BGLayer30CleanCacheAndUploadIndexBufferEPKv kind:function(arm,size=0x34) addr:0x0204b0e8
+_ZN7BGLayer17ConfigureTextModeEi kind:function(arm,size=0x10) addr:0x0204b11c
+_ZN7BGLayer19AllocateIndexBufferEP13SafeAllocator kind:function(arm,size=0x48) addr:0x0204b12c
+_ZN7BGLayer19ProcessGraphicsFileEPKvP13SafeAllocator kind:function(arm,size=0x16c) addr:0x0204b174
+_ZN7BGLayer27ProcessGraphicsFileMetadataEPKv kind:function(arm,size=0xc0) addr:0x0204b2e0
+_ZN7BGLayer23StageGraphicsFileBufferEPKv kind:function(arm,size=0x120) addr:0x0204b3a0
+_ZN7BGLayer24StageGraphicsFileBuffer2EPKv kind:function(arm,size=0xf4) addr:0x0204b4c0
+_ZN7BGLayer11SetPriorityEi kind:function(arm,size=0x34) addr:0x0204b5b4
+_ZN7BGLayer9SetOffsetEii kind:function(arm,size=0x38) addr:0x0204b5e8
+_ZN7BGLayer18BlitSpriteToBufferEPtPKNS_6SpriteEsssssst kind:function(arm,size=0x258) addr:0x0204b620
+_ZN7BGLayer10BlitSpriteEPKNS_6SpriteEsssssst kind:function(arm,size=0x58) addr:0x0204b878
+_ZN7BGLayer17BlitSpriteByIndexEjsssssst kind:function(arm,size=0x68) addr:0x0204b8d0
+_ZN7BGLayer10BlitSpriteEPKNS_6SpriteEsst kind:function(arm,size=0x50) addr:0x0204b938
+_ZN7BGLayer17BlitSpriteByIndexEjsst kind:function(arm,size=0x30) addr:0x0204b988
+_ZN7BGLayer18SetPaletteInRegionEsssst kind:function(arm,size=0xfc) addr:0x0204b9b8
+_ZN7BGLayer18BlitSpriteRepeatedEPKNS_6SpriteEsssssst kind:function(arm,size=0x100) addr:0x0204bab4
+_ZN7BGLayer25BlitSpriteByIndexRepeatedEjsssssst kind:function(arm,size=0x54) addr:0x0204bbb4
+_ZN7BGLayer17UploadPaletteDataEiiPKvj kind:function(arm,size=0x6c) addr:0x0204bc08
+_ZN7BGLayer18SetTileInRectangleEtsssst kind:function(arm,size=0x108) addr:0x0204bc74
 func_0204bd7c kind:function(arm,size=0x44) addr:0x0204bd7c
 func_0204bdc0 kind:function(arm,size=0x18) addr:0x0204bdc0
 func_0204bdd8 kind:function(arm,size=0x18) addr:0x0204bdd8
@@ -6317,10 +6317,11 @@ data_020e7b30 kind:data(any) addr:0x020e7b30
 data_020e7b3c kind:data(any) addr:0x020e7b3c
 data_020e7b48 kind:data(any) addr:0x020e7b48
 data_020e7b54 kind:data(any) addr:0x020e7b54
-data_020e7b60 kind:data(any) addr:0x020e7b60
-data_020e7b68 kind:data(any) addr:0x020e7b68
-data_020e7b70 kind:data(any) addr:0x020e7b70
-data_020e7b98 kind:data(any) addr:0x020e7b98
+regionLookupPalette$808 kind:data(any) addr:0x020e7b60 local
+regionLookupBG0Screen$814 kind:data(any) addr:0x020e7b68 local
+regionLookupBG0Char$803 kind:data(any) addr:0x020e7b70 local
+screenDimLookup$820 kind:data(any) addr:0x020e7b78 local
+screenDataSizeLookup$826 kind:data(any) addr:0x020e7b98 local
 data_020e7bb8 kind:data(any) addr:0x020e7bb8
 data_020e7bd6 kind:data(any) addr:0x020e7bd6
 data_020e7bd8 kind:data(any) addr:0x020e7bd8
@@ -6943,15 +6944,12 @@ data_020f0156 kind:data(any) addr:0x020f0156
 data_020f0159 kind:data(any) addr:0x020f0159
 data_020f015c kind:data(any) addr:0x020f015c
 data_020f01a4 kind:data(any) addr:0x020f01a4
-data_020f01b0 kind:data(any) addr:0x020f01b0
-data_020f01b8 kind:data(any) addr:0x020f01b8
-data_020f01d8 kind:data(any) addr:0x020f01d8
-data_020f01f8 kind:data(any) addr:0x020f01f8
-data_020f0202 kind:data(any) addr:0x020f0202
-data_020f0218 kind:data(any) addr:0x020f0218
-data_020f0238 kind:data(any) addr:0x020f0238
-data_020f023d kind:data(any) addr:0x020f023d
-data_020f0242 kind:data(any) addr:0x020f0242
+loadProcLookupPalette$797 kind:data(any) addr:0x020f01b0 local
+setOffsetLookup$838 kind:data(any) addr:0x020f01b8 local
+setPriorityLookup$832 kind:data(any) addr:0x020f01d8 local
+loadBGCharLookup$844 kind:data(any) addr:0x020f01f8 local
+loadBGScreenLookup$850 kind:data(any) addr:0x020f0218 local
+@stringBase0 kind:data(byte[0xf]) addr:0x020f0238 local
 data_020f0248 kind:data(any) addr:0x020f0248
 data_020f024e kind:data(any) addr:0x020f024e
 data_020f0251 kind:data(any) addr:0x020f0251
