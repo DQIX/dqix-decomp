@@ -140,6 +140,10 @@ src/World/LootableContainer.cpp:
     .text start:0x0207c88c end:0x0207d07c
     .data start:0x020f0fe0 end:0x020f1050
 
+src/Graphics/TextureArena.cpp:
+    complete
+    .text start:0x0207ebc8 end:0x0207ede0
+
 src/Graphics/Animation3D.cpp:
     complete
     .text start:0x0207ede0 end:0x0207efbc
@@ -266,6 +270,10 @@ src/NitroSDK/NSBXX/VAV.cpp:
 src/NitroSDK/NSBXX/RenderCommandProcs.cpp:
     complete
     .text start:0x020bb47c end:0x020bcef0
+
+src/NitroSDK/VRAMAllocation.cpp:
+    complete
+    .text start:0x020bcef0 end:0x020bd430
 
 src/NitroSDK/VRAM.cpp:
     complete

@@ -1,6 +1,14 @@
 #include "NitroSDK/VRAMAllocation.h"
 #include <globaldefs.h>
 
+#if defined(jpn)
+#define data_020f1ef8 data_020f2064
+#define data_020f1f14 data_020f2080
+
+#define data_0210cf84 data_0210cc3c
+#define data_0210cf88 data_0210cc40
+#endif
+
 // sizeof == 0x18.
 // block in VRAM corresponding to a VRAM bank, or half of one, that's mapped for
 // texture image data.
