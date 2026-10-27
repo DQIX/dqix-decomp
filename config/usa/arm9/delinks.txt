@@ -140,6 +140,10 @@ src/World/LootableContainer.cpp:
     .text start:0x0207ba54 end:0x0207c244
     .data start:0x020f0f18 end:0x020f0f88
 
+src/Graphics/TextureArena.cpp:
+    complete
+    .text start:0x0207de48 end:0x0207e060
+
 src/Graphics/Animation3D.cpp:
     complete
     .text start:0x0207e060 end:0x0207e23c

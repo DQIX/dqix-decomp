@@ -2,6 +2,13 @@
 
 #include <std_library_functions.h>
 
+#if defined(jpn)
+#define data_020f1ee8 data_020f2054
+#define data_020f1eec data_020f2058
+#define data_020f1ef0 data_020f205c
+#define data_020f1ef4 data_020f2060
+#endif
+
 void InitializeTextureImageAllocation(unsigned int numBanks, CBool setAllocFunctions);
 unsigned int FrameAllocateTextureImageVRAM(unsigned int requestedSize, CBool compressed, int unused);
 int FrameFreeTextureImageVRAM(unsigned int);

@@ -7,14 +7,10 @@
 #include "NitroSDK/Graphics.h"
 #include "Filesystem/BackgroundLoader.h"
 #include "Filesystem/FileIO.h"
+#include "NitroSDK/VRAMAllocation.h"
 #include <globaldefs.h>
 
 #if defined(jpn)
-#define data_020f1ee8 data_020f2054
-#define data_020f1eec data_020f2058
-#define data_020f1ef0 data_020f205c
-#define data_020f1ef4 data_020f2060
-
 #define func_020c56b0 func_020c717c
 #endif
 
@@ -22,11 +18,6 @@ extern "C"
 {
     int func_020c56b0(int*);
 }
-
-extern unsigned int (*data_020f1ee8)(unsigned int, int, int);
-extern unsigned int (*data_020f1eec)(unsigned int);
-extern unsigned int (*data_020f1ef0)(unsigned int, int, int);
-extern unsigned int (*data_020f1ef4)(unsigned int);
 
 void Model3D::Clear()
 {

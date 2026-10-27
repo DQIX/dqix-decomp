@@ -9,6 +9,7 @@
 #include "NitroSDK/NSBXX/RenderConfig.h"
 #include "NitroSDK/NSBXX/GeometryFifo.h"
 #include "NitroSDK/NSBXX/NSBXX.h"
+#include "Graphics/TextureArena.h"
 #include "GameState/GameState.h"
 #include "Graphics/LightingManager.h"
 
@@ -44,17 +45,12 @@ struct EffectScriptData
 #if defined(jpn)
 #define func_02033fa0 func_02033ad8 
 #define func_0204be20 func_0204cc40 
-#define func_0207df90 func_0207ed10 
-#define func_0207dfac func_0207ed2c 
 #endif
 
 extern "C"
 {
     void* func_02033fa0(void*);
     bool func_0204be20(void*);
-
-    void func_0207df90(void*);
-    void func_0207dfac(void*);
 }
 
 void AtmosphericEffect::Initialize()
@@ -343,7 +339,7 @@ bool AtmosphericEffectSet::IsArchiveLoaded()
     return false;
 }
 
-void AtmosphericEffectSet::ProcessArchive(AtmosphericEffectSet *target, SafeAllocator *allocator, void *pZone50Thing)
+void AtmosphericEffectSet::ProcessArchive(AtmosphericEffectSet* target, SafeAllocator* allocator, TextureArena* textureArena)
 {
     if (rawArchive_ == NULL)
         return;
@@ -454,13 +450,13 @@ void AtmosphericEffectSet::ProcessArchive(AtmosphericEffectSet *target, SafeAllo
                 fileID++;
             }
             narc.Destroy();
-            func_0207df90(pZone50Thing);
+            textureArena->Restore();
             loadInfo.allocator = allocator;
             loadInfo.fileData = loopObject->archiveFileData_;
             loadInfo.unk_8 = loopObject->archiveFileSize_;
             loadInfo.unk_10 = 1;
             loopObject->object_.LoadFromCHRArchive(&loadInfo);
-            func_0207dfac(pZone50Thing);
+            textureArena->Save();
         }
     }
 

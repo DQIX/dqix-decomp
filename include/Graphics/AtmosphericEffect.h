@@ -3,6 +3,7 @@
 #include "Vector.h"
 #include "std_library_functions.h"
 #include "../World/Object3D.h"
+#include "TextureArena.h"
 
 class AtmosphericEffect
 {
@@ -71,7 +72,7 @@ public:
     void LoadArchive(const char* name);
     bool IsArchiveLoaded();
 
-    void ProcessArchive(AtmosphericEffectSet* alt, SafeAllocator* allocator, void* pZone50Thing);
+    void ProcessArchive(AtmosphericEffectSet* alt, SafeAllocator* allocator, TextureArena* textureArena);
     bool Draw();
 
     void AddEffectObject(AtmosphericEffect* obj);

@@ -7,6 +7,7 @@
 #include "Graphics/AtmosphericEffect.h"
 #include "Graphics/LightingInfo.h"
 #include "Grotto/Main/TileFeatures.h"
+#include "../Graphics/TextureArena.h"
 
 struct Zone3D_StructPtr_8
 {
@@ -58,7 +59,7 @@ public:
         int unknown_3c_;
     } substruct_c_;
     SafeAllocator* pAllocator_4c_;
-    void* unknown_ptr_50_; // referenced in the nsbtx processor, so something graphical
+    TextureArena* textureArena_50_;
     SafeAllocator internalAllocator_;
     SafeAllocator* pAllocator_68_;
 
