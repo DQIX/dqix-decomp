@@ -267,7 +267,7 @@ src/NitroSDK/NSBXX/RenderCommandProcs.cpp:
     complete
     .text start:0x020b99b0 end:0x020bb424
 
-src/NitroSDK/VRAMMapping.cpp:
+src/NitroSDK/VRAMAllocation.cpp:
     complete
     .text start:0x020bb424 end:0x020bb964
 
