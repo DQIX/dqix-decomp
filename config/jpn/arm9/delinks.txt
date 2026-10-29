@@ -85,6 +85,11 @@ src/Resource/PAC.cpp:
     complete
     .text start:0x0204755c end:0x0204775c
 
+src/Graphics/SPRSprite.cpp:
+    complete
+    .text start:0x02047fbc end:0x02048f24
+    .data start:0x020f0140 end:0x020f0150
+
 src/Graphics/BGLayer.cpp:
     complete
     .text start:0x0204b404 end:0x0204cb9c

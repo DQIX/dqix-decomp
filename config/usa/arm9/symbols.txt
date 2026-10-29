@@ -6923,7 +6923,7 @@ data_020f00b6 kind:data(any) addr:0x020f00b6
 data_020f00bc kind:data(any) addr:0x020f00bc
 data_020f00c3 kind:data(any) addr:0x020f00c3
 data_020f00cc kind:data(any) addr:0x020f00cc
-data_020f0118 kind:data(any) addr:0x020f0118
+@stringBase0 kind:data(byte[0xd]) addr:0x020f0118 local
 data_020f0128 kind:data(any) addr:0x020f0128
 data_020f0129 kind:data(any) addr:0x020f0129
 data_020f012c kind:data(any) addr:0x020f012c

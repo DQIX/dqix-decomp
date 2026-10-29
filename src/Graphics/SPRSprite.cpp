@@ -5,6 +5,16 @@
 #include "Filesystem/BackgroundLoader.h"
 #include "Filesystem/FileIO.h"
 
+#if defined(jpn)
+#define data_02114e00 data_02114aa0
+#define data_02114e50 data_02114af0
+
+#define func_020311f0 func_02030d28
+#define func_02031234 func_02030d6c
+#define func_02031278 func_02030db0
+#define func_020429d4 func_02042e94
+#endif
+
 extern "C"
 {
     // submit x-rotation to fifo
@@ -20,8 +30,6 @@ extern "C"
 
 extern bool data_02114e00;
 extern int data_02114e50; // frame counter
-
-extern char data_020f0118[]; // "/data/ani/%s"
 
 static inline void WriteVertex(fix32_t x, fix32_t y, fix32_t z)
 {
@@ -343,7 +351,7 @@ void SPRSprite::LoadAnimationFromFile(const char* filename, SafeAllocator* alloc
         return;
 
     char fullPath[0x80] = {0};
-    sprintf(fullPath, data_020f0118, filename);
+    sprintf(fullPath, "/data/ani/%s", filename);
     void* staging = func_020429d4();
     BackgroundLoader::AddLockGlobal();
 
