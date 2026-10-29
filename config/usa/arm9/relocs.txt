@@ -21756,7 +21756,7 @@ from:0x020bb584 kind:load to:0x020f1f14 module:main
 from:0x020bb6e8 kind:load to:0x020f1f14 add:0x30 module:main
 from:0x020bb6ec kind:load to:0x020f1f14 add:0x18 module:main
 from:0x020bb6f0 kind:load to:0x020f1ef8 module:main
-from:0x020bb6f4 kind:load to:0x020f1ef8 add:0x8 module:main
+from:0x020bb6f4 kind:load to:0x020f1f00 module:main
 from:0x020bb73c kind:load to:0x020f1f14 module:main
 from:0x020bb77c kind:load to:0x020f1f14 module:main
 from:0x020bb790 kind:arm_call to:0x020bb948 module:main

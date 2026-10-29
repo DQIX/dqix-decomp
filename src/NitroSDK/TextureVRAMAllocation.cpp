@@ -1,13 +1,6 @@
 #include "NitroSDK/VRAMAllocation.h"
 #include <globaldefs.h>
 
-#if defined(jpn)
-#define data_020f1ef8 data_020f2064
-#define data_020f1f14 data_020f2080
-
-#define data_0210cf84 data_0210cc3c
-#endif
-
 // sizeof == 0x18.
 // block in VRAM corresponding to a VRAM bank, or half of one, that's mapped for
 // texture image data.
@@ -32,7 +25,7 @@ struct TextureImageVRAMBlock
     {
         return freeEnd - freeStart;
     }
-} static data_020f1f14[5] =
+} static s_blocks[5] =
 {
     { -1, -1, false, false, 0, -1, 0 },
     { -1, -1, false, true,  1, -1, 0x20000 },
@@ -41,37 +34,32 @@ struct TextureImageVRAMBlock
     { -1, -1, false, false, 4, -1, 0x60000 }
 };
 
-static unsigned short data_0210cf84; // #banks available for texture image data
+static unsigned short s_numImageBanks;
 
-// points to data_020f1f14[...], indices { 0, 3, 4, 3, 0, 2, 1 }
-static TextureImageVRAMBlock* data_020f1ef8[7] = 
+static TextureImageVRAMBlock* s_compressedBlockPriorityList[2] =
 {
-    &data_020f1f14[0],
-    &data_020f1f14[3],
-    &data_020f1f14[4],
-    &data_020f1f14[3],
-    &data_020f1f14[0],
-    &data_020f1f14[2],
-    &data_020f1f14[1]
+    &s_blocks[0],
+    &s_blocks[3]
 };
 
-void InitializeTextureImageVRAMBlocks();
-unsigned int FrameAllocateTextureImageVRAM(unsigned int requestedSize, CBool compressed, int unused);
-int FrameFreeTextureImageVRAM(unsigned int);
-
-inline TextureImageVRAMBlock* GetVRAMBlockForUncompressedImageData(int i)
+static TextureImageVRAMBlock* s_blockPriorityList[5] = 
 {
-    TextureImageVRAMBlock* const* x = data_020f1ef8 + 2;
-    return x[i];
-}
+    &s_blocks[4],
+    &s_blocks[3],
+    &s_blocks[0],
+    &s_blocks[2],
+    &s_blocks[1]
+};
 
-void SetTextureImageAllocationOrder(int first, int second, int third, int fourth, int fifth)
+static void InitializeTextureImageVRAMBlocks();
+
+static void SetTextureImageAllocationOrder(int first, int second, int third, int fourth, int fifth)
 {
-    data_020f1ef8[2] = &data_020f1f14[first];
-    data_020f1ef8[3] = &data_020f1f14[second];
-    data_020f1ef8[4] = &data_020f1f14[third];
-    data_020f1ef8[5] = &data_020f1f14[fourth];
-    data_020f1ef8[6] = &data_020f1f14[fifth];
+    s_blockPriorityList[0] = &s_blocks[first];
+    s_blockPriorityList[1] = &s_blocks[second];
+    s_blockPriorityList[2] = &s_blocks[third];
+    s_blockPriorityList[3] = &s_blocks[fourth];
+    s_blockPriorityList[4] = &s_blocks[fifth];
 }
 
 void InitializeTextureImageAllocation(unsigned int numBanks, CBool setAllocFunctions)
@@ -81,7 +69,7 @@ void InitializeTextureImageAllocation(unsigned int numBanks, CBool setAllocFunct
     else
         SetTextureImageAllocationOrder(4, 3, 0, 2, 1);
 
-    data_0210cf84 = numBanks;
+    s_numImageBanks = numBanks;
     InitializeTextureImageVRAMBlocks();
 
     if (setAllocFunctions)
@@ -91,12 +79,12 @@ void InitializeTextureImageAllocation(unsigned int numBanks, CBool setAllocFunct
     }
 }
 
-void InitializeTextureImageVRAMBlocks()
+static void InitializeTextureImageVRAMBlocks()
 {
     int i;
-    TextureImageVRAMBlock* loopObj = data_020f1f14;
-    int numBlocksAvailable = data_0210cf84;
-    if (data_0210cf84 > 1)
+    TextureImageVRAMBlock* loopObj = s_blocks;
+    int numBlocksAvailable = s_numImageBanks;
+    if (s_numImageBanks > 1)
         numBlocksAvailable++;
     for (i = 0; i < 5; i++, loopObj++)
     {
@@ -139,17 +127,17 @@ unsigned int FrameAllocateTextureImageVRAM(unsigned int requestedSize, CBool com
         TextureImageVRAMBlock* texelStorageBlock;
         for (int i = 0; i < 2; i++)
         {
-            texelStorageBlock = data_020f1ef8[i];
+            texelStorageBlock = s_compressedBlockPriorityList[i];
             if (!texelStorageBlock->available || texelStorageBlock->GetLength() < size)
                 continue;
             
             switch (texelStorageBlock->blockIndex)
             {
             case 0:
-                paletteIndexStorageBlock = &data_020f1f14[1];
+                paletteIndexStorageBlock = &s_blocks[1];
                 break;
             case 3:
-                paletteIndexStorageBlock = &data_020f1f14[2];
+                paletteIndexStorageBlock = &s_blocks[2];
                 break;
             default:
                 paletteIndexStorageBlock = NULL;
@@ -173,7 +161,7 @@ unsigned int FrameAllocateTextureImageVRAM(unsigned int requestedSize, CBool com
     {
         for (int i = 0; i < 5; i++)
         {
-            TextureImageVRAMBlock* obj = GetVRAMBlockForUncompressedImageData(i);
+            TextureImageVRAMBlock* obj = s_blockPriorityList[i];
             if (!obj->available || obj->GetLength() < size)
                 continue;
             obj->freeEnd -= size;
@@ -198,7 +186,7 @@ int FrameFreeTextureImageVRAM(unsigned int)
 void SaveTextureImageAllocationState(unsigned int* output)
 {
     int i;
-    TextureImageVRAMBlock* loopObject = data_020f1f14;
+    TextureImageVRAMBlock* loopObject = s_blocks;
     for (i = 0; i < 5; loopObject++, i++)
     {
         *(output + 2*i) = loopObject->freeStart;
@@ -210,7 +198,7 @@ void RestoreTextureImageAllocationState(const unsigned int* input)
 {
     int i = 0;
     int twoi = 0;
-    TextureImageVRAMBlock* loopObject = data_020f1f14;
+    TextureImageVRAMBlock* loopObject = s_blocks;
     for (; i < 5; twoi += 2, i++, loopObject++)
     {
         loopObject->freeStart = *(input + twoi);
