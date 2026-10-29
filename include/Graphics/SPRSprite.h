@@ -6,10 +6,14 @@
 
 // sizeof == 0x88.
 // A 2D (animated) sprite rendered using the 3D engine.
+// Has an inline constructor that gets emitted at 0201c0e8 and a destructor
+// emitted at 0201c108 (usa), calling Reset() and Release() respectively
 class SPRSprite
 {
 public:
     typedef char AnimationName[30];
+    // Has an inline constructor and destructor that each call Reset(),
+    // doesn't appear to be emitted anywhere
     struct Names
     {
         int count;

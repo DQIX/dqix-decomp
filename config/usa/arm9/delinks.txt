@@ -276,9 +276,21 @@ src/NitroSDK/NSBXX/RenderCommandProcs.cpp:
     complete
     .text start:0x020b99b0 end:0x020bb424
 
-src/NitroSDK/VRAMAllocation.cpp:
+src/NitroSDK/VRAMAllocationBase.cpp:
     complete
-    .text start:0x020bb424 end:0x020bb964
+    .text start:0x020bb424 end:0x020bb444
+    .data start:0x020f1ee8 end:0x020f1ef8
+
+src/NitroSDK/TextureVRAMAllocation.cpp:
+    complete
+    .text start:0x020bb444 end:0x020bb780
+    .data start:0x020f1ef8 end:0x020f1f8c
+    .bss start:0x0210cf84 end:0x0210cf88
+
+src/NitroSDK/PaletteVRAMAllocation.cpp:
+    complete
+    .text start:0x020bb780 end:0x020bb964
+    .bss start:0x0210cf88 end:0x0210cf94
 
 src/NitroSDK/VRAM.cpp:
     complete

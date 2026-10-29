@@ -4620,10 +4620,10 @@ CreateTextureMatrix_v3_Rotate kind:function(arm,size=0xa4) addr:0x020bb194
 CreateTextureMatrix_v3_Scale kind:function(arm,size=0x40) addr:0x020bb238
 CreateTextureMatrix_v3_NoExtensions kind:function(arm,size=0x24) addr:0x020bb278
 _Z35MaterialTextureMatrixLoadProc_Type3P18MaterialRenderData kind:function(arm,size=0x188) addr:0x020bb29c
-_Z23InvalidTextureVRAMAllocjii kind:function(arm,size=0x8) addr:0x020bb424
-_Z22InvalidTextureVRAMFreej kind:function(arm,size=0x8) addr:0x020bb42c
-_Z23InvalidPaletteVRAMAllocjii kind:function(arm,size=0x8) addr:0x020bb434
-_Z22InvalidPaletteVRAMFreej kind:function(arm,size=0x8) addr:0x020bb43c
+_Z23InvalidTextureVRAMAllocjii kind:function(arm,size=0x8) addr:0x020bb424 local
+_Z22InvalidTextureVRAMFreej kind:function(arm,size=0x8) addr:0x020bb42c local
+_Z23InvalidPaletteVRAMAllocjii kind:function(arm,size=0x8) addr:0x020bb434 local
+_Z22InvalidPaletteVRAMFreej kind:function(arm,size=0x8) addr:0x020bb43c local
 _Z30SetTextureImageAllocationOrderiiiii kind:function(arm,size=0x48) addr:0x020bb444
 _Z32InitializeTextureImageAllocationji kind:function(arm,size=0x88) addr:0x020bb48c
 _Z32InitializeTextureImageVRAMBlocksv kind:function(arm,size=0x74) addr:0x020bb514
@@ -7426,12 +7426,12 @@ data_020f1e08 kind:data(any) addr:0x020f1e08
 data_020f1e88 kind:data(any) addr:0x020f1e88
 data_020f1ea8 kind:data(any) addr:0x020f1ea8
 data_020f1ec8 kind:data(any) addr:0x020f1ec8
-data_020f1ee8 kind:data(any) addr:0x020f1ee8
-data_020f1eec kind:data(any) addr:0x020f1eec
-data_020f1ef0 kind:data(any) addr:0x020f1ef0
-data_020f1ef4 kind:data(any) addr:0x020f1ef4
-data_020f1ef8 kind:data(any) addr:0x020f1ef8
-data_020f1f14 kind:data(any) addr:0x020f1f14
+g_pfnAllocTextureImage kind:data(any) addr:0x020f1ee8
+g_pfnFreeTextureImage kind:data(any) addr:0x020f1eec
+g_pfnAllocTexturePalette kind:data(any) addr:0x020f1ef0
+g_pfnFreeTexturePalette kind:data(any) addr:0x020f1ef4
+data_020f1ef8 kind:data(any) addr:0x020f1ef8 local
+data_020f1f14 kind:data(any) addr:0x020f1f14 local
 data_020f1f8c kind:data(any) addr:0x020f1f8c
 data_020f1f90 kind:data(any) addr:0x020f1f90
 data_020f2050 kind:data(any) addr:0x020f2050
@@ -7788,8 +7788,8 @@ data_0210b678 kind:bss addr:0x0210b678
 data_0210b6b8 kind:bss addr:0x0210b6b8
 data_0210cf78 kind:bss addr:0x0210cf78
 data_0210cf7c kind:bss addr:0x0210cf7c
-data_0210cf84 kind:data(byte[0x2]) addr:0x0210cf84
-data_0210cf88 kind:bss addr:0x0210cf88
+data_0210cf84 kind:data(byte[0x2]) addr:0x0210cf84 local
+data_0210cf88 kind:bss addr:0x0210cf88 local
 data_0210cf94 kind:bss addr:0x0210cf94
 data_0210cfc0 kind:bss addr:0x0210cfc0
 data_0210cfd0 kind:bss addr:0x0210cfd0

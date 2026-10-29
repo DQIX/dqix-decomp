@@ -28,7 +28,7 @@ typedef int (*TextureImageVRAMFreeProc)(unsigned int handle);
 typedef unsigned int (*TexturePaletteVRAMAllocProc)(unsigned int size, CBool eightByteAlign, int allocDir);
 typedef int (*TexturePaletteVRAMFreeProc)(unsigned int handle);
 
-extern TexturePaletteVRAMAllocProc data_020f1ef0;
-extern TexturePaletteVRAMFreeProc data_020f1ef4;
-extern TextureImageVRAMAllocProc data_020f1ee8;
-extern TextureImageVRAMFreeProc data_020f1eec;
+extern TexturePaletteVRAMAllocProc g_pfnAllocTexturePalette;
+extern TexturePaletteVRAMFreeProc g_pfnFreeTexturePalette;
+extern TextureImageVRAMAllocProc g_pfnAllocTextureImage;
+extern TextureImageVRAMFreeProc g_pfnFreeTextureImage;

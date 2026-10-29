@@ -6,7 +6,6 @@
 #define data_020f1f14 data_020f2080
 
 #define data_0210cf84 data_0210cc3c
-#define data_0210cf88 data_0210cc40
 #endif
 
 // sizeof == 0x18.
@@ -33,53 +32,32 @@ struct TextureImageVRAMBlock
     {
         return freeEnd - freeStart;
     }
-} extern data_020f1f14[5];
-
-extern unsigned short data_0210cf84; // #banks available for texture image data
-struct PaletteAllocationData
+} static data_020f1f14[5] =
 {
-    unsigned int freeStart;
-    unsigned int freeEnd;
-    unsigned int totalLength;
-} extern data_0210cf88;
+    { -1, -1, false, false, 0, -1, 0 },
+    { -1, -1, false, true,  1, -1, 0x20000 },
+    { -1, -1, false, true,  2, -1, 0x30000 },
+    { -1, -1, false, false, 3, -1, 0x40000 },
+    { -1, -1, false, false, 4, -1, 0x60000 }
+};
 
-// to do: declare these here
-extern TexturePaletteVRAMAllocProc data_020f1ef0;
-extern TexturePaletteVRAMFreeProc data_020f1ef4;
-extern TextureImageVRAMAllocProc data_020f1ee8;
-extern TextureImageVRAMFreeProc data_020f1eec;
+static unsigned short data_0210cf84; // #banks available for texture image data
 
 // points to data_020f1f14[...], indices { 0, 3, 4, 3, 0, 2, 1 }
-extern TextureImageVRAMBlock* data_020f1ef8[7];
+static TextureImageVRAMBlock* data_020f1ef8[7] = 
+{
+    &data_020f1f14[0],
+    &data_020f1f14[3],
+    &data_020f1f14[4],
+    &data_020f1f14[3],
+    &data_020f1f14[0],
+    &data_020f1f14[2],
+    &data_020f1f14[1]
+};
 
 void InitializeTextureImageVRAMBlocks();
 unsigned int FrameAllocateTextureImageVRAM(unsigned int requestedSize, CBool compressed, int unused);
 int FrameFreeTextureImageVRAM(unsigned int);
-
-unsigned int FrameAllocateTexturePaletteVRAM(unsigned int requestedSize, CBool eightByteAlign, int allocDir);
-int FrameFreeTexturePaletteVRAM(unsigned int);
-
-void ResetTexturePaletteAllocationState();
-
-unsigned int InvalidTextureVRAMAlloc(unsigned int, CBool, int)
-{
-    return 0;
-}
-
-int InvalidTextureVRAMFree(unsigned int)
-{
-    return -1;
-}
-
-unsigned int InvalidPaletteVRAMAlloc(unsigned int, CBool, int)
-{
-    return 0;
-}
-
-int InvalidPaletteVRAMFree(unsigned int)
-{
-    return -1;
-}
 
 inline TextureImageVRAMBlock* GetVRAMBlockForUncompressedImageData(int i)
 {
@@ -108,8 +86,8 @@ void InitializeTextureImageAllocation(unsigned int numBanks, CBool setAllocFunct
 
     if (setAllocFunctions)
     {
-        data_020f1ee8 = &FrameAllocateTextureImageVRAM;
-        data_020f1eec = &FrameFreeTextureImageVRAM;
+        g_pfnAllocTextureImage = &FrameAllocateTextureImageVRAM;
+        g_pfnFreeTextureImage = &FrameFreeTextureImageVRAM;
     }
 }
 
@@ -238,108 +216,4 @@ void RestoreTextureImageAllocationState(const unsigned int* input)
         loopObject->freeStart = *(input + twoi);
         loopObject->freeEnd = *(input + twoi + 1);
     }
-}
-
-void InitializeTexturePaletteVRAMAllocation(unsigned int size, CBool setAllocFunctions)
-{
-    data_0210cf88.totalLength = size;
-    ResetTexturePaletteAllocationState();
-    if (setAllocFunctions)
-    {
-        data_020f1ef0 = &FrameAllocateTexturePaletteVRAM;
-        data_020f1ef4 = &FrameFreeTexturePaletteVRAM;
-    }
-}
-
-inline CBool FrameAllocateTexturePalette_Front(unsigned int size, CBool eightByte, unsigned int* pOutcome)
-{
-    unsigned int freeStart = data_0210cf88.freeStart;
-    unsigned int distanceToAligned;
-    if (eightByte)
-        distanceToAligned = (8 - (freeStart & 7)) & 7;
-    else
-        distanceToAligned = (16 - (freeStart & 15)) & 15;
-    unsigned int neededSize = size + distanceToAligned;
-
-    if (data_0210cf88.freeEnd - data_0210cf88.freeStart >= neededSize)
-    {
-        unsigned int allocEnd = freeStart + neededSize;
-        if (eightByte && allocEnd > 0x10000)
-            return false;
-
-        *pOutcome = freeStart + distanceToAligned;
-        data_0210cf88.freeStart += neededSize;
-        return true;
-    }
-    else
-        return false;
-}
-
-inline CBool FrameAllocateTexturePalette_Back(unsigned int size, CBool eightByte, unsigned int* pOutcome)
-{
-    if (data_0210cf88.freeEnd >= size)
-    {
-        unsigned int freeStart = data_0210cf88.freeEnd - size;
-        unsigned int alignmentWaste;
-        if (eightByte)
-            alignmentWaste = freeStart & 7;
-        else
-            alignmentWaste = freeStart & 15;
-        unsigned int neededSize = size + alignmentWaste;
-
-        if (data_0210cf88.freeEnd - data_0210cf88.freeStart >= neededSize)
-        {
-            unsigned int freeEnd = data_0210cf88.freeEnd;
-            if (eightByte && freeEnd > 0x10000)
-                return false;
-            
-            data_0210cf88.freeEnd -= neededSize;
-            *pOutcome = data_0210cf88.freeEnd;
-            return true;
-        }
-    }
-    return false;
-}
-
-unsigned int FrameAllocateTexturePaletteVRAM(unsigned int size, CBool eightByte, int allocDir)
-{
-    unsigned int chosenOffset = 0;
-    CBool success = false;
-
-    size = (size == 0) ? 8 : ((size + 7) & ~7);
-
-    if (size >= 0x7fff8) // 512kb
-        return 0;
-
-    if (allocDir == 1) // allocate at front
-        success = FrameAllocateTexturePalette_Front(size, eightByte, &chosenOffset);
-    else
-        success = FrameAllocateTexturePalette_Back(size, eightByte, &chosenOffset);
-
-    if (success)
-        return ((size >> 3) << 16) | ((chosenOffset >> 3) & 0xffff);
-    return 0;
-}
-
-int FrameFreeTexturePaletteVRAM(unsigned int)
-{
-    return 0;
-}
-
-void SaveTexturePaletteAllocationState(unsigned int* pRange)
-{
-    pRange[0] = data_0210cf88.freeStart;
-    pRange[1] = data_0210cf88.freeEnd;
-}
-
-void RestoreTexturePaletteAllocationState(const unsigned int* pRange)
-{
-    data_0210cf88.freeStart = pRange[0];
-    data_0210cf88.freeEnd = pRange[1];
-}
-
-void ResetTexturePaletteAllocationState()
-{
-    data_0210cf88.freeStart = 0;
-    data_0210cf88.freeEnd = data_0210cf88.totalLength;
 }
