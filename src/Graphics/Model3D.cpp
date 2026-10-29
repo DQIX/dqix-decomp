@@ -7,14 +7,10 @@
 #include "NitroSDK/Graphics.h"
 #include "Filesystem/BackgroundLoader.h"
 #include "Filesystem/FileIO.h"
+#include "NitroSDK/VRAMAllocation.h"
 #include <globaldefs.h>
 
 #if defined(jpn)
-#define data_020f1ee8 data_020f2054
-#define data_020f1eec data_020f2058
-#define data_020f1ef0 data_020f205c
-#define data_020f1ef4 data_020f2060
-
 #define func_020c56b0 func_020c717c
 #endif
 
@@ -22,11 +18,6 @@ extern "C"
 {
     int func_020c56b0(int*);
 }
-
-extern unsigned int (*data_020f1ee8)(unsigned int, int, int);
-extern unsigned int (*data_020f1eec)(unsigned int);
-extern unsigned int (*data_020f1ef0)(unsigned int, int, int);
-extern unsigned int (*data_020f1ef4)(unsigned int);
 
 void Model3D::Clear()
 {
@@ -151,7 +142,7 @@ void Model3D::ProcessRawFile(TextureStagingMode stagingMode)
 
             if (block1Len != 0)
             {
-                block1Alloc = data_020f1ee8(block1Len, 0, 0);
+                block1Alloc = g_pfnAllocTextureImage(block1Len, 0, 0);
                 if (block1Alloc == 0)
                     block1Succeeded = false;
             }
@@ -160,7 +151,7 @@ void Model3D::ProcessRawFile(TextureStagingMode stagingMode)
 
             if (block2Len != 0)
             {
-                block2Alloc = data_020f1ee8(block2Len, 1, 0);
+                block2Alloc = g_pfnAllocTextureImage(block2Len, 1, 0);
                 if (block2Alloc == 0)
                     block23Succeeded = false;
             }
@@ -169,7 +160,7 @@ void Model3D::ProcessRawFile(TextureStagingMode stagingMode)
             
             if (block4Len != 0)
             {
-                block4Alloc = data_020f1ef0(block4Len, tex0->maybeBlock23Flags_20_ & 0x8000, 0);
+                block4Alloc = g_pfnAllocTexturePalette(block4Len, tex0->maybeBlock23Flags_20_ & 0x8000, 0);
                 if (block4Alloc == 0)
                     block4Succeeded = false;
             }
@@ -179,11 +170,11 @@ void Model3D::ProcessRawFile(TextureStagingMode stagingMode)
             if (!block1Succeeded || !block23Succeeded || !block4Succeeded)
             {
                 if (block4Succeeded)
-                    data_020f1ef4(block4Alloc);
+                    g_pfnFreeTexturePalette(block4Alloc);
                 if (block23Succeeded)
-                    data_020f1eec(block2Alloc);
+                    g_pfnFreeTextureImage(block2Alloc);
                 if (block1Succeeded)
-                    data_020f1eec(block1Alloc);
+                    g_pfnFreeTextureImage(block1Alloc);
                 break; // from switch statement
             }
             else

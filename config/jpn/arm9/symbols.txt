@@ -1737,31 +1737,31 @@ func_02047da4 kind:function(arm,size=0x88) addr:0x02047da4
 func_02047e2c kind:function(arm,size=0x150) addr:0x02047e2c
 func_02047f7c kind:function(arm,size=0x3c) addr:0x02047f7c
 func_02047fb8 kind:function(arm,size=0x4) addr:0x02047fb8
-func_02047fbc kind:function(arm,size=0x94) addr:0x02047fbc
-func_02048050 kind:function(arm,size=0x1c) addr:0x02048050
-func_0204806c kind:function(arm,size=0x98) addr:0x0204806c
-func_02048104 kind:function(arm,size=0xe4) addr:0x02048104
-func_020481e8 kind:function(arm,size=0x80) addr:0x020481e8
-func_02048268 kind:function(arm,size=0x10c) addr:0x02048268
-func_02048374 kind:function(arm,size=0xf4) addr:0x02048374
-func_02048468 kind:function(arm,size=0xd0) addr:0x02048468
-func_02048538 kind:function(arm,size=0x170) addr:0x02048538
-func_020486a8 kind:function(arm,size=0x34) addr:0x020486a8
-func_020486dc kind:function(arm,size=0x70) addr:0x020486dc
-func_0204874c kind:function(arm,size=0x8c) addr:0x0204874c
-func_020487d8 kind:function(arm,size=0x44) addr:0x020487d8
-func_0204881c kind:function(arm,size=0x40) addr:0x0204881c
-func_0204885c kind:function(arm,size=0x20) addr:0x0204885c
-func_0204887c kind:function(arm,size=0x1c) addr:0x0204887c
-func_02048898 kind:function(arm,size=0xb8) addr:0x02048898
-func_02048950 kind:function(arm,size=0x10) addr:0x02048950
-func_02048960 kind:function(arm,size=0x394) addr:0x02048960
-func_02048cf4 kind:function(arm,size=0x9c) addr:0x02048cf4
-func_02048d90 kind:function(arm,size=0x94) addr:0x02048d90
-func_02048e24 kind:function(arm,size=0x7c) addr:0x02048e24
-func_02048ea0 kind:function(arm,size=0x10) addr:0x02048ea0
-func_02048eb0 kind:function(arm,size=0x28) addr:0x02048eb0
-func_02048ed8 kind:function(arm,size=0x4c) addr:0x02048ed8
+_ZN9SPRSprite5ResetEv kind:function(arm,size=0x94) addr:0x02047fbc
+_ZN9SPRSprite7ReleaseEv kind:function(arm,size=0x1c) addr:0x02048050
+_ZN9SPRSprite6UpdateEv kind:function(arm,size=0x98) addr:0x0204806c
+_ZN9SPRSprite24DrawAnimatedWithRotationEb kind:function(arm,size=0xe4) addr:0x02048104
+_ZN9SPRSprite22DrawAnimatedNoRotationEb kind:function(arm,size=0x80) addr:0x020481e8
+_ZN9SPRSprite31DrawTextureScaleRotateTranslateEib kind:function(arm,size=0x10c) addr:0x02048268
+_ZN9SPRSprite25DrawTextureScaleTranslateEib kind:function(arm,size=0xf4) addr:0x02048374
+_ZN9SPRSprite17DrawTextureStaticEib kind:function(arm,size=0xd0) addr:0x02048468
+_ZN9SPRSprite16DrawTexturePieceEPNS_12TexturePieceEb kind:function(arm,size=0x170) addr:0x02048538
+_Z14WriteTexCoordsii kind:function(arm,size=0x34) addr:0x020486a8 local
+_ZN9SPRSprite12SetAnimationEi kind:function(arm,size=0x70) addr:0x020486dc
+_ZN9SPRSprite22SetAnimationRandomTimeEPKc kind:function(arm,size=0x8c) addr:0x0204874c
+_ZNK9SPRSprite23GetCurrentTextureHeightEv kind:function(arm,size=0x44) addr:0x020487d8
+_ZNK9SPRSprite22GetCurrentTextureWidthEv kind:function(arm,size=0x40) addr:0x0204881c
+_ZNK9SPRSprite16GetTextureHeightEi kind:function(arm,size=0x20) addr:0x0204885c
+_ZNK9SPRSprite15GetTextureWidthEi kind:function(arm,size=0x1c) addr:0x0204887c
+_ZN9SPRSprite21LoadAnimationFromFileEPKcP13SafeAllocator kind:function(arm,size=0xb8) addr:0x02048898
+_ZN9SPRSprite11LoadFromSPREPKvjP13SafeAllocator kind:function(arm,size=0x10) addr:0x02048950
+_ZN9SPRSprite11LoadFromSPREPKvP13SafeAllocator kind:function(arm,size=0x394) addr:0x02048960
+_ZN9SPRSprite20AllocateTextureImageEPNS_12TexturePieceEPKvjP13SafeAllocator kind:function(arm,size=0x9c) addr:0x02048cf4
+_ZN9SPRSprite22AllocateTexturePaletteEPKvjP13SafeAllocator kind:function(arm,size=0x94) addr:0x02048d90
+_ZN9SPRSprite7CloneToEPS_ kind:function(arm,size=0x7c) addr:0x02048e24
+_ZN9SPRSprite5Names5ResetEv kind:function(arm,size=0x10) addr:0x02048ea0
+_ZN9SPRSprite5Names8AllocateEiP13SafeAllocator kind:function(arm,size=0x28) addr:0x02048eb0
+_ZN9SPRSprite5Names4FindEPKc kind:function(arm,size=0x4c) addr:0x02048ed8
 func_02048f24 kind:function(arm,size=0x1c) addr:0x02048f24
 func_02048f40 kind:function(arm,size=0x24) addr:0x02048f40
 func_02048f64 kind:function(arm,size=0xc) addr:0x02048f64
@@ -2764,7 +2764,7 @@ _Z32EffectScript_SetHiddenTimesOfDayPN6Script9ParameterEi kind:function(arm,size
 _ZN20AtmosphericEffectSet5ResetEv kind:function(arm,size=0x5c) addr:0x0207b3f0
 _ZN20AtmosphericEffectSet11LoadArchiveEPKc kind:function(arm,size=0x90) addr:0x0207b44c
 _ZN20AtmosphericEffectSet15IsArchiveLoadedEv kind:function(arm,size=0x90) addr:0x0207b4dc
-_ZN20AtmosphericEffectSet14ProcessArchiveEPS_P13SafeAllocatorPv kind:function(arm,size=0x524) addr:0x0207b56c
+_ZN20AtmosphericEffectSet14ProcessArchiveEPS_P13SafeAllocatorP12TextureArena kind:function(arm,size=0x524) addr:0x0207b56c
 _ZN20AtmosphericEffectSet4DrawEv kind:function(arm,size=0x338) addr:0x0207ba90
 _ZN20AtmosphericEffectSet15AddEffectObjectEP17AtmosphericEffect kind:function(arm,size=0x2c) addr:0x0207bdc8
 _ZN20AtmosphericEffectSet15GetEffectByNameEPKc kind:function(arm,size=0x44) addr:0x0207bdf4
@@ -2849,11 +2849,11 @@ func_0207e928 kind:function(arm,size=0x148) addr:0x0207e928
 func_0207ea70 kind:function(arm,size=0x100) addr:0x0207ea70
 func_0207eb70 kind:function(arm,size=0x2c) addr:0x0207eb70
 func_0207eb9c kind:function(arm,size=0x2c) addr:0x0207eb9c
-func_0207ebc8 kind:function(arm,size=0x108) addr:0x0207ebc8
-func_0207ecd0 kind:function(arm,size=0x40) addr:0x0207ecd0
-func_0207ed10 kind:function(arm,size=0x1c) addr:0x0207ed10
-func_0207ed2c kind:function(arm,size=0x1c) addr:0x0207ed2c
-func_0207ed48 kind:function(arm,size=0x98) addr:0x0207ed48
+_ZN12TextureArena10InitializeEjj kind:function(arm,size=0x108) addr:0x0207ebc8
+_ZN12TextureArena5ResetEv kind:function(arm,size=0x40) addr:0x0207ecd0
+_ZNK12TextureArena7RestoreEv kind:function(arm,size=0x1c) addr:0x0207ed10
+_ZN12TextureArena4SaveEv kind:function(arm,size=0x1c) addr:0x0207ed2c
+_ZN12TextureArena16CreateDescendantEPS_ kind:function(arm,size=0x98) addr:0x0207ed48
 _ZN11Animation3D17DefaultInitializeEv kind:function(arm,size=0x1c) addr:0x0207ede0
 _ZN11Animation3D10SetRawFileEP14NSBXXContainer kind:function(arm,size=0x14) addr:0x0207edfc
 _ZN11Animation3D10CreateDataEP7Model3DP13SafeAllocatorS1_ kind:function(arm,size=0xd8) addr:0x0207ee10
@@ -4485,23 +4485,23 @@ CreateTextureMatrix_v3_Rotate kind:function(arm,size=0xa4) addr:0x020bcc60
 CreateTextureMatrix_v3_Scale kind:function(arm,size=0x40) addr:0x020bcd04
 CreateTextureMatrix_v3_NoExtensions kind:function(arm,size=0x24) addr:0x020bcd44
 _Z35MaterialTextureMatrixLoadProc_Type3P18MaterialRenderData kind:function(arm,size=0x188) addr:0x020bcd68
-func_020bcef0 kind:function(arm,size=0x8) addr:0x020bcef0
-func_020bcef8 kind:function(arm,size=0x8) addr:0x020bcef8
-func_020bcf00 kind:function(arm,size=0x8) addr:0x020bcf00
-func_020bcf08 kind:function(arm,size=0x8) addr:0x020bcf08
-func_020bcf10 kind:function(arm,size=0x48) addr:0x020bcf10
-func_020bcf58 kind:function(arm,size=0x88) addr:0x020bcf58
-func_020bcfe0 kind:function(arm,size=0x74) addr:0x020bcfe0
-func_020bd054 kind:function(arm,size=0x170) addr:0x020bd054
-func_020bd1c4 kind:function(arm,size=0x8) addr:0x020bd1c4
-func_020bd1cc kind:function(arm,size=0x40) addr:0x020bd1cc
-func_020bd20c kind:function(arm,size=0x40) addr:0x020bd20c
-func_020bd24c kind:function(arm,size=0x4c) addr:0x020bd24c
-func_020bd298 kind:function(arm,size=0x13c) addr:0x020bd298
-func_020bd3d4 kind:function(arm,size=0x8) addr:0x020bd3d4
-func_020bd3dc kind:function(arm,size=0x1c) addr:0x020bd3dc
-func_020bd3f8 kind:function(arm,size=0x1c) addr:0x020bd3f8
-func_020bd414 kind:function(arm,size=0x1c) addr:0x020bd414
+_Z23InvalidTextureVRAMAllocjii kind:function(arm,size=0x8) addr:0x020bcef0 local
+_Z22InvalidTextureVRAMFreej kind:function(arm,size=0x8) addr:0x020bcef8 local
+_Z23InvalidPaletteVRAMAllocjii kind:function(arm,size=0x8) addr:0x020bcf00 local
+_Z22InvalidPaletteVRAMFreej kind:function(arm,size=0x8) addr:0x020bcf08 local
+_Z30SetTextureImageAllocationOrderiiiii kind:function(arm,size=0x48) addr:0x020bcf10 local
+_Z32InitializeTextureImageAllocationji kind:function(arm,size=0x88) addr:0x020bcf58
+_Z32InitializeTextureImageVRAMBlocksv kind:function(arm,size=0x74) addr:0x020bcfe0 local
+_Z29FrameAllocateTextureImageVRAMjii kind:function(arm,size=0x170) addr:0x020bd054
+_Z25FrameFreeTextureImageVRAMj kind:function(arm,size=0x8) addr:0x020bd1c4
+_Z31SaveTextureImageAllocationStatePj kind:function(arm,size=0x40) addr:0x020bd1cc
+_Z34RestoreTextureImageAllocationStatePKj kind:function(arm,size=0x40) addr:0x020bd20c
+_Z38InitializeTexturePaletteVRAMAllocationji kind:function(arm,size=0x4c) addr:0x020bd24c
+_Z31FrameAllocateTexturePaletteVRAMjii kind:function(arm,size=0x13c) addr:0x020bd298
+_Z27FrameFreeTexturePaletteVRAMj kind:function(arm,size=0x8) addr:0x020bd3d4
+_Z33SaveTexturePaletteAllocationStatePj kind:function(arm,size=0x1c) addr:0x020bd3dc
+_Z36RestoreTexturePaletteAllocationStatePKj kind:function(arm,size=0x1c) addr:0x020bd3f8
+_Z34ResetTexturePaletteAllocationStatev kind:function(arm,size=0x1c) addr:0x020bd414
 func_020bd430 kind:function(arm,size=0x20) addr:0x020bd430
 func_020bd450 kind:function(arm,size=0x14) addr:0x020bd450
 func_020bd464 kind:function(arm,size=0x2c) addr:0x020bd464
@@ -6792,7 +6792,7 @@ data_020f00db kind:data(any) addr:0x020f00db
 data_020f00e2 kind:data(any) addr:0x020f00e2
 data_020f00ea kind:data(any) addr:0x020f00ea
 data_020f00f4 kind:data(any) addr:0x020f00f4
-data_020f0140 kind:data(any) addr:0x020f0140
+@stringBase0 kind:data(byte[0xd]) addr:0x020f0140 local
 data_020f0150 kind:data(any) addr:0x020f0150
 data_020f0151 kind:data(any) addr:0x020f0151
 data_020f0154 kind:data(any) addr:0x020f0154
@@ -7302,17 +7302,13 @@ data_020f1f74 kind:data(any) addr:0x020f1f74
 data_020f1ff4 kind:data(any) addr:0x020f1ff4
 data_020f2014 kind:data(any) addr:0x020f2014
 data_020f2034 kind:data(any) addr:0x020f2034
-data_020f2054 kind:data(any) addr:0x020f2054
-data_020f2058 kind:data(any) addr:0x020f2058
-data_020f205c kind:data(any) addr:0x020f205c
-data_020f2060 kind:data(any) addr:0x020f2060
-data_020f2064 kind:data(any) addr:0x020f2064
-data_020f206c kind:data(any) addr:0x020f206c
-data_020f2080 kind:data(any) addr:0x020f2080
-data_020f2098 kind:data(any) addr:0x020f2098
-data_020f20b0 kind:data(any) addr:0x020f20b0
-data_020f20c8 kind:data(any) addr:0x020f20c8
-data_020f20e0 kind:data(any) addr:0x020f20e0
+g_pfnAllocTextureImage kind:data(any) addr:0x020f2054
+g_pfnFreeTextureImage kind:data(any) addr:0x020f2058
+g_pfnAllocTexturePalette kind:data(any) addr:0x020f205c
+g_pfnFreeTexturePalette kind:data(any) addr:0x020f2060
+s_compressedBlockPriorityList kind:data(any) addr:0x020f2064 local
+s_blockPriorityList kind:data(any) addr:0x020f206c local
+s_blocks kind:data(any) addr:0x020f2080 local
 data_020f20f8 kind:data(any) addr:0x020f20f8
 data_020f20fc kind:data(any) addr:0x020f20fc
 data_020f21bc kind:data(any) addr:0x020f21bc
@@ -7635,8 +7631,8 @@ data_0210b330 kind:bss addr:0x0210b330
 data_0210b370 kind:bss addr:0x0210b370
 data_0210cc30 kind:bss addr:0x0210cc30
 data_0210cc34 kind:bss addr:0x0210cc34
-data_0210cc3c kind:bss addr:0x0210cc3c
-data_0210cc40 kind:bss addr:0x0210cc40
+s_numImageBanks kind:data(byte[0x2]) addr:0x0210cc3c local
+s_paletteData kind:bss addr:0x0210cc40 local
 data_0210cc4c kind:bss addr:0x0210cc4c
 data_0210cc60 kind:bss addr:0x0210cc60
 data_0210cc70 kind:bss addr:0x0210cc70
