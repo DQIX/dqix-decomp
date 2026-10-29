@@ -3,9 +3,7 @@
 
 // sizeof == 0x18.
 // block in VRAM corresponding to a VRAM bank, or half of one, that's mapped for
-// texture image data.
-// We have an array of 5 of these (1 & 2 are half of the second mapped block,
-// 0,3,4 are the full 1st, 3rd, 4th block respectively)
+// texture image data
 struct TextureImageVRAMBlock
 {
     unsigned int freeStart;
@@ -14,11 +12,7 @@ struct TextureImageVRAMBlock
     CBool isHalfSize;
     unsigned short blockIndex;
     unsigned short pad_12; // filled with 0xffff, might be 2 chars
-    // offset, within the overall VRAM assigned to texture image, of this
-    // block. e.g. the block corresponding to VRAM bank A is always 0 if mapped.
-    // the five instances of this have values 0, 0x20000, 0x30000, 0x40000
-    // and 0x60000 which matches the 4 banks A-D assigned to this with the second
-    // being split into 2x 64K
+    // offset, within the overall VRAM assigned to texture image, of this block
     unsigned int blockOffset;
 
     inline unsigned int GetLength() const
@@ -116,7 +110,7 @@ unsigned int FrameAllocateTextureImageVRAM(unsigned int requestedSize, CBool com
     else
         size = (requestedSize + 15) & ~15;
 
-    if (size >= 0x7fff0) // 512kb, VRAM banks A-D?
+    if (size >= 0x7fff0) // basically 512k (all of banks A-D)
         return 0;
 
     CBool success;
@@ -189,8 +183,8 @@ void SaveTextureImageAllocationState(unsigned int* output)
     TextureImageVRAMBlock* loopObject = s_blocks;
     for (i = 0; i < 5; loopObject++, i++)
     {
-        *(output + 2*i) = loopObject->freeStart;
-        *(output + 2*i + 1) = loopObject->freeEnd;
+        *(output + 2 * i) = loopObject->freeStart;
+        *(output + 2 * i + 1) = loopObject->freeEnd;
     }
 }
 
@@ -199,9 +193,12 @@ void RestoreTextureImageAllocationState(const unsigned int* input)
     int i = 0;
     int twoi = 0;
     TextureImageVRAMBlock* loopObject = s_blocks;
-    for (; i < 5; twoi += 2, i++, loopObject++)
+    while (i < 5)
     {
         loopObject->freeStart = *(input + twoi);
         loopObject->freeEnd = *(input + twoi + 1);
+        twoi += 2;
+        i++;
+        loopObject++;
     }
 }
