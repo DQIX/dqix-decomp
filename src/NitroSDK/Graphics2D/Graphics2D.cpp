@@ -1,4 +1,7 @@
 #include "NitroSDK/Graphics2D/Graphics2D.h"
+#include "NitroSDK/HWRegisters.h"
+#include "NitroSDK/Cache.h"
+#include "NitroSDK/LoadToVRAM.h"
 #include <globaldefs.h>
 
 extern "C"
@@ -9,6 +12,7 @@ extern "C"
 #define SIGNATURE_CEBK 0x4345424b
 #define SIGNATURE_CHAR 0x43484152
 #define SIGNATURE_PLTT 0x504c5454
+#define SIGNATURE_PCMP 0x50434d50
 
 template<class T>
 static inline T* FixPointerOffsetRight(T** pPtr, void* base)
@@ -22,11 +26,26 @@ static inline T* FixPointerOffsetLeft(T** pPtr, void* base)
     return (*pPtr = (T*)((intptr_t)base + (intptr_t)*pPtr));
 }
 
+static inline int Log2Discrete(int x)
+{
+    switch (x)
+    {
+    case 1: return 0;
+    case 2: return 1;
+    case 4: return 2;
+    case 8: return 3;
+    case 16: return 4;
+    case 32: return 5;
+    }
+    return 0;
+}
+
 void InternalPrepareCellBankSubstruct14(Nitro2DCellBank::Substruct14::Interior* ptr);
 void PrepareABNK(Nitro2DAnimationBank* ptr);
 void PrepareCEBK(Nitro2DCellBank* ptr);
 void PrepareCHAR(Nitro2DCharacter* ptr);
 void PreparePLTT(Nitro2DPalette* ptr);
+void PreparePCMP(Nitro2DPaletteCMP* ptr);
 
 CBool InternalGetAnimationBank(void* fileData, Nitro2DAnimationBank** output)
 {
@@ -186,6 +205,24 @@ CBool Nitro2D_GetPalette(void* fileData, Nitro2DPalette** output)
     return true;
 }
 
+CBool Nitro2D_GetPaletteCMP(void* fileData, Nitro2DPaletteCMP** output)
+{
+    Nitro2DInnerFileHeader* fileHeader = Nitro2D_GetInnerFileBySignature(fileData, SIGNATURE_PCMP);
+    if (fileHeader == NULL)
+    {
+        *output = NULL;
+        return false;
+    }
+    PreparePCMP((Nitro2DPaletteCMP*)fileHeader->GetInterior());
+    *output = (Nitro2DPaletteCMP*)fileHeader->GetInterior();
+    return true;
+}
+
+void PrepareCPCMP(Nitro2DPaletteCMP* ptr)
+{
+    FixPointerOffsetRight(&ptr->pPaletteIDs_4, ptr);
+}
+
 void PreparePLTT(Nitro2DPalette* ptr)
 {
     FixPointerOffsetRight(&ptr->pPaletteData_c, ptr);
@@ -211,4 +248,206 @@ void InternalPrepareCellBankSubstruct14(Nitro2DCellBank::Substruct14::Interior* 
     {
         FixPointerOffsetLeft(&ptr->pointers_4[i], ptr);
     }
+}
+
+void StoreCharacterVRAMLoadOffset(Nitro2DCharacterLoadOutput* output, int vramType, unsigned int offset)
+{
+    output->offsets_0[vramType] = offset;
+}
+
+void StorePaletteVRAMLoadOffset(Nitro2DPaletteLoadOutput* output, int screen, unsigned int offset)
+{
+    output->loadOffsets_8[screen] = offset;
+}
+
+void Nitro2D_LoadCharacterToVRAM(Nitro2DCharacter* character, unsigned int vramOffset, int vramType, Nitro2DCharacterLoadOutput* output)
+{
+    unsigned int objTileMapping = character->objTileMapping_8;
+    switch (vramType)
+    {
+    case 0:
+        break;
+    case 1:
+        DISPCNT = (DISPCNT & 0xffcfffef) | objTileMapping;
+        break;
+    case 2:
+        DISPCNTSUB = (DISPCNTSUB & 0xffcfffef) | objTileMapping;
+        break;
+    }
+    CleanInvalidateCacheRange(character->pTileData_14, character->tileDataSizeBytes_10);
+    switch (vramType)
+    {
+    case 0:
+        MemoryMapTextureImage();
+        LoadToTextureImage(character->pTileData_14, vramOffset, character->tileDataSizeBytes_10);
+        MemoryUnmapTextureImage();
+        break;
+    case 1:
+        LoadToMainObjVRAM(character->pTileData_14, vramOffset, character->tileDataSizeBytes_10);
+        break;
+    case 2:
+        LoadToSubObjVRAM(character->pTileData_14, vramOffset, character->tileDataSizeBytes_10);
+        break;
+    }
+    if (character->objTileMapping_8 == 0) // 2D tile mapping
+    {
+        output->unknown_c = Log2Discrete(character->unknown_2);
+        output->unknown_10 = Log2Discrete(character->tileDataSizeKB_0);
+    }
+    else
+    {
+        output->unknown_c = character->unknown_2;
+        output->unknown_10 = character->tileDataSizeKB_0;
+    }
+    output->unknown_14 = character->colorDepth_4;
+    output->unknown_18 = 0;
+    output->unknown_1c = 1;
+    output->objTileMapping_20 = character->objTileMapping_8;
+    StoreCharacterVRAMLoadOffset(output, vramType, vramOffset);
+}
+
+void Nitro2D_LoadCharacterToVRAM2(Nitro2DCharacter* character, unsigned int vramOffset, int vramType, Nitro2DCharacterLoadOutput* output)
+{
+    unsigned int objTileMapping = character->objTileMapping_8;
+    switch (vramType)
+    {
+    case 0:
+        break;
+    case 1:
+        DISPCNT = (DISPCNT & 0xffcfffef) | objTileMapping;
+        break;
+    case 2:
+        DISPCNTSUB = (DISPCNTSUB & 0xffcfffef) | objTileMapping;
+        break;
+    }
+    CleanInvalidateCacheRange(character->pTileData_14, character->tileDataSizeBytes_10);
+    switch (vramType)
+    {
+    case 0:
+        MemoryMapTextureImage();
+        LoadToTextureImage(character->pTileData_14, vramOffset, character->tileDataSizeBytes_10);
+        MemoryUnmapTextureImage();
+        break;
+    case 1:
+        LoadToMainObjVRAM(character->pTileData_14, vramOffset, character->tileDataSizeBytes_10);
+        break;
+    case 2:
+        LoadToSubObjVRAM(character->pTileData_14, vramOffset, character->tileDataSizeBytes_10);
+        break;
+    }
+    if (character->objTileMapping_8 == 0) // 2D tile mapping
+    {
+        output->unknown_c = Log2Discrete(character->unknown_2);
+        output->unknown_10 = Log2Discrete(character->tileDataSizeKB_0);
+    }
+    else
+    {
+        output->unknown_c = character->unknown_2;
+        output->unknown_10 = character->tileDataSizeKB_0;
+    }
+    output->unknown_14 = character->colorDepth_4;
+    output->unknown_18 = 0;
+    output->unknown_1c = 1;
+    output->objTileMapping_20 = character->objTileMapping_8;
+    StoreCharacterVRAMLoadOffset(output, vramType, vramOffset);
+}
+
+void Nitro2D_LoadPaletteToVRAM(Nitro2DPalette* palette, unsigned int vramOffset, int screen, Nitro2DPaletteLoadOutput* output)
+{
+    uint8_t* paletteData = palette->pPaletteData_c;
+    unsigned int dataLength = palette->paletteDataSize_8;
+    CleanInvalidateCacheRange(paletteData, dataLength);
+    switch (screen)
+    {
+    case 1:
+        if (palette->unknown_4 != 0)
+        {
+            MemoryMapMainObjExtendedPalette();
+            LoadToMainObjExtendedPalette(paletteData, vramOffset, dataLength);
+            MemoryUnmapMainObjExtendedPalette();
+        }
+        else
+        {
+            LoadToMainObjStandardPalette(paletteData, vramOffset, dataLength);
+        }
+        break;
+    case 2:
+        if (palette->unknown_4 != 0)
+        {
+            MemoryMapSubObjExtendedPalette();
+            LoadToSubObjExtendedPalette(paletteData, vramOffset, dataLength);
+            MemoryUnmapSubObjExtendedPalette();
+        }
+        else
+        {
+            LoadToSubObjStandardPalette(paletteData, vramOffset, dataLength);
+        }
+        break;
+    case 0:
+        MemoryMapTexturePalette();
+        LoadToTexturePalette(paletteData, vramOffset, dataLength);
+        MemoryUnmapTexturePalette();
+        break;
+    }
+    output->textureFormat_0 = palette->textureFormat_0;
+    output->unknown_4 = palette->unknown_4;
+    StorePaletteVRAMLoadOffset(output, screen, vramOffset);
+}
+
+void Nitro2D_LoadPaletteWithCMPToVRAM(Nitro2DPalette* palette, Nitro2DPaletteCMP* paletteCMP,
+    unsigned int vramOffset, int screen, Nitro2DPaletteLoadOutput* output)
+{
+    unsigned int loadSize = (palette->textureFormat_0 == 3) ? 0x20 : 0x200;
+
+    unsigned short numPalettes = paletteCMP->numPalettes_0;
+    unsigned int paletteSourceOffset;
+    uint8_t* paletteData;
+    unsigned int dstOffset;
+    for (unsigned short i = 0; i < numPalettes; i++)
+    {
+        paletteData = palette->pPaletteData_c;
+        dstOffset = loadSize * paletteCMP->pPaletteIDs_4[i];
+        paletteSourceOffset = loadSize * i;
+        CleanInvalidateCacheRange(paletteData, palette->paletteDataSize_8);
+        switch (screen)
+        {
+        case 1:
+            if (palette->unknown_4 != 0)
+            {
+                MemoryMapMainObjExtendedPalette();
+                LoadToMainObjExtendedPalette(paletteData + paletteSourceOffset,
+                    vramOffset + dstOffset, loadSize);
+                MemoryUnmapMainObjExtendedPalette();
+            }
+            else
+            {
+                LoadToMainObjStandardPalette(paletteData + paletteSourceOffset,
+                    vramOffset + dstOffset, loadSize);
+            }
+            break;
+        case 2:
+            if (palette->unknown_4 != 0)
+            {
+                MemoryMapSubObjExtendedPalette();
+                LoadToSubObjExtendedPalette(paletteData + paletteSourceOffset,
+                    vramOffset + dstOffset, loadSize);
+                MemoryUnmapSubObjExtendedPalette();
+            }
+            else
+            {
+                LoadToSubObjStandardPalette(paletteData + paletteSourceOffset,
+                    vramOffset + dstOffset, loadSize);
+            }
+            break;
+        case 0:
+            MemoryMapTexturePalette();
+            LoadToTexturePalette(paletteData + paletteSourceOffset,
+                vramOffset + dstOffset, loadSize);
+            MemoryUnmapTexturePalette();
+            break;
+        }
+    }
+    output->textureFormat_0 = palette->textureFormat_0;
+    output->unknown_4 = palette->unknown_4;
+    StorePaletteVRAMLoadOffset(output, screen, vramOffset);
 }
