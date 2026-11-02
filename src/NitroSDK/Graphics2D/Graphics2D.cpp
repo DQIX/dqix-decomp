@@ -352,12 +352,12 @@ void Nitro2D_LoadCharacterToVRAM2(Nitro2DCharacter* character, unsigned int vram
     StoreCharacterVRAMLoadOffset(output, vramType, vramOffset);
 }
 
-void Nitro2D_LoadPaletteToVRAM(Nitro2DPalette* palette, unsigned int vramOffset, int screen, Nitro2DPaletteLoadOutput* output)
+void Nitro2D_LoadPaletteToVRAM(Nitro2DPalette* palette, unsigned int vramOffset, int vramType, Nitro2DPaletteLoadOutput* output)
 {
     uint8_t* paletteData = palette->pPaletteData_c;
     unsigned int dataLength = palette->paletteDataSize_8;
     CleanInvalidateCacheRange(paletteData, dataLength);
-    switch (screen)
+    switch (vramType)
     {
     case 1:
         if (palette->unknown_4 != 0)
@@ -391,7 +391,7 @@ void Nitro2D_LoadPaletteToVRAM(Nitro2DPalette* palette, unsigned int vramOffset,
     }
     output->textureFormat_0 = palette->textureFormat_0;
     output->unknown_4 = palette->unknown_4;
-    StorePaletteVRAMLoadOffset(output, screen, vramOffset);
+    StorePaletteVRAMLoadOffset(output, vramType, vramOffset);
 }
 
 void Nitro2D_LoadPaletteWithCMPToVRAM(Nitro2DPalette* palette, Nitro2DPaletteCMP* paletteCMP,

@@ -21,12 +21,12 @@ struct Nitro2DPaletteLoadOutput
 {
     uint32_t textureFormat_0;
     uint32_t unknown_4;
-    uint32_t loadOffsets_8[2];
+    uint32_t loadOffsets_8[3];
 };
 
 CBool Nitro2D_GetPalette(void* fileData, Nitro2DPalette** output);
 CBool Nitro2D_GetPaletteCMP(void* fileData, Nitro2DPaletteCMP** output);
 
-void Nitro2D_LoadPaletteToVRAM(Nitro2DPalette* palette, unsigned int vramOffset, int screen, Nitro2DPaletteLoadOutput* output);
+void Nitro2D_LoadPaletteToVRAM(Nitro2DPalette* palette, unsigned int vramOffset, int vramType, Nitro2DPaletteLoadOutput* output);
 void Nitro2D_LoadPaletteWithCMPToVRAM(Nitro2DPalette* palette, Nitro2DPaletteCMP* paletteCMP,
-    unsigned int vramOffset, int screen, Nitro2DPaletteLoadOutput* output);
+    unsigned int vramOffset, int vramType, Nitro2DPaletteLoadOutput* output);
