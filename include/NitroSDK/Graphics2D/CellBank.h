@@ -1,28 +1,21 @@
 #pragma once
 
 #include "Common.h"
+#include "../OAM.h"
 
 // signature 'CEBK'
 struct Nitro2DCellBank
 {
-    struct OBJAttributes;
     struct Metatile
     {
         uint16_t numObjs_0;
         uint16_t unknown_2;
-        OBJAttributes* pAttributes_4;
+        OAMEntry* pAttributes_4;
     };
     struct MetatileEXT
     {
         Metatile base;
         char unk_8[8];
-    };
-
-    struct OBJAttributes
-    {
-        uint16_t first;
-        uint16_t second;
-        uint16_t third;
     };
 
     struct SubstructC
@@ -47,11 +40,11 @@ struct Nitro2DCellBank
     uint16_t numMetatiles_0;
     uint16_t metatileEntrySize_2; // 0 = 8 bytes, 1 = 16 bytes
     Metatile* pMetatiles_4;
-    char unk_8[4];
+    uint32_t unknown_8;
     SubstructC* unknown_c;
     char unk_10[4];
     Substruct14* unknown_14;
 };
 
 CBool Nitro2D_GetCellBank(void* fileData, Nitro2DCellBank** output);
-Nitro2DCellBank::Metatile* Nitro2D_GetCellBankMetatile(Nitro2DCellBank* bank, unsigned int idx);
+Nitro2DCellBank::Metatile* Nitro2D_GetCellBankMetatile(Nitro2DCellBank* bank, unsigned short idx);

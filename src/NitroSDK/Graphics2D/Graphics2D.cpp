@@ -112,13 +112,13 @@ Nitro2DAnimationBank::AnimationBlock* Nitro2D_AnimationBankGetAnimationBlock(Nit
     return NULL;
 }
 
-Nitro2DCellBank::OBJAttributes* GetCellBankOBJAttributes(Nitro2DCellBank* bank)
+OAMEntry* GetCellBankOBJAttributes(Nitro2DCellBank* bank)
 {
     // OBJ attributes begin at the end of the metatile table
     if (bank->metatileEntrySize_2 & 1)
-        return (Nitro2DCellBank::OBJAttributes*)((Nitro2DCellBank::MetatileEXT*)bank->pMetatiles_4 + bank->numMetatiles_0);
+        return (OAMEntry*)((Nitro2DCellBank::MetatileEXT*)bank->pMetatiles_4 + bank->numMetatiles_0);
     else
-        return (Nitro2DCellBank::OBJAttributes*)(bank->pMetatiles_4 + bank->numMetatiles_0);
+        return (OAMEntry*)(bank->pMetatiles_4 + bank->numMetatiles_0);
 }
 
 void PrepareCellBankSubstruct14(Nitro2DCellBank::Substruct14* ptr)
@@ -139,7 +139,7 @@ CBool Nitro2D_GetCellBank(void* fileData, Nitro2DCellBank** output)
     return true;
 }
 
-Nitro2DCellBank::Metatile* Nitro2D_GetCellBankMetatile(Nitro2DCellBank* bank, unsigned int idx)
+Nitro2DCellBank::Metatile* Nitro2D_GetCellBankMetatile(Nitro2DCellBank* bank, unsigned short idx)
 {
     if (idx >= bank->numMetatiles_0)
         return NULL;
@@ -152,7 +152,7 @@ Nitro2DCellBank::Metatile* Nitro2D_GetCellBankMetatile(Nitro2DCellBank* bank, un
 void PrepareCEBK(Nitro2DCellBank* ptr)
 {
     FixPointerOffsetRight(&ptr->pMetatiles_4, ptr);
-    Nitro2DCellBank::OBJAttributes* oam = GetCellBankOBJAttributes(ptr);
+    OAMEntry* oam = GetCellBankOBJAttributes(ptr);
 
     for (unsigned short i = 0; i < ptr->numMetatiles_0; i++)
     {
