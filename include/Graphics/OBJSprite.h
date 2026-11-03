@@ -18,7 +18,7 @@ public:
         fix32_t unknown_10; // scale y
         Vector2fix position_14;
         // index into rotation array
-        unsigned short unknown_1c;
+        unsigned short normalizedAngle_1c;
         short unknown_1e;
         unsigned short rotScaleDataIndex_20;
         unsigned char destinationIndex_22;
@@ -32,42 +32,45 @@ public:
 
     struct AnimationFrame
     {
-        unsigned short unknown_0;
-        unsigned short unknown_2;
+        unsigned short duration_0;
+        unsigned short metatileIndex_2;
 
         inline void Reset()
         {
-            unknown_0 = 0;
-            unknown_2 = 0;
+            duration_0 = 0;
+            metatileIndex_2 = 0;
         }
     };
 
     // sizeof == 0x18
     struct Animation
     {
-        int unknown_0;
+        int animationType_0; // 1 = stop at end, 2 = loop
         short unknown_4;
         short unknown_6;
-        short bufferIndex_8;
+        unsigned short id_8;
         unsigned short numFrames_a;
         AnimationFrame* frames_c;
-        short unknown_10;
-        short unknown_12;
-        unsigned char unknown_14;
-        char unknown_15;
+        unsigned short currentFrame_10;
+        unsigned short frameTime_12;
+        unsigned char destinationIndex_14;
+        // bit 0: ??? maybe stopped?
+        // bit 1: is playing?
+        // bit 2: ???
+        unsigned char flags_15;
 
         inline void Reset()
         {
-            unknown_0 = 0;
+            animationType_0 = 0;
             unknown_6 = 0;
             unknown_4 = 0;
-            bufferIndex_8 = 0;
+            id_8 = 0;
             numFrames_a = 0;
             frames_c = NULL;
-            unknown_10 = 0;
-            unknown_12 = 0;
-            unknown_14 = 0xff;
-            unknown_15 = 1;
+            currentFrame_10 = 0;
+            frameTime_12 = 0;
+            destinationIndex_14 = 0xff;
+            flags_15 = 1;
         }
     };
 
@@ -75,6 +78,16 @@ public:
     {
         Animation* data;
         unsigned short count;
+
+        void Reset();
+        void Destroy();
+        Animation* GetAnimation(unsigned int id);
+        void SetAnimationOBJIndex(unsigned short animID, unsigned char to);
+        void Update(unsigned char id, int numTicks);
+        void UpdateAll(int numTicks);
+
+        void StartAnimation(unsigned int id);
+        void StopAnimation(unsigned int id);
     };
 
     Nitro2DCharacterLoadDesc charLoad_0_;
@@ -106,10 +119,26 @@ public:
     bool LoadNCLR(void* data, unsigned int length);
 
     void DrawMetatile(Metatile* metatile);
+    void DrawSprite(unsigned char id);
+    void DrawAll();
 
+    void AssignOBJIndices(Metatile* metatiles, unsigned short numMetatiles, unsigned char firstIndex);
+
+    unsigned short GetMetatilePalette(const Metatile* metatile) const;
+
+    // if transformEnabled == false, then doubleSize == true means disable/hide
+    // (but this is only ever used with true, true)
+    void SetMetatileTransformFlags(Metatile* metatile, bool transformEnabled, bool doubleSize);
+    void SetMetatilePriority(Metatile* metatile, unsigned char priority);
+    void SetMetatilePalette(Metatile* metatile, unsigned short palette);
+    void SetMetatileOBJMode(Metatile* metatile, unsigned char mode);
+
+    bool SetOAMWord(Metatile* metatile, unsigned int wordIdx, unsigned short clearMask,
+        unsigned short setShift, unsigned short setMask);
     void Compute2x2Matrices(Matrix2x2* outRotScale, Matrix2x2* outRotInvScale, const Metatile* metatile);
 
     int GetMetatileObjMode(const Metatile* metatile) const;
+    unsigned int GetMetatilePaletteInternal(const Metatile* metatile) const;
 };
 
 // returns false on success, true on fail?!

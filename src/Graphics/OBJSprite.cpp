@@ -2,6 +2,7 @@
 
 #include "Graphics/OBJSprite.h"
 #include "Resource/PAC.h"
+#include <asmhacks.h>
 
 // sin/cos table
 extern const fix16_t data_020e9450[0x1000 * 2];
@@ -24,9 +25,6 @@ extern "C"
     OAMEntryEXT* func_0203be4c(void*);
     // get main engine obj oam entries for staging
     OAMEntryEXT* func_0203be40(void*);
-
-    void func_020b0318(void*);
-    void func_020b033c(void*);
 }
 
 extern char data_020f0504[]; // "RECN"
@@ -40,7 +38,7 @@ void OBJSprite::Metatile::Reset()
     oamEntries_8 = NULL;
     unknown_c = unknown_10 = 1 << 12;
     position_14.x = position_14.y = 0;
-    unknown_1c = 0;
+    normalizedAngle_1c = 0;
     unknown_1e = 0;
     rotScaleDataIndex_20 = 0;
     destinationIndex_22 = 0;
@@ -61,6 +59,114 @@ bool GetCharBlockFromNitroFile(Nitro2DCharacter** out, void* data, unsigned int 
     if (!Nitro2D_GetCharacter(data, out))
         return true;
     return false;
+}
+
+void OBJSprite::AnimationList::Reset()
+{
+    data = NULL;
+    count = 0;
+}
+
+void OBJSprite::AnimationList::Destroy()
+{
+    data = NULL;
+    count = 0;
+}
+
+void OBJSprite::AnimationList::Update(unsigned char id, int numTicks)
+{
+    unsigned short tickCount16 = numTicks;
+    Animation* anim = GetAnimation(id);
+    if (anim == NULL)
+        return;
+    if (!(anim->flags_15 & 2) || anim->animationType_0 == 0)
+        return;
+    anim->frameTime_12 += tickCount16;
+    AnimationFrame* frame = &anim->frames_c[anim->currentFrame_10];
+    if (frame->duration_0 <= anim->frameTime_12)
+    {
+        // don't simplify this to -=
+        anim->frameTime_12 = anim->frameTime_12 - frame->duration_0;
+        switch (anim->animationType_0)
+        {
+        case 0:
+            break;
+        case 1:
+        {
+            anim->currentFrame_10++;
+            if (anim->numFrames_a <= anim->currentFrame_10)
+            {
+                anim->currentFrame_10 = anim->currentFrame_10 - 1;
+                anim->frameTime_12 = frame->duration_0;
+                StopAnimation(anim->id_8);
+            }
+            break;
+        }
+        case 2:
+            anim->currentFrame_10++;
+            if (anim->numFrames_a <= anim->currentFrame_10)
+                anim->currentFrame_10 = 0;
+            break;
+        case 3:
+            break;
+        case 4:
+            break;
+        }
+    }
+}
+
+void OBJSprite::AnimationList::UpdateAll(int numTicks)
+{
+    for (unsigned short i = 0; i < this->count; i++)
+        Update(i, numTicks);
+}
+
+void OBJSprite::AnimationList::StartAnimation(unsigned int id)
+{
+    Animation* anim = GetAnimation(id);
+    if (anim == NULL)
+        return;
+    if (anim->flags_15 & 1)
+    {
+        anim->currentFrame_10 = 0;
+        anim->frameTime_12 = 0;
+    }
+    anim->flags_15 &= ~7;
+    anim->flags_15 |= 2;
+}
+
+void OBJSprite::AnimationList::StopAnimation(unsigned int id)
+{
+    Animation* anim = GetAnimation(id);
+    if (anim == NULL)
+        return;
+    anim->flags_15 &= ~7;
+    anim->flags_15 |= 1;
+}
+
+OBJSprite::Animation* OBJSprite::AnimationList::GetAnimation(unsigned int id)
+{
+    if (this->data == NULL)
+        return NULL;
+    if (this->count == 0)
+        return NULL;
+    Animation* ptr = NULL;
+    for (unsigned short i = 0; i < this->count; i++)
+    {
+        if (this->data[i].id_8 == id)
+        {
+            ptr = &this->data[i];
+            break;
+        }
+    }
+    return ptr;
+}
+
+void OBJSprite::AnimationList::SetAnimationOBJIndex(unsigned short animID, unsigned char to)
+{
+    Animation* anim = GetAnimation(animID);
+    if (anim != NULL)
+        anim->destinationIndex_14 = to;
 }
 
 void OBJSprite::Reset()
@@ -278,9 +384,9 @@ bool OBJSprite::LoadNANR(void* data, unsigned int length, SafeAllocator* alloc)
                 continue;
             localAnim = &animBuffer[i];
             localAnim->Reset();
-            localAnim->unknown_0 = block->unknown_8;
+            localAnim->animationType_0 = block->unknown_8;
             localAnim->numFrames_a = block->numFrames_0;
-            localAnim->bufferIndex_8 = i;
+            localAnim->id_8 = i;
             AnimationFrame* frameBuffer = 
                 (AnimationFrame*)alloc->Allocate(localAnim->numFrames_a * sizeof(AnimationFrame));
             localAnim->frames_c = frameBuffer;
@@ -291,8 +397,8 @@ bool OBJSprite::LoadNANR(void* data, unsigned int length, SafeAllocator* alloc)
                     continue;
                 AnimationFrame* frame = &frameBuffer[j];
                 frame->Reset();
-                frame->unknown_0 = nitroFrame->unknown_4;
-                frame->unknown_2 = nitroFrame->unknown_0[0];
+                frame->duration_0 = nitroFrame->unknown_4;
+                frame->metatileIndex_2 = nitroFrame->unknown_0[0];
             }
         }
     }
@@ -404,13 +510,143 @@ void OBJSprite::DrawMetatile(Metatile* metatile)
     }
 }
 
+static inline bool TestAnimationBit3(OBJSprite::Animation* anim)
+{
+    if (anim != NULL)
+    {
+        return anim->flags_15 & 8;
+    }
+    return false;
+}
+
+void OBJSprite::DrawSprite(unsigned char id)
+{
+    if (animations_3c_ == NULL)
+        return;
+    Animation* anim = animations_3c_->GetAnimation(id);
+    if (anim == NULL)
+        return;
+    if (!TestAnimationBit3(animations_3c_->GetAnimation(id)))
+        return;
+    unsigned short tileIndex = anim->frames_c[anim->currentFrame_10].metatileIndex_2;
+    if (tileIndex >= numMetatiles_4c_)
+        return;
+    Metatile* tile = &metatiles_40_[tileIndex];
+    short drawX = anim->unknown_4;
+    short drawY = anim->unknown_6;
+    tile->position_14.x = drawX << 12;
+    tile->position_14.y = drawY << 12;
+    if (anim->destinationIndex_14 != 0xff)
+        tile->destinationIndex_22 = anim->destinationIndex_14;
+    DrawMetatile(tile);
+}
+
+void OBJSprite::DrawAll()
+{
+    if (animations_3c_ == NULL)
+        return;
+    unsigned int numAnims = animations_3c_->count;
+    for (unsigned short i = 0; i < numAnims; i++)
+        DrawSprite(i);
+}
+
+void OBJSprite::AssignOBJIndices(Metatile* metatiles, unsigned short numMetatiles, unsigned char firstIndex)
+{
+    if (metatiles == NULL)
+        return;
+    for (unsigned short i = 0; i < numMetatiles; i++)
+    {
+        Metatile* tile = &metatiles[i];
+        tile->destinationIndex_22 += firstIndex;
+        tile->destinationIndex_22 &= 0x7f;
+    }
+}
+
+unsigned short OBJSprite::GetMetatilePalette(const Metatile* metatile) const
+{
+    if (metatile == NULL)
+        return 0;
+    return GetMetatilePaletteInternal(metatile);
+}
+
+void OBJSprite::SetMetatileTransformFlags(Metatile* metatile, bool transformEnabled, bool doubleSize)
+{
+    if (metatile == NULL)
+        return;
+    unsigned short flags = transformEnabled;
+    flags |= (unsigned short)(doubleSize << 1);
+    if (SetOAMWord(metatile, 0, 0x300, 8, flags))
+        return;
+    metatile->useTransform_23 = transformEnabled;
+    metatile->doubleSize_24 = doubleSize;
+}
+
+void OBJSprite::SetMetatilePriority(Metatile* metatile, unsigned char priority)
+{
+    SetOAMWord(metatile, 2, 0xc00, 10, priority & 3);
+}
+
+void OBJSprite::SetMetatilePalette(Metatile* metatile, unsigned short palette)
+{
+    SetOAMWord(metatile, 2, 0xf000, 12, palette & 15);
+}
+
+void OBJSprite::SetMetatileOBJMode(Metatile* metatile, unsigned char mode)
+{
+    SetOAMWord(metatile, 0, 0xc00, 10, mode & 3);
+}
+
+bool OBJSprite::SetOAMWord(Metatile *metatile, unsigned int wordIdx, unsigned short clearMask,
+    unsigned short setShift, unsigned short setMask)
+{
+    if (metatile == NULL)
+        return true;
+    if (wordIdx >= 3)
+        return true;
+    if (metatile == NULL) // again...
+        return true;
+    setMask <<= setShift;
+    for (unsigned short i = 0; i < metatile->nitroData_0.numObjs_0; i++)
+    {
+        OAMEntry* loopEntry = &metatile->nitroData_0.pAttributes_4[i];
+        unsigned short word;
+        switch (wordIdx)
+        {
+        case 0:
+            word = loopEntry->word0;
+            break;
+        case 1:
+            word = loopEntry->word1;
+            break;
+        case 2:
+            word = loopEntry->word2;
+            break;
+        }
+        word &= ~clearMask;
+        word |= setMask;
+        switch (wordIdx)
+        {
+        case 0:
+            loopEntry->word0 = word;
+            break;
+        case 1:
+            loopEntry->word1 = word;
+            break;
+        case 2:
+            loopEntry->word2 = word;
+            break;
+        }
+    }
+    return false;
+}
+
 void OBJSprite::Compute2x2Matrices(Matrix2x2* outRotScale, Matrix2x2* outRotInvScale, const Metatile* metatile)
 {
     if (metatile == NULL || outRotScale == NULL || outRotInvScale == NULL)
         return;
     
     Matrix2x2 rotMatrix;
-    Mat2x2_WriteRotation(&rotMatrix, LookupSine(metatile->unknown_1c >> 4), LookupCosine(metatile->unknown_1c >> 4));
+    Mat2x2_WriteRotation(&rotMatrix, LookupSine(metatile->normalizedAngle_1c >> 4), LookupCosine(metatile->normalizedAngle_1c >> 4));
     Mat2x2_ApplyScale(&rotMatrix, outRotScale, metatile->unknown_c, metatile->unknown_10);
     fix32_t invX = fix32_Divide(1 << 12, metatile->unknown_c);
     fix32_t invY = fix32_Divide(1 << 12, metatile->unknown_10);
@@ -423,4 +659,12 @@ int OBJSprite::GetMetatileObjMode(const Metatile* metatile) const
         return 0;
     unsigned int word0 = metatile->nitroData_0.pAttributes_4[0].word0;
     return (word0 >> 10) & 3;
+}
+
+unsigned int OBJSprite::GetMetatilePaletteInternal(const Metatile* metatile) const
+{
+    if (metatile == NULL)
+        return 0;
+    unsigned int word = metatile->nitroData_0.pAttributes_4[0].word2;
+    return (word >> 12) & 15;
 }
