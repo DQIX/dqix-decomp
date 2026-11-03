@@ -8,19 +8,19 @@ struct Nitro2DAnimationBank
     struct FrameBlock;
     struct AnimationBlock
     {
-        uint16_t numFrames_0;
+        uint16_t numFrames;
         uint16_t unknown_2;
         uint16_t unknown_4;
         uint16_t unknown_6;
         // 1 = stop at end, 2 = loop (based on OBJSpriteSet)
-        uint32_t animationType_8;
-        FrameBlock* pFrames_c;
+        uint32_t animationType;
+        FrameBlock* pFrames;
     };
 
     struct FrameBlock
     {
-        uint16_t* metatileIndices_0; // see cell bank
-        uint16_t duration_4;
+        uint16_t* metatileIndices; // see cell bank
+        uint16_t duration;
         uint16_t unknown_6;
     };
 
@@ -46,11 +46,11 @@ struct Nitro2DAnimationBank
         Subsubstruct unknown_8;
     };
 
-    uint16_t numAnimBlocks_0;
-    uint16_t numFrameBlocks_2;
-    AnimationBlock* pAnimBlocks_4;
-    FrameBlock* pFrameBlocks_8;
-    uint16_t* pFrameData_c;
+    uint16_t numAnimBlocks;
+    uint16_t numFrameBlocks;
+    AnimationBlock* pAnimBlocks;
+    FrameBlock* pFrameBlocks;
+    uint16_t* pFrameData;
     char unk_10[4];
     Substruct14* unknown_14;
 };

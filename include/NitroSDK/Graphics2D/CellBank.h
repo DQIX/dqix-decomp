@@ -9,9 +9,9 @@ struct Nitro2DCellBank
 {
     struct Metatile
     {
-        uint16_t numObjs_0;
+        uint16_t numObjs;
         uint16_t unknown_2;
-        OAMEntry* pAttributes_4;
+        OAMEntry* pAttributes;
     };
     struct MetatileEXT
     {
@@ -38,12 +38,12 @@ struct Nitro2DCellBank
         } interior;
     };
 
-    uint16_t numMetatiles_0;
-    uint16_t hasExtraMetatileData_2; // 0 = 8 bytes, 1 = 16 bytes
-    Metatile* pMetatiles_4;
+    uint16_t numMetatiles;
+    uint16_t hasExtraMetatileData; // 0 = 8 bytes, 1 = 16 bytes
+    Metatile* pMetatiles;
     // GBATEK is wrong about this, this is the boundary mode as used
     // in bits 20-21 of DISPCNT (see LoadNCER function)
-    uint32_t alignmentBoundaryType_8;
+    uint32_t alignmentBoundaryType;
     SubstructC* unknown_c;
     char unk_10[4];
     Substruct14* unknown_14;
@@ -52,6 +52,9 @@ struct Nitro2DCellBank
 CBool Nitro2D_GetCellBank(void* fileData, Nitro2DCellBank** output);
 Nitro2DCellBank::Metatile* Nitro2D_GetCellBankMetatile(Nitro2DCellBank* bank, unsigned short idx);
 
+// transform applies rotation+scaling and can be NULL (identity)
+// if transform is NULL, position denotes the top left corner, otherwise it
+// denotes the centre
 int Nitro2D_DrawMetatile(OAMEntryEXT* targetOAM, unsigned short oamLength, 
     const Nitro2DCellBank::Metatile* metatile, const Matrix2x2* transform, const Vector2fix* position,
     unsigned short rotScaleIndex, CBool doubleSize);

@@ -7,23 +7,24 @@ struct Nitro2DCharacter
 {
     uint16_t unknown_0;
     uint16_t unknown_2;
-    uint32_t maybeColorDepth_4;
+    // might be texture format based on GBATek documentation?
+    uint32_t unknown_4;
     // bits 4 and 20-21 of dispcnt
-    uint32_t objTileMapping_8;
+    uint32_t objTileMappingFlags;
     char unk_c[4];
-    uint32_t tileDataSize_10;
-    void* pTileData_14;
+    uint32_t tileDataSize;
+    void* pTileData;
 };
 
 struct Nitro2DCharacterLoadDesc
 {
-    uint32_t offsets_0[3];
+    uint32_t loadOffsets[3];
     uint32_t unknown_c;
     uint32_t unknown_10;
     uint32_t unknown_14;
     uint32_t unknown_18;
     uint32_t unknown_1c;
-    uint32_t objTileMapping_20;
+    uint32_t objTileMapping;
 };
 
 CBool Nitro2D_GetCharacter(void* fileData, Nitro2DCharacter** output);

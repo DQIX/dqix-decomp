@@ -66,23 +66,21 @@ CBool Nitro2D_GetAnimationBank(void* fileData, Nitro2DAnimationBank** output)
 
 void PrepareABNK(Nitro2DAnimationBank* ptr)
 {
-    FixPointerOffsetRight(&ptr->pAnimBlocks_4, ptr);
-    FixPointerOffsetRight(&ptr->pFrameBlocks_8, ptr);
-    FixPointerOffsetRight(&ptr->pFrameData_c, ptr);
+    FixPointerOffsetRight(&ptr->pAnimBlocks, ptr);
+    FixPointerOffsetRight(&ptr->pFrameBlocks, ptr);
+    FixPointerOffsetRight(&ptr->pFrameData, ptr);
 
     unsigned short blockIndex;
     unsigned short frameIndex;
-    uint16_t* frameData = ptr->pFrameData_c;
-    Nitro2DAnimationBank::AnimationBlock* animBlocks = ptr->pAnimBlocks_4;
-    Nitro2DAnimationBank::FrameBlock* frameBlocks = ptr->pFrameBlocks_8;
+    uint16_t* frameData = ptr->pFrameData;
+    Nitro2DAnimationBank::AnimationBlock* animBlocks = ptr->pAnimBlocks;
+    Nitro2DAnimationBank::FrameBlock* frameBlocks = ptr->pFrameBlocks;
 
-    for (blockIndex = 0; ptr->numAnimBlocks_0 > blockIndex; blockIndex++)
+    for (blockIndex = 0; ptr->numAnimBlocks > blockIndex; blockIndex++)
     {
-        FixPointerOffsetLeft(&animBlocks[blockIndex].pFrames_c, frameBlocks);
-        for (frameIndex = 0; animBlocks[blockIndex].numFrames_0 > frameIndex; frameIndex++)
-        {
-            FixPointerOffsetLeft(&animBlocks[blockIndex].pFrames_c[frameIndex].metatileIndices_0, frameData);
-        }
+        FixPointerOffsetLeft(&animBlocks[blockIndex].pFrames, frameBlocks);
+        for (frameIndex = 0; animBlocks[blockIndex].numFrames > frameIndex; frameIndex++)
+            FixPointerOffsetLeft(&animBlocks[blockIndex].pFrames[frameIndex].metatileIndices, frameData);
     }
 
     if (ptr->unknown_14 == NULL)
@@ -98,26 +96,24 @@ void PrepareABNK(Nitro2DAnimationBank* ptr)
         FixPointerOffsetRight(&sss->unknown_4, subsub);
         FixPointerOffsetRight(&sss->unknown_8, subsub);
         for (j = 0; j < sss->unknown_0; j++)
-        {
             FixPointerOffsetRight(&sss->unknown_8[j], subsub);
-        }
     }
 }
 
 Nitro2DAnimationBank::AnimationBlock* Nitro2D_AnimationBankGetAnimationBlock(Nitro2DAnimationBank* bank, unsigned int idx)
 {
-    if (bank->numAnimBlocks_0 > idx)
-        return bank->pAnimBlocks_4 + idx;
+    if (bank->numAnimBlocks > idx)
+        return bank->pAnimBlocks + idx;
     return NULL;
 }
 
 OAMEntry* GetCellBankOBJAttributes(Nitro2DCellBank* bank)
 {
     // OBJ attributes begin at the end of the metatile table
-    if (bank->hasExtraMetatileData_2 & 1)
-        return (OAMEntry*)((Nitro2DCellBank::MetatileEXT*)bank->pMetatiles_4 + bank->numMetatiles_0);
+    if (bank->hasExtraMetatileData & 1)
+        return (OAMEntry*)((Nitro2DCellBank::MetatileEXT*)bank->pMetatiles + bank->numMetatiles);
     else
-        return (OAMEntry*)(bank->pMetatiles_4 + bank->numMetatiles_0);
+        return (OAMEntry*)(bank->pMetatiles + bank->numMetatiles);
 }
 
 void PrepareCellBankSubstruct14(Nitro2DCellBank::Substruct14* ptr)
@@ -140,23 +136,23 @@ CBool Nitro2D_GetCellBank(void* fileData, Nitro2DCellBank** output)
 
 Nitro2DCellBank::Metatile* Nitro2D_GetCellBankMetatile(Nitro2DCellBank* bank, unsigned short idx)
 {
-    if (idx >= bank->numMetatiles_0)
+    if (idx >= bank->numMetatiles)
         return NULL;
-    if (bank->hasExtraMetatileData_2 & 1)
-        return (Nitro2DCellBank::Metatile*)((Nitro2DCellBank::MetatileEXT*)bank->pMetatiles_4 + idx);
+    if (bank->hasExtraMetatileData & 1)
+        return (Nitro2DCellBank::Metatile*)((Nitro2DCellBank::MetatileEXT*)bank->pMetatiles + idx);
     else
-        return bank->pMetatiles_4 + idx;
+        return bank->pMetatiles + idx;
 }
 
 void PrepareCEBK(Nitro2DCellBank* ptr)
 {
-    FixPointerOffsetRight(&ptr->pMetatiles_4, ptr);
+    FixPointerOffsetRight(&ptr->pMetatiles, ptr);
     OAMEntry* oam = GetCellBankOBJAttributes(ptr);
 
-    for (unsigned short i = 0; i < ptr->numMetatiles_0; i++)
+    for (unsigned short i = 0; i < ptr->numMetatiles; i++)
     {
         Nitro2DCellBank::Metatile* metatile = Nitro2D_GetCellBankMetatile(ptr, i);
-        FixPointerOffsetRight(&metatile->pAttributes_4, oam);
+        FixPointerOffsetRight(&metatile->pAttributes, oam);
     }
 
     if (ptr->unknown_c != NULL)
@@ -188,7 +184,7 @@ CBool Nitro2D_GetCharacter(void* fileData, Nitro2DCharacter** output)
 
 void PrepareCHAR(Nitro2DCharacter* ptr)
 {
-    FixPointerOffsetRight(&ptr->pTileData_14, ptr);
+    FixPointerOffsetRight(&ptr->pTileData, ptr);
 }
 
 CBool Nitro2D_GetPalette(void* fileData, Nitro2DPalette** output)
@@ -219,19 +215,19 @@ CBool Nitro2D_GetPaletteCMP(void* fileData, Nitro2DPaletteCMP** output)
 
 void PreparePCMP(Nitro2DPaletteCMP* ptr)
 {
-    FixPointerOffsetRight(&ptr->pPaletteIDs_4, ptr);
+    FixPointerOffsetRight(&ptr->pPaletteIDs, ptr);
 }
 
 void PreparePLTT(Nitro2DPalette* ptr)
 {
-    FixPointerOffsetRight(&ptr->pPaletteData_c, ptr);
+    FixPointerOffsetRight(&ptr->pPaletteData, ptr);
 }
 
 Nitro2DInnerFileHeader* Nitro2D_GetInnerFileBySignature(void* fileData, uint32_t signature)
 {
     Nitro2DFileHeader* header = (Nitro2DFileHeader*)fileData;
     Nitro2DInnerFileHeader* innerFile = header->GetFirstSubfile();
-    for (unsigned short i = 0; header->numSubfiles > i; i++)
+    for (unsigned short i = 0; i < header->numSubfiles; i++)
     {
         if (innerFile->signature == signature)
             return innerFile;
@@ -252,28 +248,28 @@ void InternalPrepareCellBankSubstruct14(Nitro2DCellBank::Substruct14::Interior* 
 void Nitro2D_ClearCharacterLoadDesc(Nitro2DCharacterLoadDesc* desc)
 {
     for (int i = 0; i < 3; i++)
-        desc->offsets_0[i] = -1;
+        desc->loadOffsets[i] = -1;
 }
 
 void StoreCharacterVRAMLoadOffset(Nitro2DCharacterLoadDesc* output, int vramType, unsigned int offset)
 {
-    output->offsets_0[vramType] = offset;
+    output->loadOffsets[vramType] = offset;
 }
 
 void Nitro2D_ClearPaletteLoadDesc(Nitro2DPaletteLoadDesc* desc)
 {
     for (int i = 0; i < 3; i++)
-        desc->loadOffsets_8[i] = -1;
+        desc->loadOffsets[i] = -1;
 }
 
 void StorePaletteVRAMLoadOffset(Nitro2DPaletteLoadDesc* output, int screen, unsigned int offset)
 {
-    output->loadOffsets_8[screen] = offset;
+    output->loadOffsets[screen] = offset;
 }
 
 void Nitro2D_LoadCharacterToVRAM(Nitro2DCharacter* character, unsigned int vramOffset, int vramType, Nitro2DCharacterLoadDesc* output)
 {
-    unsigned int objTileMapping = character->objTileMapping_8;
+    unsigned int objTileMapping = character->objTileMappingFlags;
     switch (vramType)
     {
     case 0:
@@ -285,22 +281,22 @@ void Nitro2D_LoadCharacterToVRAM(Nitro2DCharacter* character, unsigned int vramO
         DISPCNTSUB = (DISPCNTSUB & 0xffcfffef) | objTileMapping;
         break;
     }
-    CleanInvalidateCacheRange(character->pTileData_14, character->tileDataSize_10);
+    CleanInvalidateCacheRange(character->pTileData, character->tileDataSize);
     switch (vramType)
     {
     case 0:
         MemoryMapTextureImage();
-        LoadToTextureImage(character->pTileData_14, vramOffset, character->tileDataSize_10);
+        LoadToTextureImage(character->pTileData, vramOffset, character->tileDataSize);
         MemoryUnmapTextureImage();
         break;
     case 1:
-        LoadToMainObjVRAM(character->pTileData_14, vramOffset, character->tileDataSize_10);
+        LoadToMainObjVRAM(character->pTileData, vramOffset, character->tileDataSize);
         break;
     case 2:
-        LoadToSubObjVRAM(character->pTileData_14, vramOffset, character->tileDataSize_10);
+        LoadToSubObjVRAM(character->pTileData, vramOffset, character->tileDataSize);
         break;
     }
-    if (character->objTileMapping_8 == 0) // 2D tile mapping
+    if (character->objTileMappingFlags == 0) // 2D tile mapping
     {
         output->unknown_c = Log2Discrete(character->unknown_2);
         output->unknown_10 = Log2Discrete(character->unknown_0);
@@ -310,16 +306,16 @@ void Nitro2D_LoadCharacterToVRAM(Nitro2DCharacter* character, unsigned int vramO
         output->unknown_c = character->unknown_2;
         output->unknown_10 = character->unknown_0;
     }
-    output->unknown_14 = character->maybeColorDepth_4;
+    output->unknown_14 = character->unknown_4;
     output->unknown_18 = 0;
     output->unknown_1c = 1;
-    output->objTileMapping_20 = character->objTileMapping_8;
+    output->objTileMapping = character->objTileMappingFlags;
     StoreCharacterVRAMLoadOffset(output, vramType, vramOffset);
 }
 
 void Nitro2D_LoadCharacterToVRAM2(Nitro2DCharacter* character, unsigned int vramOffset, int vramType, Nitro2DCharacterLoadDesc* output)
 {
-    unsigned int objTileMapping = character->objTileMapping_8;
+    unsigned int objTileMapping = character->objTileMappingFlags;
     switch (vramType)
     {
     case 0:
@@ -331,22 +327,22 @@ void Nitro2D_LoadCharacterToVRAM2(Nitro2DCharacter* character, unsigned int vram
         DISPCNTSUB = (DISPCNTSUB & 0xffcfffef) | objTileMapping;
         break;
     }
-    CleanInvalidateCacheRange(character->pTileData_14, character->tileDataSize_10);
+    CleanInvalidateCacheRange(character->pTileData, character->tileDataSize);
     switch (vramType)
     {
     case 0:
         MemoryMapTextureImage();
-        LoadToTextureImage(character->pTileData_14, vramOffset, character->tileDataSize_10);
+        LoadToTextureImage(character->pTileData, vramOffset, character->tileDataSize);
         MemoryUnmapTextureImage();
         break;
     case 1:
-        LoadToMainObjVRAM(character->pTileData_14, vramOffset, character->tileDataSize_10);
+        LoadToMainObjVRAM(character->pTileData, vramOffset, character->tileDataSize);
         break;
     case 2:
-        LoadToSubObjVRAM(character->pTileData_14, vramOffset, character->tileDataSize_10);
+        LoadToSubObjVRAM(character->pTileData, vramOffset, character->tileDataSize);
         break;
     }
-    if (character->objTileMapping_8 == 0) // 2D tile mapping
+    if (character->objTileMappingFlags == 0) // 2D tile mapping
     {
         output->unknown_c = Log2Discrete(character->unknown_2);
         output->unknown_10 = Log2Discrete(character->unknown_0);
@@ -356,22 +352,22 @@ void Nitro2D_LoadCharacterToVRAM2(Nitro2DCharacter* character, unsigned int vram
         output->unknown_c = character->unknown_2;
         output->unknown_10 = character->unknown_0;
     }
-    output->unknown_14 = character->maybeColorDepth_4;
+    output->unknown_14 = character->unknown_4;
     output->unknown_18 = 0;
     output->unknown_1c = 1;
-    output->objTileMapping_20 = character->objTileMapping_8;
+    output->objTileMapping = character->objTileMappingFlags;
     StoreCharacterVRAMLoadOffset(output, vramType, vramOffset);
 }
 
 void Nitro2D_LoadPaletteToVRAM(Nitro2DPalette* palette, unsigned int vramOffset, int vramType, Nitro2DPaletteLoadDesc* output)
 {
-    uint8_t* paletteData = palette->pPaletteData_c;
-    unsigned int dataLength = palette->paletteDataSize_8;
+    uint8_t* paletteData = palette->pPaletteData;
+    unsigned int dataLength = palette->paletteDataSize;
     CleanInvalidateCacheRange(paletteData, dataLength);
     switch (vramType)
     {
     case 1:
-        if (palette->useExtendedPalette_4)
+        if (palette->useExtendedPalette)
         {
             MemoryMapMainObjExtendedPalette();
             LoadToMainObjExtendedPalette(paletteData, vramOffset, dataLength);
@@ -383,7 +379,7 @@ void Nitro2D_LoadPaletteToVRAM(Nitro2DPalette* palette, unsigned int vramOffset,
         }
         break;
     case 2:
-        if (palette->useExtendedPalette_4)
+        if (palette->useExtendedPalette)
         {
             MemoryMapSubObjExtendedPalette();
             LoadToSubObjExtendedPalette(paletteData, vramOffset, dataLength);
@@ -400,30 +396,30 @@ void Nitro2D_LoadPaletteToVRAM(Nitro2DPalette* palette, unsigned int vramOffset,
         MemoryUnmapTexturePalette();
         break;
     }
-    output->textureFormat_0 = palette->textureFormat_0;
-    output->useExtendedPalette_4 = palette->useExtendedPalette_4;
+    output->textureFormat = palette->textureFormat;
+    output->useExtendedPalette = palette->useExtendedPalette;
     StorePaletteVRAMLoadOffset(output, vramType, vramOffset);
 }
 
 void Nitro2D_LoadPaletteWithCMPToVRAM(Nitro2DPalette* palette, Nitro2DPaletteCMP* paletteCMP,
-    unsigned int vramOffset, int screen, Nitro2DPaletteLoadDesc* output)
+    unsigned int vramOffset, int vramType, Nitro2DPaletteLoadDesc* output)
 {
-    unsigned int loadSize = (palette->textureFormat_0 == 3) ? 0x20 : 0x200;
+    unsigned int loadSize = (palette->textureFormat == 3) ? 0x20 : 0x200;
 
-    unsigned short numPalettes = paletteCMP->numPalettes_0;
+    unsigned short numPalettes = paletteCMP->numPalettes;
     unsigned int paletteSourceOffset;
     uint8_t* paletteData;
     unsigned int dstOffset;
     for (unsigned short i = 0; i < numPalettes; i++)
     {
-        paletteData = palette->pPaletteData_c;
-        dstOffset = loadSize * paletteCMP->pPaletteIDs_4[i];
+        paletteData = palette->pPaletteData;
+        dstOffset = loadSize * paletteCMP->pPaletteIDs[i];
         paletteSourceOffset = loadSize * i;
-        CleanInvalidateCacheRange(paletteData, palette->paletteDataSize_8);
-        switch (screen)
+        CleanInvalidateCacheRange(paletteData, palette->paletteDataSize);
+        switch (vramType)
         {
         case 1:
-            if (palette->useExtendedPalette_4)
+            if (palette->useExtendedPalette)
             {
                 MemoryMapMainObjExtendedPalette();
                 LoadToMainObjExtendedPalette(paletteData + paletteSourceOffset,
@@ -437,7 +433,7 @@ void Nitro2D_LoadPaletteWithCMPToVRAM(Nitro2DPalette* palette, Nitro2DPaletteCMP
             }
             break;
         case 2:
-            if (palette->useExtendedPalette_4)
+            if (palette->useExtendedPalette)
             {
                 MemoryMapSubObjExtendedPalette();
                 LoadToSubObjExtendedPalette(paletteData + paletteSourceOffset,
@@ -458,9 +454,9 @@ void Nitro2D_LoadPaletteWithCMPToVRAM(Nitro2DPalette* palette, Nitro2DPaletteCMP
             break;
         }
     }
-    output->textureFormat_0 = palette->textureFormat_0;
-    output->useExtendedPalette_4 = palette->useExtendedPalette_4;
-    StorePaletteVRAMLoadOffset(output, screen, vramOffset);
+    output->textureFormat = palette->textureFormat;
+    output->useExtendedPalette = palette->useExtendedPalette;
+    StorePaletteVRAMLoadOffset(output, vramType, vramOffset);
 }
 
 static inline void TransformVectorByMatrix(const Matrix2x2* mat, const Vector2fix* in, Vector2fix* out) {
@@ -475,12 +471,12 @@ static inline void TransformVectorByMatrix(const Matrix2x2* mat, const Vector2fi
         *out = scratch;
 }
 
-static inline int GetOAMHeight(int spaceSize)
+static inline int GetObjHeight(int spaceSize)
 {
     return data_020e9180[(spaceSize & 0xc000) >> 14][(spaceSize & 0xc0000000) >> 30];
 }
 
-static inline int GetOAMWidth(int spaceSize)
+static inline int GetObjWidth(int spaceSize)
 {
     return data_020e9198[(spaceSize & 0xc000) >> 14][(spaceSize & 0xc0000000) >> 30];
 }
@@ -489,22 +485,22 @@ int Nitro2D_DrawMetatile(OAMEntryEXT* targetOAMBuffer, unsigned short oamLength,
     const Nitro2DCellBank::Metatile* metatile, const Matrix2x2* transform, const Vector2fix* position,
     unsigned short rotScaleIndex, CBool doubleSize)
 {
-    unsigned short writeCount = (oamLength < metatile->numObjs_0) ? oamLength : metatile->numObjs_0;
+    unsigned short writeCount = (oamLength < metatile->numObjs) ? oamLength : metatile->numObjs;
 
     for (unsigned short i = 0; i < writeCount; i++)
     {
         OAMEntryEXT* target = &targetOAMBuffer[i];
-        target->base = metatile->pAttributes_4[i];
+        target->base = metatile->pAttributes[i];
         if (transform == NULL && position == NULL)
             continue;
         Vector2fix finalPosition;
         short relX = (target->words01 & 0x1ff0000) >> 16;
         if (relX > 255)
-            relX |= 0xff00;
+            relX |= 0xff00; // wrap around, has effect of subtracting 512
         finalPosition.x = relX << 12;
         short relY = (target->words01 & 0xff);
         if (relY > 127)
-            relY |= 0xff00;
+            relY |= 0xff00; // wrap around, has effect of subtracting 256
         finalPosition.y = relY << 12;
 
         if (transform != NULL)
@@ -515,8 +511,8 @@ int Nitro2D_DrawMetatile(OAMEntryEXT* targetOAMBuffer, unsigned short oamLength,
             if (transformFlags == 0x300) // double size
             {
                 int shapeSize = (target->words01 & 0xc000c000);
-                finalPosition.x += GetOAMWidth(shapeSize) << 11;
-                finalPosition.y += GetOAMHeight(shapeSize) << 11;
+                finalPosition.x += GetObjWidth(shapeSize) << 11;
+                finalPosition.y += GetObjHeight(shapeSize) << 11;
             }
 
             int requestedTransformFlags = doubleSize ? 0x300 : 0x100;
@@ -530,8 +526,8 @@ int Nitro2D_DrawMetatile(OAMEntryEXT* targetOAMBuffer, unsigned short oamLength,
                 target->words01 = (target->words01 & ~0x3e000300) | requestedTransformFlags | (rotScaleIndex << 25);
 
             int shapeSize = target->words01 & 0xc000c000;
-            int halfWidth = GetOAMWidth(shapeSize) >> 1;
-            int halfHeight = GetOAMHeight(shapeSize) >> 1;
+            int halfWidth = GetObjWidth(shapeSize) >> 1;
+            int halfHeight = GetObjHeight(shapeSize) >> 1;
             finalPosition.x += -(halfWidth << 12) + transform->entriesL[0] * halfWidth + transform->entriesL[2] * halfHeight;
             finalPosition.y += -(halfHeight << 12) + transform->entriesL[1] * halfWidth + transform->entriesL[3] * halfHeight;
             if (doubleSizeAgain)

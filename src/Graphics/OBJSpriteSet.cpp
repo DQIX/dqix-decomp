@@ -63,14 +63,14 @@ bool GetCharBlockFromNitroFile(Nitro2DCharacter** out, void* data, unsigned int 
 
 void OBJSpriteSet::List::Reset()
 {
-    sprites = NULL;
-    count = 0;
+    sprites_ = NULL;
+    count_ = 0;
 }
 
 void OBJSpriteSet::List::Destroy()
 {
-    sprites = NULL;
-    count = 0;
+    sprites_ = NULL;
+    count_ = 0;
 }
 
 void OBJSpriteSet::List::Update(unsigned char id, int numTicks)
@@ -117,7 +117,7 @@ void OBJSpriteSet::List::Update(unsigned char id, int numTicks)
 
 void OBJSpriteSet::List::UpdateAll(int numTicks)
 {
-    for (unsigned short i = 0; i < this->count; i++)
+    for (unsigned short i = 0; i < count_; i++)
         Update(i, numTicks);
 }
 
@@ -146,16 +146,16 @@ void OBJSpriteSet::List::StopSpriteAnimation(unsigned int id)
 
 OBJSpriteSet::Sprite* OBJSpriteSet::List::GetSprite(unsigned int id)
 {
-    if (this->sprites == NULL)
+    if (sprites_ == NULL)
         return NULL;
-    if (this->count == 0)
+    if (count_ == 0)
         return NULL;
     Sprite* ptr = NULL;
-    for (unsigned short i = 0; i < this->count; i++)
+    for (unsigned short i = 0; i < count_; i++)
     {
-        if (this->sprites[i].id_8 == id)
+        if (sprites_[i].id_8 == id)
         {
-            ptr = &this->sprites[i];
+            ptr = &sprites_[i];
             break;
         }
     }
@@ -254,7 +254,7 @@ bool OBJSpriteSet::LoadNCER(void* argData, unsigned int length, SafeAllocator* a
 
     if (alloc != NULL && metatiles_40_ == NULL)
     {
-        numMetatiles_4c_ = cellBank->numMetatiles_0;
+        numMetatiles_4c_ = cellBank->numMetatiles;
         metatiles_40_ = (Metatile*)alloc->Allocate(numMetatiles_4c_ * sizeof(Metatile));
         for (unsigned short i = 0; i < numMetatiles_4c_; i++)
             metatiles_40_[i].Reset();
@@ -266,7 +266,7 @@ bool OBJSpriteSet::LoadNCER(void* argData, unsigned int length, SafeAllocator* a
     
     if (pMetatiles != NULL && numMetatiles != 0 && alloc != NULL)
     {
-        unsigned short sourceNumMetatiles = cellBank->numMetatiles_0;
+        unsigned short sourceNumMetatiles = cellBank->numMetatiles;
         Nitro2DCellBank::Metatile* nitroMetatile;
         unsigned short i;
         unsigned short objCounter = 0;
@@ -277,29 +277,29 @@ bool OBJSpriteSet::LoadNCER(void* argData, unsigned int length, SafeAllocator* a
             nitroMetatile = Nitro2D_GetCellBankMetatile(cellBank, i);
             if (nitroMetatile == NULL)
                 break;
-            unsigned short thisNumObjs = nitroMetatile->numObjs_0;
+            unsigned short thisNumObjs = nitroMetatile->numObjs;
             localMetatile = &pMetatiles[i];
             localMetatile->unknown_1e = i;
             localMetatile->destinationIndex_22 = objCounter;
             localMetatile->nitroData_0 = *nitroMetatile;
-            localMetatile->nitroData_0.pAttributes_4 = localMetatile->oamEntries_8 =
+            localMetatile->nitroData_0.pAttributes = localMetatile->oamEntries_8 =
                 (OAMEntry*)alloc->Allocate(thisNumObjs * sizeof(OAMEntry));
-            for (unsigned short j = 0; j < nitroMetatile->numObjs_0; j++)
+            for (unsigned short j = 0; j < nitroMetatile->numObjs; j++)
             {
-                localMetatile->oamEntries_8[j] = nitroMetatile->pAttributes_4[j];
+                localMetatile->oamEntries_8[j] = nitroMetatile->pAttributes[j];
             }
-            objCounter += nitroMetatile->numObjs_0;
+            objCounter += nitroMetatile->numObjs;
         }
     }
 
-    numMetatiles_4e_ = cellBank->numMetatiles_0;
-    alignmentBoundaryType_38_ = cellBank->alignmentBoundaryType_8;
+    numMetatiles_4e_ = cellBank->numMetatiles;
+    alignmentBoundaryType_38_ = cellBank->alignmentBoundaryType;
 
-    Nitro2DCellBank::Metatile* lastNitroMT = Nitro2D_GetCellBankMetatile(cellBank, cellBank->numMetatiles_0 - 1);
+    Nitro2DCellBank::Metatile* lastNitroMT = Nitro2D_GetCellBankMetatile(cellBank, cellBank->numMetatiles - 1);
     if (lastNitroMT == NULL)
         return true;
     unsigned int logAlignmentBoundary = alignmentBoundaryType_38_ + 5;
-    OAMEntry* lastOAM = &lastNitroMT->pAttributes_4[lastNitroMT->numObjs_0 - 1];
+    OAMEntry* lastOAM = &lastNitroMT->pAttributes[lastNitroMT->numObjs - 1];
     
     unsigned int objVRAMOffset = (lastOAM->word2 & 0x3ff) << logAlignmentBoundary;
     unsigned int sizeIndex = (lastOAM->word1 & 0xc000) >> 14;
@@ -372,10 +372,10 @@ bool OBJSpriteSet::LoadNANR(void* data, unsigned int length, SafeAllocator* allo
     if (animList != NULL && alloc != NULL)
     {
         unsigned short i;
-        unsigned short numSprites = animBank->numAnimBlocks_0;
+        unsigned short numSprites = animBank->numAnimBlocks;
         Sprite* spriteBuffer = (Sprite*)alloc->Allocate(numSprites * sizeof(Sprite));
-        animList->sprites = spriteBuffer;
-        animList->count = numSprites;
+        animList->sprites_ = spriteBuffer;
+        animList->count_ = numSprites;
 
         for (i = 0; i < numSprites; i++)
         {
@@ -384,21 +384,21 @@ bool OBJSpriteSet::LoadNANR(void* data, unsigned int length, SafeAllocator* allo
                 continue;
             sprite = &spriteBuffer[i];
             sprite->Reset();
-            sprite->animationType_0 = block->animationType_8;
-            sprite->numFrames_a = block->numFrames_0;
+            sprite->animationType_0 = block->animationType;
+            sprite->numFrames_a = block->numFrames;
             sprite->id_8 = i;
             AnimationFrame* frameBuffer = 
                 (AnimationFrame*)alloc->Allocate(sprite->numFrames_a * sizeof(AnimationFrame));
             sprite->frames_c = frameBuffer;
             for (unsigned short j = 0; j < sprite->numFrames_a; j++)
             {
-                Nitro2DAnimationBank::FrameBlock* nitroFrame = &block->pFrames_c[j];
+                Nitro2DAnimationBank::FrameBlock* nitroFrame = &block->pFrames[j];
                 if (nitroFrame == NULL)
                     continue;
                 AnimationFrame* frame = &frameBuffer[j];
                 frame->Reset();
-                frame->duration_0 = nitroFrame->duration_4;
-                frame->metatileIndex_2 = nitroFrame->metatileIndices_0[0];
+                frame->duration_0 = nitroFrame->duration;
+                frame->metatileIndex_2 = nitroFrame->metatileIndices[0];
             }
         }
     }
@@ -497,7 +497,7 @@ void OBJSpriteSet::DrawMetatile(Metatile* metatile)
         return;
     
     int objMode = GetMetatileObjMode(metatile);
-    for (unsigned short i = metatile->nitroData_0.numObjs_0; i != 0; i--)
+    for (unsigned short i = metatile->nitroData_0.numObjs; i != 0; i--)
     {
         if (paletteIdx >= 0)
         {
@@ -513,9 +513,7 @@ void OBJSpriteSet::DrawMetatile(Metatile* metatile)
 static inline bool TestSpriteBit3(OBJSpriteSet::Sprite* sprite)
 {
     if (sprite != NULL)
-    {
         return sprite->flags_15 & 8;
-    }
     return false;
 }
 
@@ -545,7 +543,7 @@ void OBJSpriteSet::DrawAll()
 {
     if (sprites_3c_ == NULL)
         return;
-    unsigned int numSprites = sprites_3c_->count;
+    unsigned int numSprites = sprites_3c_->count_;
     for (unsigned short i = 0; i < numSprites; i++)
         DrawSprite(i);
 }
@@ -606,9 +604,9 @@ bool OBJSpriteSet::SetOAMWord(Metatile *metatile, unsigned int wordIdx, unsigned
     if (metatile == NULL) // again...
         return true;
     setMask <<= setShift;
-    for (unsigned short i = 0; i < metatile->nitroData_0.numObjs_0; i++)
+    for (unsigned short i = 0; i < metatile->nitroData_0.numObjs; i++)
     {
-        OAMEntry* loopEntry = &metatile->nitroData_0.pAttributes_4[i];
+        OAMEntry* loopEntry = &metatile->nitroData_0.pAttributes[i];
         unsigned short word;
         switch (wordIdx)
         {
@@ -657,7 +655,7 @@ int OBJSpriteSet::GetMetatileObjMode(const Metatile* metatile) const
 {
     if (metatile == NULL)
         return 0;
-    unsigned int word0 = metatile->nitroData_0.pAttributes_4[0].word0;
+    unsigned int word0 = metatile->nitroData_0.pAttributes[0].word0;
     return (word0 >> 10) & 3;
 }
 
@@ -665,6 +663,6 @@ unsigned int OBJSpriteSet::GetMetatilePaletteInternal(const Metatile* metatile) 
 {
     if (metatile == NULL)
         return 0;
-    unsigned int word = metatile->nitroData_0.pAttributes_4[0].word2;
+    unsigned int word = metatile->nitroData_0.pAttributes[0].word2;
     return (word >> 12) & 15;
 }

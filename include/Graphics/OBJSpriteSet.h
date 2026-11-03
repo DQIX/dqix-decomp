@@ -76,8 +76,8 @@ public:
 
     struct List
     {
-        Sprite* sprites;
-        unsigned short count;
+        Sprite* sprites_;
+        unsigned short count_;
 
         void Reset();
         void Destroy();

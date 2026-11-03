@@ -4,24 +4,24 @@
 
 struct Nitro2DPalette
 {
-    uint32_t textureFormat_0;
-    CBool useExtendedPalette_4;
-    uint32_t paletteDataSize_8;
-    uint8_t* pPaletteData_c;
+    uint32_t textureFormat;
+    CBool useExtendedPalette;
+    uint32_t paletteDataSize;
+    uint8_t* pPaletteData;
 };
 
 struct Nitro2DPaletteCMP
 {
-    uint16_t numPalettes_0;
+    uint16_t numPalettes;
     char unk_2[2];
-    uint16_t* pPaletteIDs_4;
+    uint16_t* pPaletteIDs;
 };
 
 struct Nitro2DPaletteLoadDesc
 {
-    uint32_t textureFormat_0;
-    CBool useExtendedPalette_4;
-    uint32_t loadOffsets_8[3];
+    uint32_t textureFormat;
+    CBool useExtendedPalette;
+    uint32_t loadOffsets[3];
 };
 
 CBool Nitro2D_GetPalette(void* fileData, Nitro2DPalette** output);
