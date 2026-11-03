@@ -4,9 +4,8 @@
 #include "NitroSDK/LoadToVRAM.h"
 #include <globaldefs.h>
 
-extern "C"
-{
-}
+extern const unsigned short data_020e9198[3][4]; // x-dimensions
+extern const unsigned short data_020e9180[3][4]; // y-dimensions
 
 #define SIGNATURE_ABNK 0x41424e4b
 #define SIGNATURE_CEBK 0x4345424b
@@ -218,7 +217,7 @@ CBool Nitro2D_GetPaletteCMP(void* fileData, Nitro2DPaletteCMP** output)
     return true;
 }
 
-void PrepareCPCMP(Nitro2DPaletteCMP* ptr)
+void PreparePCMP(Nitro2DPaletteCMP* ptr)
 {
     FixPointerOffsetRight(&ptr->pPaletteIDs_4, ptr);
 }
@@ -250,17 +249,29 @@ void InternalPrepareCellBankSubstruct14(Nitro2DCellBank::Substruct14::Interior* 
     }
 }
 
-void StoreCharacterVRAMLoadOffset(Nitro2DCharacterLoadOutput* output, int vramType, unsigned int offset)
+void Nitro2D_ClearCharacterLoadDesc(Nitro2DCharacterLoadDesc* desc)
+{
+    for (int i = 0; i < 3; i++)
+        desc->offsets_0[i] = -1;
+}
+
+void StoreCharacterVRAMLoadOffset(Nitro2DCharacterLoadDesc* output, int vramType, unsigned int offset)
 {
     output->offsets_0[vramType] = offset;
 }
 
-void StorePaletteVRAMLoadOffset(Nitro2DPaletteLoadOutput* output, int screen, unsigned int offset)
+void Nitro2D_ClearCharacterLoadDesc(Nitro2DPaletteLoadDesc* desc)
+{
+    for (int i = 0; i < 3; i++)
+        desc->loadOffsets_8[i] = -1;
+}
+
+void StorePaletteVRAMLoadOffset(Nitro2DPaletteLoadDesc* output, int screen, unsigned int offset)
 {
     output->loadOffsets_8[screen] = offset;
 }
 
-void Nitro2D_LoadCharacterToVRAM(Nitro2DCharacter* character, unsigned int vramOffset, int vramType, Nitro2DCharacterLoadOutput* output)
+void Nitro2D_LoadCharacterToVRAM(Nitro2DCharacter* character, unsigned int vramOffset, int vramType, Nitro2DCharacterLoadDesc* output)
 {
     unsigned int objTileMapping = character->objTileMapping_8;
     switch (vramType)
@@ -299,14 +310,14 @@ void Nitro2D_LoadCharacterToVRAM(Nitro2DCharacter* character, unsigned int vramO
         output->unknown_c = character->unknown_2;
         output->unknown_10 = character->tileDataSizeKB_0;
     }
-    output->unknown_14 = character->colorDepth_4;
+    output->unknown_14 = character->maybeColorDepth_4;
     output->unknown_18 = 0;
     output->unknown_1c = 1;
     output->objTileMapping_20 = character->objTileMapping_8;
     StoreCharacterVRAMLoadOffset(output, vramType, vramOffset);
 }
 
-void Nitro2D_LoadCharacterToVRAM2(Nitro2DCharacter* character, unsigned int vramOffset, int vramType, Nitro2DCharacterLoadOutput* output)
+void Nitro2D_LoadCharacterToVRAM2(Nitro2DCharacter* character, unsigned int vramOffset, int vramType, Nitro2DCharacterLoadDesc* output)
 {
     unsigned int objTileMapping = character->objTileMapping_8;
     switch (vramType)
@@ -345,14 +356,14 @@ void Nitro2D_LoadCharacterToVRAM2(Nitro2DCharacter* character, unsigned int vram
         output->unknown_c = character->unknown_2;
         output->unknown_10 = character->tileDataSizeKB_0;
     }
-    output->unknown_14 = character->colorDepth_4;
+    output->unknown_14 = character->maybeColorDepth_4;
     output->unknown_18 = 0;
     output->unknown_1c = 1;
     output->objTileMapping_20 = character->objTileMapping_8;
     StoreCharacterVRAMLoadOffset(output, vramType, vramOffset);
 }
 
-void Nitro2D_LoadPaletteToVRAM(Nitro2DPalette* palette, unsigned int vramOffset, int vramType, Nitro2DPaletteLoadOutput* output)
+void Nitro2D_LoadPaletteToVRAM(Nitro2DPalette* palette, unsigned int vramOffset, int vramType, Nitro2DPaletteLoadDesc* output)
 {
     uint8_t* paletteData = palette->pPaletteData_c;
     unsigned int dataLength = palette->paletteDataSize_8;
@@ -360,7 +371,7 @@ void Nitro2D_LoadPaletteToVRAM(Nitro2DPalette* palette, unsigned int vramOffset,
     switch (vramType)
     {
     case 1:
-        if (palette->unknown_4 != 0)
+        if (palette->useExtendedPalette_4 != 0)
         {
             MemoryMapMainObjExtendedPalette();
             LoadToMainObjExtendedPalette(paletteData, vramOffset, dataLength);
@@ -372,7 +383,7 @@ void Nitro2D_LoadPaletteToVRAM(Nitro2DPalette* palette, unsigned int vramOffset,
         }
         break;
     case 2:
-        if (palette->unknown_4 != 0)
+        if (palette->useExtendedPalette_4 != 0)
         {
             MemoryMapSubObjExtendedPalette();
             LoadToSubObjExtendedPalette(paletteData, vramOffset, dataLength);
@@ -390,12 +401,12 @@ void Nitro2D_LoadPaletteToVRAM(Nitro2DPalette* palette, unsigned int vramOffset,
         break;
     }
     output->textureFormat_0 = palette->textureFormat_0;
-    output->unknown_4 = palette->unknown_4;
+    output->useExtendedPalette_4 = palette->useExtendedPalette_4;
     StorePaletteVRAMLoadOffset(output, vramType, vramOffset);
 }
 
 void Nitro2D_LoadPaletteWithCMPToVRAM(Nitro2DPalette* palette, Nitro2DPaletteCMP* paletteCMP,
-    unsigned int vramOffset, int screen, Nitro2DPaletteLoadOutput* output)
+    unsigned int vramOffset, int screen, Nitro2DPaletteLoadDesc* output)
 {
     unsigned int loadSize = (palette->textureFormat_0 == 3) ? 0x20 : 0x200;
 
@@ -412,7 +423,7 @@ void Nitro2D_LoadPaletteWithCMPToVRAM(Nitro2DPalette* palette, Nitro2DPaletteCMP
         switch (screen)
         {
         case 1:
-            if (palette->unknown_4 != 0)
+            if (palette->useExtendedPalette_4)
             {
                 MemoryMapMainObjExtendedPalette();
                 LoadToMainObjExtendedPalette(paletteData + paletteSourceOffset,
@@ -426,7 +437,7 @@ void Nitro2D_LoadPaletteWithCMPToVRAM(Nitro2DPalette* palette, Nitro2DPaletteCMP
             }
             break;
         case 2:
-            if (palette->unknown_4 != 0)
+            if (palette->useExtendedPalette_4)
             {
                 MemoryMapSubObjExtendedPalette();
                 LoadToSubObjExtendedPalette(paletteData + paletteSourceOffset,
@@ -448,6 +459,97 @@ void Nitro2D_LoadPaletteWithCMPToVRAM(Nitro2DPalette* palette, Nitro2DPaletteCMP
         }
     }
     output->textureFormat_0 = palette->textureFormat_0;
-    output->unknown_4 = palette->unknown_4;
+    output->useExtendedPalette_4 = palette->useExtendedPalette_4;
     StorePaletteVRAMLoadOffset(output, screen, vramOffset);
+}
+
+static inline void TransformVectorByMatrix(const Matrix2x2* mat, const Vector2fix* in, Vector2fix* out) {
+    Vector2fix scratch;
+    Vector2fix* writePtr = out;
+    if (out == in)
+        writePtr = &scratch;
+    // actually important to add 0x800 two times
+    writePtr->x = (((int64_t)mat->entriesL[0] * in->x + 0x800) + ((int64_t)mat->entriesL[2] * in->y + 0x800)) >> 12;
+    writePtr->y = (((int64_t)mat->entriesL[1] * in->x + 0x800) + ((int64_t)mat->entriesL[3] * in->y + 0x800)) >> 12;
+    if (writePtr == &scratch)
+        *out = scratch;
+}
+
+static inline int GetOAMHeight(int spaceSize)
+{
+    return data_020e9180[(spaceSize & 0xc000) >> 14][(spaceSize & 0xc0000000) >> 30];
+}
+
+static inline int GetOAMWidth(int spaceSize)
+{
+    return data_020e9198[(spaceSize & 0xc000) >> 14][(spaceSize & 0xc0000000) >> 30];
+}
+
+int Nitro2D_DrawMetatile(OAMEntryEXT* targetOAMBuffer, unsigned short oamLength, 
+    const Nitro2DCellBank::Metatile* metatile, const Matrix2x2* transform, const Vector2fix* position,
+    unsigned short rotScaleIndex, CBool doubleSize)
+{
+    unsigned short writeCount = (oamLength < metatile->numObjs_0) ? oamLength : metatile->numObjs_0;
+
+    for (unsigned short i = 0; i < writeCount; i++)
+    {
+        OAMEntryEXT* target = &targetOAMBuffer[i];
+        target->base = metatile->pAttributes_4[i];
+        if (transform == NULL && position == NULL)
+            continue;
+        Vector2fix finalPosition;
+        short relX = (target->words01 & 0x1ff0000) >> 16;
+        if (relX > 255)
+            relX |= 0xff00;
+        finalPosition.x = relX << 12;
+        short relY = (target->words01 & 0xff);
+        if (relY > 127)
+            relY |= 0xff00;
+        finalPosition.y = relY << 12;
+
+        if (transform != NULL)
+        {
+            int transformFlags = target->words01 & 0x300;
+            if (transformFlags != 0x100 && transformFlags != 0x300)
+                transformFlags |= target->words01 & 0x30000000;
+            if (transformFlags == 0x300) // double size
+            {
+                int shapeSize = (target->words01 & 0xc000c000);
+                finalPosition.x += GetOAMWidth(shapeSize) << 11;
+                finalPosition.y += GetOAMHeight(shapeSize) << 11;
+            }
+
+            int requestedTransformFlags = doubleSize ? 0x300 : 0x100;
+            CBool doubleSizeAgain = (requestedTransformFlags == 0x300);
+
+            TransformVectorByMatrix(transform, &finalPosition, &finalPosition);
+
+            if (requestedTransformFlags != 0x100 && requestedTransformFlags != 0x300)
+                target->words01 = (target->words01 & ~0x3e000300) | requestedTransformFlags;
+            else // this case always runs
+                target->words01 = (target->words01 & ~0x3e000300) | requestedTransformFlags | (rotScaleIndex << 25);
+
+            int shapeSize = target->words01 & 0xc000c000;
+            int halfWidth = GetOAMWidth(shapeSize) >> 1;
+            int halfHeight = GetOAMHeight(shapeSize) >> 1;
+            finalPosition.x += -(halfWidth << 12) + transform->entriesL[0] * halfWidth + transform->entriesL[2] * halfHeight;
+            finalPosition.y += -(halfHeight << 12) + transform->entriesL[1] * halfWidth + transform->entriesL[3] * halfHeight;
+            if (doubleSizeAgain)
+            {
+                finalPosition.x -= halfWidth << 12;
+                finalPosition.y -= halfHeight << 12;
+            }
+        }
+
+        if (position != NULL)
+        {
+            finalPosition.x += position->x;
+            finalPosition.y += position->y;
+        }
+
+        int xInt = (finalPosition.x + 0x800) >> 12;
+        int yInt = (finalPosition.y + 0x800) >> 12;
+        target->words01 = (target->words01 & ~0x01ff00ff) | (yInt & 0xff) | ((xInt & 0x1ff) << 16);
+    }
+    return writeCount;
 }

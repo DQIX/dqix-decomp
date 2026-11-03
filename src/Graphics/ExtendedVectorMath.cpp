@@ -4,11 +4,11 @@
 #define data_020e9450 data_020e955c
 #endif
 
-extern const fix16_t data_020e9450[0x10000 * 2];
+extern const fix16_t data_020e9450[0x1000 * 2];
 
 fix32_t fix32sin(fix32_t x)
 {
-    // The table has 0x10000 sine entries, and so using a 16-bit 
+    // The table has 0x1000 sine entries, and so using a 16-bit 
     // value ensures perfect wraparound for values outside of (0, 2pi)
     unsigned short normalizedAngle = (x << 16) / FIX_2PI;
     int tableIndex = normalizedAngle >> 4;
@@ -18,7 +18,7 @@ fix32_t fix32sin(fix32_t x)
 
 fix32_t fix32cos(fix32_t x)
 {
-    // The table has 0x10000 cosine entries, and so using a 16-bit 
+    // The table has 0x1000 cosine entries, and so using a 16-bit 
     // value ensures perfect wraparound for values outside of (0, 2pi)
     unsigned short normalizedAngle = (x << 16) / FIX_2PI;
     int tableIndex = normalizedAngle >> 4;

@@ -32,7 +32,12 @@ struct OAMEntry
     uint16_t word2;
 };
 
-struct OAMEntryEXT : public OAMEntry
+union OAMEntryEXT
 {
-    uint16_t rotScaleData;
+    struct
+    {
+        OAMEntry base;
+        uint16_t rotScaleData;
+    };
+    uint32_t words01;
 };

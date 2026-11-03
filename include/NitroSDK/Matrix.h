@@ -46,10 +46,24 @@ typedef struct Vector3s
     int16_t z;
 } Vector3s;
 
+typedef struct Vector2i
+{
+    int32_t x;
+    int32_t y;
+} Vector2i;
+
+typedef Vector2i Vector2fix;
 typedef Vector3i Vector3fix;
 typedef Vector3s Vector3fix16;
 
 #define FIX_2PI 0x6488
+
+typedef union Matrix2x2
+{
+    Vector2i rows[2];
+    fix32_t entries[4];
+    long entriesL[4]; // needed by some sdk functions
+} Matrix2x2;
 
 typedef union Matrix3x3
 {
@@ -92,6 +106,20 @@ typedef union Matrix4x4
 extern "C"
 {
 #endif
+    // usa: func_020c111c
+    // writes a rotation into the matrix specified. Instead
+    // of providing the angle of rotation, you specify the sine/cosine
+    // values. The rotation is left-handed, i.e. the output is
+    // M = (  c s )
+    //     ( -s c )
+    void Mat2x2_WriteRotation(Matrix2x2* out, fix32_t sine, fix32_t cosine);
+
+    // usa: func_020c1128
+    // computes diag(x, y) * in and writes to out.
+    // note the resulting matrix represents first scaling, then applying the 
+    // input matrix.
+    void Mat2x2_ApplyScale(const Matrix2x2* in, Matrix2x2* out, fix32_t x, fix32_t y);
+
     // usa: func_020c1180
     void Mat3x3_WriteIdentity(Matrix3x3* out);
     // usa: func_020c11a4

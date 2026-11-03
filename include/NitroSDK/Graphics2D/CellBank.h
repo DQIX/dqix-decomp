@@ -2,6 +2,7 @@
 
 #include "Common.h"
 #include "../OAM.h"
+#include "../Matrix.h"
 
 // signature 'CEBK'
 struct Nitro2DCellBank
@@ -48,3 +49,7 @@ struct Nitro2DCellBank
 
 CBool Nitro2D_GetCellBank(void* fileData, Nitro2DCellBank** output);
 Nitro2DCellBank::Metatile* Nitro2D_GetCellBankMetatile(Nitro2DCellBank* bank, unsigned short idx);
+
+int Nitro2D_DrawMetatile(OAMEntryEXT* targetOAM, unsigned short oamLength, 
+    const Nitro2DCellBank::Metatile* metatile, const Matrix2x2* transform, const Vector2fix* position,
+    unsigned short rotScaleIndex, CBool doubleSize);

@@ -3,6 +3,32 @@
 #include "Graphics/OBJSprite.h"
 #include "Resource/PAC.h"
 
+// sin/cos table
+extern const fix16_t data_020e9450[0x1000 * 2];
+
+static inline fix16_t LookupSine(int idx)
+{
+    return data_020e9450[2 * idx];
+}
+
+static inline fix16_t LookupCosine(int idx)
+{
+    return data_020e9450[2 * idx + 1];
+}
+
+extern "C"
+{
+    // get obj manager instance
+    void* func_0203bd08();
+    // get sub-engine obj oam entries for staging
+    OAMEntryEXT* func_0203be4c(void*);
+    // get main engine obj oam entries for staging
+    OAMEntryEXT* func_0203be40(void*);
+
+    void func_020b0318(void*);
+    void func_020b033c(void*);
+}
+
 extern char data_020f0504[]; // "RECN"
 extern char data_020f0509[]; // "RNAN"
 extern char data_020f050e[]; // "RGCN"
@@ -13,15 +39,15 @@ void OBJSprite::Metatile::Reset()
     memset(&nitroData_0, 0, sizeof(Nitro2DCellBank::Metatile));
     oamEntries_8 = NULL;
     unknown_c = unknown_10 = 1 << 12;
-    unknown_14 = unknown_18 = 0;
+    position_14.x = position_14.y = 0;
     unknown_1c = 0;
     unknown_1e = 0;
-    unknown_20 = 0;
-    unknown_22 = 0;
-    unknown_23 = 0;
-    unknown_24 = 0;
-    unknown_25 = -1;
-    unknown_26 = -1;
+    rotScaleDataIndex_20 = 0;
+    destinationIndex_22 = 0;
+    useTransform_23 = 0;
+    doubleSize_24 = false;
+    paletteIndex_25 = -1;
+    priority_26 = -1;
 }
 
 bool GetCharBlockFromNitroFile(Nitro2DCharacter** out, void* data, unsigned int length)
@@ -39,15 +65,15 @@ bool GetCharBlockFromNitroFile(Nitro2DCharacter** out, void* data, unsigned int 
 
 void OBJSprite::Reset()
 {
-    memset(&charLoad_0_, 0, sizeof(Nitro2DCharacterLoadOutput));
-    memset(&paletteLoad_24_, 0, sizeof(Nitro2DPaletteLoadOutput));
+    memset(&charLoad_0_, 0, sizeof(Nitro2DCharacterLoadDesc));
+    memset(&paletteLoad_24_, 0, sizeof(Nitro2DPaletteLoadDesc));
     unknown_38_ = 0;
     metatiles_40_ = NULL;
     unknown_44_ = 0;
     unknown_48_ = 0;
     numMetatiles_4c_ = 0;
     unknown_4e_ = 0;
-    unknown_3c_ = 0;
+    animations_3c_ = NULL;
     unknown_50_ = true;
 }
 
@@ -148,7 +174,7 @@ bool OBJSprite::LoadNCER(void* argData, unsigned int length, SafeAllocator* allo
             unsigned short thisNumObjs = nitroMetatile->numObjs_0;
             localMetatile = &pMetatiles[i];
             localMetatile->unknown_1e = i;
-            localMetatile->unknown_22 = objCounter;
+            localMetatile->destinationIndex_22 = objCounter;
             localMetatile->nitroData_0 = *nitroMetatile;
             localMetatile->nitroData_0.pAttributes_4 = localMetatile->oamEntries_8 =
                 (OAMEntry*)alloc->Allocate(thisNumObjs * sizeof(OAMEntry));
@@ -166,16 +192,12 @@ bool OBJSprite::LoadNCER(void* argData, unsigned int length, SafeAllocator* allo
     Nitro2DCellBank::Metatile* lastNitroMT = Nitro2D_GetCellBankMetatile(cellBank, cellBank->numMetatiles_0 - 1);
     if (lastNitroMT == NULL)
         return true;
-    unsigned int shift = unknown_38_;
+    unsigned int shift = unknown_38_ + 5;
     OAMEntry* lastOAM = &lastNitroMT->pAttributes_4[lastNitroMT->numObjs_0 - 1];
     
-    int word2 = lastOAM->word2;
-    int word1 = lastOAM->word1;
-    int word0 = lastOAM->word0;
-    shift += 5;
-    unsigned int shiftedTileNum = (word2 & 0x3ff) << (shift);
-    unsigned int sizeIndex = (word1 & 0xc000) >> 14;
-    unsigned int shapeIndex = (word0 & 0xc000) >> 14;
+    unsigned int shiftedTileNum = (lastOAM->word2 & 0x3ff) << shift;
+    unsigned int sizeIndex = (lastOAM->word1 & 0xc000) >> 14;
+    unsigned int shapeIndex = (lastOAM->word0 & 0xc000) >> 14;
     unsigned int minShift = 5;
     switch (shapeIndex)
     {
@@ -225,3 +247,180 @@ bool OBJSprite::LoadNCER(void* argData, unsigned int length, SafeAllocator* allo
     return false;
 }
 
+bool OBJSprite::LoadNANR(void* data, unsigned int length, SafeAllocator* alloc)
+{
+    Nitro2DAnimationBank* animBank;
+    if (data == NULL)
+        data = NULL;
+    else if (length == NULL)
+        data = NULL;
+    else if (!Nitro2D_GetAnimationBank(data, &animBank))
+        data = NULL;
+
+    if (data == NULL)
+        return true;
+
+    Animation* localAnim;
+    Nitro2DAnimationBank::AnimationBlock* block;
+    AnimationList* animList = animations_3c_;
+    if (animList != NULL && alloc != NULL)
+    {
+        unsigned short i;
+        unsigned short numAnims = animBank->numAnimBlocks_0;
+        Animation* animBuffer = (Animation*)alloc->Allocate(numAnims * sizeof(Animation));
+        animList->data = animBuffer;
+        animList->count = numAnims;
+
+        for (i = 0; i < numAnims; i++)
+        {
+            block = Nitro2D_AnimationBankGetAnimationBlock(animBank, i);
+            if (block == NULL)
+                continue;
+            localAnim = &animBuffer[i];
+            localAnim->Reset();
+            localAnim->unknown_0 = block->unknown_8;
+            localAnim->numFrames_a = block->numFrames_0;
+            localAnim->bufferIndex_8 = i;
+            AnimationFrame* frameBuffer = 
+                (AnimationFrame*)alloc->Allocate(localAnim->numFrames_a * sizeof(AnimationFrame));
+            localAnim->frames_c = frameBuffer;
+            for (unsigned short j = 0; j < localAnim->numFrames_a; j++)
+            {
+                Nitro2DAnimationBank::FrameBlock* nitroFrame = &block->unknown_c[j];
+                if (nitroFrame == NULL)
+                    continue;
+                AnimationFrame* frame = &frameBuffer[j];
+                frame->Reset();
+                frame->unknown_0 = nitroFrame->unknown_4;
+                frame->unknown_2 = nitroFrame->unknown_0[0];
+            }
+        }
+    }
+    return false;
+}
+
+bool OBJSprite::LoadNCGR(void* data, unsigned int length)
+{
+    func_020b0318(&charLoad_0_);
+    Nitro2DCharacter* character;
+    if (GetCharBlockFromNitroFile(&character, data, length) != false)
+        return true;
+    
+    int vramType = (unknown_50_ == 0 ? 1 : 2);
+    if (unknown_38_ == 4)
+        Nitro2D_LoadCharacterToVRAM2(character, 0, vramType, &charLoad_0_);
+    else
+        Nitro2D_LoadCharacterToVRAM(character, unknown_44_, vramType, &charLoad_0_);
+    return false;
+}
+
+bool OBJSprite::LoadNCLR(void* data, unsigned int length)
+{
+    func_020b033c(&paletteLoad_24_);
+    Nitro2DPalette* palette = NULL;
+    Nitro2DPaletteCMP* paletteCMP = NULL;
+    CBool hasCMP = Nitro2D_GetPaletteCMP(data, &paletteCMP);
+
+    bool error;
+    if (data == NULL)
+        error = true;
+    else if (length == NULL)
+        error = true;
+    else if (Nitro2D_GetPalette(data, &palette))
+        error = false;
+    else
+        error = true;
+
+    if (error)
+        return true;
+
+    int vramType = (unknown_50_ == 0 ? 1 : 2);
+    if (hasCMP)
+        Nitro2D_LoadPaletteWithCMPToVRAM(palette, paletteCMP, 0, vramType, &paletteLoad_24_);
+    else
+        Nitro2D_LoadPaletteToVRAM(palette, 0, vramType, &paletteLoad_24_);
+
+    return false;
+}
+
+void OBJSprite::DrawMetatile(Metatile* metatile) 
+{
+    if (metatile == NULL)
+        return;
+
+    void* objManager = func_0203bd08();
+    OAMEntryEXT* oamTargetBuffer;
+    Matrix2x2* pTransform = NULL;
+    oamTargetBuffer = func_0203be4c(objManager);
+    if (unknown_50_ == 0)
+        oamTargetBuffer = func_0203be40(objManager);
+    bool doubleSize = false;
+    Matrix2x2 rotScale;
+    Matrix2x2 rotInvScale;
+    if (metatile->useTransform_23)
+    {
+        Compute2x2Matrices(&rotScale, &rotInvScale, metatile);
+        pTransform = &rotScale;
+        if (metatile->doubleSize_24)
+            doubleSize = true;
+    }
+
+    unsigned short firstObjIdx = metatile->destinationIndex_22 & 0x7f;
+    unsigned short objCapacity = 128 - firstObjIdx;
+
+    if (pTransform != NULL)
+    {
+        OAMEntryEXT* rotScaleTarget = &oamTargetBuffer[metatile->rotScaleDataIndex_20 * 4];
+        rotScaleTarget[0].rotScaleData = rotInvScale.entries[0] >> 4;
+        rotScaleTarget[1].rotScaleData = rotInvScale.entries[1] >> 4;
+        rotScaleTarget[2].rotScaleData = rotInvScale.entries[2] >> 4;
+        rotScaleTarget[3].rotScaleData = rotInvScale.entries[3] >> 4;
+    }
+
+    Vector2fix position = metatile->position_14;
+    if (position.y < -64 << 12 || position.y >= 192 << 12)
+        return;
+    
+    int paletteIdx, priority;
+    OAMEntryEXT* oamTarget = &oamTargetBuffer[firstObjIdx];
+    Nitro2D_DrawMetatile(oamTarget, objCapacity, &metatile->nitroData_0, 
+        pTransform, &metatile->position_14, metatile->rotScaleDataIndex_20, doubleSize);
+    paletteIdx = metatile->paletteIndex_25;
+    priority = metatile->priority_26;
+    if (paletteIdx < 0 && priority < 0)
+        return;
+    
+    int objMode = GetMetatileObjMode(metatile);
+    for (unsigned short i = metatile->nitroData_0.numObjs_0; i != 0; i--)
+    {
+        if (paletteIdx >= 0)
+        {
+            oamTarget->words01 = (oamTarget->words01 & ~0xc00) | (objMode << 10);
+            oamTarget->base.word2 = (oamTarget->base.word2 & ~0xf000) | (paletteIdx << 12);
+        }
+        if (priority >= 0)
+            oamTarget->base.word2 = (oamTarget->base.word2 & ~0xc00) | (priority << 10);
+        oamTarget++;
+    }
+}
+
+void OBJSprite::Compute2x2Matrices(Matrix2x2* outRotScale, Matrix2x2* outRotInvScale, const Metatile* metatile)
+{
+    if (metatile == NULL || outRotScale == NULL || outRotInvScale == NULL)
+        return;
+    
+    Matrix2x2 rotMatrix;
+    Mat2x2_WriteRotation(&rotMatrix, LookupSine(metatile->unknown_1c >> 4), LookupCosine(metatile->unknown_1c >> 4));
+    Mat2x2_ApplyScale(&rotMatrix, outRotScale, metatile->unknown_c, metatile->unknown_10);
+    fix32_t invX = fix32_Divide(1 << 12, metatile->unknown_c);
+    fix32_t invY = fix32_Divide(1 << 12, metatile->unknown_10);
+    Mat2x2_ApplyScale(&rotMatrix, outRotInvScale, invX, invY);
+}
+
+int OBJSprite::GetMetatileObjMode(const Metatile* metatile) const
+{
+    if (metatile == NULL)
+        return 0;
+    unsigned int word0 = metatile->nitroData_0.pAttributes_4[0].word0;
+    return (word0 >> 10) & 3;
+}

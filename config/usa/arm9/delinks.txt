@@ -220,7 +220,8 @@ src/NitroSDK/Memory/AllocatorUnion.cpp:
     .text start:0x020afe6c end:0x020afec4
 
 src/NitroSDK/Graphics2D/Graphics2D.cpp:
-    .text start:0x020afec4 end:0x020b2acc
+    complete
+    .text start:0x020afec4 end:0x020b0d80
 
 src/NitroSDK/NSBXX/Animation.cpp:
     complete
