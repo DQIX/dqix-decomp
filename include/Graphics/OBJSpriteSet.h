@@ -6,7 +6,7 @@
 
 // sizeof == 0x54.
 // A 2D sprite rendered via the OBJ system
-class OBJSprite
+class OBJSpriteSet
 {
 public:
     // sizeof == 0x28
@@ -43,7 +43,7 @@ public:
     };
 
     // sizeof == 0x18
-    struct Animation
+    struct Sprite
     {
         int animationType_0; // 1 = stop at end, 2 = loop
         short unknown_4;
@@ -74,33 +74,33 @@ public:
         }
     };
 
-    struct AnimationList
+    struct List
     {
-        Animation* data;
+        Sprite* sprites;
         unsigned short count;
 
         void Reset();
         void Destroy();
-        Animation* GetAnimation(unsigned int id);
-        void SetAnimationOBJIndex(unsigned short animID, unsigned char to);
-        void Update(unsigned char id, int numTicks);
+        Sprite* GetSprite(unsigned int id);
+        void SetSpriteOBJIndex(unsigned short spriteID, unsigned char to);
+        void Update(unsigned char spriteID, int numTicks);
         void UpdateAll(int numTicks);
 
-        void StartAnimation(unsigned int id);
-        void StopAnimation(unsigned int id);
+        void PlaySpriteAnimation(unsigned int spriteID);
+        void StopSpriteAnimation(unsigned int spriteID);
     };
 
     Nitro2DCharacterLoadDesc charLoad_0_;
     Nitro2DPaletteLoadDesc paletteLoad_24_;
-    int unknown_38_;
-    AnimationList* animations_3c_;
+    int alignmentBoundaryType_38_; // matches DISPCNT bits 20-21?
+    List* sprites_3c_;
     Metatile* metatiles_40_;
-    int unknown_44_;
-    int unknown_48_;
+    int charVRAMLoadOffset_44_;
+    int usedObjVRAMEnd_48_;
     unsigned short numMetatiles_4c_;
-    short unknown_4e_;
+    short numMetatiles_4e_;
     // 0 = main engine, 1 = sub engine. might be bool
-    unsigned char unknown_50_;
+    unsigned char engine_50_;
 
     void Reset();
     void Destroy(); // does nothing but is probably Destroy given how it's used

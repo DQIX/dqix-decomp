@@ -5,13 +5,13 @@
 // signature 'CHAR'
 struct Nitro2DCharacter
 {
-    uint16_t tileDataSizeKB_0;
+    uint16_t unknown_0;
     uint16_t unknown_2;
     uint32_t maybeColorDepth_4;
     // bits 4 and 20-21 of dispcnt
     uint32_t objTileMapping_8;
     char unk_c[4];
-    uint32_t tileDataSizeBytes_10;
+    uint32_t tileDataSize_10;
     void* pTileData_14;
 };
 

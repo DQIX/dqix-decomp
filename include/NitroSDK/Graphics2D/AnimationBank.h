@@ -12,17 +12,19 @@ struct Nitro2DAnimationBank
         uint16_t unknown_2;
         uint16_t unknown_4;
         uint16_t unknown_6;
-        uint32_t unknown_8;
-        FrameBlock* unknown_c;
+        // 1 = stop at end, 2 = loop (based on OBJSpriteSet)
+        uint32_t animationType_8;
+        FrameBlock* pFrames_c;
     };
 
     struct FrameBlock
     {
-        uint16_t* unknown_0;
-        uint16_t unknown_4;
+        uint16_t* metatileIndices_0; // see cell bank
+        uint16_t duration_4;
         uint16_t unknown_6;
     };
 
+    // some nonsense, never gets used and has no GBATEK documentation
     struct Subsubsub
     {
         unsigned short unknown_0;
