@@ -301,7 +301,7 @@ bool OBJSprite::LoadNANR(void* data, unsigned int length, SafeAllocator* alloc)
 
 bool OBJSprite::LoadNCGR(void* data, unsigned int length)
 {
-    func_020b0318(&charLoad_0_);
+    Nitro2D_ClearCharacterLoadDesc(&charLoad_0_);
     Nitro2DCharacter* character;
     if (GetCharBlockFromNitroFile(&character, data, length) != false)
         return true;
@@ -316,7 +316,7 @@ bool OBJSprite::LoadNCGR(void* data, unsigned int length)
 
 bool OBJSprite::LoadNCLR(void* data, unsigned int length)
 {
-    func_020b033c(&paletteLoad_24_);
+    Nitro2D_ClearPaletteLoadDesc(&paletteLoad_24_);
     Nitro2DPalette* palette = NULL;
     Nitro2DPaletteCMP* paletteCMP = NULL;
     CBool hasCMP = Nitro2D_GetPaletteCMP(data, &paletteCMP);

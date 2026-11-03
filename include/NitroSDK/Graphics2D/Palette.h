@@ -27,7 +27,7 @@ struct Nitro2DPaletteLoadDesc
 CBool Nitro2D_GetPalette(void* fileData, Nitro2DPalette** output);
 CBool Nitro2D_GetPaletteCMP(void* fileData, Nitro2DPaletteCMP** output);
 
-void Nitro2D_ClearCharacterLoadDesc(Nitro2DPaletteLoadDesc* desc);
+void Nitro2D_ClearPaletteLoadDesc(Nitro2DPaletteLoadDesc* desc);
 // vram type: 0 = texture palette, 1 = main engine obj palette (standard/extended),
 // 2 = sub engine obj palette (standard/extended)
 void Nitro2D_LoadPaletteToVRAM(Nitro2DPalette* palette, unsigned int vramOffset, int vramType, Nitro2DPaletteLoadDesc* output);

@@ -260,7 +260,7 @@ void StoreCharacterVRAMLoadOffset(Nitro2DCharacterLoadDesc* output, int vramType
     output->offsets_0[vramType] = offset;
 }
 
-void Nitro2D_ClearCharacterLoadDesc(Nitro2DPaletteLoadDesc* desc)
+void Nitro2D_ClearPaletteLoadDesc(Nitro2DPaletteLoadDesc* desc)
 {
     for (int i = 0; i < 3; i++)
         desc->loadOffsets_8[i] = -1;
