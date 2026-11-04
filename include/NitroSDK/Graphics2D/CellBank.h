@@ -42,7 +42,7 @@ struct Nitro2DCellBank
     uint16_t hasExtraMetatileData; // 0 = 8 bytes, 1 = 16 bytes
     Metatile* pMetatiles;
     // GBATEK is wrong about this, this is the boundary mode as used
-    // in bits 20-21 of DISPCNT (see LoadNCER function)
+    // in bits 20-21 of DISPCNT (see ObjSpriteSet::LoadNCER)
     uint32_t alignmentBoundaryType;
     SubstructC* unknown_c;
     char unk_10[4];
