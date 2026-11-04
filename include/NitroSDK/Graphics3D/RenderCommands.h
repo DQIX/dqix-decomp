@@ -4,8 +4,8 @@
 #include "Common.h"
 #include "BoneMatrix.h"
 
-struct RenderCommandHandler;
-typedef void (*RenderCommandHook)(RenderCommandHandler*);
+struct Nitro3DRenderCommandHandler;
+typedef void (*RenderCommandHook)(Nitro3DRenderCommandHandler*);
 
 struct BoneMatrixRenderData
 {
@@ -62,7 +62,7 @@ struct Nitro3DModelMaterials;
 struct Nitro3DTextureSet;
 
 // sizeof == 0x54
-struct ModelRenderContext
+struct Nitro3DRenderContext
 {
     // bits 0, 1, 2, 3 set flags 7, 8, 9, 10 in RenderCommandHandler
     // bit 4: animation bitfields dirty
@@ -77,11 +77,11 @@ struct ModelRenderContext
     Nitro3DAnimation* visibilityAnimations; // V.AV animations (never used?)
     // points to ProcessVisibilityAnimations (020b3f98 usa)
     bool (*pfnProcessVisibilityAnimations)(int*, Nitro3DAnimation*, unsigned int);
-    void (*renderCommandHook)(RenderCommandHandler*);
+    void (*renderCommandHook)(Nitro3DRenderCommandHandler*);
     unsigned char renderCommandHookCommandID;
     unsigned char renderCommandHookStage; // 1,2 or 3 depending on when in the function it gets called
     char pad_26[2];
-    void (*preRenderCallback)(RenderCommandHandler*);
+    void (*preRenderCallback)(Nitro3DRenderCommandHandler*);
     char unk_2c[4];
     uint8_t* renderCommandList;
     BoneMatrixRenderData* boneMatrixRenderDataArray;
@@ -97,10 +97,10 @@ struct ModelRenderContext
 };
 
 // sizeof == 0x188
-struct RenderCommandHandler
+struct Nitro3DRenderCommandHandler
 {
     uint8_t* instructionPointer;
-    ModelRenderContext* context;
+    Nitro3DRenderContext* context;
     unsigned int flags;
     RenderCommandHook hooks[32];
     unsigned char hookStages[32];
@@ -159,7 +159,7 @@ struct RenderCommandHandler
 // 6 to return early
 #define RCH_FLAG_10 10
 
-void RenderModelFromRenderData(ModelRenderContext* renderData);
+void RenderModelFromRenderData(Nitro3DRenderContext* renderData);
 // much more barebones implementation of rendering and just does a single
 // mesh / material pair. In practice this seems to be used for shadows
 // bindMaterial is really a bool

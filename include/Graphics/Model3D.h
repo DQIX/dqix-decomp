@@ -17,7 +17,7 @@ public:
         TextureStagingMode_Immediate = 2
     };
 
-    ModelRenderContext renderContext_;
+    Nitro3DRenderContext renderContext_;
     Nitro3DModel* rawInternalModel_;
     Nitro3DTextureSet* rawTEX_;
     void* rawBMD_; // holds the (decompressed) NSBMD file

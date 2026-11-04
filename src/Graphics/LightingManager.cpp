@@ -622,14 +622,14 @@ void LightingManager::Initialize()
     unknown_84 = 1;
     fogEnabled_ = true;
 
-    RenderConfig::SetLightVector(0, 0, 0, 0);
-    RenderConfig::SetLightVector(1, 0, 0, 0);
-    RenderConfig::SetLightVector(2, 0, 0, 0);
-    RenderConfig::SetLightVector(3, 0, 0, 0);
-    RenderConfig::SetLightColor(0, 0);
-    RenderConfig::SetLightColor(1, 0);
-    RenderConfig::SetLightColor(2, 0);
-    RenderConfig::SetLightColor(3, 0);
+    Nitro3DRenderConfig::SetLightVector(0, 0, 0, 0);
+    Nitro3DRenderConfig::SetLightVector(1, 0, 0, 0);
+    Nitro3DRenderConfig::SetLightVector(2, 0, 0, 0);
+    Nitro3DRenderConfig::SetLightVector(3, 0, 0, 0);
+    Nitro3DRenderConfig::SetLightColor(0, 0);
+    Nitro3DRenderConfig::SetLightColor(1, 0);
+    Nitro3DRenderConfig::SetLightColor(2, 0);
+    Nitro3DRenderConfig::SetLightColor(3, 0);
 
     lightRGBScale_ = 1 << 12;
     lightRGBScaleInitial_ = 1 << 12;
@@ -701,7 +701,7 @@ void LightingManager::ModelTransformTintBrightnessContrast(Nitro3DModel *model)
     spriteDiffuseColor_ = lightingInfo->basic_.spriteDiffuseColor[index];
     modelDiffuseColor_ = lightingInfo->basic_.modelDiffuseColor[index];
     edgeColor_ = lightingInfo->basic_.edgeColor[index];
-    RenderConfig::SetDiffuseAmbientColors(modelDiffuseColor_, 0, false);
+    Nitro3DRenderConfig::SetDiffuseAmbientColors(modelDiffuseColor_, 0, false);
     func_ov017_021901ac(GetGameResources());
     tint_4a_ = modelDiffuseColor_;
 
@@ -769,7 +769,7 @@ void LightingManager::ProcessZoneChange(Zone3D *newZone)
     {
         info->advanced_.FillMissingEntries();
         info->fogList.FillMissingEntries();
-        RenderConfig::SetDiffuseAmbientColors(modelDiffuseColor_, 0, false);
+        Nitro3DRenderConfig::SetDiffuseAmbientColors(modelDiffuseColor_, 0, false);
         func_ov017_021901ac(GetGameResources());
         tint_4a_ = modelDiffuseColor_;
     }
@@ -820,7 +820,7 @@ void LightingManager::ProcessZoneChange(Zone3D *newZone)
             edgeColor_, edgeColor_, edgeColor_, edgeColor_
         };
         func_020c555c(edgeColors);
-        RenderConfig::SetDiffuseAmbientColors(modelDiffuseColor_, 0, false);
+        Nitro3DRenderConfig::SetDiffuseAmbientColors(modelDiffuseColor_, 0, false);
         func_ov017_021901ac(GetGameResources());
         tint_4a_ = modelDiffuseColor_;
     }
@@ -836,18 +836,18 @@ void LightingManager::ProcessZoneChange(Zone3D *newZone)
             edgeColor_, edgeColor_, edgeColor_, edgeColor_
         };
         func_020c555c(edgeColors);
-        RenderConfig::SetDiffuseAmbientColors(modelDiffuseColor_, 0, false);
+        Nitro3DRenderConfig::SetDiffuseAmbientColors(modelDiffuseColor_, 0, false);
         func_ov017_021901ac(GetGameResources());
         tint_4a_ = modelDiffuseColor_;
     }
-    RenderConfig::SetLightVector(0, 0, 0, 0);
-    RenderConfig::SetLightVector(1, 0, 0, 0);
-    RenderConfig::SetLightVector(2, 0, 0, 0);
-    RenderConfig::SetLightVector(3, 0, 0, 0);
-    RenderConfig::SetLightColor(0, 0);
-    RenderConfig::SetLightColor(1, 0);
-    RenderConfig::SetLightColor(2, 0);
-    RenderConfig::SetLightColor(3, 0);
+    Nitro3DRenderConfig::SetLightVector(0, 0, 0, 0);
+    Nitro3DRenderConfig::SetLightVector(1, 0, 0, 0);
+    Nitro3DRenderConfig::SetLightVector(2, 0, 0, 0);
+    Nitro3DRenderConfig::SetLightVector(3, 0, 0, 0);
+    Nitro3DRenderConfig::SetLightColor(0, 0);
+    Nitro3DRenderConfig::SetLightColor(1, 0);
+    Nitro3DRenderConfig::SetLightColor(2, 0);
+    Nitro3DRenderConfig::SetLightColor(3, 0);
 }
 
 void LightingManager::RecomputeAdvancedLighting()
@@ -969,13 +969,13 @@ void LightingManager::SubmitToRenderConfig()
     if (zone == NULL)
         return;
     (void)GetGameResources();
-    RenderConfig::SetDiffuseAmbientColors(modelDiffuseColor_, 0, false);
+    Nitro3DRenderConfig::SetDiffuseAmbientColors(modelDiffuseColor_, 0, false);
     if (zone->lighting_.maybeMode_ == 2)
     {
-        RenderConfig::SetLightVector(0, lightVectors_[0].x, lightVectors_[0].y, lightVectors_[0].z);
-        RenderConfig::SetLightColor(0, lightColors_[0]);
-        RenderConfig::SetLightVector(1, lightVectors_[1].x, lightVectors_[1].y, lightVectors_[1].z);
-        RenderConfig::SetLightColor(1, lightColors_[1]);
+        Nitro3DRenderConfig::SetLightVector(0, lightVectors_[0].x, lightVectors_[0].y, lightVectors_[0].z);
+        Nitro3DRenderConfig::SetLightColor(0, lightColors_[0]);
+        Nitro3DRenderConfig::SetLightVector(1, lightVectors_[1].x, lightVectors_[1].y, lightVectors_[1].z);
+        Nitro3DRenderConfig::SetLightColor(1, lightColors_[1]);
         unsigned short edgeColors[8] = {
             edgeColor_, edgeColor_, edgeColor_, edgeColor_,
             edgeColor_, edgeColor_, edgeColor_, edgeColor_

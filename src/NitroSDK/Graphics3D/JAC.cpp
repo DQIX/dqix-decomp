@@ -84,7 +84,7 @@ void JACAnimationProcessingCallback(void* data, Nitro3DAnimation* anim, int arg)
 
 void ApplyBindPoseTranslation(BoneMatrixRenderData* bmrd)
 {
-    RenderCommandHandler* handler = data_0210a274;
+    Nitro3DRenderCommandHandler* handler = data_0210a274;
     // this is super cursed, but I guess this executes during command 6 when
     // ip[1] holds the bone index to apply stuff to
     Nitro3DBoneMatrix* boneMatrix = 
@@ -104,7 +104,7 @@ void ApplyBindPoseTranslation(BoneMatrixRenderData* bmrd)
 
 void ApplyBindPoseScaling(BoneMatrixRenderData* bmrd)
 {
-    RenderCommandHandler* handler = data_0210a274;
+    Nitro3DRenderCommandHandler* handler = data_0210a274;
     uint8_t* ip = handler->instructionPointer;
     Nitro3DBoneMatrix* boneMatrix = handler->boneList->GetEntryFromu32Offset<Nitro3DBoneMatrix>(ip[1]);
     intptr_t addrScaling = (intptr_t)(boneMatrix + 1);
@@ -124,7 +124,7 @@ void ApplyBindPoseScaling(BoneMatrixRenderData* bmrd)
 
 void ApplyBindPoseRotation(BoneMatrixRenderData* bmrd)
 {
-    RenderCommandHandler* handler = data_0210a274;
+    Nitro3DRenderCommandHandler* handler = data_0210a274;
     Nitro3DBoneMatrix* boneMatrix = 
         handler->boneList->GetEntryFromu32Offset<Nitro3DBoneMatrix>(handler->instructionPointer[1]);
 

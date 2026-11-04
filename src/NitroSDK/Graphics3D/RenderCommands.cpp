@@ -10,7 +10,7 @@ static inline int SetBitfieldBit(unsigned int* bitfield, unsigned int idx)
     bitfield[idx >> 5] |= (1 << (idx & 31));
 }
 
-void ExecuteRenderCommands(RenderCommandHandler* handler)
+void ExecuteRenderCommands(Nitro3DRenderCommandHandler* handler)
 {
     do
     {
@@ -20,9 +20,9 @@ void ExecuteRenderCommands(RenderCommandHandler* handler)
     } while (!(handler->flags & (1 << RCH_FLAG_5)));
 }
 
-void SetUpRenderCommandHandler(RenderCommandHandler* handler, ModelRenderContext* modelData)
+void SetUpRenderCommandHandler(Nitro3DRenderCommandHandler* handler, Nitro3DRenderContext* modelData)
 {
-    func_020ca458(0, handler, sizeof(RenderCommandHandler));
+    func_020ca458(0, handler, sizeof(Nitro3DRenderCommandHandler));
     handler->boneMatrixBitfield[0] = 1;
     handler->flags = 1;
 
@@ -50,7 +50,7 @@ void SetUpRenderCommandHandler(RenderCommandHandler* handler, ModelRenderContext
     if (modelData->renderCommandHook != NULL && modelData->renderCommandHookCommandID < 32)
     {
         handler->hooks[modelData->renderCommandHookCommandID] =
-            (void(*)(RenderCommandHandler*))modelData->renderCommandHook;
+            (void(*)(Nitro3DRenderCommandHandler*))modelData->renderCommandHook;
         handler->hookStages[modelData->renderCommandHookCommandID] = modelData->renderCommandHookStage;
     }
 
@@ -65,7 +65,7 @@ void SetUpRenderCommandHandler(RenderCommandHandler* handler, ModelRenderContext
 
     if (modelData->preRenderCallback != NULL)
     {
-        void (*proc)(RenderCommandHandler*) = (void(*)(RenderCommandHandler*))modelData->preRenderCallback;
+        void (*proc)(Nitro3DRenderCommandHandler*) = (void(*)(Nitro3DRenderCommandHandler*))modelData->preRenderCallback;
         proc(handler);
     }
 
@@ -86,9 +86,9 @@ void PopulateBitfieldFromAnimData(unsigned int* bitfield, Nitro3DAnimation* anim
     }
 }
 
-void RenderModelFromRenderData(ModelRenderContext* renderData)
+void RenderModelFromRenderData(Nitro3DRenderContext* renderData)
 {
-    RenderCommandHandler handler;
+    Nitro3DRenderCommandHandler handler;
     
     if ((renderData->flags & 0x10) == 0x10)
     {
@@ -118,7 +118,7 @@ void RenderModelFromRenderData(ModelRenderContext* renderData)
 }
 
 // nsbmd docs call this 'nop' though the callback still occurs
-void RenderCommand_0(RenderCommandHandler* handler, int modifier)
+void RenderCommand_0(Nitro3DRenderCommandHandler* handler, int modifier)
 {
     if (handler->hooks[0] != NULL)
         handler->hooks[0](handler);
@@ -126,7 +126,7 @@ void RenderCommand_0(RenderCommandHandler* handler, int modifier)
 }
 
 // signal end of render commands
-void RenderCommand_1(RenderCommandHandler* handler, int modifier)
+void RenderCommand_1(Nitro3DRenderCommandHandler* handler, int modifier)
 {
     if (handler->hooks[1] != NULL)
         handler->hooks[1](handler);
@@ -135,7 +135,7 @@ void RenderCommand_1(RenderCommandHandler* handler, int modifier)
 
 // apply visibility condition to be used by animation
 // params: condition index, default value (lowest bit used)
-void RenderCommand_2(RenderCommandHandler* handler, int modifier)
+void RenderCommand_2(Nitro3DRenderCommandHandler* handler, int modifier)
 {
     if (!(handler->flags & (1 << RCH_FLAG_9)))
     {
@@ -159,7 +159,7 @@ void RenderCommand_2(RenderCommandHandler* handler, int modifier)
 
         if (flagbit6 == 0)
         {
-            ModelRenderContext* modelData = handler->context;
+            Nitro3DRenderContext* modelData = handler->context;
             if (modelData->visibilityAnimations == NULL ||
                 !TestBitfieldBit(modelData->animatedVisibilityConditions, conditionIdx) ||
                 !modelData->pfnProcessVisibilityAnimations(handler->pCommand2Word, modelData->visibilityAnimations, conditionIdx))
@@ -197,7 +197,7 @@ void RenderCommand_2(RenderCommandHandler* handler, int modifier)
 
 // load matrix from stack
 // parameters: index to load from
-void RenderCommand_3(RenderCommandHandler* handler, int modifier)
+void RenderCommand_3(Nitro3DRenderCommandHandler* handler, int modifier)
 {
     if (!(handler->flags & (1 << RCH_FLAG_9)) && (handler->flags & (1 << RCH_FLAG_0)))
     {
@@ -230,7 +230,7 @@ void RenderCommand_3(RenderCommandHandler* handler, int modifier)
     handler->instructionPointer += 2;
 }
 
-void MaterialBindProc(RenderCommandHandler* handler, int modifier, Nitro3DMaterial* material, unsigned int idx)
+void MaterialBindProc(Nitro3DRenderCommandHandler* handler, int modifier, Nitro3DMaterial* material, unsigned int idx)
 {
     handler->boundMaterial = idx;
     handler->flags |= (1 << RCH_FLAG_3);
@@ -336,7 +336,7 @@ void MaterialBindProc(RenderCommandHandler* handler, int modifier, Nitro3DMateri
                 targetData->flags |= 8;
             }
 
-            ModelRenderContext* modelData = handler->context;
+            Nitro3DRenderContext* modelData = handler->context;
             if (modelData->materialAnimations != NULL && TestBitfieldBit(modelData->animatedMaterials, idx))
                 modelData->pfnProcessMaterialAnimations(targetData, modelData->materialAnimations, idx);
 
@@ -403,7 +403,7 @@ void MaterialBindProc(RenderCommandHandler* handler, int modifier, Nitro3DMateri
 
 // bind material
 // parameters: index of material within the model's MaterialList
-void RenderCommand_4(RenderCommandHandler* handler, int modifier)
+void RenderCommand_4(Nitro3DRenderCommandHandler* handler, int modifier)
 {
     if (!(handler->flags & (1 << RCH_FLAG_9)))
     {
@@ -418,7 +418,7 @@ void RenderCommand_4(RenderCommandHandler* handler, int modifier)
     handler->instructionPointer += 2;
 }
 
-void MeshDrawProc(RenderCommandHandler* handler, int modifier, Nitro3DMesh* mesh, unsigned int meshIdx)
+void MeshDrawProc(Nitro3DRenderCommandHandler* handler, int modifier, Nitro3DMesh* mesh, unsigned int meshIdx)
 {
     int callbackStage = (handler->hooks[5] != NULL) ? handler->hookStages[5] : 0;
     unsigned int flagbit6;
@@ -451,7 +451,7 @@ void MeshDrawProc(RenderCommandHandler* handler, int modifier, Nitro3DMesh* mesh
 
 // draw mesh
 // parameters: index of mesh to draw
-void RenderCommand_5(RenderCommandHandler* handler, int modifier)
+void RenderCommand_5(Nitro3DRenderCommandHandler* handler, int modifier)
 {
     if (!(handler->flags & (1 << RCH_FLAG_9)) && (handler->flags & (1 << RCH_FLAG_0)) && !(handler->flags & (1 << RCH_FLAG_1)))
     {
@@ -471,7 +471,7 @@ void RenderCommand_5(RenderCommandHandler* handler, int modifier)
 // if modifier & 0x20: stack position to store result at the end
 // if modifier & 0x40: stack position of matrix to retrieve at the start, i.e. 
 // you'll retrieve a matrix off the stack and pre-multiply that by the bone matrix
-void RenderCommand_6(RenderCommandHandler* handler, int modifier)
+void RenderCommand_6(Nitro3DRenderCommandHandler* handler, int modifier)
 {
     int boneIdx = handler->instructionPointer[1];
     int numBytesConsumed = 4; // by default it's opcode + 3 args
@@ -666,7 +666,7 @@ void RenderCommand_6(RenderCommandHandler* handler, int modifier)
 // if modifier & 0x20: stack position to store result at the end
 // if modifier & 0x40: stack position of matrix to retrieve at the start, i.e. 
 // you'll retrieve a matrix off the stack and pre-multiply that by the bone matrix
-void RenderCommand_7(RenderCommandHandler* handler, int modifier)
+void RenderCommand_7(Nitro3DRenderCommandHandler* handler, int modifier)
 {
     int numBytesConsumed = 2;
     Vector3fix* pTranslation = &data_020f1d78.rotationTranslation.translation;
@@ -720,7 +720,7 @@ void RenderCommand_7(RenderCommandHandler* handler, int modifier)
         while (func_020c54fc(&clipMatrix) != 0) {}
         if (data_0210a010.flags & (1 << RENDER_CONFIG_FLAG_0))
         {
-            const Matrix4x3* worldView4x3 = RenderConfig::GetCombinedWorldViewMatrix();
+            const Matrix4x3* worldView4x3 = Nitro3DRenderConfig::GetCombinedWorldViewMatrix();
             Matrix4x4 worldView;
             Mat4x3_ConvertTo4x4(worldView4x3, &worldView);
             Mat4x4_Multiply(&clipMatrix, &worldView, &clipMatrix);
@@ -750,7 +750,7 @@ void RenderCommand_7(RenderCommandHandler* handler, int modifier)
             GXFIFO = COMBINE_GXFIFO_COMMANDS3(GXFifoCommand_PopMatrix, GXFifoCommand_SetMatrixMode, GXFifoCommand_LoadMat4x3);
             func_020ca430(&data_020f1d78.popMatrixParameter, &GXFIFO, 8); // pass pop / matrix mode commands
             // load the matrix returned by func_020b3a24(), inverse of func_020b39ec()
-            func_020ca430(RenderConfig::GetInverseCombinedWorldViewMatrix(), &GXFIFO, 4*3 * sizeof(fix32_t));
+            func_020ca430(Nitro3DRenderConfig::GetInverseCombinedWorldViewMatrix(), &GXFIFO, 4*3 * sizeof(fix32_t));
             // the matrix to multiply by is a translation matrix, so we're composing
             // scaling with translation (remember the final operation represents
             // the first matrix transformation to carry out)
@@ -761,7 +761,7 @@ void RenderCommand_7(RenderCommandHandler* handler, int modifier)
         {
             GXFIFO = COMBINE_GXFIFO_COMMANDS3(GXFifoCommand_PopMatrix, GXFifoCommand_SetMatrixMode, GXFifoCommand_LoadMat4x3);
             func_020ca430(&data_020f1d78.popMatrixParameter, &GXFIFO, 8);
-            func_020ca430(RenderConfig::GetInverseViewMatrix(), &GXFIFO, 4*3 * sizeof(fix32_t));
+            func_020ca430(Nitro3DRenderConfig::GetInverseViewMatrix(), &GXFIFO, 4*3 * sizeof(fix32_t));
             GXFIFO = COMBINE_GXFIFO_COMMANDS2(GXFifoCommand_MultiplyMat4x3, GXFifoCommand_ScaleMatrix);
             func_020ca430(&data_020f1d78.rotationTranslation, &GXFIFO, (4*3 + 3) * sizeof(fix32_t));
         }
@@ -798,7 +798,7 @@ void RenderCommand_7(RenderCommandHandler* handler, int modifier)
 
 // seems to be used for axis-aligned billboarding - noticeable on trees in
 // Angel Falls & lights in cave grottos
-void RenderCommand_8(RenderCommandHandler* handler, int modifier)
+void RenderCommand_8(Nitro3DRenderCommandHandler* handler, int modifier)
 {
     int numBytesConsumed = 2;
     Vector3fix* pTranslation = &data_020f1dc0.rotationTranslation.translation;
@@ -851,7 +851,7 @@ void RenderCommand_8(RenderCommandHandler* handler, int modifier)
         while (func_020c54fc(&clipMatrix) != 0) {}
         if (data_0210a010.flags & (1 << RENDER_CONFIG_FLAG_0))
         {
-            const Matrix4x3* worldView4x3 = RenderConfig::GetCombinedWorldViewMatrix();
+            const Matrix4x3* worldView4x3 = Nitro3DRenderConfig::GetCombinedWorldViewMatrix();
             Matrix4x4 worldView;
             Mat4x3_ConvertTo4x4(worldView4x3, &worldView);
             Mat4x4_Multiply(&clipMatrix, &worldView, &clipMatrix);
@@ -896,7 +896,7 @@ void RenderCommand_8(RenderCommandHandler* handler, int modifier)
         {
             GXFIFO = COMBINE_GXFIFO_COMMANDS3(GXFifoCommand_PopMatrix, GXFifoCommand_SetMatrixMode, GXFifoCommand_LoadMat4x3);
             func_020ca430(&data_020f1dc0.popMatrixParameter, &GXFIFO, 8); // pass pop / matrix mode commands
-            func_020ca430(RenderConfig::GetInverseCombinedWorldViewMatrix(), &GXFIFO, 3 * 4 * sizeof(fix32_t));
+            func_020ca430(Nitro3DRenderConfig::GetInverseCombinedWorldViewMatrix(), &GXFIFO, 3 * 4 * sizeof(fix32_t));
             // the 4x3 matrix is a rotate-then-translate matrix. Recall that matrix multiplication
             // commands put the parameter on the inside, so we are actually ending 
             // up with (scale) -> (rotate then translate) -> (apply matrix from above)
@@ -907,7 +907,7 @@ void RenderCommand_8(RenderCommandHandler* handler, int modifier)
         {
             GXFIFO = COMBINE_GXFIFO_COMMANDS3(GXFifoCommand_PopMatrix, GXFifoCommand_SetMatrixMode, GXFifoCommand_LoadMat4x3);
             func_020ca430(&data_020f1dc0.popMatrixParameter, &GXFIFO, 8);
-            func_020ca430(RenderConfig::GetInverseViewMatrix(), &GXFIFO, 4*3 * sizeof(fix32_t));
+            func_020ca430(Nitro3DRenderConfig::GetInverseViewMatrix(), &GXFIFO, 4*3 * sizeof(fix32_t));
             // the 4x3 matrix is a rotate-then-translate matrix. Recall that matrix multiplication
             // commands put the parameter on the inside, so we are actually ending 
             // up with (scale) -> (rotate then translate) -> (apply matrix from above)
@@ -944,7 +944,7 @@ void RenderCommand_8(RenderCommandHandler* handler, int modifier)
     handler->instructionPointer += numBytesConsumed;
 }
 
-void RenderCommand_9(RenderCommandHandler* handler, int modifier)
+void RenderCommand_9(Nitro3DRenderCommandHandler* handler, int modifier)
 {
     int64_t weight = 0;
     Nitro3DModel* model = handler->context->model;    
@@ -1043,7 +1043,7 @@ void RenderCommand_9(RenderCommandHandler* handler, int modifier)
 // notably, the instruction pointer only advances past the offset and
 // length data, so presumably this is stored past the end, like constants
 // in assembly coming after the return statement
-void RenderCommand_10(RenderCommandHandler* handler, int modifier)
+void RenderCommand_10(Nitro3DRenderCommandHandler* handler, int modifier)
 {
     int callbackStage = (handler->hooks[10] != NULL) ? handler->hookStages[10] : 0;
     unsigned int flagbit6;
@@ -1074,7 +1074,7 @@ void RenderCommand_10(RenderCommandHandler* handler, int modifier)
     handler->instructionPointer += 9;
 }
 
-void RenderCommand_11(RenderCommandHandler* handler, int modifier)
+void RenderCommand_11(Nitro3DRenderCommandHandler* handler, int modifier)
 {
     if (!(handler->flags & (1 << RCH_FLAG_8)) && !(handler->flags & (1 << RCH_FLAG_9)))
     {
@@ -1094,7 +1094,7 @@ void RenderCommand_11(RenderCommandHandler* handler, int modifier)
 // as in commands 7 and 8, this might be something like matcap lighting
 // 2 parameters: 1) index of material in model's material list to use
 // second parameter is unknown / seems to be unused
-void RenderCommand_12(RenderCommandHandler* handler, int modifier)
+void RenderCommand_12(Nitro3DRenderCommandHandler* handler, int modifier)
 {
     Matrix3x3 directionMat3x3;
     if (!(handler->flags & (1 << RCH_FLAG_9)) && (handler->flags & (1 << RCH_FLAG_0)))
@@ -1216,7 +1216,7 @@ void RenderCommand_12(RenderCommandHandler* handler, int modifier)
 // I have no idea what this is, but it's texture related. I couldn't find any
 // use of it in the game.
 // 2 parameters: 1) index of material in model's material list, 2) unknown/unused
-void RenderCommand_13(RenderCommandHandler* handler, int modifier)
+void RenderCommand_13(Nitro3DRenderCommandHandler* handler, int modifier)
 {
     if (!(handler->flags & (1 << RCH_FLAG_9)) && (handler->flags & (1 << RCH_FLAG_0)))
     {
@@ -1315,7 +1315,7 @@ void RenderCommand_13(RenderCommandHandler* handler, int modifier)
             }
             else
             {
-                const Matrix4x3* invView = RenderConfig::GetInverseViewMatrix();
+                const Matrix4x3* invView = Nitro3DRenderConfig::GetInverseViewMatrix();
                 SubmitCommandToGeometryFifo(GXFifoCommand_MultiplyMat4x3, (uint32_t*)invView, 12);
                 SubmitCommandToGeometryFifo(GXFifoCommand_MultiplyMat4x3, (uint32_t*)&worldView.entries, 12);
             }

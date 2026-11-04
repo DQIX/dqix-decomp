@@ -53,9 +53,9 @@ void InitializeModelAnimation(Nitro3DAnimation *anim, void *pRawData, Nitro3DMod
     }
 }
 
-void PopulateModelRenderContext(ModelRenderContext *context, Nitro3DModel *model)
+void PopulateModelRenderContext(Nitro3DRenderContext *context, Nitro3DModel *model)
 {
-    func_020ca3ec(0, context, sizeof(ModelRenderContext));
+    func_020ca3ec(0, context, sizeof(Nitro3DRenderContext));
     context->pfnProcessMaterialAnimations = data_020f1c8c;
     context->pfnProcessJointAnimations = data_020f1c88;
     context->pfnProcessVisibilityAnimations = data_020f1c84;
@@ -149,7 +149,7 @@ void PopulateBitfieldFromAnimData0(unsigned int* bitfield, Nitro3DAnimation* ani
     } while (anim != NULL);
 }
 
-void AddAnimationsToModelRenderContext(ModelRenderContext *context, Nitro3DAnimation *anim)
+void AddAnimationsToModelRenderContext(Nitro3DRenderContext *context, Nitro3DAnimation *anim)
 {
     if (anim == NULL || anim->pRawData == NULL)
         return;
@@ -208,7 +208,7 @@ bool RemoveAnimationFromList(Nitro3DAnimation** pList, Nitro3DAnimation* entry)
     return false;
 }
 
-void RemoveAnimationFromModelRenderContext(ModelRenderContext *context, Nitro3DAnimation *anim)
+void RemoveAnimationFromModelRenderContext(Nitro3DRenderContext *context, Nitro3DAnimation *anim)
 {
     if (RemoveAnimationFromList(&context->materialAnimations, anim) ||
         RemoveAnimationFromList(&context->jointAnimations, anim) ||
@@ -218,7 +218,7 @@ void RemoveAnimationFromModelRenderContext(ModelRenderContext *context, Nitro3DA
     }
 }
 
-void SetModelRenderContextRenderCommandHook(ModelRenderContext *context,
+void SetModelRenderContextRenderCommandHook(Nitro3DRenderContext *context,
     RenderCommandHook hook, int unknown, int commandID, int stage)
 {
     context->renderCommandHook = hook;

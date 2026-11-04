@@ -13,7 +13,7 @@ static inline void ArrayCopyVec3(void* dst, const void* src)
     *(ArrayVec3*)dst = *(const ArrayVec3*)src;
 }
 
-void RenderConfig::Reset()
+void Nitro3DRenderConfig::Reset()
 {
     data_0210a010.magicCommands_0 = COMBINE_GXFIFO_COMMANDS4(
         GXFifoCommand_SetMatrixMode,
@@ -94,9 +94,9 @@ void RenderConfig::Reset()
     data_0210a010.targetVector.z = -1 << 12;
 }
 
-void RenderConfig::SubmitToFifo()
+void Nitro3DRenderConfig::SubmitToFifo()
 {
-    RenderConfig* instance = &data_0210a010;
+    Nitro3DRenderConfig* instance = &data_0210a010;
     uint32_t* commands = 
 #if defined(usa)
     (uint32_t*)0x0210a010; // i hate this
@@ -111,7 +111,7 @@ void RenderConfig::SubmitToFifo()
     instance->flags &= ~(1 << RENDER_CONFIG_FLAG_1);
 }
 
-void RenderConfig::SetObjectPosition(Vector3fix *pos)
+void Nitro3DRenderConfig::SetObjectPosition(Vector3fix *pos)
 {
     if (pos != NULL)
     {
@@ -120,7 +120,7 @@ void RenderConfig::SetObjectPosition(Vector3fix *pos)
     }
 }
 
-void RenderConfig::SetObjectScale(Vector3fix *scale)
+void Nitro3DRenderConfig::SetObjectScale(Vector3fix *scale)
 {
     if (scale != NULL)
     {
@@ -129,7 +129,7 @@ void RenderConfig::SetObjectScale(Vector3fix *scale)
     }
 }
 
-void RenderConfig::SetLightVector(unsigned int light, fix16_t x, fix16_t y, fix16_t z)
+void Nitro3DRenderConfig::SetLightVector(unsigned int light, fix16_t x, fix16_t y, fix16_t z)
 {
     uint32_t formattedX = (x >> 3) & 0x3ff;
     uint32_t formattedY = ((uint32_t)(y >> 3) << 22) >> 12;
@@ -137,25 +137,25 @@ void RenderConfig::SetLightVector(unsigned int light, fix16_t x, fix16_t y, fix1
     data_0210a010.lightVectors[light] = formattedX | formattedY | formattedZ | (light << 30);
 }
 
-void RenderConfig::SetLightColor(unsigned int light, uint32_t rgb)
+void Nitro3DRenderConfig::SetLightColor(unsigned int light, uint32_t rgb)
 {
     data_0210a010.lightColors[light] = rgb | (light << 30);
 }
 
-void RenderConfig::SetDiffuseAmbientColors(uint32_t diffuseRGB, uint32_t ambientRGB, int setVertexColor)
+void Nitro3DRenderConfig::SetDiffuseAmbientColors(uint32_t diffuseRGB, uint32_t ambientRGB, int setVertexColor)
 {
     setVertexColor = (setVertexColor ? 1 : 0);
     data_0210a010.diffuseAmbientArg = diffuseRGB | (ambientRGB << 16) | (setVertexColor << 15);
 }
 
-void RenderConfig::SetPolygonAttributes(unsigned int lights, unsigned int mode,
+void Nitro3DRenderConfig::SetPolygonAttributes(unsigned int lights, unsigned int mode,
     unsigned int culling, unsigned int polygonID, unsigned int alpha, unsigned int miscFlags)
 {
     data_0210a010.polygonAttrArg = miscFlags | 
         (lights | mode << 4 | culling << 6) | polygonID << 24 | alpha << 16;
 }
 
-const Matrix4x3* RenderConfig::GetInverseViewMatrix()
+const Matrix4x3* Nitro3DRenderConfig::GetInverseViewMatrix()
 {
     if (!(data_0210a010.flags & (1 << RENDER_CONFIG_FLAG_INVERSE_VIEW_CACHE_VALID)))
     {
@@ -174,7 +174,7 @@ void RecalculateWorldViewAndInverse()
     Mat4x3_Invert(&data_0210a010.cachedWorldView, &data_0210a010.cachedInverseWorldView);
 }
 
-const Matrix4x3* RenderConfig::GetCombinedWorldViewMatrix()
+const Matrix4x3* Nitro3DRenderConfig::GetCombinedWorldViewMatrix()
 {
     if (!(data_0210a010.flags & (1 << RENDER_CONFIG_FLAG_WORLDVIEW_CACHE_VALID)))
     {
@@ -184,7 +184,7 @@ const Matrix4x3* RenderConfig::GetCombinedWorldViewMatrix()
     return &data_0210a010.cachedWorldView;
 }
 
-const Matrix4x3* RenderConfig::GetInverseCombinedWorldViewMatrix()
+const Matrix4x3* Nitro3DRenderConfig::GetInverseCombinedWorldViewMatrix()
 {
     if (!(data_0210a010.flags & (1 << RENDER_CONFIG_FLAG_WORLDVIEW_CACHE_VALID)))
     {
@@ -194,7 +194,7 @@ const Matrix4x3* RenderConfig::GetInverseCombinedWorldViewMatrix()
     return &data_0210a010.cachedInverseWorldView;
 }
 
-void RenderConfig::GetViewport(int *left, int *top, int *right, int *bottom)
+void Nitro3DRenderConfig::GetViewport(int *left, int *top, int *right, int *bottom)
 {
     if (left != NULL)
         *left = data_0210a010.viewportArg & 0xff;

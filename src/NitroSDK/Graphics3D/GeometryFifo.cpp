@@ -173,7 +173,7 @@ void GetCurrentPositionAndDirectionMatrices(Matrix4x3* position, Matrix3x3* dire
     GXFIFO_MATRIX_MODE = 2; // return to position+direction mode
 }
 
-bool GetModelBonePositionAndDirectionMatrices(ModelRenderContext *context,
+bool GetModelBonePositionAndDirectionMatrices(Nitro3DRenderContext *context,
     Matrix4x3* outPos, Matrix3x3* outDir, unsigned int boneIndex)
 {
     Nitro3DModel* model = context->model;
@@ -196,7 +196,7 @@ bool GetModelBonePositionAndDirectionMatrices(ModelRenderContext *context,
 void Finish3DRendering()
 {
     func_020c51dc();
-    RenderConfig::Reset();
+    Nitro3DRenderConfig::Reset();
     // set IRQ mode to 2: irq when fifo becomes empty
     GXSTATUS = GXSTATUS & ~0xc0000000 | 0x80000000;
 }
@@ -242,7 +242,7 @@ int ConvertWorldToScreenCoordinates(const Vector3fix *world, int *outX, int *out
 
     int left, top, right, bottom;
 
-    RenderConfig::GetViewport(&left, &top, &right, &bottom);
+    Nitro3DRenderConfig::GetViewport(&left, &top, &right, &bottom);
 
     int width = right - left;
     int height = bottom - top;

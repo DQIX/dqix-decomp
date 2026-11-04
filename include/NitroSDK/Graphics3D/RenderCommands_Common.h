@@ -84,9 +84,9 @@ extern struct Struct_020f1d08
     unsigned int texImageParamsArg_c_;
 
     // only one of these is not null
-    void (*materialBindFunctions[4])(RenderCommandHandler*, int modifier, Nitro3DMaterial*, unsigned int idx);
+    void (*materialBindFunctions[4])(Nitro3DRenderCommandHandler*, int modifier, Nitro3DMaterial*, unsigned int idx);
     // only one of these is not null
-    void (*meshDrawFunctions[4])(RenderCommandHandler*, int modifier, Nitro3DMesh*, unsigned int idx);
+    void (*meshDrawFunctions[4])(Nitro3DRenderCommandHandler*, int modifier, Nitro3DMesh*, unsigned int idx);
 
     Matrix4x4 command13Matrix4x4_;
 } data_020f1d08;
@@ -114,15 +114,15 @@ struct Struct_020f1d78 {
 } extern data_020f1d78, data_020f1dc0;
 
 // render command lookup
-extern void (*data_020f1e08[])(RenderCommandHandler*, int);
+extern void (*data_020f1e08[])(Nitro3DRenderCommandHandler*, int);
 
-extern struct RenderCommandHandler* data_0210a274;
+extern struct Nitro3DRenderCommandHandler* data_0210a274;
 // sizeof == 0x38
 MaterialRenderData extern data_0210a278[64];
 
 struct Struct_0210b078
 {
-    Vector3fix vec0_;
+    BoneMatrixRenderData::Scale vec0_;
     BoneMatrixRenderData::Scale vec1_;
 };
 

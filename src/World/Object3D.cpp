@@ -27,7 +27,7 @@
 #define data_02108760 data_021086a4
 #endif
 
-ModelRenderContext* GetModel3DContext(Model3D* model);
+Nitro3DRenderContext* GetModel3DContext(Model3D* model);
 void AnimationPackageListInsert(AnimationPackage** pListStart, AnimationPackage* entry);
 
 void CreateRotationX(Matrix3x3* out, fix32_t s, fix32_t c);
@@ -579,15 +579,15 @@ void Object3D::PopulateRenderConfigWorld()
         ownScale.y = scale_[1];
         ownScale.z = scale_[2];
         Vector3fixMultiply(&data_0210a010.objectScale, &ownScale, &multipliedScale);
-        RenderConfig::SetObjectScale(&multipliedScale);
+        Nitro3DRenderConfig::SetObjectScale(&multipliedScale);
         Vector3fix multipliedPosition;
         Vector3fixMultiply(&position_, &multipliedScale, &multipliedPosition);
         Vector3fix_Add(&data_0210a010.objectRotationPosition.translation, &multipliedPosition, &multipliedPosition);
-        RenderConfig::SetObjectPosition(&multipliedPosition);
+        Nitro3DRenderConfig::SetObjectPosition(&multipliedPosition);
     }
     else
     {
-        RenderConfig::SetObjectPosition(&position_);
+        Nitro3DRenderConfig::SetObjectPosition(&position_);
         if (flags_ & (1 << OBJECT3D_FLAG_19))
         {
             const Matrix3x3* rotation = func_0202ed74(func_020100bc(GameState::GetInstance()));
@@ -628,7 +628,7 @@ void Object3D::PopulateRenderConfigWorld()
         scaling.x = scale_[0];
         scaling.y = scale_[1];
         scaling.z = scale_[2];
-        RenderConfig::SetObjectScale(&scaling);
+        Nitro3DRenderConfig::SetObjectScale(&scaling);
     }
 }
 
@@ -688,7 +688,7 @@ bool Object3D::Draw(bool applyClipping)
         else
         {
             PopulateRenderConfigWorld();
-            RenderConfig::SubmitToFifo();
+            Nitro3DRenderConfig::SubmitToFifo();
         }
     }
 
@@ -745,7 +745,7 @@ bool Object3D::DrawSimple(bool applyClipping)
         pModel_->SetAlpha(ownAlpha);
 
     ApplyTextures();
-    RenderConfig::SubmitToFifo();
+    Nitro3DRenderConfig::SubmitToFifo();
 
     bool success = pModel_->Draw(applyClipping);
     drawSuccessful_ = (int)success;
@@ -792,7 +792,7 @@ bool Object3D::DrawMeshWithMaterial(bool applyClipping, int material, int mesh, 
 
     ApplyTextures();
     PopulateRenderConfigWorld();
-    RenderConfig::SubmitToFifo();
+    Nitro3DRenderConfig::SubmitToFifo();
     return pModel_->DrawMeshWithMaterial(applyClipping, material, mesh, bind);
 }
 
@@ -842,7 +842,7 @@ void Object3D::MaybeUpdateBonePositions()
     flags_ |= (1 << OBJECT3D_FLAG_5);
     ApplyAnimations(NULL);
     Vector3fix position = { 0 };
-    RenderConfig::SetObjectPosition(&position);
+    Nitro3DRenderConfig::SetObjectPosition(&position);
     fix32_t cosine = fix32cos(rotation_.y);
     fix32_t sine = fix32sin(rotation_.y);
 
@@ -850,8 +850,8 @@ void Object3D::MaybeUpdateBonePositions()
     Mat3x3_WriteRotationY(&rotationMatrix, sine, cosine);
     func_02016d8c(&rotationMatrix);
     Vector3fix scale = { 0x1000, 0x1000, 0x1000 };
-    RenderConfig::SetObjectScale(&scale);
-    RenderConfig::SubmitToFifo();
+    Nitro3DRenderConfig::SetObjectScale(&scale);
+    Nitro3DRenderConfig::SubmitToFifo();
 
     boneTracking.boneMatrixList = trackedBoneMatrixList_;
     pModel_->Draw(false);
@@ -1778,7 +1778,7 @@ void Object3D::ComputeShadowPosition()
     if (pModel_ == NULL)
         return;
     AnimationPackage* package;
-    ModelRenderContext* context;
+    Nitro3DRenderContext* context;
     Model3D* model = pModel_;
     
     if (!(context = GetModel3DContext(pModel_)))
@@ -1800,7 +1800,7 @@ void Object3D::ComputeShadowPosition()
         {
             Matrix4x3 boneWorldTransform;
             Mat4x3_WriteIdentity(&boneWorldTransform);
-            const Matrix4x3* inverseView = RenderConfig::GetInverseViewMatrix();
+            const Matrix4x3* inverseView = Nitro3DRenderConfig::GetInverseViewMatrix();
             // fix this cast later
             GetCurrentPositionAndDirectionMatrices(&boneWorldTransform, NULL);
             Mat4x3_Multiply(&boneWorldTransform, inverseView, &boneWorldTransform);
@@ -1814,7 +1814,7 @@ void Object3D::ComputeShadowPosition()
     }
 }
 
-ModelRenderContext* GetModel3DContext(Model3D* model)
+Nitro3DRenderContext* GetModel3DContext(Model3D* model)
 {
     if (!model->unknown_flags_a8_0_)
         return NULL;
@@ -1939,7 +1939,7 @@ void Object3D::DrawChildren(Object3D *topLevelObject)
         {
             Matrix4x3 positionMatrix;
             Matrix3x3 directionMatrix;
-            ModelRenderContext* context = GetModel3DContext(topLevelObject->pModel_);
+            Nitro3DRenderContext* context = GetModel3DContext(topLevelObject->pModel_);
             if (context != NULL && GetModelBonePositionAndDirectionMatrices(context,
                 &positionMatrix, &directionMatrix, pNextChild_->attachmentBoneIndex_))
             {
@@ -2029,20 +2029,20 @@ Object3D::TrackedBoneMatrix* Object3D::GetTrackedBoneMatrix(int idx)
     return NULL;
 }
 
-void BoneTrackingRenderCommandHook(RenderCommandHandler*);
+void BoneTrackingRenderCommandHook(Nitro3DRenderCommandHandler*);
 
 void Object3D::EnableBoneTracking()
 {
     if (pModel_ == NULL)
         return;
 
-    ModelRenderContext* context = GetModel3DContext(pModel_);
+    Nitro3DRenderContext* context = GetModel3DContext(pModel_);
     if (context == NULL)
         return;
     SetModelRenderContextRenderCommandHook(context, &BoneTrackingRenderCommandHook, 0, 6, 3);
 }
 
-void BoneTrackingRenderCommandHook(RenderCommandHandler* handler)
+void BoneTrackingRenderCommandHook(Nitro3DRenderCommandHandler* handler)
 {
     for (Object3D::TrackedBoneMatrix* tracker = boneTracking.boneMatrixList;
         tracker != NULL; tracker = tracker->pNext)
@@ -2052,7 +2052,7 @@ void BoneTrackingRenderCommandHook(RenderCommandHandler* handler)
         
         GetCurrentPositionAndDirectionMatrices(&tracker->matrix, NULL);
         boneTracking.boneMatrixWithView = tracker->matrix;
-        Mat4x3_Multiply(&tracker->matrix, RenderConfig::GetInverseViewMatrix(), &tracker->matrix);
+        Mat4x3_Multiply(&tracker->matrix, Nitro3DRenderConfig::GetInverseViewMatrix(), &tracker->matrix);
     }
 }
 

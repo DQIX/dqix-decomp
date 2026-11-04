@@ -138,14 +138,14 @@ extern "C"
     void SubmitCommandToGeometryFifo(int command, const uint32_t* params, unsigned int numParams);
 }
 
-struct ModelRenderContext;
+struct Nitro3DRenderContext;
 struct Nitro3DAnimation;
 struct Nitro3DModel;
 
 // these don't really fit here but are a bit too random to have their own TU...
 
 void GetCurrentPositionAndDirectionMatrices(Matrix4x3* position, Matrix3x3* direction);
-bool GetModelBonePositionAndDirectionMatrices(ModelRenderContext* context, Matrix4x3* outPos, Matrix3x3* outDir, unsigned int boneIndex);
+bool GetModelBonePositionAndDirectionMatrices(Nitro3DRenderContext* context, Matrix4x3* outPos, Matrix3x3* outDir, unsigned int boneIndex);
 void Finish3DRendering();
 // returns 0 if point is visible and -1 if not
 int ConvertWorldToScreenCoordinates(const Vector3fix* world, int* outX, int* outY);

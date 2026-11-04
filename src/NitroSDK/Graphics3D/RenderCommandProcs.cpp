@@ -70,6 +70,13 @@ extern void (*data_020f1e88[8])(Matrix4x4*, MaterialRenderData*);
 extern void (*data_020f1ea8[8])(Matrix4x4*, MaterialRenderData*);
 extern void (*data_020f1ec8[8])(Matrix4x4*, MaterialRenderData*);
 
+// annoying thing because C++ does struct assignment differently to C
+static inline void CopyVector3(Vector3fix* dst, const Vector3fix* src)
+{
+    struct RawVector { fix32_t vals[3]; };
+    *(RawVector*)dst = *(const RawVector*)src;
+}
+
 void BoneMatrixDataSubmissionProc_Type0(BoneMatrixRenderData* renderData)
 {
     if (!(renderData->flags & 4))
@@ -186,7 +193,7 @@ void BoneMatrixScaleCalculationProc_Type1(BoneMatrixRenderData* renderData, Nitr
         }
         else
         {
-            renderData->scale_v1 = data_0210b078.vectorData[parentBoneIdx].vec1_;
+           renderData->scale_v1 = data_0210b078.vectorData[parentBoneIdx].vec1_;
         }
     }
 

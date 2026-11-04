@@ -51,17 +51,17 @@ struct Nitro3DAnimation
 };
 
 void InitializeModelAnimation(Nitro3DAnimation* anim, void* pRawData, Nitro3DModel* model, Nitro3DTextureSet* tex);
-void PopulateModelRenderContext(ModelRenderContext* context, Nitro3DModel* model);
+void PopulateModelRenderContext(Nitro3DRenderContext* context, Nitro3DModel* model);
 
 // Only the first animation in the list is checked to determine where to add it,
 // so maybe it's assumed that you only add one? But in theory you can add
 // multiple of the same type if they're already chained together
-void AddAnimationsToModelRenderContext(ModelRenderContext* context, Nitro3DAnimation* anim);
+void AddAnimationsToModelRenderContext(Nitro3DRenderContext* context, Nitro3DAnimation* anim);
 
-void RemoveAnimationFromModelRenderContext(ModelRenderContext* context, Nitro3DAnimation* anim);
+void RemoveAnimationFromModelRenderContext(Nitro3DRenderContext* context, Nitro3DAnimation* anim);
 
 // really doesn't fit here...
-void SetModelRenderContextRenderCommandHook(ModelRenderContext* context, RenderCommandHook hook, int unknown, int commandID, int stage);
+void SetModelRenderContextRenderCommandHook(Nitro3DRenderContext* context, RenderCommandHook hook, int unknown, int commandID, int stage);
 
 // Defined in AnimationProcessing.cpp 
 
