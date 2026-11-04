@@ -1,6 +1,5 @@
 #include "Graphics/Model3D.h"
-#include "NitroSDK/NSBXX/NSBXX.h"
-#include "NitroSDK/NSBXX/RenderCommands.h"
+#include "NitroSDK/Graphics3D/Graphics3D.h"
 #include "Graphics/Vector.h"
 #include "Graphics/VRAMStaging.h"
 #include "NitroSDK/Cache.h"

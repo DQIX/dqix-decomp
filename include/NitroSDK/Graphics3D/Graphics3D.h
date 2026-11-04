@@ -11,6 +11,8 @@
 #include "Texture.h"
 #include "Material.h"
 #include "RenderCommands.h"
+#include "GeometryFifo.h"
+#include "RenderConfig.h"
 
 // Documentation on the various formats is available here:
 // https://github.com/scurest/nsbmd_docs/blob/master/nsbmd_docs.txt

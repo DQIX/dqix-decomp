@@ -1,6 +1,5 @@
-#include "NitroSDK/NSBXX/RenderCommands.h"
-#include "NitroSDK/NSBXX/RenderCommands_Common.h"
-#include "NitroSDK/NSBXX/GeometryFifo.h"
+#include "NitroSDK/Graphics3D/RenderCommands.h"
+#include "NitroSDK/Graphics3D/RenderCommands_Common.h"
 
 // Texture matrix generation procedures:
 // In all instances, we build a texture matrix of the form 

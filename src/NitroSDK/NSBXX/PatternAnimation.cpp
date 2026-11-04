@@ -1,4 +1,4 @@
-#include "NitroSDK/NSBXX/NSBXX.h"
+#include "NitroSDK/Graphics3D/Graphics3D.h"
 #include <asmhacks.h>
 
 #define SUBFILE_OFFSETS(nsb) ((uint32_t*)((intptr_t)(nsb) + nsb->headerSize_))

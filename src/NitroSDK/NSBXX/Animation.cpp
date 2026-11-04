@@ -1,4 +1,4 @@
-#include "NitroSDK/NSBXX/Animation.h"
+#include "NitroSDK/Graphics3D/Animation.h"
 
 #if defined(jpn)
 #define func_020ca3ec func_020cbeb8

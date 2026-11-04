@@ -4,8 +4,8 @@
 // Once command 9 is decompiled we can merge the files into one and paste
 // this in instead
 
-#include "NSBXX.h"
-#include "../../NitroSDK/Graphics.h"
+#include "Graphics3D.h"
+#include "../Graphics.h"
 #include "GeometryFifo.h"
 #include "RenderCommands.h"
 #include "RenderConfig.h"

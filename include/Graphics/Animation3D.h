@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../NitroSDK/NSBXX/Animation.h"
+#include "../NitroSDK/Graphics3D/Graphics3D.h"
 #include "Memory/SafeAllocator.h"
 
 class Model3D;

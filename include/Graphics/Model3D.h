@@ -3,7 +3,7 @@
 #include "std_library_functions.h"
 #include "Vector.h"
 #include "Memory/SafeAllocator.h"
-#include "../NitroSDK/NSBXX/NSBXX.h"
+#include "../NitroSDK/Graphics3D/Graphics3D.h"
 #include "Animation3D.h"
 
 // sizeof == 0xac

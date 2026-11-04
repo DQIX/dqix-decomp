@@ -1,4 +1,4 @@
-#include "NitroSDK/NSBXX/RenderCommands_Common.h"
+#include "NitroSDK/Graphics3D/RenderCommands_Common.h"
 
 static inline int TestBitfieldBit(const unsigned int* bitfield, unsigned int idx)
 {

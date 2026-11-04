@@ -1,4 +1,4 @@
-#include "NitroSDK/NSBXX/NSBXX.h"
+#include "NitroSDK/Graphics3D/Graphics3D.h"
 #include "NitroSDK/LoadToVRAM.h"
 #include <globaldefs.h>
 #include <asmhacks.h>

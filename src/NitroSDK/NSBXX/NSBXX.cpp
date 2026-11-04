@@ -1,7 +1,5 @@
-#include "NitroSDK/NSBXX/NSBXX.h"
+#include "NitroSDK/Graphics3D/Graphics3D.h"
 #include <globaldefs.h>
-#include <asmhacks.h>
-#include "NitroSDK/NSBXX/Animation.h"
 #include "NitroSDK/Memory/AllocatorUnion.h"
 
 #if defined(jpn)

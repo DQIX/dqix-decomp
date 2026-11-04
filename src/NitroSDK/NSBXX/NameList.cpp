@@ -1,4 +1,4 @@
-#include "NitroSDK/NSBXX/NSBXX.h"
+#include "NitroSDK/Graphics3D/Graphics3D.h"
 
 extern "C" void* NSBXXNameList_Search(const Nitro3DNameList* nameList, const char* name)
 {

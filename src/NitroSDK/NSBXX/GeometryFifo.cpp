@@ -1,7 +1,6 @@
-#include "NitroSDK/NSBXX/GeometryFifo.h"
 #include "NitroSDK/Graphics.h"
-#include "NitroSDK/NSBXX/NSBXX.h"
-#include "NitroSDK/NSBXX/RenderConfig.h"
+#include "NitroSDK/Graphics3D/Graphics3D.h"
+#include "NitroSDK/Graphics3D/RenderConfig.h"
 #include "NitroSDK/DMA.h"
 #include <globaldefs.h>
 
