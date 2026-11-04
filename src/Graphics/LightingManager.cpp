@@ -1,3 +1,5 @@
+#pragma ipa file
+
 #include "Graphics/LightingManager.h"
 #include "World/Zone3D.h"
 #include "NitroSDK/Memory.h"
@@ -711,12 +713,7 @@ void LightingManager::ModelTransformTintBrightnessContrast(NSBXXInternalModel *m
         unsigned char opcode2;
         unsigned char opcode3;
 
-        NSBXXMesh* mesh;
-        void* pOffset;
-        if (meshList != NULL && (pOffset = meshList->GetEntryv3Safe(meshIndex)))
-            mesh = (NSBXXMesh*)meshList->GetEntryFromPtrOffset(pOffset);
-        else
-            mesh = NULL;
+        NSBXXMesh* mesh = meshList->GetEntryFromu32Offset<NSBXXMesh>(meshIndex);
         
         if (!(mesh->unk_4 & 2))
             continue;
@@ -962,9 +959,8 @@ void LightingManager::RecomputeAdvancedLighting()
 
 void SetVector3fixComponents(Vector3fix* vec, fix32_t x, fix32_t y, fix32_t z)
 {
-    vec->x = x;
-    vec->y = y;
-    vec->z = z;
+    Vector3fix copy = { x, y, z };
+    *vec = copy;
 }
 
 void LightingManager::SubmitToRenderConfig()

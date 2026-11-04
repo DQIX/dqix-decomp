@@ -146,7 +146,7 @@ extern "C" bool NSBXX_AttachTextureImageToModel(NSBXXInternalModel* model, NSBXX
             (NSBXXTexTexture*)NSBXXNameList_Search(&tex0->textureList_, textureName) : NULL;
         if (texture != NULL)
         {
-            NSBXXMaterialPairing* pairing = imagePairingsList->GetEntryByIndex_notVolatile<NSBXXMaterialPairing>(i);
+            NSBXXMaterialPairing* pairing = imagePairingsList->GetEntryByIndex<NSBXXMaterialPairing>(i);
 
             if (!(pairing->flags_ & 1))
                 AttachTextureImageToModelMaterials(materialData, pairing, tex0, texture);
@@ -164,7 +164,7 @@ extern "C" void NSBXX_DetachTextureImageFromModel(NSBXXInternalModel* model)
 
     for (unsigned int i = 0; i < pairingList->numEntries_; i++)
     {
-        NSBXXMaterialPairing* pairing = pairingList->GetEntryByIndex_notVolatile<NSBXXMaterialPairing>(i);
+        NSBXXMaterialPairing* pairing = pairingList->GetEntryByIndex<NSBXXMaterialPairing>(i);
         if (pairing->flags_ & 1)
         {
             DetachTextureImageFromModelMaterials(materialData, pairing);
@@ -218,7 +218,7 @@ bool NSBXX_AttachTexturePaletteToModel(NSBXXInternalModel* model, NSBXXTex* tex0
 
         if (palette != NULL)
         {
-            NSBXXMaterialPairing* pairing = palettePairingsList->GetEntryByIndex_notVolatile<NSBXXMaterialPairing>(i);
+            NSBXXMaterialPairing* pairing = palettePairingsList->GetEntryByIndex<NSBXXMaterialPairing>(i);
             if ((pairing->flags_ & 1) == 0)
                 AttachTexturePaletteToModelMaterials(materialData, pairing, tex0, palette);
         }
@@ -236,7 +236,7 @@ extern "C" void NSBXX_DetachTexturePaletteFromModel(NSBXXInternalModel* model)
     unsigned int i = 0;
     for (unsigned int i = 0; i < pairingList->numEntries_; i++)
     {
-        NSBXXMaterialPairing* pairing = pairingList->GetEntryByIndex_notVolatile<NSBXXMaterialPairing>(i);
+        NSBXXMaterialPairing* pairing = pairingList->GetEntryByIndex<NSBXXMaterialPairing>(i);
         if (pairing->flags_ & 1)
             pairing->flags_ &= ~1;
     }

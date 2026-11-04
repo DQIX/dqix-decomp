@@ -189,7 +189,7 @@ void MAMAnimationProcessingCallback(void* data, AnimationData* anim, int arg)
     MaterialRenderData* renderData = (MaterialRenderData*)data;
     NSBXXAnimationMAM* mam = (NSBXXAnimationMAM*)anim->pRawData_;
     unsigned int frame = anim->time_ >> 12;
-    NSBXXAnimationMAM::Track* track = mam->tracks_.GetEntryByIndex_notVolatile<NSBXXAnimationMAM::Track>((unsigned short)arg);
+    NSBXXAnimationMAM::Track* track = mam->tracks_.GetEntryByIndex<NSBXXAnimationMAM::Track>((unsigned short)arg);
 
     unsigned int diffuseCol = GetColorFromMaterialAnimation(mam, track->diffuse_, frame);
     unsigned int ambientCol = GetColorFromMaterialAnimation(mam, track->ambient_, frame);

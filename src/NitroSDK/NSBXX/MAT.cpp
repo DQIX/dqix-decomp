@@ -231,7 +231,7 @@ compute_average:
 
 void CalculateTextureTransformFromMAT(NSBXXAnimationMAT* mat, unsigned short arg, unsigned int frame, MaterialRenderData* renderData)
 {
-    NSBXXAnimationMAT::Track* track = mat->tracks_.GetEntryByIndex_notVolatile<NSBXXAnimationMAT::Track>(arg);
+    NSBXXAnimationMAT::Track* track = mat->tracks_.GetEntryByIndex<NSBXXAnimationMAT::Track>(arg);
     unsigned int renderFlags = renderData->flags_;
 
     fix32_t tx = SampleScalarFromMATTrack(mat, track->unk_18, track->unk_1c, frame);

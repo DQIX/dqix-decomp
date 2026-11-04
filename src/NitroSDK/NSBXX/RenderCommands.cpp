@@ -457,7 +457,7 @@ void RenderCommand_5(RenderCommandHandler* handler, int modifier)
     {
         int meshIdx = handler->instructionPointer_[1];
         NSBXXNameList* meshList = handler->meshList_;
-        NSBXXMesh* mesh = meshList->GetEntryFromu32Offset_v2<NSBXXMesh>(meshIdx);
+        NSBXXMesh* mesh = meshList->GetEntryFromu32Offset<NSBXXMesh>(meshIdx);
         data_020f1d08.meshDrawFunctions[mesh->unk_0](handler, modifier, mesh, meshIdx);
     }
     handler->instructionPointer_ += 2;
@@ -546,7 +546,7 @@ void RenderCommand_6(RenderCommandHandler* handler, int modifier)
             if (handler->modelContext_->jointAnimations_ == NULL ||
                 !handler->modelContext_->pfnProcessJointAnimations_(targetData, handler->modelContext_->jointAnimations_, boneIdx))
             {
-                NSBXXBoneMatrix* boneMatrix = handler->boneList_->GetEntryFromu32Offset_v2<NSBXXBoneMatrix>(boneIdx);
+                NSBXXBoneMatrix* boneMatrix = handler->boneList_->GetEntryFromu32Offset<NSBXXBoneMatrix>(boneIdx);
                 intptr_t boneMatrixExtraPtr = (intptr_t)(boneMatrix + 1);
                 if ((boneMatrix->flags_ & 1)) // has no translation component
                     targetData->flags_ |= 4;
@@ -1436,7 +1436,7 @@ void RenderMeshWithMaterial(NSBXXInternalModel* model, unsigned int materialIdx,
     if (meshIdx < model->numMeshes_)
     {
         NSBXXNameList* meshList = model->GetMeshList();
-        NSBXXMesh* mesh = meshList->GetEntryFromu32Offset_v2<NSBXXMesh>(meshIdx);
+        NSBXXMesh* mesh = meshList->GetEntryFromu32Offset<NSBXXMesh>(meshIdx);
 
         SendRawDataToGeometryFifo(mesh->GetGPUCommands(), mesh->gpuCommandsLength_);
     }

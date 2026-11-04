@@ -89,7 +89,7 @@ void ApplyBindPoseTranslation(BoneMatrixRenderData* bmrd)
     // this is super cursed, but I guess this executes during command 6 when
     // ip[1] holds the bone index to apply stuff to
     NSBXXBoneMatrix* boneMatrix = 
-        handler->boneList_->GetEntryFromu32Offset_v2<NSBXXBoneMatrix>(handler->instructionPointer_[1]);
+        handler->boneList_->GetEntryFromu32Offset<NSBXXBoneMatrix>(handler->instructionPointer_[1]);
     if (boneMatrix->flags_ & 1) // no translation data
     {
         bmrd->flags_ |= 4;
@@ -107,7 +107,7 @@ void ApplyBindPoseScaling(BoneMatrixRenderData* bmrd)
 {
     RenderCommandHandler* handler = data_0210a274;
     uint8_t* ip = handler->instructionPointer_;
-    NSBXXBoneMatrix* boneMatrix = handler->boneList_->GetEntryFromu32Offset_v2<NSBXXBoneMatrix>(ip[1]);
+    NSBXXBoneMatrix* boneMatrix = handler->boneList_->GetEntryFromu32Offset<NSBXXBoneMatrix>(ip[1]);
     intptr_t addrScaling = (intptr_t)(boneMatrix + 1);
     unsigned int flags = boneMatrix->flags_;
     if (!(flags & 1)) // has translation data
@@ -127,7 +127,7 @@ void ApplyBindPoseRotation(BoneMatrixRenderData* bmrd)
 {
     RenderCommandHandler* handler = data_0210a274;
     NSBXXBoneMatrix* boneMatrix = 
-        handler->boneList_->GetEntryFromu32Offset_v2<NSBXXBoneMatrix>(handler->instructionPointer_[1]);
+        handler->boneList_->GetEntryFromu32Offset<NSBXXBoneMatrix>(handler->instructionPointer_[1]);
 
     const char* addrRotation = (const char*)(boneMatrix + 1);
     if (!(boneMatrix->flags_ & 1)) // has translation data

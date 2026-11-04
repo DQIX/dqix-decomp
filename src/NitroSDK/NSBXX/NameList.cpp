@@ -20,7 +20,7 @@ extern "C" void* NSBXXNameList_Search(const NSBXXNameList* nameList, const char*
             if (source[0] == target0 && source[1] == target1 &&
                 source[2] == target2 && source[3] == target3)
             {
-                return nameList->GetEntryByIndex_notVolatile<void>(searchIndex);
+                return nameList->GetEntryByIndex<void>(searchIndex);
             }
         }
     }
@@ -50,7 +50,7 @@ extern "C" void* NSBXXNameList_Search(const NSBXXNameList* nameList, const char*
             if (source[0] == target[0] && source[1] == target[1] &&
                 source[2] == target[2] && source[3] == target[3])
             {
-                return nameList->GetEntryByIndex_notVolatile<void>(candidateIndex);
+                return nameList->GetEntryByIndex<void>(candidateIndex);
             }
         }
     }

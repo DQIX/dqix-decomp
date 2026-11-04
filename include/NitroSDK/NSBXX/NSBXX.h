@@ -56,23 +56,8 @@ struct NSBXXNameList
     // T dataElements_[numEntries_];
     // Name names_[numEntries_]; // Name is an array of 16 chars
 
-    // to do: clean up all of this mess, I don't want to change any existing
-    // function until I know it won't affect any existing use
-
     template<class T>
-    inline T* GetEntryByIndex(unsigned int n) const volatile
-    {
-        if (this != NULL && n < numEntries_)
-        {
-            intptr_t dataStart = (intptr_t)this + offsetToDataStart_;
-            uint16_t stride = *(uint16_t*)dataStart;
-            return (T*)(dataStart + 4 + stride * n);
-        }
-        return NULL;
-    }
-
-    template<class T>
-    inline T* GetEntryByIndex_notVolatile(unsigned int n) const
+    inline T* GetEntryByIndex(unsigned int n) const
     {
         if (this != NULL && n < numEntries_)
         {
@@ -86,18 +71,9 @@ struct NSBXXNameList
     template<class T>
     inline T* GetEntryFromu32Offset(unsigned int n) const
     {
-        uint32_t* pOffset = GetEntryByIndex_notVolatile<uint32_t>(n);
-        if (pOffset != NULL)
-            return (T*)((intptr_t)this + *pOffset);
-        return NULL;
-    }
-
-    template<class T>
-    inline T* GetEntryFromu32Offset_v2(unsigned int n) const
-    {
         if (this != NULL)
         {
-            uint32_t* pOffset = GetEntryByIndex_notVolatile<uint32_t>(n);
+            uint32_t* pOffset = GetEntryByIndex<uint32_t>(n);
             if (pOffset != NULL)
                 return (T*)((const char*)this + *pOffset);
         }
@@ -126,37 +102,6 @@ struct NSBXXNameList
             return (const char*)(nameStart + offsetInBuffer);
         }
         return NULL;
-    }
-
-    // 12 million helper functions that build up the 'get entry' function. By 
-    // composing them we trick the compiler into still inlining them even in
-    // regular -O2
-    inline void* GetDataStart() const { return (void*)((intptr_t)this + offsetToDataStart_); }
-    inline void* GetEntryv3Helper(unsigned int index, void* dataStart) const 
-    {
-        return (void*)((intptr_t)dataStart + 4 + *(uint16_t*)dataStart * index);
-    }
-
-    inline void* GetEntryv3(unsigned int index) const
-    {
-        return GetEntryv3Helper(index, GetDataStart());
-    }
-
-    inline void* GetEntryv3Safe(unsigned int index) const
-    {
-        return (this != NULL && index < numEntries_) ? GetEntryv3(index) : NULL;
-    }
-
-    inline void* GetEntryFromPtrOffset(void* pOffset) const
-    {
-        return (void*)((intptr_t)this + *(uint32_t*)pOffset);
-    }
-
-    inline void* GetEntryFromOffsetList_v3(unsigned int index) const
-    {
-        uint32_t* pOffset;
-        return (this != NULL && (pOffset = (uint32_t*)GetEntryv3Safe(index))) ? 
-            GetEntryFromPtrOffset(pOffset) : NULL;
     }
 };
 
@@ -507,7 +452,7 @@ struct NSBXXModelMaterialData
     {
         if (this != NULL)
         {
-            uint32_t* materialOffset = (uint32_t*)materialOffsetList_.GetEntryByIndex_notVolatile<uint32_t>(n);
+            uint32_t* materialOffset = (uint32_t*)materialOffsetList_.GetEntryByIndex<uint32_t>(n);
             if (materialOffset != NULL)
             {
                 return (NSBXXMaterial*)((intptr_t)this + *materialOffset);
@@ -609,21 +554,6 @@ struct NSBXXInternalModel
             return (NSBXXNameList*)((intptr_t)this + meshesOffset_);
         return NULL;
     }
-
-    inline NSBXXMesh* GetMesh(unsigned int n) const
-    {
-        NSBXXNameList* meshList;
-        if (this != NULL && meshesOffset_ != 0)
-            meshList = (NSBXXNameList*)((intptr_t)this + meshesOffset_);
-        else
-            meshList = NULL;
-
-        if (meshList != NULL)
-        {
-            return meshList->GetEntryFromu32Offset<NSBXXMesh>(n);
-        }
-        return NULL;
-    }
 };
 
 struct NSBXXMdl
@@ -637,7 +567,7 @@ struct NSBXXMdl
         NSBXXInternalModel* internalModel;
         if (this != NULL)
         {
-            uint32_t* pModelOffset = nameList_.GetEntryByIndex_notVolatile<uint32_t>(n);
+            uint32_t* pModelOffset = nameList_.GetEntryByIndex<uint32_t>(n);
 
             if (pModelOffset != NULL)
             {

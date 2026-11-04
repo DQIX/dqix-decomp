@@ -179,7 +179,7 @@ bool GetModelBonePositionAndDirectionMatrices(ModelRenderContext *context,
 {
     NSBXXInternalModel* model = context->internalModel_;
     NSBXXNameList* boneList = &model->boneList_;
-    NSBXXBoneMatrix* boneMatrix = boneList->GetEntryFromu32Offset_v2<NSBXXBoneMatrix>(boneIndex);
+    NSBXXBoneMatrix* boneMatrix = boneList->GetEntryFromu32Offset<NSBXXBoneMatrix>(boneIndex);
 
     unsigned int stackPos = ((unsigned int)boneMatrix->flags_ & 0xf800) >> 11;
     if (stackPos != 31)
