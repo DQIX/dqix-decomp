@@ -6283,9 +6283,10 @@ data_020e9256 kind:data(any) addr:0x020e9256
 _ZN19AllocatorTypeUnused8s_vtableE kind:data(any) addr:0x020e926c
 _ZN14AllocatorTypeA8s_vtableE kind:data(any) addr:0x020e9274
 _ZN14AllocatorTypeB8s_vtableE kind:data(any) addr:0x020e927c
-data_020e9284 kind:data(any) addr:0x020e9284
-data_020e928c kind:data(any) addr:0x020e928c
-data_020e92a4 kind:data(any) addr:0x020e92a4
+g_unusedAllocatorVTable kind:data(any) addr:0x020e9284
+heightLookup$974 kind:data(any) addr:0x020e928c local
+widthLookup$979 kind:data(any) addr:0x020e92a4 local
+data_020e92bc kind:data(any) addr:0x020e92bc
 data_020e92d4 kind:data(any) addr:0x020e92d4
 data_020e92e0 kind:data(any) addr:0x020e92e0
 data_020e92ec kind:data(any) addr:0x020e92ec

@@ -214,7 +214,7 @@ src/NitroSDK/Filesystem/NarcHandle.cpp:
 
 src/NitroSDK/Memory/AllocatorTypes.cpp:
     complete
-    .rodata start:0x020e9160 end:0x020e9178
+    .rodata start:0x020e9160 end:0x020e9180
     .text start:0x020afdc8 end:0x020afe34
 
 src/NitroSDK/Memory/AllocatorUnion.cpp:
@@ -223,6 +223,7 @@ src/NitroSDK/Memory/AllocatorUnion.cpp:
 
 src/NitroSDK/Graphics2D/Graphics2D.cpp:
     complete
+    .rodata start:0x020e9180 end:0x020e91b0
     .text start:0x020afec4 end:0x020b0d80
 
 src/NitroSDK/NSBXX/Animation.cpp:

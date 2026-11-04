@@ -4,14 +4,6 @@
 #include "NitroSDK/LoadToVRAM.h"
 #include <globaldefs.h>
 
-#ifdef jpn
-#define data_020e9180 data_020e928c
-#define data_020e9198 data_020e92a4
-#endif
-
-extern const unsigned short data_020e9180[3][4];
-extern const unsigned short data_020e9198[3][4]; // x-dimensions
-
 #define SIGNATURE_ABNK 0x41424e4b
 #define SIGNATURE_CEBK 0x4345424b
 #define SIGNATURE_CHAR 0x43484152
@@ -478,12 +470,24 @@ static inline void TransformVectorByMatrix(const Matrix2x2* mat, const Vector2fi
 
 static inline int GetObjHeight(int spaceSize)
 {
-    return data_020e9180[(spaceSize & 0xc000) >> 14][(spaceSize & 0xc0000000) >> 30];
+    static const unsigned short heightLookup[3][4] = 
+    {
+        { 8, 16, 32, 64 },
+        { 8, 8, 16, 32 },
+        { 16, 32, 32, 64 }
+    };
+    return heightLookup[(spaceSize & 0xc000) >> 14][(spaceSize & 0xc0000000) >> 30];
 }
 
 static inline int GetObjWidth(int spaceSize)
 {
-    return data_020e9198[(spaceSize & 0xc000) >> 14][(spaceSize & 0xc0000000) >> 30];
+    static const unsigned short widthLookup[3][4] = 
+    {
+        { 8, 16, 32, 64 },
+        { 16, 32, 32, 64 },
+        { 8, 8, 16, 32 },
+    };
+    return widthLookup[(spaceSize & 0xc000) >> 14][(spaceSize & 0xc0000000) >> 30];
 }
 
 int Nitro2D_DrawMetatile(OAMEntryEXT* targetOAMBuffer, unsigned short oamLength, 

@@ -1,5 +1,20 @@
 #include "NitroSDK/Memory/AllocatorTypes.h"
 
+#if defined(jpn)
+#define func_020afe34 func_020b1900
+#define func_020afe50 func_020b191c
+#endif
+
+extern "C" void* func_020afe34(AllocatorBase*, unsigned int);
+extern "C" void func_020afe50(AllocatorBase*, void*);
+
+// USA: data_020e9170
+// JPN: data_020e927c
+const AllocatorBase::VTable AllocatorTypeB::s_vtable = {
+    &AllocatorTypeB::Allocate,
+    &AllocatorTypeB::Free
+};
+
 // USA: data_020e9168
 // JPN: data_020e9274
 const AllocatorBase::VTable AllocatorTypeA::s_vtable = {
@@ -9,18 +24,14 @@ const AllocatorBase::VTable AllocatorTypeA::s_vtable = {
 
 // USA: data_020e9160
 // JPN: data_020e926c
-// Why does the compiler place these symbols out of order?
-// If we put this at the top, it goes at 9168 and type A goes at 9160.
 const AllocatorBase::VTable AllocatorTypeUnused::s_vtable = {
     &AllocatorTypeUnused::Allocate,
     &AllocatorTypeUnused::Free
 };
 
-// USA: data_020e9170
-// JPN: data_020e927c
-const AllocatorBase::VTable AllocatorTypeB::s_vtable = {
-    &AllocatorTypeB::Allocate,
-    &AllocatorTypeB::Free
+// we only declare this to prevent it being optimized away
+extern const AllocatorBase::VTable g_unusedAllocatorVTable = {
+    &func_020afe34, &func_020afe50
 };
 
 // USA: func_020afdc8
