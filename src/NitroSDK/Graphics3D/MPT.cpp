@@ -19,67 +19,67 @@ void InitializeModelAnimationFromMPT(Nitro3DAnimation* anim, void* pvMPT, Nitro3
 {
     unsigned int track;
     Nitro3DModelMaterials* materials;
-    if (model != NULL && model->materialsOffset_ != 0)
-        materials = (Nitro3DModelMaterials*)((intptr_t)model + model->materialsOffset_);
+    if (model != NULL && model->materialsOffset != 0)
+        materials = (Nitro3DModelMaterials*)((intptr_t)model + model->materialsOffset);
     else
         materials = NULL;
     
-    anim->callback_ = data_020f1c7c;
+    anim->callback = data_020f1c7c;
 
-    anim->numEntries_ = model->numMaterials_;
+    anim->numEntries = model->numMaterials;
     Nitro3DMPT* mpt = (Nitro3DMPT*)pvMPT;
-    anim->pRawData_ = mpt;
-    func_020ca390(0, &anim->entries_[0], anim->numEntries_ * 2);
+    anim->pRawData = mpt;
+    func_020ca390(0, &anim->entries[0], anim->numEntries * 2);
     
-    for (track = 0; track < mpt->tracks_.numEntries_; track++)
+    for (track = 0; track < mpt->tracks.numEntries; track++)
     {
-        const char* trackName = mpt->tracks_.GetNameByIndex(track);
+        const char* trackName = mpt->tracks.GetNameByIndex(track);
         int idx;
 
         if (materials == NULL)
             idx = -1;
         else
-            idx = NSBXXNameList_SearchIndex(&materials->materialOffsetList_, trackName);
+            idx = NSBXXNameList_SearchIndex(&materials->materialOffsetList, trackName);
 
         if (idx >= 0)
-            anim->entries_[idx] = track | 0x100;
+            anim->entries[idx] = track | 0x100;
     }
 }
 
 void SetMaterialTextureForRender(Nitro3DTextureSet* tex, const char* textureName, MaterialRenderData* renderData)
 {
-    Nitro3DTextureSet::ImageData* image = tex ? (Nitro3DTextureSet::ImageData*)NSBXXNameList_Search(&tex->textureList_, textureName) : NULL;
+    Nitro3DTextureSet::ImageData* image = tex ? (Nitro3DTextureSet::ImageData*)NSBXXNameList_Search(&tex->textureList, textureName) : NULL;
     unsigned int vramOffset;
-    if ((image->paramTEXIMAGE_PARAMS_ & 0x1c000000) != 0x14000000)
-        vramOffset = (unsigned short)tex->block1VRAMLoadOffset_ & ~0xe0000000;
+    if ((image->paramTEXIMAGE_PARAMS & 0x1c000000) != 0x14000000)
+        vramOffset = (unsigned short)tex->block1VRAMLoadOffset & ~0xe0000000;
     else
-        vramOffset = (unsigned short)tex->block2Or3VRAMLoadOffset_ & ~0xe0000000;
+        vramOffset = (unsigned short)tex->block2Or3VRAMLoadOffset & ~0xe0000000;
 
     // extract the transform mode (top 2 bits) and flip/reflect settings (bits 16-19)
-    renderData->paramTEXIMAGE_PARAMS_ &= 0xc00f0000;
-    renderData->paramTEXIMAGE_PARAMS_ |= image->paramTEXIMAGE_PARAMS_ + vramOffset;
+    renderData->paramTEXIMAGE_PARAMS &= 0xc00f0000;
+    renderData->paramTEXIMAGE_PARAMS |= image->paramTEXIMAGE_PARAMS + vramOffset;
     
-    renderData->materialWidth_ = image->unk_4 & 0x7ff;
-    renderData->materialHeight_ = (image->unk_4 & 0x3ff800) >> 11;
+    renderData->materialWidth = image->dimensions & 0x7ff;
+    renderData->materialHeight = (image->dimensions & 0x3ff800) >> 11;
 
 
-    int newWidth = image->unk_4 & 0x7ff;
-    int newHeight = (image->unk_4 & 0x3ff800) >> 11;
+    int newWidth = image->dimensions & 0x7ff;
+    int newHeight = (image->dimensions & 0x3ff800) >> 11;
 
     // wtf is the point of this? you just set it to these values...
-    fix32_t rescaleX = (newWidth == renderData->materialWidth_) ? 0x1000 : fix32_Divide(newWidth << 12, renderData->materialWidth_ << 12);
-    renderData->materialxScale_ = rescaleX;
+    fix32_t rescaleX = (newWidth == renderData->materialWidth) ? 0x1000 : fix32_Divide(newWidth << 12, renderData->materialWidth << 12);
+    renderData->materialScaleX = rescaleX;
 
-    fix32_t rescaleY = (newHeight == renderData->materialHeight_) ? 0x1000 : fix32_Divide(newHeight << 12, renderData->materialHeight_ << 12);
-    renderData->materialyScale_ = rescaleY;
+    fix32_t rescaleY = (newHeight == renderData->materialHeight) ? 0x1000 : fix32_Divide(newHeight << 12, renderData->materialHeight << 12);
+    renderData->materialScaleY = rescaleY;
 }
 
 void SetMaterialPaletteForRender(Nitro3DTextureSet* tex, const char* paletteName, MaterialRenderData* renderData)
 {
     Nitro3DTextureSet::PaletteData* palette;
-    if (tex != NULL && tex->paletteListOffset_ != 0)
+    if (tex != NULL && tex->paletteListOffset != 0)
     {
-        Nitro3DNameList* paletteList = (Nitro3DNameList*)((intptr_t)tex + tex->paletteListOffset_);
+        Nitro3DNameList* paletteList = (Nitro3DNameList*)((intptr_t)tex + tex->paletteListOffset);
         palette = (Nitro3DTextureSet::PaletteData*)NSBXXNameList_Search(paletteList, paletteName);
     }
     else
@@ -88,30 +88,30 @@ void SetMaterialPaletteForRender(Nitro3DTextureSet* tex, const char* paletteName
     }
 
     
-    unsigned short blockStartPos = (unsigned short)tex->block4VRAMLoadOffset_ & ~0xe0000000;
-    unsigned short offsetInBlock = palette->offsetWithinBlock4_;
-    if (!(palette->unk_2 & 1))
+    unsigned short blockStartPos = (unsigned short)tex->block4VRAMLoadOffset & ~0xe0000000;
+    unsigned short offsetInBlock = palette->offsetWithinBlock4;
+    if (!(palette->unknown_2 & 1))
     {
         offsetInBlock >>= 1; 
         blockStartPos >>= 1;
     }
 
-    renderData->texturePaletteBase_ = offsetInBlock + blockStartPos;
+    renderData->texturePaletteBase = offsetInBlock + blockStartPos;
 }
 
 void MPTAnimationProcessingCallback(void* data, Nitro3DAnimation* anim, int arg)
 {
     MaterialRenderData* renderData = (MaterialRenderData*)data;
 
-    Nitro3DMPT* mpt = (Nitro3DMPT*)anim->pRawData_;
+    Nitro3DMPT* mpt = (Nitro3DMPT*)anim->pRawData;
 
-    Nitro3DMPT::Track::Keyframe* keyframe = NSBXX_PatternAnimation_GetKeyframe(mpt, arg, anim->time_ >> 12);
-    const char* textureName = NSBXX_PatternAnimation_GetTextureName(mpt, keyframe->textureIdx_);
-    SetMaterialTextureForRender(anim->pTex0_, textureName, renderData);
+    Nitro3DMPT::Track::Keyframe* keyframe = NSBXX_PatternAnimation_GetKeyframe(mpt, arg, anim->time >> 12);
+    const char* textureName = NSBXX_PatternAnimation_GetTextureName(mpt, keyframe->textureIdx);
+    SetMaterialTextureForRender(anim->pTex0, textureName, renderData);
 
-    if (keyframe->paletteIdx_ != 0xff)
+    if (keyframe->paletteIdx != 0xff)
     {
-        const char* paletteName = NSBXX_PatternAnimation_GetPaletteName(mpt, keyframe->paletteIdx_);
-        SetMaterialPaletteForRender(anim->pTex0_, paletteName, renderData);
+        const char* paletteName = NSBXX_PatternAnimation_GetPaletteName(mpt, keyframe->paletteIdx);
+        SetMaterialPaletteForRender(anim->pTex0, paletteName, renderData);
     }
 }

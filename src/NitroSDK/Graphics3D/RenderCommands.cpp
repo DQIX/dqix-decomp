@@ -14,75 +14,75 @@ void ExecuteRenderCommands(RenderCommandHandler* handler)
 {
     do
     {
-        handler->flags_ &= ~(1 << RCH_FLAG_6);
-        uint8_t opcode = handler->instructionPointer_[0];
+        handler->flags &= ~(1 << RCH_FLAG_6);
+        uint8_t opcode = handler->instructionPointer[0];
         data_020f1e08[opcode & 0x1f](handler, opcode & 0xe0);
-    } while (!(handler->flags_ & (1 << RCH_FLAG_5)));
+    } while (!(handler->flags & (1 << RCH_FLAG_5)));
 }
 
 void SetUpRenderCommandHandler(RenderCommandHandler* handler, ModelRenderContext* modelData)
 {
     func_020ca458(0, handler, sizeof(RenderCommandHandler));
-    handler->boneMatrixBitfield_[0] = 1;
-    handler->flags_ = 1;
+    handler->boneMatrixBitfield[0] = 1;
+    handler->flags = 1;
 
-    uint8_t* commands = modelData->renderCommandList_;
+    uint8_t* commands = modelData->renderCommandList;
     if (commands == NULL)
-        commands = (uint8_t*)modelData->internalModel_ + modelData->internalModel_->renderCommandsOffset_;
-    *(uint8_t* volatile*)&handler->instructionPointer_ = commands;
+        commands = (uint8_t*)modelData->model + modelData->model->renderCommandsOffset;
+    *(uint8_t* volatile*)&handler->instructionPointer = commands;
     
-    handler->modelContext_ = modelData;
+    handler->context = modelData;
 
-    if (modelData->internalModel_ != NULL)
-        handler->boneList_ = &modelData->internalModel_->boneList_;
+    if (modelData->model != NULL)
+        handler->boneList = &modelData->model->boneList;
     else
-        handler->boneList_ = NULL;
+        handler->boneList = NULL;
 
-    handler->modelMaterials_ = modelData->internalModel_->GetMaterialData();
-    handler->meshList_ = modelData->internalModel_->GetMeshList();
-    handler->boneMatrixRenderDataScalePopulateProc_ = data_020f1cec[modelData->internalModel_->boneScalingMode_];
-    handler->boneMatrixRenderDataSubmitProc_ = data_020f1ce0[modelData->internalModel_->boneScalingMode_];
-    handler->textureMatrixCreateProc_ = data_020f1cf8[modelData->internalModel_->materialCallbackType_];
+    handler->modelMaterials = modelData->model->GetMaterialData();
+    handler->meshList = modelData->model->GetMeshList();
+    handler->pfnBoneMatrixRenderDataScalePopulate = data_020f1cec[modelData->model->boneScalingMode];
+    handler->pfnBoneMatrixRenderDataSubmit = data_020f1ce0[modelData->model->boneScalingMode];
+    handler->pfnTextureMatrixCreate = data_020f1cf8[modelData->model->materialCallbackType];
 
-    handler->upScale_ = modelData->internalModel_->upScale_;
-    handler->downScale_ = modelData->internalModel_->downScale_;
+    handler->upScale = modelData->model->upScale;
+    handler->downScale = modelData->model->downScale;
 
-    if (modelData->renderCommandHook_ != NULL && modelData->renderCommandHookCommandID_ < 32)
+    if (modelData->renderCommandHook != NULL && modelData->renderCommandHookCommandID < 32)
     {
-        handler->hooks_[modelData->renderCommandHookCommandID_] =
-            (void(*)(RenderCommandHandler*))modelData->renderCommandHook_;
-        handler->hookStages_[modelData->renderCommandHookCommandID_] = modelData->renderCommandHookStage_;
+        handler->hooks[modelData->renderCommandHookCommandID] =
+            (void(*)(RenderCommandHandler*))modelData->renderCommandHook;
+        handler->hookStages[modelData->renderCommandHookCommandID] = modelData->renderCommandHookStage;
     }
 
-    if (modelData->flags_ & 1)
-        handler->flags_ |= (1 << RCH_FLAG_7);
-    if (modelData->flags_ & 2)
-        handler->flags_ |= (1 << RCH_FLAG_8);
-    if (modelData->flags_ & 4)
-        handler->flags_ |= (1 << RCH_FLAG_9);
-    if (modelData->flags_ & 8)
-        handler->flags_ |= (1 << RCH_FLAG_10);
+    if (modelData->flags & 1)
+        handler->flags |= (1 << RCH_FLAG_7);
+    if (modelData->flags & 2)
+        handler->flags |= (1 << RCH_FLAG_8);
+    if (modelData->flags & 4)
+        handler->flags |= (1 << RCH_FLAG_9);
+    if (modelData->flags & 8)
+        handler->flags |= (1 << RCH_FLAG_10);
 
-    if (modelData->preRenderCallback_ != NULL)
+    if (modelData->preRenderCallback != NULL)
     {
-        void (*proc)(RenderCommandHandler*) = (void(*)(RenderCommandHandler*))modelData->preRenderCallback_;
+        void (*proc)(RenderCommandHandler*) = (void(*)(RenderCommandHandler*))modelData->preRenderCallback;
         proc(handler);
     }
 
     ExecuteRenderCommands(handler);
-    modelData->flags_ &= ~1;
+    modelData->flags &= ~1;
 }
 
 void PopulateBitfieldFromAnimData(unsigned int* bitfield, Nitro3DAnimation* anim)
 {
     while (anim != NULL)
     {
-        for (int counter = 0; counter < anim->numEntries_; counter++)
+        for (int counter = 0; counter < anim->numEntries; counter++)
         {
-            if (anim->entries_[counter] & 0x100)
+            if (anim->entries[counter] & 0x100)
                 bitfield[counter >> 5] |= 1 << (counter & 0x1f);
         }
-        anim = anim->pNext_;
+        anim = anim->pNext;
     }
 }
 
@@ -90,19 +90,19 @@ void RenderModelFromRenderData(ModelRenderContext* renderData)
 {
     RenderCommandHandler handler;
     
-    if ((renderData->flags_ & 0x10) == 0x10)
+    if ((renderData->flags & 0x10) == 0x10)
     {
-        func_020ca3ec(0, renderData->animatedMaterials_, sizeof(renderData->animatedMaterials_));
-        func_020ca3ec(0, renderData->animatedBoneMatrices_, sizeof(renderData->animatedBoneMatrices_));
-        func_020ca3ec(0, renderData->animatedVisibilityConditions_, sizeof(renderData->animatedVisibilityConditions_));
-        if (renderData->materialAnimations_ != NULL)
-            PopulateBitfieldFromAnimData(renderData->animatedMaterials_, renderData->materialAnimations_);
-        if (renderData->jointAnimations_ != NULL)
-            PopulateBitfieldFromAnimData(renderData->animatedBoneMatrices_, renderData->jointAnimations_);
-        if (renderData->visibilityAnimations_ != NULL)
-            PopulateBitfieldFromAnimData(renderData->animatedVisibilityConditions_, renderData->visibilityAnimations_);
+        func_020ca3ec(0, renderData->animatedMaterials, sizeof(renderData->animatedMaterials));
+        func_020ca3ec(0, renderData->animatedBoneMatrices, sizeof(renderData->animatedBoneMatrices));
+        func_020ca3ec(0, renderData->animatedVisibilityConditions, sizeof(renderData->animatedVisibilityConditions));
+        if (renderData->materialAnimations != NULL)
+            PopulateBitfieldFromAnimData(renderData->animatedMaterials, renderData->materialAnimations);
+        if (renderData->jointAnimations != NULL)
+            PopulateBitfieldFromAnimData(renderData->animatedBoneMatrices, renderData->jointAnimations);
+        if (renderData->visibilityAnimations != NULL)
+            PopulateBitfieldFromAnimData(renderData->animatedVisibilityConditions, renderData->visibilityAnimations);
 
-        renderData->flags_ &= ~0x10;
+        renderData->flags &= ~0x10;
     }
 
     if (data_0210a274 != NULL)
@@ -120,131 +120,131 @@ void RenderModelFromRenderData(ModelRenderContext* renderData)
 // nsbmd docs call this 'nop' though the callback still occurs
 void RenderCommand_0(RenderCommandHandler* handler, int modifier)
 {
-    if (handler->hooks_[0] != NULL)
-        handler->hooks_[0](handler);
-    handler->instructionPointer_++;
+    if (handler->hooks[0] != NULL)
+        handler->hooks[0](handler);
+    handler->instructionPointer++;
 }
 
 // signal end of render commands
 void RenderCommand_1(RenderCommandHandler* handler, int modifier)
 {
-    if (handler->hooks_[1] != NULL)
-        handler->hooks_[1](handler);
-    handler->flags_ |= (1 << RCH_FLAG_5);
+    if (handler->hooks[1] != NULL)
+        handler->hooks[1](handler);
+    handler->flags |= (1 << RCH_FLAG_5);
 }
 
 // apply visibility condition to be used by animation
 // params: condition index, default value (lowest bit used)
 void RenderCommand_2(RenderCommandHandler* handler, int modifier)
 {
-    if (!(handler->flags_ & (1 << RCH_FLAG_9)))
+    if (!(handler->flags & (1 << RCH_FLAG_9)))
     {
-        unsigned int conditionIdx = handler->instructionPointer_[1];
-        handler->command2Arg1_ = conditionIdx;
-        handler->flags_ |= (1 << RCH_FLAG_2);
-        handler->pCommand2Word_ = &handler->scratchCommand2Word_;
+        unsigned int conditionIdx = handler->instructionPointer[1];
+        handler->command2Arg1 = conditionIdx;
+        handler->flags |= (1 << RCH_FLAG_2);
+        handler->pCommand2Word = &handler->scratchCommand2Word;
 
-        int callbackStage = (handler->hooks_[2] != NULL) ? handler->hookStages_[2] : 0;
+        int callbackStage = (handler->hooks[2] != NULL) ? handler->hookStages[2] : 0;
 
         unsigned int flagbit6;
         if (callbackStage == 1)
         {
-            handler->flags_ &= ~(1 << RCH_FLAG_6);
-            handler->hooks_[2](handler);
-            callbackStage = (handler->hooks_[2] != NULL) ? handler->hookStages_[2] : 0;
-            flagbit6 = handler->flags_ & (1 << RCH_FLAG_6);   
+            handler->flags &= ~(1 << RCH_FLAG_6);
+            handler->hooks[2](handler);
+            callbackStage = (handler->hooks[2] != NULL) ? handler->hookStages[2] : 0;
+            flagbit6 = handler->flags & (1 << RCH_FLAG_6);   
         }
         else
             flagbit6 = 0;
 
         if (flagbit6 == 0)
         {
-            ModelRenderContext* modelData = handler->modelContext_;
-            if (modelData->visibilityAnimations_ == NULL ||
-                !TestBitfieldBit(modelData->animatedVisibilityConditions_, conditionIdx) ||
-                !modelData->pfnProcessVisibilityAnimations_(handler->pCommand2Word_, modelData->visibilityAnimations_, conditionIdx))
+            ModelRenderContext* modelData = handler->context;
+            if (modelData->visibilityAnimations == NULL ||
+                !TestBitfieldBit(modelData->animatedVisibilityConditions, conditionIdx) ||
+                !modelData->pfnProcessVisibilityAnimations(handler->pCommand2Word, modelData->visibilityAnimations, conditionIdx))
             {
-                *handler->pCommand2Word_ = handler->instructionPointer_[2] & 1;
+                *handler->pCommand2Word = handler->instructionPointer[2] & 1;
             }
         }
 
         if (callbackStage == 2)
         {
-            handler->flags_ &= ~(1 << RCH_FLAG_6);
-            handler->hooks_[2](handler);
-            callbackStage = (handler->hooks_[2] != NULL) ? handler->hookStages_[2] : 0;
-            flagbit6 = handler->flags_ & (1 << RCH_FLAG_6);
+            handler->flags &= ~(1 << RCH_FLAG_6);
+            handler->hooks[2](handler);
+            callbackStage = (handler->hooks[2] != NULL) ? handler->hookStages[2] : 0;
+            flagbit6 = handler->flags & (1 << RCH_FLAG_6);
         }
         else
             flagbit6 = 0;
 
         if (flagbit6 == 0)
         {
-            if (*handler->pCommand2Word_ != 0)
-                handler->flags_ |= (1 << RCH_FLAG_0);
+            if (*handler->pCommand2Word != 0)
+                handler->flags |= (1 << RCH_FLAG_0);
             else
-                handler->flags_ &= ~(1 << RCH_FLAG_0);
+                handler->flags &= ~(1 << RCH_FLAG_0);
         }
 
         if (callbackStage == 3)
         {
-            handler->flags_ &= ~(1 << RCH_FLAG_6);
-            handler->hooks_[2](handler);
+            handler->flags &= ~(1 << RCH_FLAG_6);
+            handler->hooks[2](handler);
         }
     }
-    handler->instructionPointer_ += 3;
+    handler->instructionPointer += 3;
 }
 
 // load matrix from stack
 // parameters: index to load from
 void RenderCommand_3(RenderCommandHandler* handler, int modifier)
 {
-    if (!(handler->flags_ & (1 << RCH_FLAG_9)) && (handler->flags_ & (1 << RCH_FLAG_0)))
+    if (!(handler->flags & (1 << RCH_FLAG_9)) && (handler->flags & (1 << RCH_FLAG_0)))
     {
-        int callbackStage = (handler->hooks_[3] != NULL) ? handler->hookStages_[3] : 0;
+        int callbackStage = (handler->hooks[3] != NULL) ? handler->hookStages[3] : 0;
 
         unsigned int flagbit6;
         if (callbackStage == 1)
         {
-            handler->flags_ &= ~(1 << RCH_FLAG_6);
-            handler->hooks_[3](handler);
-            callbackStage = (handler->hooks_[3] != NULL) ? handler->hookStages_[3] : 0;
-            flagbit6 = handler->flags_ & (1 << RCH_FLAG_6);
+            handler->flags &= ~(1 << RCH_FLAG_6);
+            handler->hooks[3](handler);
+            callbackStage = (handler->hooks[3] != NULL) ? handler->hookStages[3] : 0;
+            flagbit6 = handler->flags & (1 << RCH_FLAG_6);
         }
         else
             flagbit6 = 0;
 
         if (flagbit6 == 0)
         {
-            uint32_t stackPos = handler->instructionPointer_[1];
-            if (!(handler->flags_ & (1 << RCH_FLAG_8)))
+            uint32_t stackPos = handler->instructionPointer[1];
+            if (!(handler->flags & (1 << RCH_FLAG_8)))
                 SubmitCommandToGeometryFifo(GXFifoCommand_GetMatrix, &stackPos, 1);
         }
 
         if (callbackStage == 3)
         {
-            handler->flags_ &= ~(1 << RCH_FLAG_6);
-            handler->hooks_[3](handler);
+            handler->flags &= ~(1 << RCH_FLAG_6);
+            handler->hooks[3](handler);
         }
     }
-    handler->instructionPointer_ += 2;
+    handler->instructionPointer += 2;
 }
 
 void MaterialBindProc(RenderCommandHandler* handler, int modifier, Nitro3DMaterial* material, unsigned int idx)
 {
-    handler->boundMaterial_ = idx;
-    handler->flags_ |= (1 << RCH_FLAG_3);
-    handler->pMaterialRenderData_ = &handler->scratchMaterialRenderData_;
+    handler->boundMaterial = idx;
+    handler->flags |= (1 << RCH_FLAG_3);
+    handler->pMaterialRenderData = &handler->scratchMaterialRenderData;
 
-    int callbackStage = (handler->hooks_[4] != NULL) ? handler->hookStages_[4] : 0;
+    int callbackStage = (handler->hooks[4] != NULL) ? handler->hookStages[4] : 0;
 
     unsigned int flagbit6;
     if (callbackStage == 1)
     {
-        handler->flags_ &= ~(1 << RCH_FLAG_6);
-        handler->hooks_[4](handler);
-        callbackStage = (handler->hooks_[4] != NULL) ? handler->hookStages_[4] : 0;
-        flagbit6 = handler->flags_ & (1 << RCH_FLAG_6);
+        handler->flags &= ~(1 << RCH_FLAG_6);
+        handler->hooks[4](handler);
+        callbackStage = (handler->hooks[4] != NULL) ? handler->hookStages[4] : 0;
+        flagbit6 = handler->flags & (1 << RCH_FLAG_6);
     }
     else
         flagbit6 = 0;
@@ -252,10 +252,10 @@ void MaterialBindProc(RenderCommandHandler* handler, int modifier, Nitro3DMateri
     if (flagbit6 == 0)
     {
         MaterialRenderData* targetData;
-        MaterialRenderData* modelMaterialArray = handler->modelContext_->materialRenderDataArray_;
-        if (modelMaterialArray != NULL && !(handler->flags_ & (1 << RCH_FLAG_7)))
+        MaterialRenderData* modelMaterialArray = handler->context->materialRenderDataArray;
+        if (modelMaterialArray != NULL && !(handler->flags & (1 << RCH_FLAG_7)))
             targetData = &modelMaterialArray[idx];
-        else if ((modifier == 0x20 || modifier == 0x40) && TestBitfieldBit(handler->materialBitfield_, idx))
+        else if ((modifier == 0x20 || modifier == 0x40) && TestBitfieldBit(handler->materialBitfield, idx))
         {
             if (modelMaterialArray != NULL)
                 targetData = &modelMaterialArray[idx];
@@ -266,138 +266,138 @@ void MaterialBindProc(RenderCommandHandler* handler, int modifier, Nitro3DMateri
         {
             if (modelMaterialArray != NULL)
             {
-                SetBitfieldBit(handler->materialBitfield_, idx);
-                targetData = &handler->modelContext_->materialRenderDataArray_[idx];
+                SetBitfieldBit(handler->materialBitfield, idx);
+                targetData = &handler->context->materialRenderDataArray[idx];
             }
             else
             {
                 if (!(modifier != 0x40))
                 {
-                    SetBitfieldBit(handler->materialBitfield_, idx);
+                    SetBitfieldBit(handler->materialBitfield, idx);
                     targetData = &data_0210a278[idx];
                 }
                 else
-                    targetData = &handler->scratchMaterialRenderData_;
+                    targetData = &handler->scratchMaterialRenderData;
             }
 
-            targetData->flags_ = 0;
-            Nitro3DMaterial* lookupMaterial = handler->modelMaterials_->GetMaterialByIndex(idx);
-            if (lookupMaterial->flags_ & 0x20)
-                targetData->flags_ |= 0x20;
+            targetData->flags = 0;
+            Nitro3DMaterial* lookupMaterial = handler->modelMaterials->GetMaterialByIndex(idx);
+            if (lookupMaterial->flags & 0x20)
+                targetData->flags |= 0x20;
             
-            int difambMask = data_020e9240[(material->flags_ >> 6) & 7];
-            targetData->paramDIF_AMB_ = (data_0210a010.diffuseAmbientArg & ~difambMask) |
-                (material->paramDIF_AMB_ & difambMask);
+            int difambMask = data_020e9240[(material->flags >> 6) & 7];
+            targetData->paramDIF_AMB = (data_0210a010.diffuseAmbientArg & ~difambMask) |
+                (material->paramDIF_AMB & difambMask);
 
-            int speemiMask = data_020e9240[(material->flags_ >> 9) & 7];
-            targetData->paramSPE_EMI_ = (data_0210a010.specularArg & ~speemiMask) |
-                (material->paramSPE_EMI_ & speemiMask);
+            int speemiMask = data_020e9240[(material->flags >> 9) & 7];
+            targetData->paramSPE_EMI = (data_0210a010.specularArg & ~speemiMask) |
+                (material->paramSPE_EMI & speemiMask);
 
-            targetData->paramPOLYGON_ATTR_ = (data_0210a010.polygonAttrArg & ~material->maskPOLYGON_ATTR_) |
-                (material->paramPOLYGON_ATTR_ & material->maskPOLYGON_ATTR_);
-            targetData->paramTEXIMAGE_PARAMS_ = material->paramTEXIMAGE_PARAMS_;
-            targetData->texturePaletteBase_ = material->texturePaletteVRAMOffset_;
+            targetData->paramPOLYGON_ATTR = (data_0210a010.polygonAttrArg & ~material->maskPOLYGON_ATTR) |
+                (material->paramPOLYGON_ATTR & material->maskPOLYGON_ATTR);
+            targetData->paramTEXIMAGE_PARAMS = material->paramTEXIMAGE_PARAMS;
+            targetData->texturePaletteBase = material->texturePaletteVRAMOffset;
 
-            if (material->flags_ & 1)
+            if (material->flags & 1)
             {
                 intptr_t extensionDataAddress = (intptr_t)(material + 1);
-                if (!(material->flags_ & 2))
+                if (!(material->flags & 2))
                 {
                     Nitro3DMaterial::ExtensionData_Bit1* extensionData = 
                         (Nitro3DMaterial::ExtensionData_Bit1*)extensionDataAddress;
-                    targetData->extensionScaleX_ = extensionData->scaleX_;
-                    targetData->extensionScaleY_ = extensionData->scaleY_;
+                    targetData->extensionScaleX = extensionData->scaleX;
+                    targetData->extensionScaleY = extensionData->scaleY;
                     extensionDataAddress += sizeof(*extensionData);
                 }
                 else
-                    targetData->flags_ |= 1;
+                    targetData->flags |= 1;
 
-                if (!(material->flags_ & 4))
+                if (!(material->flags & 4))
                 {
                     Nitro3DMaterial::ExtensionData_Bit2* extensionData =
                         (Nitro3DMaterial::ExtensionData_Bit2*)extensionDataAddress;
-                    targetData->rotationSine_ = extensionData->sine_;
-                    targetData->rotationCosine_ = extensionData->cosine_;
+                    targetData->rotationSine = extensionData->sine;
+                    targetData->rotationCosine = extensionData->cosine;
                     extensionDataAddress += sizeof(*extensionData);
                 }
                 else
-                    targetData->flags_ |= 2;
+                    targetData->flags |= 2;
                 
-                if (!(material->flags_ & 8))
+                if (!(material->flags & 8))
                 {
                     Nitro3DMaterial::ExtensionData_Bit3* extensionData = 
                         (Nitro3DMaterial::ExtensionData_Bit3*)extensionDataAddress;
-                    targetData->translateX_ = extensionData->translateX_;
-                    targetData->translateY_ = extensionData->translateY_;
+                    targetData->translateX = extensionData->translateX;
+                    targetData->translateY = extensionData->translateY;
                 }
                 else 
-                    targetData->flags_ |= 4;
+                    targetData->flags |= 4;
 
-                targetData->flags_ |= 8;
+                targetData->flags |= 8;
             }
 
-            ModelRenderContext* modelData = handler->modelContext_;
-            if (modelData->materialAnimations_ != NULL && TestBitfieldBit(modelData->animatedMaterials_, idx))
-                modelData->pfnProcessMaterialAnimations_(targetData, modelData->materialAnimations_, idx);
+            ModelRenderContext* modelData = handler->context;
+            if (modelData->materialAnimations != NULL && TestBitfieldBit(modelData->animatedMaterials, idx))
+                modelData->pfnProcessMaterialAnimations(targetData, modelData->materialAnimations, idx);
 
-            if (targetData->flags_ & (0x10 | 0x08))
+            if (targetData->flags & (0x10 | 0x08))
             {
-                targetData->materialWidth_ = material->width_;
-                targetData->materialHeight_ = material->height_;
-                targetData->materialxScale_ = material->xScale_;
-                targetData->materialyScale_ = material->yScale_;
+                targetData->materialWidth = material->width;
+                targetData->materialHeight = material->height;
+                targetData->materialScaleX = material->xScale;
+                targetData->materialScaleY = material->yScale;
             }
         }      
-        handler->pMaterialRenderData_ = targetData;
+        handler->pMaterialRenderData = targetData;
     }
 
     if (callbackStage == 2)
     {
-        handler->flags_ &= ~(1 << RCH_FLAG_6);
-        handler->hooks_[4](handler);
-        callbackStage = (handler->hooks_[4] != NULL) ? handler->hookStages_[4] : 0;
-        flagbit6 = handler->flags_ & (1 << RCH_FLAG_6);
+        handler->flags &= ~(1 << RCH_FLAG_6);
+        handler->hooks[4](handler);
+        callbackStage = (handler->hooks[4] != NULL) ? handler->hookStages[4] : 0;
+        flagbit6 = handler->flags & (1 << RCH_FLAG_6);
     }
     else
         flagbit6 = 0;
 
     if (flagbit6 == 0)
     {
-        MaterialRenderData* targetData = handler->pMaterialRenderData_;
-        if ((targetData->paramPOLYGON_ATTR_ & 0x1f0000) != 0) // alpha != 0
+        MaterialRenderData* targetData = handler->pMaterialRenderData;
+        if ((targetData->paramPOLYGON_ATTR & 0x1f0000) != 0) // alpha != 0
         {
-            if (targetData->flags_ & 0x20)
-                targetData->paramPOLYGON_ATTR_ &= ~0x1f0000;
-            handler->flags_ &= ~(1 << RCH_FLAG_1);
-            if (!(handler->flags_ & (1 << RCH_FLAG_8)))
+            if (targetData->flags & 0x20)
+                targetData->paramPOLYGON_ATTR &= ~0x1f0000;
+            handler->flags &= ~(1 << RCH_FLAG_1);
+            if (!(handler->flags & (1 << RCH_FLAG_8)))
             {
                 uint32_t commands[7];
                 commands[0] = COMBINE_GXFIFO_COMMANDS3(
                     GXFifoCommand_DiffuseAmbientReflect,
                     GXFifoCommand_SpecularReflectEmit,
                     GXFifoCommand_SetPolygonAttr);
-                commands[1] = targetData->paramDIF_AMB_;
-                commands[2] = targetData->paramSPE_EMI_;
-                commands[3] = targetData->paramPOLYGON_ATTR_;
+                commands[1] = targetData->paramDIF_AMB;
+                commands[2] = targetData->paramSPE_EMI;
+                commands[3] = targetData->paramPOLYGON_ATTR;
                 commands[4] = COMBINE_GXFIFO_COMMANDS2(
                     GXFifoCommand_SetTexImageParams,
                     GXFifoCommand_SetTexturePaletteBase);
-                commands[5] = targetData->paramTEXIMAGE_PARAMS_;
-                commands[6] = targetData->texturePaletteBase_;
+                commands[5] = targetData->paramTEXIMAGE_PARAMS;
+                commands[6] = targetData->texturePaletteBase;
                 SubmitCommandToGeometryFifo(commands[0], &commands[1], 6);
 
-                if (targetData->flags_ & (0x10 | 0x08))
-                    handler->textureMatrixCreateProc_(targetData);
+                if (targetData->flags & (0x10 | 0x08))
+                    handler->pfnTextureMatrixCreate(targetData);
             }
         }
         else
-            handler->flags_ |= (1 << RCH_FLAG_1);
+            handler->flags |= (1 << RCH_FLAG_1);
     }
 
     if (callbackStage == 3)
     {
-        handler->flags_ &= ~(1 << RCH_FLAG_6);
-        handler->hooks_[4](handler);
+        handler->flags &= ~(1 << RCH_FLAG_6);
+        handler->hooks[4](handler);
     }
 }
 
@@ -405,47 +405,47 @@ void MaterialBindProc(RenderCommandHandler* handler, int modifier, Nitro3DMateri
 // parameters: index of material within the model's MaterialList
 void RenderCommand_4(RenderCommandHandler* handler, int modifier)
 {
-    if (!(handler->flags_ & (1 << RCH_FLAG_9)))
+    if (!(handler->flags & (1 << RCH_FLAG_9)))
     {
-        int materialIdx = handler->instructionPointer_[1];
-        if ((handler->flags_ & (1 << RCH_FLAG_0)) || !(handler->flags_ & (1 << RCH_FLAG_3)) || materialIdx != handler->boundMaterial_)
+        int materialIdx = handler->instructionPointer[1];
+        if ((handler->flags & (1 << RCH_FLAG_0)) || !(handler->flags & (1 << RCH_FLAG_3)) || materialIdx != handler->boundMaterial)
         {
-            Nitro3DMaterial* material = handler->modelMaterials_->GetMaterialByIndex(materialIdx);
+            Nitro3DMaterial* material = handler->modelMaterials->GetMaterialByIndex(materialIdx);
             // MaterialBindProc
-            data_020f1d08.materialBindFunctions[material->unk_0](handler, modifier, material, materialIdx);
+            data_020f1d08.materialBindFunctions[material->bindMethod](handler, modifier, material, materialIdx);
         }
     }
-    handler->instructionPointer_ += 2;
+    handler->instructionPointer += 2;
 }
 
 void MeshDrawProc(RenderCommandHandler* handler, int modifier, Nitro3DMesh* mesh, unsigned int meshIdx)
 {
-    int callbackStage = (handler->hooks_[5] != NULL) ? handler->hookStages_[5] : 0;
+    int callbackStage = (handler->hooks[5] != NULL) ? handler->hookStages[5] : 0;
     unsigned int flagbit6;
     if (callbackStage == 1)
     {
-        handler->flags_ &= ~(1 << RCH_FLAG_6);
-        handler->hooks_[5](handler);
-        callbackStage = (handler->hooks_[5] != NULL) ? handler->hookStages_[5] : 0;
-        flagbit6 = handler->flags_ & (1 << RCH_FLAG_6);
+        handler->flags &= ~(1 << RCH_FLAG_6);
+        handler->hooks[5](handler);
+        callbackStage = (handler->hooks[5] != NULL) ? handler->hookStages[5] : 0;
+        flagbit6 = handler->flags & (1 << RCH_FLAG_6);
     }
     else
         flagbit6 = 0;
 
-    if (flagbit6 == 0 && !(handler->flags_ & (1 << RCH_FLAG_8)))
-        SendRawDataToGeometryFifo(mesh->GetGPUCommands(), mesh->gpuCommandsLength_);
+    if (flagbit6 == 0 && !(handler->flags & (1 << RCH_FLAG_8)))
+        SendRawDataToGeometryFifo(mesh->GetGPUCommands(), mesh->gpuCommandsLength);
 
     if (callbackStage == 2)
     {
-        handler->flags_ &= ~(1 << RCH_FLAG_6);
-        handler->hooks_[5](handler);
-        callbackStage = (handler->hooks_[5] != NULL) ? handler->hookStages_[5] : 0;
+        handler->flags &= ~(1 << RCH_FLAG_6);
+        handler->hooks[5](handler);
+        callbackStage = (handler->hooks[5] != NULL) ? handler->hookStages[5] : 0;
     }
 
     if (callbackStage == 3)
     {
-        handler->flags_ &= ~(1 << RCH_FLAG_6);
-        handler->hooks_[5](handler);
+        handler->flags &= ~(1 << RCH_FLAG_6);
+        handler->hooks[5](handler);
     }
 }
 
@@ -453,14 +453,14 @@ void MeshDrawProc(RenderCommandHandler* handler, int modifier, Nitro3DMesh* mesh
 // parameters: index of mesh to draw
 void RenderCommand_5(RenderCommandHandler* handler, int modifier)
 {
-    if (!(handler->flags_ & (1 << RCH_FLAG_9)) && (handler->flags_ & (1 << RCH_FLAG_0)) && !(handler->flags_ & (1 << RCH_FLAG_1)))
+    if (!(handler->flags & (1 << RCH_FLAG_9)) && (handler->flags & (1 << RCH_FLAG_0)) && !(handler->flags & (1 << RCH_FLAG_1)))
     {
-        int meshIdx = handler->instructionPointer_[1];
-        Nitro3DNameList* meshList = handler->meshList_;
+        int meshIdx = handler->instructionPointer[1];
+        Nitro3DNameList* meshList = handler->meshList;
         Nitro3DMesh* mesh = meshList->GetEntryFromu32Offset<Nitro3DMesh>(meshIdx);
-        data_020f1d08.meshDrawFunctions[mesh->unk_0](handler, modifier, mesh, meshIdx);
+        data_020f1d08.meshDrawFunctions[mesh->drawMethod](handler, modifier, mesh, meshIdx);
     }
-    handler->instructionPointer_ += 2;
+    handler->instructionPointer += 2;
 }
 
 // multiply current matrix by bone matrix (on the left)
@@ -473,24 +473,24 @@ void RenderCommand_5(RenderCommandHandler* handler, int modifier)
 // you'll retrieve a matrix off the stack and pre-multiply that by the bone matrix
 void RenderCommand_6(RenderCommandHandler* handler, int modifier)
 {
-    int boneIdx = handler->instructionPointer_[1];
+    int boneIdx = handler->instructionPointer[1];
     int numBytesConsumed = 4; // by default it's opcode + 3 args
-    handler->currentBoneMatrix_ = boneIdx;
-    handler->flags_ |= (1 << RCH_FLAG_4);
-    if (handler->flags_ & (1 << RCH_FLAG_10))
+    handler->currentBoneMatrix = boneIdx;
+    handler->flags |= (1 << RCH_FLAG_4);
+    if (handler->flags & (1 << RCH_FLAG_10))
     {
         if (modifier == 0x40 || modifier == 0x60)
             numBytesConsumed++;
         if (modifier == 0x20 || modifier == 0x60)
         {
             numBytesConsumed++;
-            if (!(handler->flags_ & (1 << RCH_FLAG_8)))
+            if (!(handler->flags & (1 << RCH_FLAG_8)))
             {
-                uint32_t retrievalPosition = handler->instructionPointer_[4];
+                uint32_t retrievalPosition = handler->instructionPointer[4];
                 SubmitCommandToGeometryFifo(GXFifoCommand_GetMatrix, &retrievalPosition, 1);
             }
         }
-        handler->instructionPointer_ += numBytesConsumed;
+        handler->instructionPointer += numBytesConsumed;
         return;
     }
 
@@ -498,27 +498,27 @@ void RenderCommand_6(RenderCommandHandler* handler, int modifier)
     if (modifier == 0x40 || modifier == 0x60)
     {
         // the presence of the 0x20 bit means we have to look one further
-        uint8_t* instructionPtr = handler->instructionPointer_;
+        uint8_t* instructionPtr = handler->instructionPointer;
         uint32_t retrievalPosition;
         if (modifier == 0x40) 
             retrievalPosition = instructionPtr[4];
         else 
             retrievalPosition = instructionPtr[5];
         numBytesConsumed++;
-        if (!(handler->flags_ & (1 << RCH_FLAG_8)))
+        if (!(handler->flags & (1 << RCH_FLAG_8)))
             SubmitCommandToGeometryFifo(GXFifoCommand_GetMatrix, &retrievalPosition, 1);
     }
 
-    handler->pBoneMatrixRenderData_ = &handler->scratchBoneMatrixRenderData_;
-    int callbackStage = (handler->hooks_[6] != NULL) ? handler->hookStages_[6] : 0;
+    handler->pBoneMatrixRenderData = &handler->scratchBoneMatrixRenderData;
+    int callbackStage = (handler->hooks[6] != NULL) ? handler->hookStages[6] : 0;
 
     unsigned int flagbit6;
     if (callbackStage == 1)
     {
-        handler->flags_ &= ~(1 << RCH_FLAG_6);
-        handler->hooks_[6](handler);
-        callbackStage = (handler->hooks_[6] != NULL) ? handler->hookStages_[6] : 0;
-        flagbit6 = handler->flags_ & (1 << RCH_FLAG_6);
+        handler->flags &= ~(1 << RCH_FLAG_6);
+        handler->hooks[6](handler);
+        callbackStage = (handler->hooks[6] != NULL) ? handler->hookStages[6] : 0;
+        flagbit6 = handler->flags & (1 << RCH_FLAG_6);
     }
     else
         flagbit6 = 0;
@@ -526,122 +526,122 @@ void RenderCommand_6(RenderCommandHandler* handler, int modifier)
     if (flagbit6 == 0)
     {
         BoneMatrixRenderData* targetData;
-        BoneMatrixRenderData* modelBoneArray = handler->modelContext_->boneMatrixRenderDataArray_;
+        BoneMatrixRenderData* modelBoneArray = handler->context->boneMatrixRenderDataArray;
 
         bool bit7clear;
         if (modelBoneArray != NULL)
         {
             targetData = &modelBoneArray[boneIdx];
-            bit7clear = !(handler->flags_ & (1 << RCH_FLAG_7));
+            bit7clear = !(handler->flags & (1 << RCH_FLAG_7));
         }
         else
         {
-            targetData = &handler->scratchBoneMatrixRenderData_;
+            targetData = &handler->scratchBoneMatrixRenderData;
             bit7clear = false;
         }
 
         if (!bit7clear)
         {
-            targetData->flags_ = 0;
-            if (handler->modelContext_->jointAnimations_ == NULL ||
-                !handler->modelContext_->pfnProcessJointAnimations_(targetData, handler->modelContext_->jointAnimations_, boneIdx))
+            targetData->flags = 0;
+            if (handler->context->jointAnimations == NULL ||
+                !handler->context->pfnProcessJointAnimations(targetData, handler->context->jointAnimations, boneIdx))
             {
-                Nitro3DBoneMatrix* boneMatrix = handler->boneList_->GetEntryFromu32Offset<Nitro3DBoneMatrix>(boneIdx);
+                Nitro3DBoneMatrix* boneMatrix = handler->boneList->GetEntryFromu32Offset<Nitro3DBoneMatrix>(boneIdx);
                 intptr_t boneMatrixExtraPtr = (intptr_t)(boneMatrix + 1);
-                if ((boneMatrix->flags_ & 1)) // has no translation component
-                    targetData->flags_ |= 4;
+                if ((boneMatrix->flags & 1)) // has no translation component
+                    targetData->flags |= 4;
                 else
                 {
                     Nitro3DBoneMatrix::Translation* translation = 
                         (Nitro3DBoneMatrix::Translation*)boneMatrixExtraPtr;
-                    targetData->translate_.x = translation->x;
-                    targetData->translate_.y = translation->y;
-                    targetData->translate_.z = translation->z;
+                    targetData->translate.x = translation->x;
+                    targetData->translate.y = translation->y;
+                    targetData->translate.z = translation->z;
                     boneMatrixExtraPtr += sizeof(*translation);
                 }
 
-                if (boneMatrix->flags_ & 2) // does not have any kind of rotation
-                    targetData->flags_ |= 2;
-                else if (boneMatrix->flags_ & 8) // use pivot matrix
+                if (boneMatrix->flags & 2) // does not have any kind of rotation
+                    targetData->flags |= 2;
+                else if (boneMatrix->flags & 8) // use pivot matrix
                 {
-                    int form = (boneMatrix->flags_ & 0xf0) >> 4;
+                    int form = (boneMatrix->flags & 0xf0) >> 4;
                     Nitro3DBoneMatrix::PivotMatrixData* pivot = 
                         (Nitro3DBoneMatrix::PivotMatrixData*)boneMatrixExtraPtr;
                     fix32_t entryA = pivot->a;
                     fix32_t entryB = pivot->b;
-                    func_020ca7d0(&targetData->rotationMatrix_);
+                    func_020ca7d0(&targetData->rotationMatrix);
                     
                     fix32_t unit;
-                    if (boneMatrix->flags_ & 0x100)
+                    if (boneMatrix->flags & 0x100)
                         unit = 0xfffff000; // -1.0
                     else
                         unit = 0x1000; // +1.0
 
-                    targetData->rotationMatrix_.entries[form] = unit;
+                    targetData->rotationMatrix.entries[form] = unit;
 
                     uint8_t indexA = data_020e9260[form].a;
                     uint8_t indexB = data_020e9260[form].b;
 
-                    targetData->rotationMatrix_.entries[indexA] = entryA;
-                    targetData->rotationMatrix_.entries[indexB] = entryB;
+                    targetData->rotationMatrix.entries[indexA] = entryA;
+                    targetData->rotationMatrix.entries[indexB] = entryB;
 
-                    fix32_t entryC = (boneMatrix->flags_ & 0x200) ? -entryB : entryB;
+                    fix32_t entryC = (boneMatrix->flags & 0x200) ? -entryB : entryB;
                     uint8_t indexC = data_020e9260[form].c;
-                    targetData->rotationMatrix_.entries[indexC] = entryC;
+                    targetData->rotationMatrix.entries[indexC] = entryC;
 
-                    fix32_t entryD = (boneMatrix->flags_ & 0x400) ? -entryA : entryA;
+                    fix32_t entryD = (boneMatrix->flags & 0x400) ? -entryA : entryA;
                     uint8_t indexD = data_020e9260[form].d;
-                    targetData->rotationMatrix_.entries[indexD] = entryD;
+                    targetData->rotationMatrix.entries[indexD] = entryD;
                     boneMatrixExtraPtr += sizeof(*pivot);
                 }
                 else // use specified matrix
                 {
                     // casting from fix16_t to fix32_t, this is okay because
                     // both have 12 bits after the point
-                    targetData->rotationMatrix_.entries[0] = boneMatrix->m_11;
+                    targetData->rotationMatrix.entries[0] = boneMatrix->m_11;
                     Nitro3DBoneMatrix::RotationMatrixData* rotation = 
                         (Nitro3DBoneMatrix::RotationMatrixData*)boneMatrixExtraPtr;
-                    targetData->rotationMatrix_.entries[1] = rotation->entries[0];
-                    targetData->rotationMatrix_.entries[2] = rotation->entries[1];
-                    targetData->rotationMatrix_.entries[3] = rotation->entries[2];
-                    targetData->rotationMatrix_.entries[4] = rotation->entries[3];
-                    targetData->rotationMatrix_.entries[5] = rotation->entries[4];
-                    targetData->rotationMatrix_.entries[6] = rotation->entries[5];
-                    targetData->rotationMatrix_.entries[7] = rotation->entries[6];
-                    targetData->rotationMatrix_.entries[8] = rotation->entries[7];
+                    targetData->rotationMatrix.entries[1] = rotation->entries[0];
+                    targetData->rotationMatrix.entries[2] = rotation->entries[1];
+                    targetData->rotationMatrix.entries[3] = rotation->entries[2];
+                    targetData->rotationMatrix.entries[4] = rotation->entries[3];
+                    targetData->rotationMatrix.entries[5] = rotation->entries[4];
+                    targetData->rotationMatrix.entries[6] = rotation->entries[5];
+                    targetData->rotationMatrix.entries[7] = rotation->entries[6];
+                    targetData->rotationMatrix.entries[8] = rotation->entries[7];
                     boneMatrixExtraPtr += sizeof(*rotation);
                 }
 
-                handler->boneMatrixRenderDataScalePopulateProc_(targetData,
+                handler->pfnBoneMatrixRenderDataScalePopulate(targetData,
                     (Nitro3DBoneMatrix::Scaling*)boneMatrixExtraPtr,
-                    handler->instructionPointer_, boneMatrix->flags_);
+                    handler->instructionPointer, boneMatrix->flags);
             }
         }
-        handler->pBoneMatrixRenderData_ = targetData;
+        handler->pBoneMatrixRenderData = targetData;
     }
 
     if (callbackStage == 2)
     {
-        handler->flags_ &= ~(1 << RCH_FLAG_6);
-        handler->hooks_[6](handler);
-        callbackStage = (handler->hooks_[6] != NULL) ? handler->hookStages_[6] : 0;
-        flagbit6 = handler->flags_ & (1 << RCH_FLAG_6);
+        handler->flags &= ~(1 << RCH_FLAG_6);
+        handler->hooks[6](handler);
+        callbackStage = (handler->hooks[6] != NULL) ? handler->hookStages[6] : 0;
+        flagbit6 = handler->flags & (1 << RCH_FLAG_6);
     }
     else
         flagbit6 = 0;
     
-    if (flagbit6 == 0 && !(handler->flags_ & (1 << RCH_FLAG_8)))
+    if (flagbit6 == 0 && !(handler->flags & (1 << RCH_FLAG_8)))
     {
-        handler->boneMatrixRenderDataSubmitProc_(handler->pBoneMatrixRenderData_);
+        handler->pfnBoneMatrixRenderDataSubmit(handler->pBoneMatrixRenderData);
     }
 
-    handler->pBoneMatrixRenderData_ = NULL;
+    handler->pBoneMatrixRenderData = NULL;
     if (callbackStage == 3)
     {
-        handler->flags_ &= ~(1 << RCH_FLAG_6);
-        handler->hooks_[6](handler);
-        callbackStage = (handler->hooks_[6] != NULL) ? handler->hookStages_[6] : 0;
-        flagbit6 = handler->flags_ & (1 << RCH_FLAG_6);
+        handler->flags &= ~(1 << RCH_FLAG_6);
+        handler->hooks[6](handler);
+        callbackStage = (handler->hooks[6] != NULL) ? handler->hookStages[6] : 0;
+        flagbit6 = handler->flags & (1 << RCH_FLAG_6);
     }
     else
         flagbit6 = 0;
@@ -649,14 +649,14 @@ void RenderCommand_6(RenderCommandHandler* handler, int modifier)
     if (modifier == 0x20 || modifier == 0x60)
     {
         numBytesConsumed++;
-        if (flagbit6 == 0 && !(handler->flags_ & (1 << RCH_FLAG_8)))
+        if (flagbit6 == 0 && !(handler->flags & (1 << RCH_FLAG_8)))
         {
-            uint32_t storagePosition = handler->instructionPointer_[4];
+            uint32_t storagePosition = handler->instructionPointer[4];
             SubmitCommandToGeometryFifo(GXFifoCommand_StoreMatrix, &storagePosition, 1);
         }
     }
 
-    handler->instructionPointer_ += numBytesConsumed;
+    handler->instructionPointer += numBytesConsumed;
 }
 
 // seems to be used for free billboarding, i.e. making stuff turn in any
@@ -671,22 +671,22 @@ void RenderCommand_7(RenderCommandHandler* handler, int modifier)
     int numBytesConsumed = 2;
     Vector3fix* pTranslation = &data_020f1d78.rotationTranslation.translation;
     Vector3fix* pScaling = &data_020f1d78.scaling;
-    if (handler->flags_ & (1 << RCH_FLAG_9))
+    if (handler->flags & (1 << RCH_FLAG_9))
     {
         if (modifier == 0x40 || modifier == 0x60)
             numBytesConsumed++;
         if (modifier == 0x20 || modifier == 0x60)
             numBytesConsumed++;
-        handler->instructionPointer_ += numBytesConsumed;
+        handler->instructionPointer += numBytesConsumed;
         return;
     }
 
     if (modifier == 0x40 || modifier == 0x60)
     {
         numBytesConsumed++;
-        if (!(handler->flags_ & (1 << RCH_FLAG_8)))
+        if (!(handler->flags & (1 << RCH_FLAG_8)))
         {
-            uint8_t* instructionPtr = handler->instructionPointer_;
+            uint8_t* instructionPtr = handler->instructionPointer;
             uint32_t retrievalPosition;
             if (modifier == 0x40)
                 retrievalPosition = instructionPtr[2];
@@ -696,19 +696,19 @@ void RenderCommand_7(RenderCommandHandler* handler, int modifier)
         }
     }
 
-    int callbackStage = (handler->hooks_[7] != NULL) ? handler->hookStages_[7] : 0;
+    int callbackStage = (handler->hooks[7] != NULL) ? handler->hookStages[7] : 0;
     unsigned int flagbit6;
     if (callbackStage == 1)
     {
-        handler->flags_ &= ~(1 << RCH_FLAG_6);
-        handler->hooks_[7](handler);
-        callbackStage = (handler->hooks_[7] != NULL) ? handler->hookStages_[7] : 0;
-        flagbit6 = handler->flags_ & (1 << RCH_FLAG_6);
+        handler->flags &= ~(1 << RCH_FLAG_6);
+        handler->hooks[7](handler);
+        callbackStage = (handler->hooks[7] != NULL) ? handler->hookStages[7] : 0;
+        flagbit6 = handler->flags & (1 << RCH_FLAG_6);
     }
     else
         flagbit6 = 0;
 
-    if (!(handler->flags_ & (1 << RCH_FLAG_8)) && flagbit6 == 0)
+    if (!(handler->flags & (1 << RCH_FLAG_8)) && flagbit6 == 0)
     {
         SendQueuedDataToGeometryFifo();
         GXFIFO = COMBINE_GXFIFO_COMMANDS3(GXFifoCommand_SetMatrixMode, GXFifoCommand_PushMatrix, GXFifoCommand_LoadMatIdentity);
@@ -777,9 +777,9 @@ void RenderCommand_7(RenderCommandHandler* handler, int modifier)
     int newFlagbit6;
     if (callbackStage == 3)
     {
-        handler->flags_ &= ~(1 << RCH_FLAG_6);
-        handler->hooks_[7](handler);
-        newFlagbit6 = handler->flags_ & (1 << RCH_FLAG_6);
+        handler->flags &= ~(1 << RCH_FLAG_6);
+        handler->hooks[7](handler);
+        newFlagbit6 = handler->flags & (1 << RCH_FLAG_6);
     }
     else
         newFlagbit6 = 0;
@@ -787,13 +787,13 @@ void RenderCommand_7(RenderCommandHandler* handler, int modifier)
     if (modifier == 0x20 || modifier == 0x60)
     {
         numBytesConsumed++;
-        if (newFlagbit6 == 0 && !(handler->flags_ & (1 << RCH_FLAG_8)))
+        if (newFlagbit6 == 0 && !(handler->flags & (1 << RCH_FLAG_8)))
         {
-            uint32_t storePosition = handler->instructionPointer_[2];
+            uint32_t storePosition = handler->instructionPointer[2];
             SubmitCommandToGeometryFifo(GXFifoCommand_StoreMatrix, &storePosition, 1);
         }
     }
-    handler->instructionPointer_ += numBytesConsumed;
+    handler->instructionPointer += numBytesConsumed;
 }
 
 // seems to be used for axis-aligned billboarding - noticeable on trees in
@@ -804,22 +804,22 @@ void RenderCommand_8(RenderCommandHandler* handler, int modifier)
     Vector3fix* pTranslation = &data_020f1dc0.rotationTranslation.translation;
     Vector3fix* pScaling = &data_020f1dc0.scaling;
     Matrix3x3* pRotation = &data_020f1dc0.rotationTranslation.rotation;
-    if (handler->flags_ & (1 << RCH_FLAG_9))
+    if (handler->flags & (1 << RCH_FLAG_9))
     {
         if (modifier == 0x40 || modifier == 0x60)
             numBytesConsumed++;
         if (modifier == 0x20 || modifier == 0x60)
             numBytesConsumed++;
-        handler->instructionPointer_ += numBytesConsumed;
+        handler->instructionPointer += numBytesConsumed;
         return;
     }
 
     if (modifier == 0x40 || modifier == 0x60)
     {
         numBytesConsumed++;
-        if (!(handler->flags_ & (1 << RCH_FLAG_8)))
+        if (!(handler->flags & (1 << RCH_FLAG_8)))
         {
-            uint8_t* instructionPtr = handler->instructionPointer_;
+            uint8_t* instructionPtr = handler->instructionPointer;
             uint32_t retrievalPosition;
             if (modifier == 0x40)
                 retrievalPosition = instructionPtr[2];
@@ -829,19 +829,19 @@ void RenderCommand_8(RenderCommandHandler* handler, int modifier)
         }
     }
 
-    int callbackStage = (handler->hooks_[8] != NULL) ? handler->hookStages_[8] : 0;
+    int callbackStage = (handler->hooks[8] != NULL) ? handler->hookStages[8] : 0;
     unsigned int flagbit6;
     if (callbackStage == 1)
     {
-        handler->flags_ &= ~(1 << RCH_FLAG_6);
-        handler->hooks_[8](handler);
-        callbackStage = (handler->hooks_[8] != NULL) ? handler->hookStages_[8] : 0;
-        flagbit6 = handler->flags_ & (1 << RCH_FLAG_6);
+        handler->flags &= ~(1 << RCH_FLAG_6);
+        handler->hooks[8](handler);
+        callbackStage = (handler->hooks[8] != NULL) ? handler->hookStages[8] : 0;
+        flagbit6 = handler->flags & (1 << RCH_FLAG_6);
     }
     else
         flagbit6 = 0;
 
-    if (!(handler->flags_ & (1 << RCH_FLAG_8)) && flagbit6 == 0)
+    if (!(handler->flags & (1 << RCH_FLAG_8)) && flagbit6 == 0)
     {
         SendQueuedDataToGeometryFifo();
         GXFIFO = COMBINE_GXFIFO_COMMANDS3(GXFifoCommand_SetMatrixMode, GXFifoCommand_PushMatrix, GXFifoCommand_LoadMatIdentity);
@@ -925,9 +925,9 @@ void RenderCommand_8(RenderCommandHandler* handler, int modifier)
     int newFlagbit6;
     if (callbackStage == 3)
     {
-        handler->flags_ &= ~(1 << RCH_FLAG_6);
-        handler->hooks_[8](handler);
-        newFlagbit6 = handler->flags_ & (1 << RCH_FLAG_6);
+        handler->flags &= ~(1 << RCH_FLAG_6);
+        handler->hooks[8](handler);
+        newFlagbit6 = handler->flags & (1 << RCH_FLAG_6);
     }
     else
         newFlagbit6 = 0;
@@ -935,22 +935,22 @@ void RenderCommand_8(RenderCommandHandler* handler, int modifier)
     if (modifier == 0x20 || modifier == 0x60)
     {
         numBytesConsumed++;
-        if (newFlagbit6 == 0 && !(handler->flags_ & (1 << RCH_FLAG_8)))
+        if (newFlagbit6 == 0 && !(handler->flags & (1 << RCH_FLAG_8)))
         {
-            uint32_t storePosition = handler->instructionPointer_[2];
+            uint32_t storePosition = handler->instructionPointer[2];
             SubmitCommandToGeometryFifo(GXFifoCommand_StoreMatrix, &storePosition, 1);
         }
     }
-    handler->instructionPointer_ += numBytesConsumed;
+    handler->instructionPointer += numBytesConsumed;
 }
 
 void RenderCommand_9(RenderCommandHandler* handler, int modifier)
 {
     int64_t weight = 0;
-    Nitro3DModel* model = handler->modelContext_->internalModel_;    
-    const Nitro3DInvBindMatrix* invBindMatrices = (Nitro3DInvBindMatrix*)((intptr_t)model + model->inverseBindsOffset_);
-    unsigned int numTerms = handler->instructionPointer_[2];
-    uint8_t* instructionPtr = handler->instructionPointer_ + 3;
+    Nitro3DModel* model = handler->context->model;    
+    const Nitro3DInvBindMatrix* invBindMatrices = (Nitro3DInvBindMatrix*)((intptr_t)model + model->inverseBindsOffset);
+    unsigned int numTerms = handler->instructionPointer[2];
+    uint8_t* instructionPtr = handler->instructionPointer + 3;
     
     Nitro3DInvBindMatrix localCopy;
     func_020ca458(0, &localCopy, sizeof(Nitro3DInvBindMatrix));
@@ -968,11 +968,11 @@ void RenderCommand_9(RenderCommandHandler* handler, int modifier)
     {
         unsigned int inverseBindIndex = instructionPtr[1];
         
-        int inBitfield = TestBitfieldBit(handler->invBindBitfield_, inverseBindIndex);
+        int inBitfield = TestBitfieldBit(handler->invBindBitfield, inverseBindIndex);
         cachedPosMatrix = &data_0210b078.matrixData[inverseBindIndex].mat4x4;
         if (!inBitfield)
         {
-            SetBitfieldBit(handler->invBindBitfield_, inverseBindIndex);
+            SetBitfieldBit(handler->invBindBitfield, inverseBindIndex);
             // retrieve the local-to-world matrix from the stack
             GXFIFO_MATRIX_GET = instructionPtr[0];
             GXFIFO_MATRIX_MODE = 1; // position
@@ -1035,8 +1035,8 @@ void RenderCommand_9(RenderCommandHandler* handler, int modifier)
     GXFIFO_MATRIX_MODE = 0;
     GXFIFO_MATRIX_GET = 1;
     GXFIFO_MATRIX_MODE = 2;
-    GXFIFO_MATRIX_STORE = handler->instructionPointer_[1];
-    handler->instructionPointer_ += 3 + handler->instructionPointer_[2] * 3;
+    GXFIFO_MATRIX_STORE = handler->instructionPointer[1];
+    handler->instructionPointer += 3 + handler->instructionPointer[2] * 3;
 }
 
 // run raw gxfifo commands at the given offset and length.
@@ -1045,21 +1045,21 @@ void RenderCommand_9(RenderCommandHandler* handler, int modifier)
 // in assembly coming after the return statement
 void RenderCommand_10(RenderCommandHandler* handler, int modifier)
 {
-    int callbackStage = (handler->hooks_[10] != NULL) ? handler->hookStages_[10] : 0;
+    int callbackStage = (handler->hooks[10] != NULL) ? handler->hookStages[10] : 0;
     unsigned int flagbit6;
     if (callbackStage == 1)
     {
-        handler->flags_ &= ~(1 << RCH_FLAG_6);
-        handler->hooks_[10](handler);
-        callbackStage = (handler->hooks_[10] != NULL) ? handler->hookStages_[10] : 0;
-        flagbit6 = handler->flags_ & (1 << RCH_FLAG_6);
+        handler->flags &= ~(1 << RCH_FLAG_6);
+        handler->hooks[10](handler);
+        callbackStage = (handler->hooks[10] != NULL) ? handler->hookStages[10] : 0;
+        flagbit6 = handler->flags & (1 << RCH_FLAG_6);
     }
     else
         flagbit6 = 0;
 
-    if (!(handler->flags_ & (1 << RCH_FLAG_8)) && flagbit6 == 0)
+    if (!(handler->flags & (1 << RCH_FLAG_8)) && flagbit6 == 0)
     {
-        uint8_t* instructionPtr = handler->instructionPointer_;
+        uint8_t* instructionPtr = handler->instructionPointer;
         uint32_t startOffset = (instructionPtr[1] | (instructionPtr[2] << 8) | (instructionPtr[3] << 16) | (instructionPtr[4] << 24));
         uint32_t length = (instructionPtr[5] | (instructionPtr[6] << 8) | (instructionPtr[7] << 16) | (instructionPtr[8] << 24));
         SendRawDataToGeometryFifo((uint32_t*)(instructionPtr + startOffset), length); 
@@ -1067,26 +1067,26 @@ void RenderCommand_10(RenderCommandHandler* handler, int modifier)
 
     if (callbackStage == 3)
     {
-        handler->flags_ &= ~(1 << RCH_FLAG_6);
-        handler->hooks_[10](handler);
+        handler->flags &= ~(1 << RCH_FLAG_6);
+        handler->hooks[10](handler);
     }
 
-    handler->instructionPointer_ += 9;
+    handler->instructionPointer += 9;
 }
 
 void RenderCommand_11(RenderCommandHandler* handler, int modifier)
 {
-    if (!(handler->flags_ & (1 << RCH_FLAG_8)) && !(handler->flags_ & (1 << RCH_FLAG_9)))
+    if (!(handler->flags & (1 << RCH_FLAG_8)) && !(handler->flags & (1 << RCH_FLAG_9)))
     {
         uint32_t scaleParams[3];
         if (modifier == 0)
-            scaleParams[0] = scaleParams[1] = scaleParams[2] = handler->upScale_;
+            scaleParams[0] = scaleParams[1] = scaleParams[2] = handler->upScale;
         else
-            scaleParams[0] = scaleParams[1] = scaleParams[2] = handler->downScale_;
+            scaleParams[0] = scaleParams[1] = scaleParams[2] = handler->downScale;
 
         SubmitCommandToGeometryFifo(GXFifoCommand_ScaleMatrix, scaleParams, 3);
     }
-    handler->instructionPointer_++;
+    handler->instructionPointer++;
 }
 
 // This instruction isn't explained in the nsbmd docs. Given the use of normals
@@ -1097,17 +1097,17 @@ void RenderCommand_11(RenderCommandHandler* handler, int modifier)
 void RenderCommand_12(RenderCommandHandler* handler, int modifier)
 {
     Matrix3x3 directionMat3x3;
-    if (!(handler->flags_ & (1 << RCH_FLAG_9)) && (handler->flags_ & (1 << RCH_FLAG_0)))
+    if (!(handler->flags & (1 << RCH_FLAG_9)) && (handler->flags & (1 << RCH_FLAG_0)))
     {
         // if texcoord transformation mode != 2 (normal), set it to 2 and submit
         // the new params. In this mode, final texture coords to be used
         // are given by (normal) * TextureMatrix + (raw coords)
         // with raw coords being the argument to GXFifoCommand_SetTextureCoords
-        if ((handler->pMaterialRenderData_->paramTEXIMAGE_PARAMS_ & 0xc0000000) != 0x80000000)
+        if ((handler->pMaterialRenderData->paramTEXIMAGE_PARAMS & 0xc0000000) != 0x80000000)
         {
-            handler->pMaterialRenderData_->paramTEXIMAGE_PARAMS_ &= ~0xc0000000;
-            handler->pMaterialRenderData_->paramTEXIMAGE_PARAMS_ |= 0x80000000;
-            data_020f1d08.texImageParamsArg_c_ = handler->pMaterialRenderData_->paramTEXIMAGE_PARAMS_;
+            handler->pMaterialRenderData->paramTEXIMAGE_PARAMS &= ~0xc0000000;
+            handler->pMaterialRenderData->paramTEXIMAGE_PARAMS |= 0x80000000;
+            data_020f1d08.texImageParamsArg_c_ = handler->pMaterialRenderData->paramTEXIMAGE_PARAMS;
             SubmitCommandToGeometryFifo(data_020f1d08.commandTexImageParams_8_,
                 &data_020f1d08.texImageParamsArg_c_, 1);
         }
@@ -1115,22 +1115,22 @@ void RenderCommand_12(RenderCommandHandler* handler, int modifier)
         uint32_t textureMatrixMode = 3;
         SubmitCommandToGeometryFifo(GXFifoCommand_SetMatrixMode, &textureMatrixMode, 1);
 
-        int callbackStage = (handler->hooks_[12] != NULL) ? handler->hookStages_[12] : 0;
+        int callbackStage = (handler->hooks[12] != NULL) ? handler->hookStages[12] : 0;
         unsigned int flagbit6;
         if (callbackStage == 1)
         {
-            handler->flags_ &= ~(1 << RCH_FLAG_6);
-            handler->hooks_[12](handler);
-            callbackStage = (handler->hooks_[12] != NULL) ? handler->hookStages_[12] : 0;
-            flagbit6 = handler->flags_ & (1 << RCH_FLAG_6);
+            handler->flags &= ~(1 << RCH_FLAG_6);
+            handler->hooks[12](handler);
+            callbackStage = (handler->hooks[12] != NULL) ? handler->hookStages[12] : 0;
+            flagbit6 = handler->flags & (1 << RCH_FLAG_6);
         }
         else
             flagbit6 = 0;
             
         if (flagbit6 == 0)
         {
-            unsigned int materialWidth = handler->pMaterialRenderData_->materialWidth_;
-            unsigned int materialHeight = handler->pMaterialRenderData_->materialHeight_;
+            unsigned int materialWidth = handler->pMaterialRenderData->materialWidth;
+            unsigned int materialHeight = handler->pMaterialRenderData->materialHeight;
 
             uint32_t scaleParams[3];
             scaleParams[0] = materialWidth * 0x8000;
@@ -1146,38 +1146,38 @@ void RenderCommand_12(RenderCommandHandler* handler, int modifier)
 
         if (callbackStage == 2)
         {
-            handler->flags_ &= ~(1 << RCH_FLAG_6);
-            handler->hooks_[12](handler);
-            callbackStage = (handler->hooks_[12] != NULL) ? handler->hookStages_[12] : 0;
-            flagbit6 = handler->flags_ & (1 << RCH_FLAG_6);
+            handler->flags &= ~(1 << RCH_FLAG_6);
+            handler->hooks[12](handler);
+            callbackStage = (handler->hooks[12] != NULL) ? handler->hookStages[12] : 0;
+            flagbit6 = handler->flags & (1 << RCH_FLAG_6);
         }
         else
             flagbit6 = 0;
 
         if (flagbit6 == 0)
         {
-            unsigned int materialIdx = handler->instructionPointer_[1];
-            Nitro3DMaterial* material = handler->modelMaterials_->GetMaterialByIndex(materialIdx);
-            if (material->flags_ & 0x2000)
+            unsigned int materialIdx = handler->instructionPointer[1];
+            Nitro3DMaterial* material = handler->modelMaterials->GetMaterialByIndex(materialIdx);
+            if (material->flags & 0x2000)
             {
                 intptr_t bit13data = (intptr_t)(material + 1);
-                if (!(material->flags_ & 2))
+                if (!(material->flags & 2))
                     bit13data += sizeof(Nitro3DMaterial::ExtensionData_Bit1);
-                if (!(material->flags_ & 4))
+                if (!(material->flags & 4))
                     bit13data += sizeof(Nitro3DMaterial::ExtensionData_Bit2);
-                if (!(material->flags_ & 8))
+                if (!(material->flags & 8))
                     bit13data += sizeof(Nitro3DMaterial::ExtensionData_Bit3);
                 
                 Nitro3DMaterial::ExtensionData_Bit13* ptr = (Nitro3DMaterial::ExtensionData_Bit13*)bit13data;
-                SubmitCommandToGeometryFifo(GXFifoCommand_MultiplyMat4x4, (uint32_t*)ptr->matrix_.entries, 16);
+                SubmitCommandToGeometryFifo(GXFifoCommand_MultiplyMat4x4, (uint32_t*)ptr->matrix.entries, 16);
             }
         }
 
         if (callbackStage == 3)
         {
-            handler->flags_ &= ~(1 << RCH_FLAG_6);
-            handler->hooks_[12](handler);
-            flagbit6 = handler->flags_ & (1 << RCH_FLAG_6);
+            handler->flags &= ~(1 << RCH_FLAG_6);
+            handler->hooks[12](handler);
+            flagbit6 = handler->flags & (1 << RCH_FLAG_6);
         }
         else
             flagbit6 = 0;
@@ -1210,7 +1210,7 @@ void RenderCommand_12(RenderCommandHandler* handler, int modifier)
         uint32_t endMode = 2;
         SubmitCommandToGeometryFifo(GXFifoCommand_SetMatrixMode, &endMode, 1);
     }
-    handler->instructionPointer_ += 3;
+    handler->instructionPointer += 3;
 }
 
 // I have no idea what this is, but it's texture related. I couldn't find any
@@ -1218,7 +1218,7 @@ void RenderCommand_12(RenderCommandHandler* handler, int modifier)
 // 2 parameters: 1) index of material in model's material list, 2) unknown/unused
 void RenderCommand_13(RenderCommandHandler* handler, int modifier)
 {
-    if (!(handler->flags_ & (1 << RCH_FLAG_9)) && (handler->flags_ & (1 << RCH_FLAG_0)))
+    if (!(handler->flags & (1 << RCH_FLAG_9)) && (handler->flags & (1 << RCH_FLAG_0)))
     {
         Matrix4x3 worldView;
         GetCurrentPositionAndDirectionMatrices(&worldView, NULL);
@@ -1228,31 +1228,31 @@ void RenderCommand_13(RenderCommandHandler* handler, int modifier)
         SubmitCommandToGeometryFifo(GXFifoCommand_StoreMatrix, &storeMatrixPos, 1);
         
         // if texcoord transform mode != 3 (vertex source), set it to 3
-        if ((handler->pMaterialRenderData_->paramTEXIMAGE_PARAMS_ & 0xc0000000) != 0xc0000000)
+        if ((handler->pMaterialRenderData->paramTEXIMAGE_PARAMS & 0xc0000000) != 0xc0000000)
         {
-            handler->pMaterialRenderData_->paramTEXIMAGE_PARAMS_ &= ~0xc0000000;
-            handler->pMaterialRenderData_->paramTEXIMAGE_PARAMS_ |= 0xc0000000;
-            data_020f1d08.texImageParamsArg_4_ = handler->pMaterialRenderData_->paramTEXIMAGE_PARAMS_;
+            handler->pMaterialRenderData->paramTEXIMAGE_PARAMS &= ~0xc0000000;
+            handler->pMaterialRenderData->paramTEXIMAGE_PARAMS |= 0xc0000000;
+            data_020f1d08.texImageParamsArg_4_ = handler->pMaterialRenderData->paramTEXIMAGE_PARAMS;
             SubmitCommandToGeometryFifo(data_020f1d08.commandTexImageParams_0_,
                 &data_020f1d08.texImageParamsArg_4_, 1);
         }
 
-        int callbackStage = (handler->hooks_[13] != NULL) ? handler->hookStages_[13] : 0;
+        int callbackStage = (handler->hooks[13] != NULL) ? handler->hookStages[13] : 0;
         unsigned int flagbit6;
         if (callbackStage == 1)
         {
-            handler->flags_ &= ~(1 << RCH_FLAG_6);
-            handler->hooks_[13](handler);
-            callbackStage = (handler->hooks_[13] != NULL) ? handler->hookStages_[13] : 0;
-            flagbit6 = handler->flags_ & (1 << RCH_FLAG_6);
+            handler->flags &= ~(1 << RCH_FLAG_6);
+            handler->hooks[13](handler);
+            callbackStage = (handler->hooks[13] != NULL) ? handler->hookStages[13] : 0;
+            flagbit6 = handler->flags & (1 << RCH_FLAG_6);
         }
         else
             flagbit6 = 0;
         
         if (flagbit6 == 0)
         {
-            unsigned int materialWidth = handler->pMaterialRenderData_->materialWidth_;
-            unsigned int materialHeight = handler->pMaterialRenderData_->materialHeight_;
+            unsigned int materialWidth = handler->pMaterialRenderData->materialWidth;
+            unsigned int materialHeight = handler->pMaterialRenderData->materialHeight;
 
             data_020f1d08.command13Matrix4x4_.entries[0] = materialWidth * 0x8000;
             data_020f1d08.command13Matrix4x4_.entries[5] = -materialHeight * 0x8000;
@@ -1263,40 +1263,40 @@ void RenderCommand_13(RenderCommandHandler* handler, int modifier)
 
         if (callbackStage == 2)
         {
-            handler->flags_ &= ~(1 << RCH_FLAG_6);
-            handler->hooks_[13](handler);
-            callbackStage = (handler->hooks_[13] != NULL) ? handler->hookStages_[13] : 0;
-            flagbit6 = handler->flags_ & (1 << RCH_FLAG_6);
+            handler->flags &= ~(1 << RCH_FLAG_6);
+            handler->hooks[13](handler);
+            callbackStage = (handler->hooks[13] != NULL) ? handler->hookStages[13] : 0;
+            flagbit6 = handler->flags & (1 << RCH_FLAG_6);
         }
         else
             flagbit6 = 0;
 
         if (flagbit6 == 0)
         {
-            unsigned int materialIdx = handler->instructionPointer_[1];
-            Nitro3DModelMaterials* materialData = handler->modelMaterials_;
+            unsigned int materialIdx = handler->instructionPointer[1];
+            Nitro3DModelMaterials* materialData = handler->modelMaterials;
             Nitro3DMaterial* material = materialData->GetMaterialByIndex(materialIdx);
 
-            if (material->flags_ & 0x2000)
+            if (material->flags & 0x2000)
             {
                 intptr_t bit13addr = (intptr_t)(material + 1);
-                if (!(material->flags_ & 2))
+                if (!(material->flags & 2))
                     bit13addr += sizeof(Nitro3DMaterial::ExtensionData_Bit1);
-                if (!(material->flags_ & 4))
+                if (!(material->flags & 4))
                     bit13addr += sizeof(Nitro3DMaterial::ExtensionData_Bit2);
-                if (!(material->flags_ & 8))
+                if (!(material->flags & 8))
                     bit13addr += sizeof(Nitro3DMaterial::ExtensionData_Bit3);
 
                 Nitro3DMaterial::ExtensionData_Bit13* extData = (Nitro3DMaterial::ExtensionData_Bit13*)bit13addr;
-                SubmitCommandToGeometryFifo(GXFifoCommand_MultiplyMat4x4, (uint32_t*)extData->matrix_.entries, 16);
+                SubmitCommandToGeometryFifo(GXFifoCommand_MultiplyMat4x4, (uint32_t*)extData->matrix.entries, 16);
             }
         }
 
         if (callbackStage == 3)
         {
-            handler->flags_ &= ~(1 << RCH_FLAG_6);
-            handler->hooks_[13](handler);
-            flagbit6 = handler->flags_ & (1 << RCH_FLAG_6);
+            handler->flags &= ~(1 << RCH_FLAG_6);
+            handler->hooks[13](handler);
+            flagbit6 = handler->flags & (1 << RCH_FLAG_6);
         }
         else
             flagbit6 = 0;
@@ -1341,7 +1341,7 @@ void RenderCommand_13(RenderCommandHandler* handler, int modifier)
         uint32_t retrievePos = 30;
         SubmitCommandToGeometryFifo(GXFifoCommand_GetMatrix, &retrievePos, 1);
     }
-    handler->instructionPointer_ += 3;
+    handler->instructionPointer += 3;
 }
 
 void RenderMeshWithMaterial(Nitro3DModel* model, unsigned int materialIdx, unsigned int meshIdx, int bind)
@@ -1349,7 +1349,7 @@ void RenderMeshWithMaterial(Nitro3DModel* model, unsigned int materialIdx, unsig
     uint32_t commandParams[7];
     MaterialRenderData targetData;
     
-    fix32_t upScale = model->upScale_;
+    fix32_t upScale = model->upScale;
     if (upScale != 1 << 12)
     {
         uint32_t upScaleParams[3];
@@ -1359,89 +1359,89 @@ void RenderMeshWithMaterial(Nitro3DModel* model, unsigned int materialIdx, unsig
         SubmitCommandToGeometryFifo(GXFifoCommand_ScaleMatrix, upScaleParams, 3);
     }
 
-    if (bind && materialIdx < model->numMaterials_)
+    if (bind && materialIdx < model->numMaterials)
     {
         Nitro3DModelMaterials* materialData;
-        if (model != NULL && model->materialsOffset_ != 0)
-            materialData = (Nitro3DModelMaterials*)((intptr_t)model + model->materialsOffset_);
+        if (model != NULL && model->materialsOffset != 0)
+            materialData = (Nitro3DModelMaterials*)((intptr_t)model + model->materialsOffset);
         else
             materialData = NULL;
 
         Nitro3DMaterial* material = materialData->GetMaterialByIndex(materialIdx);
 
         // if alpha = 0 don't draw
-        if ((material->paramPOLYGON_ATTR_ & 0x1f0000) == 0)
+        if ((material->paramPOLYGON_ATTR & 0x1f0000) == 0)
             return;
         
         commandParams[0] = COMBINE_GXFIFO_COMMANDS3(
             GXFifoCommand_DiffuseAmbientReflect,
             GXFifoCommand_SpecularReflectEmit,
             GXFifoCommand_SetPolygonAttr);
-        commandParams[1] = material->paramDIF_AMB_;
-        commandParams[2] = material->paramSPE_EMI_;
-        commandParams[3] = material->paramPOLYGON_ATTR_;
+        commandParams[1] = material->paramDIF_AMB;
+        commandParams[2] = material->paramSPE_EMI;
+        commandParams[3] = material->paramPOLYGON_ATTR;
         // conditionally don't specify alpha?
-        if (material->flags_ & 0x20)
+        if (material->flags & 0x20)
             commandParams[3] &= ~0x001f0000;
         // 2a = TEXIMAGE_PARAMS, 2b = PLTT_BASE
         commandParams[4] = COMBINE_GXFIFO_COMMANDS2(
             GXFifoCommand_SetTexImageParams,
             GXFifoCommand_SetTexturePaletteBase);
-        commandParams[5] = material->paramTEXIMAGE_PARAMS_;
-        commandParams[6] = material->texturePaletteVRAMOffset_;
+        commandParams[5] = material->paramTEXIMAGE_PARAMS;
+        commandParams[6] = material->texturePaletteVRAMOffset;
         SubmitCommandToGeometryFifo(commandParams[0], &commandParams[1], 6);
         
-        if (material->flags_ & 1)
+        if (material->flags & 1)
         {
-            targetData.flags_ = 8;
-            targetData.materialWidth_ = material->width_;
-            targetData.materialHeight_ = material->height_;
-            targetData.materialxScale_ = material->xScale_;
-            targetData.materialyScale_ = material->yScale_;
+            targetData.flags = 8;
+            targetData.materialWidth = material->width;
+            targetData.materialHeight = material->height;
+            targetData.materialScaleX = material->xScale;
+            targetData.materialScaleY = material->yScale;
             intptr_t extraDataAddr = (intptr_t)(material + 1);
-            if (material->flags_ & 2)
-                targetData.flags_ |= 1;
+            if (material->flags & 2)
+                targetData.flags |= 1;
             else
             {
                 Nitro3DMaterial::ExtensionData_Bit1* ext = (Nitro3DMaterial::ExtensionData_Bit1*)extraDataAddr;
-                targetData.extensionScaleX_ = ext->scaleX_;
-                targetData.extensionScaleY_ = ext->scaleY_;
+                targetData.extensionScaleX = ext->scaleX;
+                targetData.extensionScaleY = ext->scaleY;
                 extraDataAddr += sizeof(*ext);
             }
 
-            if (!(material->flags_ & 4))
+            if (!(material->flags & 4))
             {
                 Nitro3DMaterial::ExtensionData_Bit2* ext = (Nitro3DMaterial::ExtensionData_Bit2*)extraDataAddr;
-                targetData.rotationSine_ = ext->sine_;
-                targetData.rotationCosine_ = ext->cosine_;
+                targetData.rotationSine = ext->sine;
+                targetData.rotationCosine = ext->cosine;
                 extraDataAddr += sizeof(*ext);
             }
             else
-                targetData.flags_ |= 2;
+                targetData.flags |= 2;
 
-            if (!(material->flags_ & 8))
+            if (!(material->flags & 8))
             {
                 Nitro3DMaterial::ExtensionData_Bit3* ext = (Nitro3DMaterial::ExtensionData_Bit3*)extraDataAddr;
-                targetData.translateX_ = ext->translateX_;
-                targetData.translateY_ = ext->translateY_;
+                targetData.translateX = ext->translateX;
+                targetData.translateY = ext->translateY;
             }
             else
-                targetData.flags_ |= 4;
+                targetData.flags |= 4;
 
-            if (data_020f1cf8[model->materialCallbackType_])
-                data_020f1cf8[model->materialCallbackType_](&targetData);
+            if (data_020f1cf8[model->materialCallbackType])
+                data_020f1cf8[model->materialCallbackType](&targetData);
         }
     }
 
-    if (meshIdx < model->numMeshes_)
+    if (meshIdx < model->numMeshes)
     {
         Nitro3DNameList* meshList = model->GetMeshList();
         Nitro3DMesh* mesh = meshList->GetEntryFromu32Offset<Nitro3DMesh>(meshIdx);
 
-        SendRawDataToGeometryFifo(mesh->GetGPUCommands(), mesh->gpuCommandsLength_);
+        SendRawDataToGeometryFifo(mesh->GetGPUCommands(), mesh->gpuCommandsLength);
     }
 
-    fix32_t downScale = model->downScale_;
+    fix32_t downScale = model->downScale;
     if (downScale != 1 << 12)
     {
         uint32_t downScaleParams[3];

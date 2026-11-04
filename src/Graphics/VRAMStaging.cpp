@@ -36,12 +36,12 @@ int StageTexFilePaletteData(volatile Nitro3DTextureSet* texture, bool highPriori
     if (texture == NULL)
         return -1;
         
-    texture->maybeBlock4Flags_32_ |= (1 << 0);
+    texture->maybeBlock4Flags_32 |= (1 << 0);
 
-    int size = texture->block4NumEightBytes_;
+    int size = texture->block4NumEightBytes;
     size <<= 3;
-    int offset = (unsigned short)texture->block4VRAMLoadOffset_ << 3;
-    const void* src = (const void*)((intptr_t)texture + texture->block4Offset_);
+    int offset = (unsigned short)texture->block4VRAMLoadOffset << 3;
+    const void* src = (const void*)((intptr_t)texture + texture->block4Offset);
 
     return g_stagingManagerInstance.Stage(VRAMSubregion_TexturePalette,
         src, offset, size, highPriority, false);
@@ -52,12 +52,12 @@ int StageTexFileImageData(volatile Nitro3DTextureSet* texture, bool highPriority
     if (texture == NULL)
         return -1;
         
-    texture->maybeBlock1Flags_10_ |= (1 << 0);
+    texture->maybeBlock1Flags_10 |= (1 << 0);
 
-    int size = texture->block1NumEightBytes_;
+    int size = texture->block1NumEightBytes;
     size <<= 3;
-    int offset = (unsigned short)texture->block1VRAMLoadOffset_ << 3;
-    const void* src = (const void*)((intptr_t)texture + texture->block1Offset_);
+    int offset = (unsigned short)texture->block1VRAMLoadOffset << 3;
+    const void* src = (const void*)((intptr_t)texture + texture->block1Offset);
 
     return g_stagingManagerInstance.Stage(VRAMSubregion_TextureImage,
         src, offset, size, highPriority, false);

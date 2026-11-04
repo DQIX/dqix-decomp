@@ -115,7 +115,7 @@ void Model3D::ProcessRawFile(TextureStagingMode stagingMode)
     Nitro3DFileHeader* data = (Nitro3DFileHeader*)rawBMD_;
     if (data == NULL)
         return;
-    switch (data->signature_)
+    switch (data->signature)
     {
     case SIGNATURE_NSBVA:
     case SIGNATURE_NSBTA:
@@ -159,7 +159,7 @@ void Model3D::ProcessRawFile(TextureStagingMode stagingMode)
             
             if (block4Len != 0)
             {
-                block4Alloc = g_pfnAllocTexturePalette(block4Len, tex0->maybeBlock23Flags_20_ & 0x8000, 0);
+                block4Alloc = g_pfnAllocTexturePalette(block4Len, tex0->maybeBlock23Flags_20 & 0x8000, 0);
                 if (block4Alloc == 0)
                     block4Succeeded = false;
             }
@@ -182,7 +182,7 @@ void Model3D::ProcessRawFile(TextureStagingMode stagingMode)
                 NSBXX_Tex_WritePaletteVRAMOffset(tex0, block4Alloc);
             }
         }
-        if (data->signature_ == SIGNATURE_NSBMD)
+        if (data->signature == SIGNATURE_NSBMD)
         {
             Nitro3DModelSet* mdl0 = (Nitro3DModelSet*)NSBXX_GetFirstSubfile(data);
             if (tex0 != NULL)
@@ -212,12 +212,12 @@ void Model3D::ProcessRawFile(TextureStagingMode stagingMode)
     Nitro3DModel* model;
     if (mdl0 != NULL)
     {
-        Nitro3DNameList* nameList = &mdl0->nameList_;
+        Nitro3DNameList* nameList = &mdl0->nameList;
         intptr_t pModelOffset;
         unsigned int zero = 0; // prevents compiler from optimising > 0 to != 0
-        if (nameList != NULL && mdl0->nameList_.numEntries_ > zero)
+        if (nameList != NULL && mdl0->nameList.numEntries > zero)
         {
-            pModelOffset = (intptr_t)nameList + mdl0->nameList_.offsetToDataStart_ + 4;
+            pModelOffset = (intptr_t)nameList + mdl0->nameList.offsetToDataStart + 4;
         }
         else
             pModelOffset = 0;
@@ -235,18 +235,18 @@ found_a_model:
     
     PopulateModelRenderContext(&renderContext_, model);
     rawTEX_ = (Nitro3DTextureSet*)NSBXX_GetTEXFile((Nitro3DFileHeader*)rawBMD_);
-    if (((Nitro3DFileHeader*)rawBMD_)->signature_ == SIGNATURE_NSBMD)
+    if (((Nitro3DFileHeader*)rawBMD_)->signature == SIGNATURE_NSBMD)
     {
         Nitro3DModel* model = rawInternalModel_;
-        int32_t scale = model->maybeScale_;
+        int32_t scale = model->scale;
 
-        int32_t scaledXMin = FIX32_MULTIPLY(model->bounds_.xMin_, scale);
-        int32_t scaledYMin = FIX32_MULTIPLY(model->bounds_.yMin_, scale);
-        int32_t scaledZMin = FIX32_MULTIPLY(model->bounds_.zMin_, scale);
+        int32_t scaledXMin = FIX32_MULTIPLY(model->bounds.xMin, scale);
+        int32_t scaledYMin = FIX32_MULTIPLY(model->bounds.yMin, scale);
+        int32_t scaledZMin = FIX32_MULTIPLY(model->bounds.zMin, scale);
 
-        int32_t scaledXSize = FIX32_MULTIPLY(model->bounds_.xSize_, scale);
-        int32_t scaledYSize = FIX32_MULTIPLY(model->bounds_.ySize_, scale);
-        int32_t scaledZSize = FIX32_MULTIPLY(model->bounds_.zSize_, scale);
+        int32_t scaledXSize = FIX32_MULTIPLY(model->bounds.xSize, scale);
+        int32_t scaledYSize = FIX32_MULTIPLY(model->bounds.ySize, scale);
+        int32_t scaledZSize = FIX32_MULTIPLY(model->bounds.zSize, scale);
 
         xMax_ = scaledXMin + scaledXSize;
         yMax_ = scaledYMin + scaledYSize;
@@ -279,14 +279,14 @@ bool Model3D::Draw(bool applyClipping)
 
     if (unknown_flags_a8_2_)
     {
-        renderContext_.flags_ |= 1;
+        renderContext_.flags |= 1;
         RenderModelFromRenderData(&renderContext_);
-        renderContext_.flags_ &= ~1;
+        renderContext_.flags &= ~1;
         unknown_flags_a8_2_ = false;
     }
     else if (unknown_flags_a8_1_)
     {
-        renderContext_.flags_ |= 1;
+        renderContext_.flags |= 1;
         RenderModelFromRenderData(&renderContext_);
     }
     else
@@ -309,7 +309,7 @@ bool Model3D::DrawMeshWithMaterial(bool applyClipping, unsigned int material, un
 int Model3D::TestVisible()
 {
     GXFIFO_MATRIX_PUSH = 0;
-    int scale = rawInternalModel_->maybeScale_;
+    int scale = rawInternalModel_->scale;
     // presumably 3 times for each of the components
     GXFIFO_MATRIX_SCALE = scale;
     GXFIFO_MATRIX_SCALE = scale;
@@ -334,12 +334,12 @@ int Model3D::TestVisible()
         } u32s;
     } boxparams;
 
-    boxparams.box.xMin_ = model->bounds_.xMin_;
-    boxparams.box.yMin_ = model->bounds_.yMin_;
-    boxparams.box.zMin_ = model->bounds_.zMin_;
-    boxparams.box.xSize_ = model->bounds_.xSize_;
-    boxparams.box.ySize_ = model->bounds_.ySize_;
-    boxparams.box.zSize_ = model->bounds_.zSize_;
+    boxparams.box.xMin = model->bounds.xMin;
+    boxparams.box.yMin = model->bounds.yMin;
+    boxparams.box.zMin = model->bounds.zMin;
+    boxparams.box.xSize = model->bounds.xSize;
+    boxparams.box.ySize = model->bounds.ySize;
+    boxparams.box.zSize = model->bounds.zSize;
 
     // we pass two parameters at a time here
     // (xmin, ymin), (zmin, xsize), (ysize, zsize)
@@ -361,7 +361,7 @@ int Model3D::GetBoneIndex(const char *boneName)
     char zeroPaddedName[16];
     memset(zeroPaddedName, 0, sizeof(zeroPaddedName));
     strcpy(zeroPaddedName, boneName);
-    return NSBXXNameList_SearchIndex(&rawInternalModel_->boneList_, zeroPaddedName);
+    return NSBXXNameList_SearchIndex(&rawInternalModel_->boneList, zeroPaddedName);
 }
 
 void Model3D::ApplyTexturesFromModel(Model3D* otherModel)
@@ -395,18 +395,18 @@ void Model3D::CreateBoneMatrixAndMaterialArrays(SafeAllocator *alloc, int args)
     if (alloc != NULL)
     {
         if (pBoneMatrixRenderData_ == NULL && (args & 1))
-            pBoneMatrixRenderData_ = (BoneMatrixRenderData*)alloc->Allocate(renderContext_.internalModel_->numBoneMatrices_ * sizeof(BoneMatrixRenderData));
+            pBoneMatrixRenderData_ = (BoneMatrixRenderData*)alloc->Allocate(renderContext_.model->numBoneMatrices * sizeof(BoneMatrixRenderData));
 
         if (pMaterialRenderData_ == NULL && (args & 2))
-            pMaterialRenderData_ = (MaterialRenderData*)alloc->Allocate(renderContext_.internalModel_->numMaterials_ * sizeof(MaterialRenderData));
+            pMaterialRenderData_ = (MaterialRenderData*)alloc->Allocate(renderContext_.model->numMaterials * sizeof(MaterialRenderData));
     }
 
     if (!(args & 4))
     {
         if (pBoneMatrixRenderData_ != NULL)
-            renderContext_.boneMatrixRenderDataArray_ = pBoneMatrixRenderData_;
+            renderContext_.boneMatrixRenderDataArray = pBoneMatrixRenderData_;
         if (pMaterialRenderData_ != NULL)
-            renderContext_.materialRenderDataArray_ = pMaterialRenderData_;
+            renderContext_.materialRenderDataArray = pMaterialRenderData_;
 
         unknown_flags_a8_2_ = true;
     }
@@ -415,9 +415,9 @@ void Model3D::CreateBoneMatrixAndMaterialArrays(SafeAllocator *alloc, int args)
 void Model3D::StoreBoneMatrixAndMaterialArrayPointers()
 {
     if (pBoneMatrixRenderData_ != NULL)
-        renderContext_.boneMatrixRenderDataArray_ = pBoneMatrixRenderData_;
+        renderContext_.boneMatrixRenderDataArray = pBoneMatrixRenderData_;
     if (pMaterialRenderData_ != NULL)
-        renderContext_.materialRenderDataArray_ = pMaterialRenderData_;
+        renderContext_.materialRenderDataArray = pMaterialRenderData_;
     unknown_flags_a8_1_ = true;
 }
 
@@ -442,14 +442,14 @@ void Model3D::AddAnimation(Animation3D* anim)
 
 void Model3D::RemoveAnimations()
 {
-    while (renderContext_.materialAnimations_ != NULL)
-        RemoveAnimationFromModelRenderContext(&renderContext_, renderContext_.materialAnimations_);
+    while (renderContext_.materialAnimations != NULL)
+        RemoveAnimationFromModelRenderContext(&renderContext_, renderContext_.materialAnimations);
 
-    while (renderContext_.jointAnimations_ != NULL)
-        RemoveAnimationFromModelRenderContext(&renderContext_, renderContext_.jointAnimations_);
+    while (renderContext_.jointAnimations != NULL)
+        RemoveAnimationFromModelRenderContext(&renderContext_, renderContext_.jointAnimations);
 
-    while (renderContext_.visibilityAnimations_ != NULL)
-        RemoveAnimationFromModelRenderContext(&renderContext_, renderContext_.visibilityAnimations_);
+    while (renderContext_.visibilityAnimations != NULL)
+        RemoveAnimationFromModelRenderContext(&renderContext_, renderContext_.visibilityAnimations);
 }
 
 void Model3D::SetBoneMatrixRenderData(BoneMatrixRenderData* data)

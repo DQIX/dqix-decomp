@@ -5,16 +5,18 @@
 
 struct Nitro3DMaterial
 {
-    uint16_t unk_0;
-    uint16_t size_; // in bytes
-    uint32_t paramDIF_AMB_;
-    uint32_t paramSPE_EMI_;
-    uint32_t paramPOLYGON_ATTR_;
-    uint32_t maskPOLYGON_ATTR_;
-    uint32_t paramTEXIMAGE_PARAMS_;
+    // determines a function pointer to call in render command 4 (bind material)
+    // in practice only 0 is supported here
+    uint16_t bindMethod;
+    uint16_t sizeBytes;
+    uint32_t paramDIF_AMB;
+    uint32_t paramSPE_EMI;
+    uint32_t paramPOLYGON_ATTR;
+    uint32_t maskPOLYGON_ATTR;
+    uint32_t paramTEXIMAGE_PARAMS;
 
-    uint32_t unk_18;
-    uint16_t texturePaletteVRAMOffset_;
+    char unk_18[4];
+    uint16_t texturePaletteVRAMOffset;
     // bit 0: has any of type 1,2,3 extension data
     // bits 1-3: does *not* have type 1, 2, 3 extension data
     // bit 4: ???
@@ -26,11 +28,11 @@ struct Nitro3DMaterial
     // bits 9,10,11: which parts of paramSPE_EMI_ to use 
     // bit 12: ???
     // bit 13: has bit-13 extension data (comes after 1,2,3 if present)
-    uint16_t flags_;
-    uint16_t width_;
-    uint16_t height_;
-    fix32_t xScale_; // to be filled when linked to actual texture data
-    fix32_t yScale_; // to be filled when linked to actual texture data
+    uint16_t flags;
+    uint16_t width;
+    uint16_t height;
+    fix32_t xScale; // to be filled when linked to actual texture data
+    fix32_t yScale; // to be filled when linked to actual texture data
 
     // Usually the size is 0x2c, but it can be larger and this seems
     // to be related to the bits at 0x1e. If bit 0 is set, then some of the
@@ -41,45 +43,45 @@ struct Nitro3DMaterial
     // Represents a scaling centred at (0, height) i.e. bottom left
     struct ExtensionData_Bit1
     {
-        fix32_t scaleX_;
-        fix32_t scaleY_;
+        fix32_t scaleX;
+        fix32_t scaleY;
     };
 
     // Represents a rotation around the centre of the texture.
     // Instead of specifying the angle we specify its sine & cosine
     struct ExtensionData_Bit2
     {
-        fix16_t sine_;
-        fix16_t cosine_;
+        fix16_t sine;
+        fix16_t cosine;
     };
 
     // Represents a translation by (width * x, height * y) texels
     struct ExtensionData_Bit3
     {
-        uint32_t translateX_;
-        uint32_t translateY_;
+        uint32_t translateX;
+        uint32_t translateY;
     };
     
     struct ExtensionData_Bit13
     {
-        Matrix4x4 matrix_;
+        Matrix4x4 matrix;
     };
 };
 
 struct Nitro3DModelMaterials
 {
     // offset to a NameList of MaterialPairing structs
-    uint16_t texturePairingsOffset_;
+    uint16_t texturePairingsOffset;
     // offset to a NameList of MaterialPairing structs
-    uint16_t palettePairingsOffset_;
+    uint16_t palettePairingsOffset;
     // entries are uint32_t's giving offsets to NSBXXMaterial structs
-    Nitro3DNameList materialOffsetList_;
+    Nitro3DNameList materialOffsetList;
 
     inline struct Nitro3DMaterial* GetMaterialByIndex(unsigned int n) const
     {
         if (this != NULL)
         {
-            uint32_t* materialOffset = (uint32_t*)materialOffsetList_.GetEntryByIndex<uint32_t>(n);
+            uint32_t* materialOffset = (uint32_t*)materialOffsetList.GetEntryByIndex<uint32_t>(n);
             if (materialOffset != NULL)
             {
                 return (Nitro3DMaterial*)((intptr_t)this + *materialOffset);
@@ -97,9 +99,9 @@ struct Nitro3DModelMaterials
         // offset to an array of uint8_t giving indices of Materials that use this
         // image / palette. Offsets to these materials are stored in a NameList,
         // and the uint8_t values are indices in that list.
-        uint16_t offsetToIndexArray_;
-        uint8_t arraySize_;
-        uint8_t flags_; // bit 0 = has TEX0 data bound/linked to it
+        uint16_t offsetToIndexArray;
+        uint8_t arraySize;
+        uint8_t flags; // bit 0 = has TEX0 data bound/linked to it
     };
 };
 

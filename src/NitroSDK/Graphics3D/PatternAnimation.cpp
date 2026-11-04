@@ -1,7 +1,7 @@
 #include "NitroSDK/Graphics3D/Graphics3D.h"
 #include <asmhacks.h>
 
-#define SUBFILE_OFFSETS(nsb) ((uint32_t*)((intptr_t)(nsb) + nsb->headerSize_))
+#define SUBFILE_OFFSETS(nsb) ((uint32_t*)((intptr_t)(nsb) + nsb->headerSize))
 
 void* NSBXX_GetFirstSubfile(Nitro3DFileHeader* nsbxx)
 {
@@ -11,9 +11,9 @@ void* NSBXX_GetFirstSubfile(Nitro3DFileHeader* nsbxx)
 Nitro3DTextureSet* NSBXX_GetTEXFile(Nitro3DFileHeader* nsbxx)
 {
     const uint32_t* subfiles = SUBFILE_OFFSETS(nsbxx);
-    if (nsbxx->numSubfiles_ == 1)
+    if (nsbxx->numSubfiles == 1)
     {
-        if (nsbxx->signature_ == SIGNATURE_NSBTX)
+        if (nsbxx->signature == SIGNATURE_NSBTX)
             return (Nitro3DTextureSet*)((intptr_t)nsbxx + subfiles[0]);
 
         return NULL;
@@ -29,10 +29,10 @@ void* NSBXX_GetObjectFromFirstSubfile(Nitro3DFileHeader* nsbxx, unsigned int idx
 
         intptr_t namelistPtr = (intptr_t)&innerData->nameList;
         uint32_t* pInnerOffset;
-        if (namelistPtr != NULL && idx < innerData->nameList.numEntries_)
+        if (namelistPtr != NULL && idx < innerData->nameList.numEntries)
         {
-            uint16_t stride = *(uint16_t*)(namelistPtr + innerData->nameList.offsetToDataStart_);
-            pInnerOffset = (uint32_t*)(namelistPtr + innerData->nameList.offsetToDataStart_ + 4 + stride * idx);
+            uint16_t stride = *(uint16_t*)(namelistPtr + innerData->nameList.offsetToDataStart);
+            pInnerOffset = (uint32_t*)(namelistPtr + innerData->nameList.offsetToDataStart + 4 + stride * idx);
         }
         else
         {
@@ -49,18 +49,18 @@ void* NSBXX_GetObjectFromFirstSubfile(Nitro3DFileHeader* nsbxx, unsigned int idx
 
 const char* NSBXX_PatternAnimation_GetTextureName(Nitro3DMPT* anim, unsigned int idx)
 {
-    if (anim != NULL && idx < anim->numTextureNames_)
+    if (anim != NULL && idx < anim->numTextureNames)
     {
-        return (const char*)((intptr_t)anim + anim->textureNamesOffset_ + idx * 0x10);
+        return (const char*)((intptr_t)anim + anim->textureNamesOffset + idx * 0x10);
     }
     return NULL;
 }
 
 const char* NSBXX_PatternAnimation_GetPaletteName(Nitro3DMPT* anim, unsigned int idx)
 {
-    if (anim != NULL && idx < anim->numPaletteNames_)
+    if (anim != NULL && idx < anim->numPaletteNames)
     {
-        return (const char*)((intptr_t)anim + anim->paletteNamesOffset_ + idx * 0x10);
+        return (const char*)((intptr_t)anim + anim->paletteNamesOffset + idx * 0x10);
     }
     return NULL;
 }
@@ -70,16 +70,16 @@ Nitro3DMPT::Track::Keyframe* NSBXX_PatternAnimation_GetKeyframe(
 {
     Nitro3DMPT::Track* pTrack = NSBXX_PatternAnimation_GetTrack(anim, track);
     Nitro3DMPT::Track::Keyframe* keyframes =
-        (Nitro3DMPT::Track::Keyframe*)((intptr_t)anim + pTrack->keyframeArrayOffset_);
+        (Nitro3DMPT::Track::Keyframe*)((intptr_t)anim + pTrack->keyframeArrayOffset);
     
     // Start with a heuristic for the index
-    unsigned int index = (unsigned int)(pTrack->maybeSpeed_4_ * frameTime) >> 12u;
+    unsigned int index = (unsigned int)(pTrack->maybeSpeed_4 * frameTime) >> 12u;
 
-    while (index != 0 && keyframes[index].frameTime_ >= frameTime)
+    while (index != 0 && keyframes[index].frameStartTime >= frameTime)
         index--;
 
-    int maxKeyframes = pTrack->numKeyframes_;
-    while (index + 1 < maxKeyframes && (keyframes + 1)[index].frameTime_ <= frameTime)
+    int maxKeyframes = pTrack->numKeyframes;
+    while (index + 1 < maxKeyframes && (keyframes + 1)[index].frameStartTime <= frameTime)
         index++;
 
     return &keyframes[index];
@@ -88,11 +88,11 @@ Nitro3DMPT::Track::Keyframe* NSBXX_PatternAnimation_GetKeyframe(
 Nitro3DMPT::Track* NSBXX_PatternAnimation_GetTrack(
     Nitro3DMPT* anim, unsigned int track)
 {
-    intptr_t nameList = (intptr_t)&anim->tracks_;
-    if (nameList != 0 && track < anim->tracks_.numEntries_)
+    intptr_t nameList = (intptr_t)&anim->tracks;
+    if (nameList != 0 && track < anim->tracks.numEntries)
     {
-        uint16_t stride = *(uint16_t*)(nameList + anim->tracks_.offsetToDataStart_);
-        intptr_t ret = nameList + anim->tracks_.offsetToDataStart_ + 4 + stride * track;
+        uint16_t stride = *(uint16_t*)(nameList + anim->tracks.offsetToDataStart);
+        intptr_t ret = nameList + anim->tracks.offsetToDataStart + 4 + stride * track;
         return (Nitro3DMPT::Track*)ret;
     }
     return NULL;

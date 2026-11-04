@@ -21,12 +21,12 @@ struct BoneMatrixRenderData
     // bit 2: set if no translation
     // if bit 3 is set, the bone matrix calculation callback treats scale_v1
     // as the identity, and if bit 4 is set, it treats scale_v2 as the identity
-    unsigned int flags_;
-    Scale scale_v0_;
-    Scale scale_v1_;
-    Scale scale_v2_;
-    Matrix3x3 rotationMatrix_; // probably a struct
-    Vector3fix translate_;
+    unsigned int flags;
+    Scale scale_v0;
+    Scale scale_v1;
+    Scale scale_v2;
+    Matrix3x3 rotationMatrix;
+    Vector3fix translate;
 };
 
 struct MaterialRenderData
@@ -38,22 +38,22 @@ struct MaterialRenderData
     // bit 4: ???, ORed with bit 3 in some places, notably to call
     //        callback_f0 in the handler
     // bit 5: if set, alpha = 0 when drawing
-    unsigned int flags_;
-    unsigned int paramDIF_AMB_;
-    unsigned int paramSPE_EMI_;
-    unsigned int paramPOLYGON_ATTR_;
-    unsigned int paramTEXIMAGE_PARAMS_;
-    unsigned int texturePaletteBase_;
-    fix32_t extensionScaleX_;
-    fix32_t extensionScaleY_;
-    fix16_t rotationSine_;
-    fix16_t rotationCosine_;
-    fix32_t translateX_;
-    fix32_t translateY_;
-    unsigned short materialWidth_;
-    unsigned short materialHeight_;
-    fix32_t materialxScale_;
-    fix32_t materialyScale_;
+    unsigned int flags;
+    unsigned int paramDIF_AMB;
+    unsigned int paramSPE_EMI;
+    unsigned int paramPOLYGON_ATTR;
+    unsigned int paramTEXIMAGE_PARAMS;
+    unsigned int texturePaletteBase;
+    fix32_t extensionScaleX;
+    fix32_t extensionScaleY;
+    fix16_t rotationSine;
+    fix16_t rotationCosine;
+    fix32_t translateX;
+    fix32_t translateY;
+    unsigned short materialWidth;
+    unsigned short materialHeight;
+    fix32_t materialScaleX;
+    fix32_t materialScaleY;
 };
 
 struct Nitro3DAnimation;
@@ -66,68 +66,68 @@ struct ModelRenderContext
 {
     // bits 0, 1, 2, 3 set flags 7, 8, 9, 10 in RenderCommandHandler
     // bit 4: animation bitfields dirty
-    unsigned int flags_;
-    Nitro3DModel* internalModel_;
-    Nitro3DAnimation* materialAnimations_; // M.AM, M.AT and M.PT animations
+    unsigned int flags;
+    Nitro3DModel* model;
+    Nitro3DAnimation* materialAnimations; // M.AM, M.AT and M.PT animations
     // points to ProcessMaterialAnimationsOnBoundMaterial (020b3ad0 usa)
-    bool (*pfnProcessMaterialAnimations_)(MaterialRenderData*, Nitro3DAnimation*, unsigned int);
-    Nitro3DAnimation* jointAnimations_; // J.AC animations
+    bool (*pfnProcessMaterialAnimations)(MaterialRenderData*, Nitro3DAnimation*, unsigned int);
+    Nitro3DAnimation* jointAnimations; // J.AC animations
     // points to ProcessJointAnimationsOnBoneMatrix (020b3bac usa)
-    bool (*pfnProcessJointAnimations_)(BoneMatrixRenderData*, Nitro3DAnimation*, unsigned int);
-    Nitro3DAnimation* visibilityAnimations_; // V.AV animations (never used?)
+    bool (*pfnProcessJointAnimations)(BoneMatrixRenderData*, Nitro3DAnimation*, unsigned int);
+    Nitro3DAnimation* visibilityAnimations; // V.AV animations (never used?)
     // points to ProcessVisibilityAnimations (020b3f98 usa)
-    bool (*pfnProcessVisibilityAnimations_)(int*, Nitro3DAnimation*, unsigned int);
-    void (*renderCommandHook_)(RenderCommandHandler*);
-    unsigned char renderCommandHookCommandID_;
-    unsigned char renderCommandHookStage_; // 1,2 or 3 depending on when in the function it gets called
-    char padding_26[2];
-    void (*preRenderCallback_)(RenderCommandHandler*);
+    bool (*pfnProcessVisibilityAnimations)(int*, Nitro3DAnimation*, unsigned int);
+    void (*renderCommandHook)(RenderCommandHandler*);
+    unsigned char renderCommandHookCommandID;
+    unsigned char renderCommandHookStage; // 1,2 or 3 depending on when in the function it gets called
+    char pad_26[2];
+    void (*preRenderCallback)(RenderCommandHandler*);
     char unk_2c[4];
-    uint8_t* renderCommandList_;
-    BoneMatrixRenderData* boneMatrixRenderDataArray_;
-    MaterialRenderData* materialRenderDataArray_;
+    uint8_t* renderCommandList;
+    BoneMatrixRenderData* boneMatrixRenderDataArray;
+    MaterialRenderData* materialRenderDataArray;
     // packed array of bools, where the k'th entry is given by the
     // (k & 0x1f)'th bit of array[k >> 5]. The index refers to a material
     // (matching the NSBXXInternalModel's MaterialList) or bone matrix (not 
     // sure about visibility animations), and pfnProcess...Animations will
     // only run for a particular object if its bit is set here.
-    unsigned int animatedMaterials_[2];
-    unsigned int animatedBoneMatrices_[2];
-    unsigned int animatedVisibilityConditions_[2];
+    unsigned int animatedMaterials[2];
+    unsigned int animatedBoneMatrices[2];
+    unsigned int animatedVisibilityConditions[2];
 };
 
 // sizeof == 0x188
 struct RenderCommandHandler
 {
-    uint8_t* instructionPointer_;
-    ModelRenderContext* modelContext_;
-    unsigned int flags_;
-    RenderCommandHook hooks_[32];
-    unsigned char hookStages_[32];
-    unsigned char command2Arg1_;
-    unsigned char boundMaterial_;
-    unsigned char currentBoneMatrix_;
-    char padding_af;
-    MaterialRenderData* pMaterialRenderData_;
-    BoneMatrixRenderData* pBoneMatrixRenderData_;
-    int* pCommand2Word_;
-    unsigned int materialBitfield_[2];
+    uint8_t* instructionPointer;
+    ModelRenderContext* context;
+    unsigned int flags;
+    RenderCommandHook hooks[32];
+    unsigned char hookStages[32];
+    unsigned char command2Arg1;
+    unsigned char boundMaterial;
+    unsigned char currentBoneMatrix;
+    char pad_af;
+    MaterialRenderData* pMaterialRenderData;
+    BoneMatrixRenderData* pBoneMatrixRenderData;
+    int* pCommand2Word;
+    unsigned int materialBitfield[2];
     // If bit n is set (0 <= n <= 63), then the bone of index n has
     // no non-trivial scaling
-    unsigned int boneMatrixBitfield_[2];
-    unsigned int invBindBitfield_[2];
-    Nitro3DNameList* boneList_;
-    Nitro3DModelMaterials* modelMaterials_;
-    Nitro3DNameList* meshList_;
-    fix32_t upScale_;
-    fix32_t downScale_;
+    unsigned int boneMatrixBitfield[2];
+    unsigned int invBindBitfield[2];
+    Nitro3DNameList* boneList;
+    Nitro3DModelMaterials* modelMaterials;
+    Nitro3DNameList* meshList;
+    fix32_t upScale;
+    fix32_t downScale;
     // specifically seems to populate the scaling part
-    void (*boneMatrixRenderDataScalePopulateProc_)(BoneMatrixRenderData*, Nitro3DBoneMatrix::Scaling* boneMatrixScaleData, uint8_t* ip, int boneMatrixFlags);
-    void (*boneMatrixRenderDataSubmitProc_)(BoneMatrixRenderData*);
-    void (*textureMatrixCreateProc_)(MaterialRenderData*);
-    MaterialRenderData scratchMaterialRenderData_;
-    BoneMatrixRenderData scratchBoneMatrixRenderData_;
-    int scratchCommand2Word_;
+    void (*pfnBoneMatrixRenderDataScalePopulate)(BoneMatrixRenderData*, Nitro3DBoneMatrix::Scaling* boneMatrixScaleData, uint8_t* ip, int boneMatrixFlags);
+    void (*pfnBoneMatrixRenderDataSubmit)(BoneMatrixRenderData*);
+    void (*pfnTextureMatrixCreate)(MaterialRenderData*);
+    MaterialRenderData scratchMaterialRenderData;
+    BoneMatrixRenderData scratchBoneMatrixRenderData;
+    int scratchCommand2Word;
 };
 
 // acts as a gate for commands 3, 5, 12 and 13, and sometimes 4: if not set,

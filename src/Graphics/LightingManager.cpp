@@ -706,7 +706,7 @@ void LightingManager::ModelTransformTintBrightnessContrast(Nitro3DModel *model)
     tint_4a_ = modelDiffuseColor_;
 
     
-    for (meshIndex = 0; meshIndex < model->numMeshes_; meshIndex++)
+    for (meshIndex = 0; meshIndex < model->numMeshes; meshIndex++)
     {
         unsigned char opcode0;
         unsigned char opcode1;
@@ -715,12 +715,12 @@ void LightingManager::ModelTransformTintBrightnessContrast(Nitro3DModel *model)
 
         Nitro3DMesh* mesh = meshList->GetEntryFromu32Offset<Nitro3DMesh>(meshIndex);
         
-        if (!(mesh->unk_4 & 2))
+        if (!(mesh->flags & 2))
             continue;
 
-        fifoBlob = (unsigned char*)mesh + mesh->gpuCommandsOffset_;
+        fifoBlob = (unsigned char*)mesh + mesh->gpuCommandsOffset;
         readPos = 0;
-        while (readPos < mesh->gpuCommandsLength_)
+        while (readPos < mesh->gpuCommandsLength)
         {
             opcode0 = fifoBlob[readPos];
             opcode1 = fifoBlob[readPos + 1];

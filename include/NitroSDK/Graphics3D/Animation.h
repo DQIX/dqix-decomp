@@ -6,9 +6,9 @@ struct Nitro3DAnimationSignature
 {
     // holds e.g. "J\0AC" or "M\0PT" but in practice is read
     // using a uint8_t and a uint16_t
-    uint8_t signatureInitial_;
-    uint8_t signatureNull_;
-    uint16_t signatureEnd_;
+    uint8_t signatureInitial;
+    uint8_t signatureNull;
+    uint16_t signatureEnd;
 };
 
 // Used to reference some kind of animation, specifically the innermost part
@@ -23,16 +23,16 @@ struct Nitro3DAnimation
 {
     typedef void (*Callback)(void*, Nitro3DAnimation*, int);
 
-    fix32_t time_;
+    fix32_t time;
     // used for e.g. combining effects of multiple bones?
-    fix32_t weight_;
-    void* pRawData_;
+    fix32_t weight;
+    void* pRawData;
     // call this to populate renderData as appropriate
-    void (*callback_)(void* renderData, Nitro3DAnimation* animData, int arg);
-    Nitro3DAnimation* pNext_;
-    Nitro3DTextureSet* pTex0_; // we always supply this, but only M.PT animations use it
-    unsigned char unk_18;
-    unsigned char numEntries_;
+    void (*callback)(void* renderData, Nitro3DAnimation* animData, int arg);
+    Nitro3DAnimation* pNext;
+    Nitro3DTextureSet* pTex0; // we always supply this, but only M.PT animations use it
+    unsigned char unknown_18;
+    unsigned char numEntries;
     // Not sure about max array length.
     // Each entry combines the following values:
     // bits 0-7: which animation track to use for the relevant thing (material,
@@ -47,7 +47,7 @@ struct Nitro3DAnimation
     // the ModelRenderData bitfields get populated based on this
     // bit 9: ???, sometimes tested in conjunction with bit 8 (often things
     // only run if entry & 0x300 == 0x100)
-    unsigned short entries_[64];
+    unsigned short entries[64];
 };
 
 void InitializeModelAnimation(Nitro3DAnimation* anim, void* pRawData, Nitro3DModel* model, Nitro3DTextureSet* tex);

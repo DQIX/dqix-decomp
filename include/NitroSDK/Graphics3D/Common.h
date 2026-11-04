@@ -6,30 +6,30 @@
 
 struct Nitro3DFileHeader
 {
-    uint32_t signature_;
-    uint16_t byteOrderMark_;
-    uint16_t version_;
-    uint32_t fileSize_;
-    uint16_t headerSize_;
-    uint16_t numSubfiles_;
+    uint32_t signature;
+    uint16_t byteOrderMark;
+    uint16_t version;
+    uint32_t fileSize;
+    uint16_t headerSize;
+    uint16_t numSubfiles;
 };
 
 struct Nitro3DNameList
 {
-    uint8_t unknown_0_;
-    uint8_t numEntries_;
-    uint16_t totalSize_; // size in bytes of the entire list
+    uint8_t unknown_0;
+    uint8_t numEntries;
+    uint16_t totalSize; // size in bytes of the entire list
 
     // subheader?
-    uint16_t subheaderSize_;
-    uint16_t offsetToDataStart_;
+    uint16_t subheaderSize;
+    uint16_t offsetToDataStart;
 
     struct SearchTreeEntry // https://github.com/scurest/nsbmd_docs/issues/2
     {
-        uint8_t bitIndex_;
-        uint8_t children_[2];
-        uint8_t resourceIndex_;
-    } treeRoot_8_;
+        uint8_t bitIndex;
+        uint8_t children[2];
+        uint8_t resourceIndex;
+    } treeRoot;
     // Supposedly the structure continues as follows:
     // SearchTreeEntry otherEntries_[numEntries_];
     // <-- this + offsetToDataStart_ points to the following:
@@ -41,9 +41,9 @@ struct Nitro3DNameList
     template<class T>
     inline T* GetEntryByIndex(unsigned int n) const
     {
-        if (this != NULL && n < numEntries_)
+        if (this != NULL && n < numEntries)
         {
-            const char* dataStart = (const char*)this + offsetToDataStart_;
+            const char* dataStart = (const char*)this + offsetToDataStart;
             uint16_t stride = *(uint16_t*)dataStart;
             return (T*)(dataStart + 4 + stride * n);
         }
@@ -65,9 +65,9 @@ struct Nitro3DNameList
     inline const char* GetNameByIndex(unsigned int n) const
     {
         const uint16_t* dataStart;
-        if (this != NULL && n < numEntries_)
+        if (this != NULL && n < numEntries)
         {
-            dataStart = (const uint16_t*)((const char*)this + offsetToDataStart_);
+            dataStart = (const uint16_t*)((const char*)this + offsetToDataStart);
             return (const char*)((const char*)dataStart + dataStart[1] + 16 * n);
         }
         else

@@ -464,7 +464,7 @@ void Object3D::AdvanceAnimations_v1()
 fix32_t GetAnimationFrameCountFix32(Nitro3DAnimation* data)
 {
     // bit ugly but we have to go into the raw data for this
-    return *(uint16_t*)((intptr_t)data->pRawData_ + 4) << 12;
+    return *(uint16_t*)((intptr_t)data->pRawData + 4) << 12;
 }
 
 void Object3D::ApplyAnimations(Object3D* otherObj)
@@ -502,7 +502,7 @@ void Object3D::ApplyAnimations(Object3D* otherObj)
                 model->AddAnimation(&anim->data[i]);
                 anim->data[i].SetAnimationTime(priorAnimationBlend_.sourceTime);
                 fix32_t thisWeight = priorAnimationBlend_.blendWeight;
-                anim->data[i].GetBasicAnimationData()->weight_ = thisWeight;
+                anim->data[i].GetBasicAnimationData()->weight = thisWeight;
             }
             weight -= priorAnimationBlend_.blendWeight;
         }
@@ -511,7 +511,7 @@ void Object3D::ApplyAnimations(Object3D* otherObj)
         {
             model->AddAnimation(&anim->data[i]);
             anim->data[i].SetAnimationTime(animationTime_);
-            anim->data[i].GetBasicAnimationData()->weight_ = weight;
+            anim->data[i].GetBasicAnimationData()->weight = weight;
         }
     }
 }
@@ -2047,7 +2047,7 @@ void BoneTrackingRenderCommandHook(RenderCommandHandler* handler)
     for (Object3D::TrackedBoneMatrix* tracker = boneTracking.boneMatrixList;
         tracker != NULL; tracker = tracker->pNext)
     {
-        if (!(handler->flags_ & (1 << RCH_FLAG_4)) || handler->currentBoneMatrix_ != tracker->boneIndex)
+        if (!(handler->flags & (1 << RCH_FLAG_4)) || handler->currentBoneMatrix != tracker->boneIndex)
             continue;
         
         GetCurrentPositionAndDirectionMatrices(&tracker->matrix, NULL);

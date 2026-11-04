@@ -176,11 +176,11 @@ void GetCurrentPositionAndDirectionMatrices(Matrix4x3* position, Matrix3x3* dire
 bool GetModelBonePositionAndDirectionMatrices(ModelRenderContext *context,
     Matrix4x3* outPos, Matrix3x3* outDir, unsigned int boneIndex)
 {
-    Nitro3DModel* model = context->internalModel_;
-    Nitro3DNameList* boneList = &model->boneList_;
+    Nitro3DModel* model = context->model;
+    Nitro3DNameList* boneList = &model->boneList;
     Nitro3DBoneMatrix* boneMatrix = boneList->GetEntryFromu32Offset<Nitro3DBoneMatrix>(boneIndex);
 
-    unsigned int stackPos = ((unsigned int)boneMatrix->flags_ & 0xf800) >> 11;
+    unsigned int stackPos = ((unsigned int)boneMatrix->flags & 0xf800) >> 11;
     if (stackPos != 31)
     {
         uint32_t arg = stackPos;

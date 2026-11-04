@@ -11,24 +11,24 @@ extern void (*data_020f1c70)(void* data, Nitro3DAnimation* anim, int arg);
 void InitializeModelAnimationFromVAV(Nitro3DAnimation* anim, void* pvVAV, Nitro3DModel* model)
 {
     unsigned int index = 0;
-    anim->callback_ = data_020f1c70;
-    anim->numEntries_ = model->numBoneMatrices_;
-    anim->pRawData_ = pvVAV;
-    if (index < anim->numEntries_)
+    anim->callback = data_020f1c70;
+    anim->numEntries = model->numBoneMatrices;
+    anim->pRawData = pvVAV;
+    if (index < anim->numEntries)
     {
         do
         {
-            anim->entries_[index] = index | 0x100;
+            anim->entries[index] = index | 0x100;
             index++;
-        } while (index < anim->numEntries_);
+        } while (index < anim->numEntries);
     }
 }
 
 void VAVAnimationProcessingCallback(void* data, Nitro3DAnimation* anim, int arg)
 {
     int* outVis = (int*)data;
-    Nitro3DVAV* vav = (Nitro3DVAV*)anim->pRawData_;
-    unsigned int frame = anim->time_ >> 12;
-    unsigned int testIndex = frame * vav->numConditions_ + arg;
-    *outVis = vav->bitfield_[testIndex >> 5] & (1 << (testIndex & 0x1f));
+    Nitro3DVAV* vav = (Nitro3DVAV*)anim->pRawData;
+    unsigned int frame = anim->time >> 12;
+    unsigned int testIndex = frame * vav->numConditions + arg;
+    *outVis = vav->bitfield[testIndex >> 5] & (1 << (testIndex & 0x1f));
 }

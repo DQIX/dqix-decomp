@@ -162,44 +162,44 @@ void InitializeModelAnimationFromMAM(Nitro3DAnimation* anim, void* pvMAM, Nitro3
 {   
     
     Nitro3DModelMaterials* materials = model->GetMaterialData();
-    anim->callback_ = data_020f1c80;
+    anim->callback = data_020f1c80;
 
-    anim->numEntries_ = model->numMaterials_;
-    func_020ca390(0, &anim->entries_[0], anim->numEntries_ * 2);
+    anim->numEntries = model->numMaterials;
+    func_020ca390(0, &anim->entries[0], anim->numEntries * 2);
 
     Nitro3DMAM* mam = (Nitro3DMAM*)pvMAM;
-    for (unsigned int track = 0; track < mam->tracks_.numEntries_; track++)
+    for (unsigned int track = 0; track < mam->tracks.numEntries; track++)
     {   
-        const char* str = mam->tracks_.GetNameByIndex(track);
+        const char* str = mam->tracks.GetNameByIndex(track);
         int idx;
 
         if (materials == NULL)
             idx = -1;
         else
-            idx = NSBXXNameList_SearchIndex(&materials->materialOffsetList_, str);
+            idx = NSBXXNameList_SearchIndex(&materials->materialOffsetList, str);
 
         if (idx >= 0)
-            anim->entries_[idx] = track | 0x100;
+            anim->entries[idx] = track | 0x100;
     }
 }
 
 void MAMAnimationProcessingCallback(void* data, Nitro3DAnimation* anim, int arg)
 {
     MaterialRenderData* renderData = (MaterialRenderData*)data;
-    Nitro3DMAM* mam = (Nitro3DMAM*)anim->pRawData_;
-    unsigned int frame = anim->time_ >> 12;
-    Nitro3DMAM::Track* track = mam->tracks_.GetEntryByIndex<Nitro3DMAM::Track>((unsigned short)arg);
+    Nitro3DMAM* mam = (Nitro3DMAM*)anim->pRawData;
+    unsigned int frame = anim->time >> 12;
+    Nitro3DMAM::Track* track = mam->tracks.GetEntryByIndex<Nitro3DMAM::Track>((unsigned short)arg);
 
-    unsigned int diffuseCol = GetColorFromMaterialAnimation(mam, track->diffuse_, frame);
-    unsigned int ambientCol = GetColorFromMaterialAnimation(mam, track->ambient_, frame);
+    unsigned int diffuseCol = GetColorFromMaterialAnimation(mam, track->diffuse, frame);
+    unsigned int ambientCol = GetColorFromMaterialAnimation(mam, track->ambient, frame);
 
-    renderData->paramDIF_AMB_ = (diffuseCol) | (ambientCol << 16) | (((renderData->paramDIF_AMB_ & 0x8000) ? 1 : 0) << 15);
+    renderData->paramDIF_AMB = (diffuseCol) | (ambientCol << 16) | (((renderData->paramDIF_AMB & 0x8000) ? 1 : 0) << 15);
 
-    unsigned int specEmission = GetColorFromMaterialAnimation(mam, track->emission_, frame);
-    unsigned int specReflection = GetColorFromMaterialAnimation(mam, track->reflection_, frame);
+    unsigned int specEmission = GetColorFromMaterialAnimation(mam, track->emission, frame);
+    unsigned int specReflection = GetColorFromMaterialAnimation(mam, track->reflection, frame);
 
-    renderData->paramSPE_EMI_ = (specReflection) | (specEmission << 16) | (((renderData->paramSPE_EMI_ & 0x8000) ? 1 : 0) << 15);
+    renderData->paramSPE_EMI = (specReflection) | (specEmission << 16) | (((renderData->paramSPE_EMI & 0x8000) ? 1 : 0) << 15);
 
-    unsigned int alpha = GetAlphaFromMaterialAnimation(mam, track->alpha_, frame);
-    renderData->paramPOLYGON_ATTR_ = (renderData->paramPOLYGON_ATTR_ & ~0x1f0000) | (alpha << 16);
+    unsigned int alpha = GetAlphaFromMaterialAnimation(mam, track->alpha, frame);
+    renderData->paramPOLYGON_ATTR = (renderData->paramPOLYGON_ATTR & ~0x1f0000) | (alpha << 16);
 }

@@ -52,18 +52,18 @@ extern void (*data_020f1c74)(void*, Nitro3DAnimation*, int);
 void InitializeModelAnimationFromJAC(Nitro3DAnimation* anim, void* pvJAC, Nitro3DModel* model)
 {
     Nitro3DJAC* jac = (Nitro3DJAC*)pvJAC;
-    anim->pRawData_ = jac;
-    anim->callback_ = data_020f1c74;
-    anim->numEntries_ = model->numBoneMatrices_;
-    func_020ca390(0, anim->entries_, 2 * anim->numEntries_);
+    anim->pRawData = jac;
+    anim->callback = data_020f1c74;
+    anim->numEntries = model->numBoneMatrices;
+    func_020ca390(0, anim->entries, 2 * anim->numEntries);
 
     unsigned int trackIdx;
-    uint16_t* trackOffsets = jac->trackOffsets_;
-    for (trackIdx = 0; trackIdx < jac->numTracks_; trackIdx++)
+    uint16_t* trackOffsets = jac->trackOffsets;
+    for (trackIdx = 0; trackIdx < jac->numTracks; trackIdx++)
     {
         Nitro3DJAC::Track* track =
                 (Nitro3DJAC::Track*)((char*)jac + trackOffsets[trackIdx]);
-            anim->entries_[trackIdx] = track->flagsAndTargetBoneMatrix_ >> 24 | 0x100;
+            anim->entries[trackIdx] = track->flagsAndTargetBoneMatrix >> 24 | 0x100;
     }
 }
 
@@ -71,11 +71,11 @@ void JACAnimationProcessingCallback(void* data, Nitro3DAnimation* anim, int arg)
 {
     BoneMatrixRenderData* boneRenderData = (BoneMatrixRenderData*)data;
 
-    fix32_t time = anim->time_;
-    Nitro3DJAC* jac = (Nitro3DJAC*)anim->pRawData_;
+    fix32_t time = anim->time;
+    Nitro3DJAC* jac = (Nitro3DJAC*)anim->pRawData;
 
-    if (time >= jac->numFrames_ << 12)
-        time = (jac->numFrames_ << 12) - 1;
+    if (time >= jac->numFrames << 12)
+        time = (jac->numFrames << 12) - 1;
     else if (time < 0)
         time = 0;
 
@@ -88,27 +88,27 @@ void ApplyBindPoseTranslation(BoneMatrixRenderData* bmrd)
     // this is super cursed, but I guess this executes during command 6 when
     // ip[1] holds the bone index to apply stuff to
     Nitro3DBoneMatrix* boneMatrix = 
-        handler->boneList_->GetEntryFromu32Offset<Nitro3DBoneMatrix>(handler->instructionPointer_[1]);
-    if (boneMatrix->flags_ & 1) // no translation data
+        handler->boneList->GetEntryFromu32Offset<Nitro3DBoneMatrix>(handler->instructionPointer[1]);
+    if (boneMatrix->flags & 1) // no translation data
     {
-        bmrd->flags_ |= 4;
+        bmrd->flags |= 4;
     }
     else
     {
         Nitro3DBoneMatrix::Translation* tdata = (Nitro3DBoneMatrix::Translation*)((intptr_t)boneMatrix + 4);
-        bmrd->translate_.x = tdata->x;
-        bmrd->translate_.y = tdata->y;
-        bmrd->translate_.z = tdata->z;
+        bmrd->translate.x = tdata->x;
+        bmrd->translate.y = tdata->y;
+        bmrd->translate.z = tdata->z;
     }
 }
 
 void ApplyBindPoseScaling(BoneMatrixRenderData* bmrd)
 {
     RenderCommandHandler* handler = data_0210a274;
-    uint8_t* ip = handler->instructionPointer_;
-    Nitro3DBoneMatrix* boneMatrix = handler->boneList_->GetEntryFromu32Offset<Nitro3DBoneMatrix>(ip[1]);
+    uint8_t* ip = handler->instructionPointer;
+    Nitro3DBoneMatrix* boneMatrix = handler->boneList->GetEntryFromu32Offset<Nitro3DBoneMatrix>(ip[1]);
     intptr_t addrScaling = (intptr_t)(boneMatrix + 1);
-    unsigned int flags = boneMatrix->flags_;
+    unsigned int flags = boneMatrix->flags;
     if (!(flags & 1)) // has translation data
         addrScaling += sizeof(Nitro3DBoneMatrix::Translation);
     if (!(flags & 2))
@@ -118,7 +118,7 @@ void ApplyBindPoseScaling(BoneMatrixRenderData* bmrd)
         else
             addrScaling += sizeof(Nitro3DBoneMatrix::RotationMatrixData);
     }
-    handler->boneMatrixRenderDataScalePopulateProc_(bmrd,
+    handler->pfnBoneMatrixRenderDataScalePopulate(bmrd,
         (Nitro3DBoneMatrix::Scaling*)addrScaling, ip, flags);
 }
 
@@ -126,51 +126,51 @@ void ApplyBindPoseRotation(BoneMatrixRenderData* bmrd)
 {
     RenderCommandHandler* handler = data_0210a274;
     Nitro3DBoneMatrix* boneMatrix = 
-        handler->boneList_->GetEntryFromu32Offset<Nitro3DBoneMatrix>(handler->instructionPointer_[1]);
+        handler->boneList->GetEntryFromu32Offset<Nitro3DBoneMatrix>(handler->instructionPointer[1]);
 
     const char* addrRotation = (const char*)(boneMatrix + 1);
-    if (!(boneMatrix->flags_ & 1)) // has translation data
+    if (!(boneMatrix->flags & 1)) // has translation data
         addrRotation += sizeof(Nitro3DBoneMatrix::Translation);
 
-    if (!(boneMatrix->flags_ & 2)) // has rotation data
+    if (!(boneMatrix->flags & 2)) // has rotation data
     {
-        if (boneMatrix->flags_ & 8) // pivot matrix format
+        if (boneMatrix->flags & 8) // pivot matrix format
         {
-            unsigned long pivotForm = (boneMatrix->flags_ & 0xf0) >> 4;
+            unsigned long pivotForm = (boneMatrix->flags & 0xf0) >> 4;
             Nitro3DBoneMatrix::PivotMatrixData* pivot =
                 (Nitro3DBoneMatrix::PivotMatrixData*)addrRotation;
             fix32_t entryA = pivot->a;
             fix32_t entryB = pivot->b;
 
-            func_020ca7d0(&bmrd->rotationMatrix_);
-            bmrd->rotationMatrix_.entries[pivotForm] = (boneMatrix->flags_ & 0x100) ? -1 << 12 : 1 << 12;
-            bmrd->rotationMatrix_.entries[data_020e9284[pivotForm].a] = entryA;
-            bmrd->rotationMatrix_.entries[data_020e9284[pivotForm].b] = entryB;
+            func_020ca7d0(&bmrd->rotationMatrix);
+            bmrd->rotationMatrix.entries[pivotForm] = (boneMatrix->flags & 0x100) ? -1 << 12 : 1 << 12;
+            bmrd->rotationMatrix.entries[data_020e9284[pivotForm].a] = entryA;
+            bmrd->rotationMatrix.entries[data_020e9284[pivotForm].b] = entryB;
 
-            fix32_t entryC = (boneMatrix->flags_ & 0x200) ? -entryB : entryB;
-            bmrd->rotationMatrix_.entries[data_020e9284[pivotForm].c] = entryC;
+            fix32_t entryC = (boneMatrix->flags & 0x200) ? -entryB : entryB;
+            bmrd->rotationMatrix.entries[data_020e9284[pivotForm].c] = entryC;
 
-            fix32_t entryD = (boneMatrix->flags_ & 0x400) ? -entryA : entryA;
-            bmrd->rotationMatrix_.entries[data_020e9284[pivotForm].d] = entryD;
+            fix32_t entryD = (boneMatrix->flags & 0x400) ? -entryA : entryA;
+            bmrd->rotationMatrix.entries[data_020e9284[pivotForm].d] = entryD;
         }
         else // generic 3x3 matrix format
         {
-            bmrd->rotationMatrix_.entries[0] = boneMatrix->m_11;
+            bmrd->rotationMatrix.entries[0] = boneMatrix->m_11;
             Nitro3DBoneMatrix::RotationMatrixData* rot = 
                 (Nitro3DBoneMatrix::RotationMatrixData*)addrRotation;
-            bmrd->rotationMatrix_.entries[1] = rot->entries[0];
-            bmrd->rotationMatrix_.entries[2] = rot->entries[1];
-            bmrd->rotationMatrix_.entries[3] = rot->entries[2];
-            bmrd->rotationMatrix_.entries[4] = rot->entries[3];
-            bmrd->rotationMatrix_.entries[5] = rot->entries[4];
-            bmrd->rotationMatrix_.entries[6] = rot->entries[5];
-            bmrd->rotationMatrix_.entries[7] = rot->entries[6];
-            bmrd->rotationMatrix_.entries[8] = rot->entries[7];
+            bmrd->rotationMatrix.entries[1] = rot->entries[0];
+            bmrd->rotationMatrix.entries[2] = rot->entries[1];
+            bmrd->rotationMatrix.entries[3] = rot->entries[2];
+            bmrd->rotationMatrix.entries[4] = rot->entries[3];
+            bmrd->rotationMatrix.entries[5] = rot->entries[4];
+            bmrd->rotationMatrix.entries[6] = rot->entries[5];
+            bmrd->rotationMatrix.entries[7] = rot->entries[6];
+            bmrd->rotationMatrix.entries[8] = rot->entries[7];
         }
     }
     else // no rotation data
     {
-        bmrd->flags_ |= 2;
+        bmrd->flags |= 2;
     }
 }
 
@@ -178,78 +178,78 @@ void CalculateBoneMatrixRenderDataFromJAC(Nitro3DJAC* jac, int arg,
     fix32_t time, BoneMatrixRenderData* bmrd)
 {
     Nitro3DJAC::Track* track = 
-        (Nitro3DJAC::Track*)((intptr_t)jac + jac->trackOffsets_[arg]);
+        (Nitro3DJAC::Track*)((intptr_t)jac + jac->trackOffsets[arg]);
 
     Nitro3DBoneMatrix::Scaling scaleData;
 
-    unsigned int trackFlags = track->flagsAndTargetBoneMatrix_;
+    unsigned int trackFlags = track->flagsAndTargetBoneMatrix;
 
     if (trackFlags & 1) // track has no channels at all
-        bmrd->flags_ = 7;
+        bmrd->flags = 7;
     else
     {
         intptr_t channelAddr = (intptr_t)(track + 1);
         bool smooth;
-        if ((time & 0xfff) != 0 && (jac->unk_8 & 1))
+        if ((time & 0xfff) != 0 && (jac->flags & 1))
             smooth = true;
         else
             smooth = false;
 
-        bmrd->flags_ = 0;
+        bmrd->flags = 0;
         
         if (!(trackFlags & 6)) // has translation channels (check both bits)
         {
             if (!(trackFlags & 0x08)) // x translation non-const
             {
                 if (smooth)
-                    CalculateTranslationAmountSmooth(&bmrd->translate_.x, time,
+                    CalculateTranslationAmountSmooth(&bmrd->translate.x, time,
                         (Nitro3DJAC::Track::ChannelNonConst*)channelAddr, jac);
                 else
-                    CalculateTranslationAmountFrameAligned(&bmrd->translate_.x, time,
+                    CalculateTranslationAmountFrameAligned(&bmrd->translate.x, time,
                         (Nitro3DJAC::Track::ChannelNonConst*)channelAddr, jac);
                 channelAddr += sizeof(Nitro3DJAC::Track::ChannelNonConst);
             }
             else // x-translation constant
             {
-                bmrd->translate_.x = *(fix32_t*)(channelAddr);
+                bmrd->translate.x = *(fix32_t*)(channelAddr);
                 channelAddr += sizeof(fix32_t);
             }
 
             if (!(trackFlags & 0x10)) // y-translation non-const
             {
                 if (smooth)
-                    CalculateTranslationAmountSmooth(&bmrd->translate_.y, time,
+                    CalculateTranslationAmountSmooth(&bmrd->translate.y, time,
                         (Nitro3DJAC::Track::ChannelNonConst*)channelAddr, jac);
                 else
-                    CalculateTranslationAmountFrameAligned(&bmrd->translate_.y, time,
+                    CalculateTranslationAmountFrameAligned(&bmrd->translate.y, time,
                         (Nitro3DJAC::Track::ChannelNonConst*)channelAddr, jac);
                 channelAddr += sizeof(Nitro3DJAC::Track::ChannelNonConst);
             }
             else // y-translation constant
             {
-                bmrd->translate_.y = *(fix32_t*)(channelAddr);
+                bmrd->translate.y = *(fix32_t*)(channelAddr);
                 channelAddr += sizeof(fix32_t);
             }
 
             if (!(trackFlags & 0x20)) // z-translation non-const
             {
                 if (smooth)
-                    CalculateTranslationAmountSmooth(&bmrd->translate_.z, time,
+                    CalculateTranslationAmountSmooth(&bmrd->translate.z, time,
                         (Nitro3DJAC::Track::ChannelNonConst*)channelAddr, jac);
                 else
-                    CalculateTranslationAmountFrameAligned(&bmrd->translate_.z, time,
+                    CalculateTranslationAmountFrameAligned(&bmrd->translate.z, time,
                         (Nitro3DJAC::Track::ChannelNonConst*)channelAddr, jac);
                 channelAddr += sizeof(Nitro3DJAC::Track::ChannelNonConst);
             }
             else // z-translation constant
             {
-                bmrd->translate_.z = *(fix32_t*)(channelAddr);
+                bmrd->translate.z = *(fix32_t*)(channelAddr);
                 channelAddr += sizeof(fix32_t);
             }
         }
         else if (trackFlags & 2)
         {
-            bmrd->flags_ |= 4;
+            bmrd->flags |= 4;
         }
         else
         {
@@ -261,40 +261,40 @@ void CalculateBoneMatrixRenderDataFromJAC(Nitro3DJAC* jac, int arg,
             if (!(trackFlags & 0x100))
             {
                 if (smooth)
-                    CalculateRotationSmooth(&bmrd->rotationMatrix_, time, 
+                    CalculateRotationSmooth(&bmrd->rotationMatrix, time, 
                         (Nitro3DJAC::Track::ChannelNonConst*)channelAddr, jac);
                 else
-                    CalculateRotationFrameAligned(&bmrd->rotationMatrix_, time,
+                    CalculateRotationFrameAligned(&bmrd->rotationMatrix, time,
                         (Nitro3DJAC::Track::ChannelNonConst*)channelAddr, jac);
                 channelAddr += sizeof(Nitro3DJAC::Track::ChannelNonConst);
             }
             else // rotation channel constant
             {
-                if (GetMatrixFromIndex(&bmrd->rotationMatrix_, 
+                if (GetMatrixFromIndex(&bmrd->rotationMatrix, 
                     (intptr_t)jac->GetPivotMatrices(),
                     (intptr_t)jac->GetBasisMatrices(),
                     *(uint32_t*)(channelAddr)))
                 {
-                    fix32_t m23 = bmrd->rotationMatrix_.entries[5];
-                    fix32_t m11 = bmrd->rotationMatrix_.entries[0];
-                    fix32_t m21 = bmrd->rotationMatrix_.entries[3];
-                    fix32_t m13 = bmrd->rotationMatrix_.entries[2];
-                    fix32_t m12 = bmrd->rotationMatrix_.entries[1];
-                    fix32_t m22 = bmrd->rotationMatrix_.entries[4];
+                    fix32_t m23 = bmrd->rotationMatrix.entries[5];
+                    fix32_t m11 = bmrd->rotationMatrix.entries[0];
+                    fix32_t m21 = bmrd->rotationMatrix.entries[3];
+                    fix32_t m13 = bmrd->rotationMatrix.entries[2];
+                    fix32_t m12 = bmrd->rotationMatrix.entries[1];
+                    fix32_t m22 = bmrd->rotationMatrix.entries[4];
 
                     fix32_t m31 = (m12 * m23 - m13 * m22) >> 12;
                     fix32_t m32 = (m13 * m21 - m11 * m23) >> 12;
                     fix32_t m33 = (m11 * m22 - m12 * m21) >> 12;
-                    bmrd->rotationMatrix_.entries[6] = m31;
-                    bmrd->rotationMatrix_.entries[7] = m32;
-                    bmrd->rotationMatrix_.entries[8] = m33;
+                    bmrd->rotationMatrix.entries[6] = m31;
+                    bmrd->rotationMatrix.entries[7] = m32;
+                    bmrd->rotationMatrix.entries[8] = m33;
                 }
                 channelAddr += sizeof(uint32_t);
             }
         }
         else if (trackFlags & 0x40)
         {
-            bmrd->flags_ |= 2;
+            bmrd->flags |= 2;
         }
         else
         {
@@ -362,7 +362,7 @@ void CalculateBoneMatrixRenderDataFromJAC(Nitro3DJAC* jac, int arg,
         }
         else if (trackFlags & 0x200)
         {
-            bmrd->flags_ |= 1;
+            bmrd->flags |= 1;
         }
         else
         {
@@ -371,9 +371,9 @@ void CalculateBoneMatrixRenderDataFromJAC(Nitro3DJAC* jac, int arg,
         }
     }
 
-    int boneMatrixFlags = (bmrd->flags_ & 1) ? 4 : 0;
-    data_0210a274->boneMatrixRenderDataScalePopulateProc_(bmrd,
-        &scaleData, data_0210a274->instructionPointer_, boneMatrixFlags);
+    int boneMatrixFlags = (bmrd->flags & 1) ? 4 : 0;
+    data_0210a274->pfnBoneMatrixRenderDataScalePopulate(bmrd,
+        &scaleData, data_0210a274->instructionPointer, boneMatrixFlags);
 }
 
 void CalculateTranslationAmountFrameAligned(fix32_t* out, fix32_t time,
@@ -382,12 +382,12 @@ void CalculateTranslationAmountFrameAligned(fix32_t* out, fix32_t time,
     unsigned int highWeightFrame, lowWeightFrame;
     unsigned int metadata;
     unsigned int thisFrame = time >> 12;
-    fix32_t* samples = (fix32_t*)((intptr_t)jac + channel->samplesOffset_);
+    fix32_t* samples = (fix32_t*)((intptr_t)jac + channel->samplesOffset);
     fix16_t* samples16 = (fix16_t*)samples;
 
     unsigned int averageIndex, directIndex = thisFrame;
 
-    metadata = channel->metadata_;
+    metadata = channel->metadata;
     // log-rate = 0: every frame is sampled, no need for averaging
     if ((metadata & 0xc0000000) == 0)
         goto compute_directly;
@@ -483,12 +483,12 @@ void CalculateTranslationAmountSmooth(fix32_t* out, fix32_t time,
     Nitro3DJAC::Track::ChannelNonConst* channel, Nitro3DJAC* jac)
 {
     unsigned int frameIdx = time >> 12;
-    fix32_t* samples = (fix32_t*)((intptr_t)jac + channel->samplesOffset_);
+    fix32_t* samples = (fix32_t*)((intptr_t)jac + channel->samplesOffset);
     fix16_t* samples16 = (fix16_t*)samples;
-    unsigned int flags = channel->metadata_;
+    unsigned int flags = channel->metadata;
 
     // at end of animation
-    if (jac->numFrames_ - 1 == frameIdx)
+    if (jac->numFrames - 1 == frameIdx)
     {
         unsigned int sampleIdx = frameIdx;
         if (flags & 0xc0000000) // log-rate != 0, i.e. samples less than once per frame
@@ -503,7 +503,7 @@ void CalculateTranslationAmountSmooth(fix32_t* out, fix32_t time,
             }
         }
 
-        if (jac->unk_8 & 2) // probably means animation is looping?
+        if (jac->flags & 2) // looping
         {
             fix32_t timeFraction = time & 0xfff;
             fix32_t lerp0;
@@ -595,10 +595,10 @@ void CalculateScalingAmountFrameAligned(fix32_t* out, fix32_t time,
     unsigned int thisFrame = time >> 12;
     
     Nitro3DJAC::ScaleSample32* samples =
-        (Nitro3DJAC::ScaleSample32*)((char*)jac + channel->samplesOffset_);
+        (Nitro3DJAC::ScaleSample32*)((char*)jac + channel->samplesOffset);
     Nitro3DJAC::ScaleSample16* samples16 = (Nitro3DJAC::ScaleSample16*)samples;
 
-    unsigned int metadata = channel->metadata_;
+    unsigned int metadata = channel->metadata;
     unsigned int highWeightFrame;
     unsigned int lowWeightFrame;
     
@@ -658,23 +658,23 @@ void CalculateScalingAmountFrameAligned(fix32_t* out, fix32_t time,
 
                 if (metadata & 0x20000000) // 16-bit samples
                 {
-                    highWeight = samples16[highWeightFrame].primary_;
-                    lowWeight = samples16[lowWeightFrame].primary_;
+                    highWeight = samples16[highWeightFrame].primary;
+                    lowWeight = samples16[lowWeightFrame].primary;
                     out[0] = ((highWeight * 2) + highWeight + lowWeight) >> 2;
 
-                    highWeight = samples16[highWeightFrame].secondary_;
-                    lowWeight = samples16[lowWeightFrame].secondary_;
+                    highWeight = samples16[highWeightFrame].secondary;
+                    lowWeight = samples16[lowWeightFrame].secondary;
                     out[1] = ((highWeight * 2) + highWeight + lowWeight) >> 2;
                     return;
                 }
                 else
                 {
-                    highWeight = samples[highWeightFrame].primary_;
-                    lowWeight = samples[lowWeightFrame].primary_;
+                    highWeight = samples[highWeightFrame].primary;
+                    lowWeight = samples[lowWeightFrame].primary;
                     out[0] = ((int64_t)highWeight + highWeight + highWeight + lowWeight) >> 2;
 
-                    highWeight = samples[highWeightFrame].secondary_;
-                    lowWeight = samples[lowWeightFrame].secondary_;
+                    highWeight = samples[highWeightFrame].secondary;
+                    lowWeight = samples[lowWeightFrame].secondary;
                     out[1] = ((int64_t)highWeight + highWeight + highWeight + lowWeight) >> 2;
                     return;
                 }
@@ -696,29 +696,29 @@ void CalculateScalingAmountFrameAligned(fix32_t* out, fix32_t time,
 compute_directly:
     if (metadata & 0x20000000)
     {
-        out[0] = samples16[highWeightFrame].primary_;
-        out[1] = samples16[highWeightFrame].secondary_;
+        out[0] = samples16[highWeightFrame].primary;
+        out[1] = samples16[highWeightFrame].secondary;
     }
     else
     {
-        out[0] = samples[highWeightFrame].primary_;
-        out[1] = samples[highWeightFrame].secondary_;
+        out[0] = samples[highWeightFrame].primary;
+        out[1] = samples[highWeightFrame].secondary;
     }
     return;
 compute_average:
     if (metadata & 0x20000000)
     {
-        out[0] = ((samples16 + highWeightFrame)->primary_ +
-            (samples16 + highWeightFrame + 1)->primary_) >> 1;
-        out[1] = ((samples16 + highWeightFrame)->secondary_ +
-            (samples16 + highWeightFrame + 1)->secondary_) >> 1;
+        out[0] = ((samples16 + highWeightFrame)->primary +
+            (samples16 + highWeightFrame + 1)->primary) >> 1;
+        out[1] = ((samples16 + highWeightFrame)->secondary +
+            (samples16 + highWeightFrame + 1)->secondary) >> 1;
     }
     else
     {
-        out[0] = ((samples + highWeightFrame)[0].primary_ +
-            (samples + highWeightFrame)[1].primary_) >> 1;
-        out[1] = ((samples + highWeightFrame)[0].secondary_ +
-            (samples + highWeightFrame)[1].secondary_) >> 1;
+        out[0] = ((samples + highWeightFrame)[0].primary +
+            (samples + highWeightFrame)[1].primary) >> 1;
+        out[1] = ((samples + highWeightFrame)[0].secondary +
+            (samples + highWeightFrame)[1].secondary) >> 1;
     }
 }
 
@@ -726,9 +726,9 @@ void CalculateScalingAmountSmooth(fix32_t* out, fix32_t time,
     Nitro3DJAC::Track::ChannelNonConst* channel, Nitro3DJAC* jac)
 {
     Nitro3DJAC::ScaleSample32* samples =
-        (Nitro3DJAC::ScaleSample32*)((intptr_t)jac + channel->samplesOffset_);
+        (Nitro3DJAC::ScaleSample32*)((intptr_t)jac + channel->samplesOffset);
     Nitro3DJAC::ScaleSample16* samples16 = (Nitro3DJAC::ScaleSample16*)samples;
-    unsigned int flags = channel->metadata_;
+    unsigned int flags = channel->metadata;
     unsigned int frameIdx = time >> 12;
     unsigned int lerpEndIdx;
 
@@ -736,7 +736,7 @@ void CalculateScalingAmountSmooth(fix32_t* out, fix32_t time,
     int rightShift;
 
     // at end of animation
-    if (jac->numFrames_ - 1 == frameIdx)
+    if (jac->numFrames - 1 == frameIdx)
     {
         if (flags & 0xc0000000) // log-rate != 0, i.e. samples less than once per frame
         {
@@ -750,7 +750,7 @@ void CalculateScalingAmountSmooth(fix32_t* out, fix32_t time,
             }
         }
 
-        if (jac->unk_8 & 2)// probably means animation is looping?
+        if (jac->flags & 2) // looping
         {
             lerpEndIdx = 0;
         }
@@ -758,13 +758,13 @@ void CalculateScalingAmountSmooth(fix32_t* out, fix32_t time,
         {
             if (flags & 0x20000000) // 16-bit samples
             {
-                out[0] = samples16[frameIdx].primary_;
-                out[1] = samples16[frameIdx].secondary_;
+                out[0] = samples16[frameIdx].primary;
+                out[1] = samples16[frameIdx].secondary;
             }
             else
             {
-                out[0] = samples[frameIdx].primary_;
-                out[1] = samples[frameIdx].secondary_;
+                out[0] = samples[frameIdx].primary;
+                out[1] = samples[frameIdx].secondary;
             }
             return;
         }       
@@ -821,17 +821,17 @@ skip_default_values:
     fix32_t secondaryLerp1;
     if (flags & 0x20000000) // 16-bit samples
     {
-        primaryLerp0 = samples16[frameIdx].primary_;
-        secondaryLerp0 = samples16[frameIdx].secondary_;
-        primaryLerp1 = samples16[lerpEndIdx].primary_;
-        secondaryLerp1 = samples16[lerpEndIdx].secondary_;
+        primaryLerp0 = samples16[frameIdx].primary;
+        secondaryLerp0 = samples16[frameIdx].secondary;
+        primaryLerp1 = samples16[lerpEndIdx].primary;
+        secondaryLerp1 = samples16[lerpEndIdx].secondary;
     }
     else
     {
-        primaryLerp0 = samples[frameIdx].primary_;
-        secondaryLerp0 = samples[frameIdx].secondary_;
-        primaryLerp1 = samples[lerpEndIdx].primary_;
-        secondaryLerp1 = samples[lerpEndIdx].secondary_;
+        primaryLerp0 = samples[frameIdx].primary;
+        secondaryLerp0 = samples[frameIdx].secondary;
+        primaryLerp1 = samples[lerpEndIdx].primary;
+        secondaryLerp1 = samples[lerpEndIdx].secondary;
     }
 
     out[0] = (primaryLerp0 * preMultiply +
@@ -843,14 +843,14 @@ skip_default_values:
 void CalculateRotationFrameAligned(Matrix3x3* out, fix32_t time,
     Nitro3DJAC::Track::ChannelNonConst* channel, Nitro3DJAC* jac)
 {
-    unsigned int flags = channel->metadata_;
+    unsigned int flags = channel->metadata;
     unsigned int frameIdx = time >> 12;
     unsigned int averageIdx;
     
     unsigned int basisOffset;
-    unsigned int pivotOffset = jac->pivotDataOffset_;
-    basisOffset = jac->basisMatricesOffset_;
-    uint16_t* samples = (uint16_t*)((intptr_t)jac + channel->samplesOffset_);
+    unsigned int pivotOffset = jac->pivotDataOffset;
+    basisOffset = jac->basisMatricesOffset;
+    uint16_t* samples = (uint16_t*)((intptr_t)jac + channel->samplesOffset);
 
     if ((flags & 0xc0000000) == 0)
         goto calculate_exact_frame;
@@ -989,19 +989,19 @@ void CalculateRotationSmooth(Matrix3x3* out, fix32_t time,
     Nitro3DJAC::Track::ChannelNonConst* channel, Nitro3DJAC* jac)
 {
     unsigned int basisOffset, pivotOffset;
-    pivotOffset = jac->pivotDataOffset_;
-    basisOffset = jac->basisMatricesOffset_;
-    unsigned int flags = channel->metadata_;
+    pivotOffset = jac->pivotDataOffset;
+    basisOffset = jac->basisMatricesOffset;
+    unsigned int flags = channel->metadata;
     
     unsigned int frameBIdx;
     unsigned int frameAIdx;
     fix32_t reducedTime;
     int preMultiply;
-    uint16_t* samples = (uint16_t*)((intptr_t)jac + channel->samplesOffset_);
+    uint16_t* samples = (uint16_t*)((intptr_t)jac + channel->samplesOffset);
     
     frameAIdx = time >> 12;
 
-    if (frameAIdx == jac->numFrames_ - 1)
+    if (frameAIdx == jac->numFrames - 1)
     {
         if ((flags & 0xc0000000) != 0)
         {
@@ -1014,7 +1014,7 @@ void CalculateRotationSmooth(Matrix3x3* out, fix32_t time,
                 frameAIdx = (frameAIdx & 3) + (frameAIdx / 4);
             }
         }
-        if (jac->unk_8 & 2)
+        if (jac->flags & 2) // looping
         {
             frameBIdx = 0;
         }

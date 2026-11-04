@@ -20,32 +20,32 @@ extern "C" Nitro3DAnimation* NSBXX_Model_AllocateAnimationData(AllocatorUnion* a
 
 extern "C" void NSBXX_Model_SetAllMaterialFlags(Nitro3DModel *model, int value, unsigned int mask)
 {
-    unsigned int numMaterials = model->numMaterials_;
+    unsigned int numMaterials = model->numMaterials;
     Nitro3DModelMaterials* materialList = model->GetMaterialData();
 
     for (unsigned int i = 0; i < numMaterials; i++)
     {
         Nitro3DMaterial* material = materialList->GetMaterialByIndex(i);
         if (value)
-            material->flags_ |= mask;
+            material->flags |= mask;
         else
-            material->flags_ &= ~mask;
+            material->flags &= ~mask;
     }
 }
 
 // 020b6f64
 extern "C" void NSBXX_Model_AdjustPolygonAttrMask(Nitro3DModel* model, int setBits, unsigned int mask)
 {
-    unsigned int numMaterials = model->numMaterials_;
+    unsigned int numMaterials = model->numMaterials;
     Nitro3DModelMaterials* materialList = model->GetMaterialData();
 
     for (unsigned int i = 0; i < numMaterials; i++)
     {
         Nitro3DMaterial* material = materialList->GetMaterialByIndex(i);
         if (setBits)
-            material->maskPOLYGON_ATTR_ |= mask;
+            material->maskPOLYGON_ATTR |= mask;
         else
-            material->maskPOLYGON_ATTR_ &= ~mask;
+            material->maskPOLYGON_ATTR &= ~mask;
     }
 }
 
@@ -55,7 +55,7 @@ extern "C" void NSBXX_Model_SetMaterialDiffuseReflectionColor(Nitro3DModel* mode
 {
     Nitro3DMaterial* material = model->GetMaterialData()->GetMaterialByIndex(materialIndex);
     // bits 16-20: ambient red, 21-25: ambient green, 26-30: ambient blue
-    material->paramDIF_AMB_ = material->paramDIF_AMB_ & 0xffff8000 | col;
+    material->paramDIF_AMB = material->paramDIF_AMB & 0xffff8000 | col;
 }
 
 // func_020b708c
@@ -64,7 +64,7 @@ extern "C" void NSBXX_Model_SetMaterialAmbientReflectionColor(Nitro3DModel* mode
 {
     Nitro3DMaterial* material = model->GetMaterialData()->GetMaterialByIndex(materialIndex);
     // bits 16-20: ambient red, 21-25: ambient green, 26-30: ambient blue
-    material->paramDIF_AMB_ = material->paramDIF_AMB_ & 0x8000ffff | (col << 16);
+    material->paramDIF_AMB = material->paramDIF_AMB & 0x8000ffff | (col << 16);
 }
 
 // 020b710c
@@ -72,13 +72,13 @@ extern "C" void NSBXX_Model_SetMaterialPolygonID(Nitro3DModel* model, unsigned i
 {
     Nitro3DMaterial* material = model->GetMaterialData()->GetMaterialByIndex(materialIndex);
     // set bits 24-29
-    material->paramPOLYGON_ATTR_ = material->paramPOLYGON_ATTR_ & ~0x3f000000 | (id << 24);
+    material->paramPOLYGON_ATTR = material->paramPOLYGON_ATTR & ~0x3f000000 | (id << 24);
 }
 
 extern "C" void NSBXX_Model_SetMaterialAlpha(Nitro3DModel* model, unsigned int materialIndex, int alpha)
 {
     Nitro3DMaterial* material = model->GetMaterialData()->GetMaterialByIndex(materialIndex);
-    material->paramPOLYGON_ATTR_ = material->paramPOLYGON_ATTR_ & ~0x1f0000 | (alpha << 16);
+    material->paramPOLYGON_ATTR = material->paramPOLYGON_ATTR & ~0x1f0000 | (alpha << 16);
 }
 
 // 020b71fc
@@ -86,32 +86,32 @@ extern "C" int NSBXX_Model_GetMaterialPolygonID(Nitro3DModel* model, unsigned in
 {
     Nitro3DMaterial* material = model->GetMaterialData()->GetMaterialByIndex(materialIndex);
     // extract bits 24-29
-    return (material->paramPOLYGON_ATTR_ & 0x3f000000) >> 24;
+    return (material->paramPOLYGON_ATTR & 0x3f000000) >> 24;
 }
 
 // 020b726c
 extern "C" void NSBXX_Model_SetDiffuseReflectionColor(Nitro3DModel* model, int col)
 {
-    for (unsigned int matIdx = 0; matIdx < model->numMaterials_; matIdx++)
+    for (unsigned int matIdx = 0; matIdx < model->numMaterials; matIdx++)
         NSBXX_Model_SetMaterialDiffuseReflectionColor(model, matIdx, col);
 }
 
 // 020b72ac
 extern "C" void NSBXX_Model_SetAmbientReflectionColor(Nitro3DModel* model, int col)
 {
-    for (unsigned int matIdx = 0; matIdx < model->numMaterials_; matIdx++)
+    for (unsigned int matIdx = 0; matIdx < model->numMaterials; matIdx++)
         NSBXX_Model_SetMaterialAmbientReflectionColor(model, matIdx, col);
 }
 
 // 020b72ec
 extern "C" void NSBXX_Model_SetPolygonID(Nitro3DModel* model, int id)
 {
-    for (unsigned int matIdx = 0; matIdx < model->numMaterials_; matIdx++)
+    for (unsigned int matIdx = 0; matIdx < model->numMaterials; matIdx++)
         NSBXX_Model_SetMaterialPolygonID(model, matIdx, id);
 }
 
 extern "C" void NSBXX_Model_SetAlpha(Nitro3DModel* model, int alpha)
 {
-    for (unsigned int matIdx = 0; matIdx < model->numMaterials_; matIdx++)
+    for (unsigned int matIdx = 0; matIdx < model->numMaterials; matIdx++)
         NSBXX_Model_SetMaterialAlpha(model, matIdx, alpha);
 }

@@ -30,21 +30,21 @@ struct AnimationTypeDescription
 
 void InitializeModelAnimation(Nitro3DAnimation *anim, void *pRawData, Nitro3DModel *model, Nitro3DTextureSet *tex)
 {
-    anim->time_ = 0;
-    anim->pRawData_ = pRawData;
-    anim->pNext_ = NULL;
-    anim->unk_18 = 0x7f;
-    anim->weight_ = 1 << 12;
-    anim->pTex0_ = tex;
-    anim->numEntries_ = 0;
-    anim->callback_ = NULL;
+    anim->time = 0;
+    anim->pRawData = pRawData;
+    anim->pNext = NULL;
+    anim->unknown_18 = 0x7f;
+    anim->weight = 1 << 12;
+    anim->pTex0 = tex;
+    anim->numEntries = 0;
+    anim->callback = NULL;
 
     Nitro3DAnimationSignature* signature = (Nitro3DAnimationSignature*)pRawData;
     int numAnimationTypes = data_020f1c6c;
     for (unsigned int animType = 0; animType < numAnimationTypes; animType++)
     {
-        if (signature->signatureInitial_ != data_020f1c90[animType].signature.signatureInitial_ ||
-            signature->signatureEnd_ != data_020f1c90[animType].signature.signatureEnd_)
+        if (signature->signatureInitial != data_020f1c90[animType].signature.signatureInitial ||
+            signature->signatureEnd != data_020f1c90[animType].signature.signatureEnd)
             continue;
         
         if (data_020f1c90[animType].initializer != NULL)
@@ -56,10 +56,10 @@ void InitializeModelAnimation(Nitro3DAnimation *anim, void *pRawData, Nitro3DMod
 void PopulateModelRenderContext(ModelRenderContext *context, Nitro3DModel *model)
 {
     func_020ca3ec(0, context, sizeof(ModelRenderContext));
-    context->pfnProcessMaterialAnimations_ = data_020f1c8c;
-    context->pfnProcessJointAnimations_ = data_020f1c88;
-    context->pfnProcessVisibilityAnimations_ = data_020f1c84;
-    context->internalModel_ = model;
+    context->pfnProcessMaterialAnimations = data_020f1c8c;
+    context->pfnProcessJointAnimations = data_020f1c88;
+    context->pfnProcessVisibilityAnimations = data_020f1c84;
+    context->model = model;
 }
 
 void AddAnimationsToList(Nitro3DAnimation** pListStart, Nitro3DAnimation* newEntry)
@@ -72,56 +72,56 @@ void AddAnimationsToList(Nitro3DAnimation** pListStart, Nitro3DAnimation* newEnt
         return;
     }    
 
-    if (mainListEntry->pNext_ == NULL)
+    if (mainListEntry->pNext == NULL)
     {
-        if (mainListEntry->unk_18 > newEntry->unk_18)
+        if (mainListEntry->unknown_18 > newEntry->unknown_18)
         {
             Nitro3DAnimation* newEntrySequenceEnd = newEntry;
-            if (newEntrySequenceEnd->pNext_ != NULL)
+            if (newEntrySequenceEnd->pNext != NULL)
             {
                 do
                 {
-                    newEntrySequenceEnd = newEntrySequenceEnd->pNext_;
-                } while (newEntrySequenceEnd->pNext_ != NULL);
+                    newEntrySequenceEnd = newEntrySequenceEnd->pNext;
+                } while (newEntrySequenceEnd->pNext != NULL);
             }
-            newEntrySequenceEnd->pNext_ = mainListEntry;
+            newEntrySequenceEnd->pNext = mainListEntry;
             *pListStart = newEntry;
         }
         else
         {
-            mainListEntry->pNext_ = newEntry;
+            mainListEntry->pNext = newEntry;
         }
         return;
     }
-    Nitro3DAnimation* mainListNextEntry = mainListEntry->pNext_;
+    Nitro3DAnimation* mainListNextEntry = mainListEntry->pNext;
     
-    if (mainListEntry->pNext_ != NULL)
+    if (mainListEntry->pNext != NULL)
     {
-        unsigned int targetOrder = newEntry->unk_18;
+        unsigned int targetOrder = newEntry->unknown_18;
         do
         {
-            unsigned int nextOrder = mainListNextEntry->unk_18;
+            unsigned int nextOrder = mainListNextEntry->unknown_18;
             if (nextOrder >= targetOrder)
             {
                 Nitro3DAnimation* newEntrySequenceEnd = newEntry;
-                if (newEntrySequenceEnd->pNext_ != NULL)
+                if (newEntrySequenceEnd->pNext != NULL)
                 {
                     do
                     {
-                        newEntrySequenceEnd = newEntrySequenceEnd->pNext_;
-                    } while (newEntrySequenceEnd->pNext_ != NULL);
+                        newEntrySequenceEnd = newEntrySequenceEnd->pNext;
+                    } while (newEntrySequenceEnd->pNext != NULL);
                 }
-                mainListEntry->pNext_ = newEntry;
-                newEntrySequenceEnd->pNext_ = mainListNextEntry;
+                mainListEntry->pNext = newEntry;
+                newEntrySequenceEnd->pNext = mainListNextEntry;
                 return;
             }
             mainListEntry = mainListNextEntry;
-            mainListNextEntry = mainListNextEntry->pNext_;
-        } while (mainListEntry->pNext_ != NULL);
+            mainListNextEntry = mainListNextEntry->pNext;
+        } while (mainListEntry->pNext != NULL);
     }
     // If we get here, need to insert the new entry at the end, and
     // mainListEntry points to the final one currently in the list
-    mainListEntry->pNext_ = newEntry;
+    mainListEntry->pNext = newEntry;
 }
 
 // the exact same function exists in RenderCommands.cpp so we give it a slightly
@@ -134,41 +134,41 @@ void PopulateBitfieldFromAnimData0(unsigned int* bitfield, Nitro3DAnimation* ani
     do
     {
         int counter = 0;
-        if (counter < anim->numEntries_)
+        if (counter < anim->numEntries)
         {
             do
             {
-                if (anim->entries_[counter] & 0x100)
+                if (anim->entries[counter] & 0x100)
                 {
                     bitfield[counter >> 5] |= 1 << (counter & 0x1f);
                 }
                 counter++;
-            } while (counter < anim->numEntries_);
+            } while (counter < anim->numEntries);
         }
-        anim = anim->pNext_;
+        anim = anim->pNext;
     } while (anim != NULL);
 }
 
 void AddAnimationsToModelRenderContext(ModelRenderContext *context, Nitro3DAnimation *anim)
 {
-    if (anim == NULL || anim->pRawData_ == NULL)
+    if (anim == NULL || anim->pRawData == NULL)
         return;
 
-    Nitro3DAnimationSignature* signature = (Nitro3DAnimationSignature*)anim->pRawData_;
+    Nitro3DAnimationSignature* signature = (Nitro3DAnimationSignature*)anim->pRawData;
 
-    switch (signature->signatureInitial_)
+    switch (signature->signatureInitial)
     {
     case 'M':
-        PopulateBitfieldFromAnimData0(context->animatedMaterials_, anim);
-        AddAnimationsToList(&context->materialAnimations_, anim);
+        PopulateBitfieldFromAnimData0(context->animatedMaterials, anim);
+        AddAnimationsToList(&context->materialAnimations, anim);
         break;
     case 'J':
-        PopulateBitfieldFromAnimData0(context->animatedBoneMatrices_, anim);
-        AddAnimationsToList(&context->jointAnimations_, anim);
+        PopulateBitfieldFromAnimData0(context->animatedBoneMatrices, anim);
+        AddAnimationsToList(&context->jointAnimations, anim);
         break;
     case 'V':
-        PopulateBitfieldFromAnimData0(context->animatedVisibilityConditions_, anim);
-        AddAnimationsToList(&context->visibilityAnimations_, anim);
+        PopulateBitfieldFromAnimData0(context->animatedVisibilityConditions, anim);
+        AddAnimationsToList(&context->visibilityAnimations, anim);
         break;
     }
 }
@@ -183,12 +183,12 @@ bool RemoveAnimationFromList(Nitro3DAnimation** pList, Nitro3DAnimation* entry)
 
     if (firstEntry == entry)
     {
-        *pList = firstEntry->pNext_;
-        entry->pNext_ = NULL;
+        *pList = firstEntry->pNext;
+        entry->pNext = NULL;
         return true;
     }
     
-    Nitro3DAnimation* nextEntry = firstEntry->pNext_;
+    Nitro3DAnimation* nextEntry = firstEntry->pNext;
     Nitro3DAnimation* listEntry = firstEntry;
     if (nextEntry != NULL)
     {
@@ -196,12 +196,12 @@ bool RemoveAnimationFromList(Nitro3DAnimation** pList, Nitro3DAnimation* entry)
         {
             if (nextEntry == entry)
             {
-                listEntry->pNext_ = nextEntry->pNext_;
-                nextEntry->pNext_ = NULL;
+                listEntry->pNext = nextEntry->pNext;
+                nextEntry->pNext = NULL;
                 return true;
             }
             listEntry = nextEntry;
-            nextEntry = nextEntry->pNext_;
+            nextEntry = nextEntry->pNext;
         } while (nextEntry != NULL);
     }
 
@@ -210,18 +210,18 @@ bool RemoveAnimationFromList(Nitro3DAnimation** pList, Nitro3DAnimation* entry)
 
 void RemoveAnimationFromModelRenderContext(ModelRenderContext *context, Nitro3DAnimation *anim)
 {
-    if (RemoveAnimationFromList(&context->materialAnimations_, anim) ||
-        RemoveAnimationFromList(&context->jointAnimations_, anim) ||
-        RemoveAnimationFromList(&context->visibilityAnimations_, anim))
+    if (RemoveAnimationFromList(&context->materialAnimations, anim) ||
+        RemoveAnimationFromList(&context->jointAnimations, anim) ||
+        RemoveAnimationFromList(&context->visibilityAnimations, anim))
     {
-        context->flags_ |= (1 << 4);
+        context->flags |= (1 << 4);
     }
 }
 
 void SetModelRenderContextRenderCommandHook(ModelRenderContext *context,
     RenderCommandHook hook, int unknown, int commandID, int stage)
 {
-    context->renderCommandHook_ = hook;
-    context->renderCommandHookCommandID_ = commandID;
-    context->renderCommandHookStage_ = stage;
+    context->renderCommandHook = hook;
+    context->renderCommandHookCommandID = commandID;
+    context->renderCommandHookStage = stage;
 }

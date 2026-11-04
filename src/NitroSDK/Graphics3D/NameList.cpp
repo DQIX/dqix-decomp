@@ -6,7 +6,7 @@ extern "C" void* NSBXXNameList_Search(const Nitro3DNameList* nameList, const cha
     if (name == NULL)
         return NULL;
 
-    if (nameList->numEntries_ < 16) // list is short, do linear search
+    if (nameList->numEntries < 16) // list is short, do linear search
     {
         unsigned int searchIndex;
         uint32_t target0 = target[0];
@@ -14,7 +14,7 @@ extern "C" void* NSBXXNameList_Search(const Nitro3DNameList* nameList, const cha
         uint32_t target2 = target[2];
         uint32_t target3 = target[3];
         
-        for (searchIndex = 0; searchIndex < nameList->numEntries_; searchIndex++)
+        for (searchIndex = 0; searchIndex < nameList->numEntries; searchIndex++)
         {
             const uint32_t* source = (const uint32_t*)nameList->GetNameByIndex(searchIndex);
             if (source[0] == target0 && source[1] == target1 &&
@@ -26,25 +26,25 @@ extern "C" void* NSBXXNameList_Search(const Nitro3DNameList* nameList, const cha
     }
     else // list is long, use the binary search tree
     {   
-        Nitro3DNameList::SearchTreeEntry* entryArray = (Nitro3DNameList::SearchTreeEntry*)&nameList->treeRoot_8_;
-        int firstChild = entryArray[0].children_[0];
+        Nitro3DNameList::SearchTreeEntry* entryArray = (Nitro3DNameList::SearchTreeEntry*)&nameList->treeRoot;
+        int firstChild = entryArray[0].children[0];
         if (firstChild != 0)
         {
             Nitro3DNameList::SearchTreeEntry* searchCursor = &entryArray[firstChild];
-            int bitIndex = entryArray[firstChild].bitIndex_;
-            unsigned int prevBitIndex = entryArray[0].bitIndex_;
+            int bitIndex = entryArray[firstChild].bitIndex;
+            unsigned int prevBitIndex = entryArray[0].bitIndex;
             while (prevBitIndex > bitIndex)
             {
                 int integerToQuery = bitIndex >> 5;
                 int bitToQuery = bitIndex & 0x1f;
                 int bitValue = (target[integerToQuery] >> bitToQuery) & 1;
-                int childID = searchCursor->children_[bitValue];
-                bitIndex = entryArray[childID].bitIndex_;
-                prevBitIndex = searchCursor->bitIndex_;
+                int childID = searchCursor->children[bitValue];
+                bitIndex = entryArray[childID].bitIndex;
+                prevBitIndex = searchCursor->bitIndex;
                 searchCursor = &entryArray[childID];
             }
             
-            unsigned int candidateIndex = searchCursor->resourceIndex_;
+            unsigned int candidateIndex = searchCursor->resourceIndex;
             const uint32_t* source = (const uint32_t*)nameList->GetNameByIndex(candidateIndex);
             
             if (source[0] == target[0] && source[1] == target[1] &&
@@ -64,14 +64,14 @@ extern "C" int NSBXXNameList_SearchIndex(const Nitro3DNameList* nameList, const 
     if (name == NULL)
         return -1;
 
-    if (nameList->numEntries_ < 16) // list is short, do linear search
+    if (nameList->numEntries < 16) // list is short, do linear search
     {
         unsigned int searchIndex;
         uint32_t target0 = target[0];
         uint32_t target1 = target[1];
         uint32_t target2 = target[2];
         uint32_t target3 = target[3];
-        for (searchIndex = 0; searchIndex < nameList->numEntries_; searchIndex++)
+        for (searchIndex = 0; searchIndex < nameList->numEntries; searchIndex++)
         {
             const uint32_t* source = (const uint32_t*)nameList->GetNameByIndex(searchIndex);
             if (source[0] == target0 && source[1] == target1 &&
@@ -83,28 +83,28 @@ extern "C" int NSBXXNameList_SearchIndex(const Nitro3DNameList* nameList, const 
     }
     else // list is long, use the binary search tree
     {   
-        Nitro3DNameList::SearchTreeEntry* entryArray = (Nitro3DNameList::SearchTreeEntry*)&nameList->treeRoot_8_;
-        int firstChild = entryArray[0].children_[0];
+        Nitro3DNameList::SearchTreeEntry* entryArray = (Nitro3DNameList::SearchTreeEntry*)&nameList->treeRoot;
+        int firstChild = entryArray[0].children[0];
         if (firstChild != 0)
         {
             Nitro3DNameList::SearchTreeEntry* searchCursor = &entryArray[firstChild];
-            int bitIndex = entryArray[firstChild].bitIndex_;   
-            unsigned int prevBitIndex = entryArray[0].bitIndex_;
+            int bitIndex = entryArray[firstChild].bitIndex;   
+            unsigned int prevBitIndex = entryArray[0].bitIndex;
             while (prevBitIndex > bitIndex)
             {
                 int integerToQuery = bitIndex >> 5;
                 int bitToQuery = bitIndex & 0x1f;
                 int bitValue = (target[integerToQuery] >> bitToQuery) & 1;
-                int childID = searchCursor->children_[bitValue];
-                bitIndex = entryArray[childID].bitIndex_;
-                prevBitIndex = searchCursor->bitIndex_;
+                int childID = searchCursor->children[bitValue];
+                bitIndex = entryArray[childID].bitIndex;
+                prevBitIndex = searchCursor->bitIndex;
                 searchCursor = &entryArray[childID];
             }
             
-            const uint32_t* sourceIntArray = (const uint32_t*)nameList->GetNameByIndex(searchCursor->resourceIndex_);
+            const uint32_t* sourceIntArray = (const uint32_t*)nameList->GetNameByIndex(searchCursor->resourceIndex);
             if (sourceIntArray[0] == target[0] && sourceIntArray[1] == target[1] &&
                 sourceIntArray[2] == target[2] && sourceIntArray[3] == target[3])
-                return searchCursor->resourceIndex_;
+                return searchCursor->resourceIndex;
             
         }
     }

@@ -14,7 +14,7 @@ struct Nitro3DBoneMatrix
     // bit 9: negate c 
     // bit 10: negate d
     // bits 11-15: index of bone matrix on stack?
-    uint16_t flags_;
+    uint16_t flags;
 
     fix16_t m_11;
 

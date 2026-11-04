@@ -8,11 +8,11 @@
 struct Nitro3DVAV
 {
     char unk_0[6];
-    unsigned short numConditions_;
+    unsigned short numConditions;
     char unk_8[4];
     // to determine visibility, you generate a test index via
     // testIndex = (frame * numConditions) + conditionIndex
     // then look up bitfield[testIndex >> 5] & (1 << (testIndex & 0x1f)).
     // if it's nonzero, the model is visible
-    uint32_t bitfield_[1];
+    uint32_t bitfield[1];
 };

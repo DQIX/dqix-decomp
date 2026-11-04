@@ -5,14 +5,16 @@
 
 struct Nitro3DJAC
 {
-    Nitro3DAnimationSignature signature_; // "J\0AC"
-    uint16_t numFrames_;
-    uint16_t numTracks_;
-    uint32_t unk_8;
-    uint32_t pivotDataOffset_;
-    uint32_t basisMatricesOffset_;
+    Nitro3DAnimationSignature signature; // "J\0AC"
+    uint16_t numFrames;
+    uint16_t numTracks;
+    // bit 0: interpolate smoothly?
+    // bit 1: loop animation
+    uint32_t flags;
+    uint32_t pivotDataOffset;
+    uint32_t basisMatricesOffset;
 
-    uint16_t trackOffsets_[1];
+    uint16_t trackOffsets[1];
 
     struct Track
     {
@@ -29,7 +31,7 @@ struct Nitro3DJAC
         // bit 13: z-scale is constant
         // bits 14-23: ???, unused?
         // bits 24-31: index of bone matrix to target
-        uint32_t flagsAndTargetBoneMatrix_;
+        uint32_t flagsAndTargetBoneMatrix;
 
         // channel data goes here...
 
@@ -39,21 +41,21 @@ struct Nitro3DJAC
             // bits 16-27: end frame
             // bits 28-29: 'width', determines type of data
             // bits 30-31: log(rate)
-            uint32_t metadata_;
-            uint32_t samplesOffset_;
+            uint32_t metadata;
+            uint32_t samplesOffset;
         };
     };
 
     struct ScaleSample16
     {
-        fix16_t primary_;
-        fix16_t secondary_;
+        fix16_t primary;
+        fix16_t secondary;
     };
 
     struct ScaleSample32
     {
-        fix32_t primary_;
-        fix32_t secondary_;
+        fix32_t primary;
+        fix32_t secondary;
     };
 
     struct PivotMatrix
@@ -74,11 +76,11 @@ struct Nitro3DJAC
 
     inline PivotMatrix* GetPivotMatrices() const
     {
-        return (PivotMatrix*)((intptr_t)this + this->pivotDataOffset_);
+        return (PivotMatrix*)((intptr_t)this + this->pivotDataOffset);
     }
 
     inline BasisMatrix* GetBasisMatrices() const
     {
-        return (BasisMatrix*)((intptr_t)this + this->basisMatricesOffset_);
+        return (BasisMatrix*)((intptr_t)this + this->basisMatricesOffset);
     }
 };

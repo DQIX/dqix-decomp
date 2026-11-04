@@ -228,11 +228,11 @@ compute_average:
 
 void CalculateTextureTransformFromMAT(Nitro3DMAT* mat, unsigned short arg, unsigned int frame, MaterialRenderData* renderData)
 {
-    Nitro3DMAT::Track* track = mat->tracks_.GetEntryByIndex<Nitro3DMAT::Track>(arg);
-    unsigned int renderFlags = renderData->flags_;
+    Nitro3DMAT::Track* track = mat->tracks.GetEntryByIndex<Nitro3DMAT::Track>(arg);
+    unsigned int renderFlags = renderData->flags;
 
-    fix32_t tx = SampleScalarFromMATTrack(mat, track->unk_18, track->unk_1c, frame);
-    fix32_t ty = SampleScalarFromMATTrack(mat, track->unk_20, track->unk_24, frame);
+    fix32_t tx = SampleScalarFromMATTrack(mat, track->translateXMetadata, track->translateXOffset, frame);
+    fix32_t ty = SampleScalarFromMATTrack(mat, track->translateYMetadata, track->translateYOffset, frame);
 
     if (tx == 0 && ty == 0)
     {
@@ -240,26 +240,26 @@ void CalculateTextureTransformFromMAT(Nitro3DMAT* mat, unsigned short arg, unsig
     }
     else
     {
-        renderData->translateX_ = tx;
-        renderData->translateY_ = ty;
+        renderData->translateX = tx;
+        renderData->translateY = ty;
         renderFlags &= ~4;
     }
     
 
-    uint32_t cos_sin = SampleSinCosFromMATTrack(mat, track->unk_10, track->unk_14, frame);
+    uint32_t cos_sin = SampleSinCosFromMATTrack(mat, track->rotationMetadata, track->rotationOffset, frame);
     if (cos_sin == 0x10000000) // cos = 1 and sin = 0, so no rotation 
     {
         renderFlags |= 2;
     }
     else
     {
-        renderData->rotationSine_ = (fix16_t)cos_sin;
-        renderData->rotationCosine_ = (fix16_t)(cos_sin >> 16);
+        renderData->rotationSine = (fix16_t)cos_sin;
+        renderData->rotationCosine = (fix16_t)(cos_sin >> 16);
         renderFlags &= ~2;
     }
 
-    fix32_t sx = SampleScalarFromMATTrack(mat, track->unk_0, track->unk_4, frame);
-    fix32_t sy = SampleScalarFromMATTrack(mat, track->unk_8, track->unk_c, frame);
+    fix32_t sx = SampleScalarFromMATTrack(mat, track->scaleXMetadata, track->scaleXOffset, frame);
+    fix32_t sy = SampleScalarFromMATTrack(mat, track->scaleYMetadata, track->scaleYOffset, frame);
 
     if (sx == 0x1000 && sy == 0x1000)
     {
@@ -267,56 +267,56 @@ void CalculateTextureTransformFromMAT(Nitro3DMAT* mat, unsigned short arg, unsig
     }
     else
     {
-        renderData->extensionScaleX_ = sx;
-        renderData->extensionScaleY_ = sy;
+        renderData->extensionScaleX = sx;
+        renderData->extensionScaleY = sy;
         renderFlags &= ~1;
     }
 
-    renderData->flags_ = renderFlags;
+    renderData->flags = renderFlags;
 }
 
 void InitializeModelAnimationFromMAT(Nitro3DAnimation* anim, void* pvMAT, Nitro3DModel* model)
 {
     unsigned int track;
     Nitro3DModelMaterials* materials;
-    if (model != NULL && model->materialsOffset_ != 0)
-        materials = (Nitro3DModelMaterials*)((intptr_t)model + model->materialsOffset_);
+    if (model != NULL && model->materialsOffset != 0)
+        materials = (Nitro3DModelMaterials*)((intptr_t)model + model->materialsOffset);
     else
         materials = NULL;
-    anim->callback_ = data_020f1c78;
+    anim->callback = data_020f1c78;
 
-    anim->numEntries_ = model->numMaterials_;
-    func_020ca390(0, &anim->entries_[0], anim->numEntries_ * 2);
+    anim->numEntries = model->numMaterials;
+    func_020ca390(0, &anim->entries[0], anim->numEntries * 2);
 
     Nitro3DMAT* mat = (Nitro3DMAT*)pvMAT;
     
     track = 0;
-    if (track < mat->tracks_.numEntries_)
+    if (track < mat->tracks.numEntries)
     {
         do
         {   
-            const char* str = mat->tracks_.GetNameByIndex(track);
+            const char* str = mat->tracks.GetNameByIndex(track);
             int idx;
 
             if (materials == NULL)
                 idx = -1;
             else
-                idx = NSBXXNameList_SearchIndex(&materials->materialOffsetList_, str);
+                idx = NSBXXNameList_SearchIndex(&materials->materialOffsetList, str);
 
             if (idx >= 0)
             {
-                anim->entries_[idx] = track | 0x100;
+                anim->entries[idx] = track | 0x100;
             }
             track++;
-        } while (track < mat->tracks_.numEntries_);
+        } while (track < mat->tracks.numEntries);
     }
 }
 
 void MATAnimationProcessingCallback(void* data, Nitro3DAnimation* anim, int arg)
 {
     MaterialRenderData* renderData = (MaterialRenderData*)data;
-    CalculateTextureTransformFromMAT((Nitro3DMAT*)anim->pRawData_, arg, anim->time_ >> 12, renderData);
+    CalculateTextureTransformFromMAT((Nitro3DMAT*)anim->pRawData, arg, anim->time >> 12, renderData);
     // set texcoord transform source to 1 (texcoord source)
-    renderData->paramTEXIMAGE_PARAMS_ = (renderData->paramTEXIMAGE_PARAMS_ & ~0xc0000000) | 0x40000000;
-    renderData->flags_ |= 8; // use extension data
+    renderData->paramTEXIMAGE_PARAMS = (renderData->paramTEXIMAGE_PARAMS & ~0xc0000000) | 0x40000000;
+    renderData->flags |= 8; // use extension data
 }
