@@ -1,8 +1,6 @@
 #include "NitroSDK/Graphics3D/Graphics3D.h"
 #include "NitroSDK/Graphics3D/RenderCommands_Common.h"
 
-#pragma optimization_level 2
-
 #if defined(jpn)
 #define func_020ca390 func_020cbe5c
 #define data_020f1c78 data_020f1de4
@@ -139,9 +137,9 @@ uint32_t SampleSinCosFromMATTrack(Nitro3DMAT* mat, unsigned int metadata, unsign
         return offset;
 
     uint32_t* samples = (uint32_t*)((intptr_t)mat + offset);
-    uint16_t* samples16 = (uint16_t*)samples;
+    fix16_t* samples16 = (fix16_t*)samples;
 
-    unsigned int sampleIdx;
+    unsigned long sampleIdx;
 
     if ((metadata & 0xc0000000) == 0)
         goto compute_direct;
@@ -222,8 +220,8 @@ uint32_t SampleSinCosFromMATTrack(Nitro3DMAT* mat, unsigned int metadata, unsign
 compute_direct:
     return samples[frame];
 compute_average:
-    fix32_t avgSine = (((fix16_t*)(samples + sampleIdx))[0] + ((fix16_t*)(samples + sampleIdx))[2]) >> 1;
-    fix32_t avgCosine = (((fix16_t*)(samples + sampleIdx))[1] + ((fix16_t*)(samples + sampleIdx))[3]) >> 1;
+    fix32_t avgSine = (samples16[2 * sampleIdx] + samples16[2 * sampleIdx + 2]) >> 1;
+    fix32_t avgCosine = (samples16[2 * sampleIdx + 1] + samples16[2 * sampleIdx + 3]) >> 1;
 
     return (uint16_t)avgSine | (avgCosine << 16);
 }
@@ -295,10 +293,9 @@ void InitializeModelAnimationFromMAT(Nitro3DAnimation* anim, void* pvMAT, Nitro3
     track = 0;
     if (track < mat->tracks_.numEntries_)
     {
-        unsigned int bufferOffset = 0;
         do
         {   
-            const char* str = mat->tracks_.GetNameByIndexAndOffset(track, bufferOffset);
+            const char* str = mat->tracks_.GetNameByIndex(track);
             int idx;
 
             if (materials == NULL)
@@ -311,7 +308,6 @@ void InitializeModelAnimationFromMAT(Nitro3DAnimation* anim, void* pvMAT, Nitro3
                 anim->entries_[idx] = track | 0x100;
             }
             track++;
-            bufferOffset += 16;
         } while (track < mat->tracks_.numEntries_);
     }
 }

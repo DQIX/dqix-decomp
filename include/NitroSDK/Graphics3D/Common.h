@@ -73,18 +73,6 @@ struct Nitro3DNameList
         else
             return NULL;
     }
-
-    // this one needs to be scrapped
-    inline const char* GetNameByIndexAndOffset(unsigned int n, unsigned int offsetInBuffer) const
-    {
-        if (this != NULL && n < numEntries_)
-        {
-            intptr_t dataStart = (intptr_t)this + offsetToDataStart_;
-            intptr_t nameStart = dataStart + *(uint16_t*)(dataStart + 2);
-            return (const char*)(nameStart + offsetInBuffer);
-        }
-        return NULL;
-    }
 };
 
 struct Nitro3DInnerFileHeader
