@@ -14,9 +14,9 @@ extern "C"
 }
 
 // processing callback for M.AM animations
-extern void (*data_020f1c80)(void* data, AnimationData* anim, int arg);
+extern void (*data_020f1c80)(void* data, Nitro3DAnimation* anim, int arg);
 
-unsigned short GetColorFromMaterialAnimation(NSBXXAnimationMAM* mam, unsigned int trackEntry, unsigned int frame)
+unsigned short GetColorFromMaterialAnimation(Nitro3DMAM* mam, unsigned int trackEntry, unsigned int frame)
 {
     if (trackEntry & 0x20000000)
         return (unsigned short)trackEntry;
@@ -97,7 +97,7 @@ unsigned short GetColorFromMaterialAnimation(NSBXXAnimationMAM* mam, unsigned in
         (((a & 0x3e0) + (b & 0x3e0)) >> 1) & 0x3e0;
 }
 
-unsigned short GetAlphaFromMaterialAnimation(NSBXXAnimationMAM* mam, unsigned int trackEntry, unsigned int frame)
+unsigned short GetAlphaFromMaterialAnimation(Nitro3DMAM* mam, unsigned int trackEntry, unsigned int frame)
 {
     if (trackEntry & 0x20000000)
         return (unsigned short)trackEntry;
@@ -159,16 +159,16 @@ unsigned short GetAlphaFromMaterialAnimation(NSBXXAnimationMAM* mam, unsigned in
     }
 }
 
-void InitializeModelAnimationFromMAM(AnimationData* anim, void* pvMAM, NSBXXInternalModel* model)
+void InitializeModelAnimationFromMAM(Nitro3DAnimation* anim, void* pvMAM, Nitro3DModel* model)
 {   
     
-    NSBXXModelMaterialData* materials = model->GetMaterialData();
+    Nitro3DModelMaterials* materials = model->GetMaterialData();
     anim->callback_ = data_020f1c80;
 
     anim->numEntries_ = model->numMaterials_;
     func_020ca390(0, &anim->entries_[0], anim->numEntries_ * 2);
 
-    NSBXXAnimationMAM* mam = (NSBXXAnimationMAM*)pvMAM;
+    Nitro3DMAM* mam = (Nitro3DMAM*)pvMAM;
     for (unsigned int track = 0; track < mam->tracks_.numEntries_; track++)
     {   
         const char* str = mam->tracks_.GetNameByIndex(track);
@@ -184,12 +184,12 @@ void InitializeModelAnimationFromMAM(AnimationData* anim, void* pvMAM, NSBXXInte
     }
 }
 
-void MAMAnimationProcessingCallback(void* data, AnimationData* anim, int arg)
+void MAMAnimationProcessingCallback(void* data, Nitro3DAnimation* anim, int arg)
 {
     MaterialRenderData* renderData = (MaterialRenderData*)data;
-    NSBXXAnimationMAM* mam = (NSBXXAnimationMAM*)anim->pRawData_;
+    Nitro3DMAM* mam = (Nitro3DMAM*)anim->pRawData_;
     unsigned int frame = anim->time_ >> 12;
-    NSBXXAnimationMAM::Track* track = mam->tracks_.GetEntryByIndex<NSBXXAnimationMAM::Track>((unsigned short)arg);
+    Nitro3DMAM::Track* track = mam->tracks_.GetEntryByIndex<Nitro3DMAM::Track>((unsigned short)arg);
 
     unsigned int diffuseCol = GetColorFromMaterialAnimation(mam, track->diffuse_, frame);
     unsigned int ambientCol = GetColorFromMaterialAnimation(mam, track->ambient_, frame);

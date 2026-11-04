@@ -177,7 +177,7 @@ public:
     void Initialize();
     void SetZone(Zone3D* zone);
 
-    void ModelTransformTintBrightnessContrast(NSBXXInternalModel* model);
+    void ModelTransformTintBrightnessContrast(Nitro3DModel* model);
 
     void ProcessZoneChange(Zone3D* newZone);
 
@@ -186,7 +186,7 @@ public:
     // In advanced mode it additionally sets the color and direction of the two
     // 3D lights as well as the edge color.
     void SubmitToRenderConfig();
-    void ApplyAmbientColorToModel(NSBXXInternalModel* model);
+    void ApplyAmbientColorToModel(Nitro3DModel* model);
 
     void MaybeComputeHorizonPosition();
     void DrawBackgroundGradient();

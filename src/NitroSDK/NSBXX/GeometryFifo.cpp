@@ -1,6 +1,6 @@
 #include "NitroSDK/NSBXX/GeometryFifo.h"
 #include "NitroSDK/Graphics.h"
-#include "NitroSDK/NSBXX/RenderCommands.h"
+#include "NitroSDK/NSBXX/NSBXX.h"
 #include "NitroSDK/NSBXX/RenderConfig.h"
 #include "NitroSDK/DMA.h"
 #include <globaldefs.h>
@@ -177,9 +177,9 @@ void GetCurrentPositionAndDirectionMatrices(Matrix4x3* position, Matrix3x3* dire
 bool GetModelBonePositionAndDirectionMatrices(ModelRenderContext *context,
     Matrix4x3* outPos, Matrix3x3* outDir, unsigned int boneIndex)
 {
-    NSBXXInternalModel* model = context->internalModel_;
-    NSBXXNameList* boneList = &model->boneList_;
-    NSBXXBoneMatrix* boneMatrix = boneList->GetEntryFromu32Offset<NSBXXBoneMatrix>(boneIndex);
+    Nitro3DModel* model = context->internalModel_;
+    Nitro3DNameList* boneList = &model->boneList_;
+    Nitro3DBoneMatrix* boneMatrix = boneList->GetEntryFromu32Offset<Nitro3DBoneMatrix>(boneIndex);
 
     unsigned int stackPos = ((unsigned int)boneMatrix->flags_ & 0xf800) >> 11;
     if (stackPos != 31)

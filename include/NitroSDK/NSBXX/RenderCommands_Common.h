@@ -67,7 +67,7 @@ extern struct {
 
 // Holds { func_020b9a2c, func_020b9b30, func_020ba390 }.
 // Called by command 6 to populate scaling data for the bone matrix
-extern void (*data_020f1cec[])(BoneMatrixRenderData*, NSBXXBoneMatrix::Scaling* boneMatrixScaleData, uint8_t* ip, int boneMatrixFlags);
+extern void (*data_020f1cec[])(BoneMatrixRenderData*, Nitro3DBoneMatrix::Scaling* boneMatrixScaleData, uint8_t* ip, int boneMatrixFlags);
 // Holds { func_020b99b0, func_020b9a6c, func_020ba264 }
 // Called by command 6 to apply bone matrix transformations via the GXFifo
 extern void (*data_020f1ce0[])(BoneMatrixRenderData*);
@@ -84,9 +84,9 @@ extern struct Struct_020f1d08
     unsigned int texImageParamsArg_c_;
 
     // only one of these is not null
-    void (*materialBindFunctions[4])(RenderCommandHandler*, int modifier, NSBXXMaterial*, unsigned int idx);
+    void (*materialBindFunctions[4])(RenderCommandHandler*, int modifier, Nitro3DMaterial*, unsigned int idx);
     // only one of these is not null
-    void (*meshDrawFunctions[4])(RenderCommandHandler*, int modifier, NSBXXMesh*, unsigned int idx);
+    void (*meshDrawFunctions[4])(RenderCommandHandler*, int modifier, Nitro3DMesh*, unsigned int idx);
 
     Matrix4x4 command13Matrix4x4_;
 } data_020f1d08;

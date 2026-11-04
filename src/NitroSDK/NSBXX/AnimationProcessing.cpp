@@ -11,7 +11,7 @@ extern "C"
     void func_020ca458(int value, void* data, unsigned len);
 }
 
-bool ProcessMaterialAnimationsOnBoundMaterial(MaterialRenderData* material, AnimationData* anim, unsigned int matIdx)
+bool ProcessMaterialAnimationsOnBoundMaterial(MaterialRenderData* material, Nitro3DAnimation* anim, unsigned int matIdx)
 {
     bool success = false;
     if (anim != NULL)
@@ -49,7 +49,7 @@ void AccumulateScaleVector(BoneMatrixRenderData::Scale* accumulator, const BoneM
     }
 }
 
-bool ProcessJointAnimationsOnBoneMatrix(BoneMatrixRenderData* bone, AnimationData* anim, unsigned int boneIdx)
+bool ProcessJointAnimationsOnBoneMatrix(BoneMatrixRenderData* bone, Nitro3DAnimation* anim, unsigned int boneIdx)
 {
     if (anim == NULL)
         return false;
@@ -74,11 +74,11 @@ bool ProcessJointAnimationsOnBoneMatrix(BoneMatrixRenderData* bone, AnimationDat
 
     
     fix32_t totalWeight = 0;
-    AnimationData* loopAnim;
+    Nitro3DAnimation* loopAnim;
     int numContributingAnims = 0;
     int numAnimsProcessed = 0;
     loopAnim = anim;
-    AnimationData* finalAnim = anim; // after the following loop, will hold the last anim to contribute
+    Nitro3DAnimation* finalAnim = anim; // after the following loop, will hold the last anim to contribute
     do {
         if (boneIdx < loopAnim->numEntries_ && (loopAnim->entries_[boneIdx] & 0x300) == 0x100)
         {
@@ -191,7 +191,7 @@ bool ProcessJointAnimationsOnBoneMatrix(BoneMatrixRenderData* bone, AnimationDat
     return true;
 }
 
-bool ProcessVisibilityAnimations(int* output, AnimationData* anim, unsigned int boneIdx)
+bool ProcessVisibilityAnimations(int* output, Nitro3DAnimation* anim, unsigned int boneIdx)
 {
     bool success = false;
     *output = 0;

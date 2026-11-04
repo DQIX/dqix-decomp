@@ -3,17 +3,17 @@
 #include <globaldefs.h>
 #include <asmhacks.h>
 
-int NSBXX_Tex_GetBlock1Length(NSBXXTex* tex)
+int NSBXX_Tex_GetBlock1Length(Nitro3DTextureSet* tex)
 {
     return (tex != NULL) ? tex->block1NumEightBytes_ << 3 : 0;
 }
 
-int NSBXX_Tex_GetBlock2Length(NSBXXTex* tex)
+int NSBXX_Tex_GetBlock2Length(Nitro3DTextureSet* tex)
 {
     return (tex != NULL) ? tex->block2NumEightBytes_ << 3 : 0;
 }
 
-void NSBXX_Tex_WriteImageVRAMOffsets(NSBXXTex* tex, int block1, int block2_3)
+void NSBXX_Tex_WriteImageVRAMOffsets(Nitro3DTextureSet* tex, int block1, int block2_3)
 {
     if (block1 != 0)
         tex->block1VRAMLoadOffset_ = block1;
@@ -21,7 +21,7 @@ void NSBXX_Tex_WriteImageVRAMOffsets(NSBXXTex* tex, int block1, int block2_3)
         tex->block2Or3VRAMLoadOffset_ = block2_3;
 }
 
-void NSBXX_Tex_LoadImageToVRAM(NSBXXTex* tex, bool needsMapping)
+void NSBXX_Tex_LoadImageToVRAM(Nitro3DTextureSet* tex, bool needsMapping)
 {
     if (needsMapping)
         MemoryMapTextureImage();
@@ -59,17 +59,17 @@ void NSBXX_Tex_LoadImageToVRAM(NSBXXTex* tex, bool needsMapping)
         MemoryUnmapTextureImage();
 }
 
-int NSBXX_Tex_GetBlock4Length(NSBXXTex* tex)
+int NSBXX_Tex_GetBlock4Length(Nitro3DTextureSet* tex)
 {
     return (tex != NULL) ? tex->block4NumEightBytes_ << 3 : 0;
 }
 
-void NSBXX_Tex_WritePaletteVRAMOffset(NSBXXTex* tex, int offset)
+void NSBXX_Tex_WritePaletteVRAMOffset(Nitro3DTextureSet* tex, int offset)
 {
     tex->block4VRAMLoadOffset_ = offset;
 }
 
-void NSBXX_Tex_LoadPaletteToVRAM(NSBXXTex* tex, bool needsMapping)
+void NSBXX_Tex_LoadPaletteToVRAM(Nitro3DTextureSet* tex, bool needsMapping)
 {
     if (needsMapping)
         MemoryMapTexturePalette();
@@ -84,8 +84,8 @@ void NSBXX_Tex_LoadPaletteToVRAM(NSBXXTex* tex, bool needsMapping)
 }
 
 extern "C" void AttachTextureImageToModelMaterials(
-    NSBXXModelMaterialData* materialData, NSBXXMaterialPairing* pairing,
-    NSBXXTex* tex0, NSBXXTexTexture* texture)
+    Nitro3DModelMaterials* materialData, Nitro3DModelMaterials::Pair* pairing,
+    Nitro3DTextureSet* tex0, Nitro3DTextureSet::ImageData* texture)
 {
     uint8_t* indexArray = (uint8_t*)materialData + pairing->offsetToIndexArray_;
     unsigned int tex0VramLoadOffset;
@@ -98,7 +98,7 @@ extern "C" void AttachTextureImageToModelMaterials(
     
     for (unsigned int i = 0; i < pairing->arraySize_; i++)
     {
-        NSBXXMaterial* material = materialData->GetMaterialByIndex(indexArray[i]);
+        Nitro3DMaterial* material = materialData->GetMaterialByIndex(indexArray[i]);
         material->paramTEXIMAGE_PARAMS_ |= (texture->paramTEXIMAGE_PARAMS_ + tex0VramLoadOffset);
         
         int trueTextureWidth = texture->unk_4 & 0x7ff;
@@ -118,12 +118,12 @@ extern "C" void AttachTextureImageToModelMaterials(
     pairing->flags_ |= 1;
 }
 
-extern "C" void DetachTextureImageFromModelMaterials(NSBXXModelMaterialData* materialData, NSBXXMaterialPairing* pairing)
+extern "C" void DetachTextureImageFromModelMaterials(Nitro3DModelMaterials* materialData, Nitro3DModelMaterials::Pair* pairing)
 {
     uint8_t* indexArray = (uint8_t*)materialData + pairing->offsetToIndexArray_;
     for (unsigned int i = 0; i < pairing->arraySize_; i++)
     {
-        NSBXXMaterial* material = materialData->GetMaterialByIndex(indexArray[i]);
+        Nitro3DMaterial* material = materialData->GetMaterialByIndex(indexArray[i]);
         // keep only bits 30-31 and 16,17,18,19
         material->paramTEXIMAGE_PARAMS_ &= 0xc00f0000;
         material->xScale_ = 1 << 12;
@@ -132,21 +132,21 @@ extern "C" void DetachTextureImageFromModelMaterials(NSBXXModelMaterialData* mat
     pairing->flags_ &= ~1;
 }
 
-extern "C" bool NSBXX_AttachTextureImageToModel(NSBXXInternalModel* model, NSBXXTex* tex0)
+extern "C" bool NSBXX_AttachTextureImageToModel(Nitro3DModel* model, Nitro3DTextureSet* tex0)
 {
-    NSBXXModelMaterialData* materialData = model->GetMaterialData();
-    NSBXXNameList* imagePairingsList = (NSBXXNameList*)((const char*)materialData + materialData->texturePairingsOffset_);
+    Nitro3DModelMaterials* materialData = model->GetMaterialData();
+    Nitro3DNameList* imagePairingsList = (Nitro3DNameList*)((const char*)materialData + materialData->texturePairingsOffset_);
     
     unsigned int i;
     bool success = true;
     for (i = 0; i < imagePairingsList->numEntries_; i++)
     {
         const char* textureName = imagePairingsList->GetNameByIndex(i);
-        NSBXXTexTexture* texture = (tex0 != NULL) ?
-            (NSBXXTexTexture*)NSBXXNameList_Search(&tex0->textureList_, textureName) : NULL;
+        Nitro3DTextureSet::ImageData* texture = (tex0 != NULL) ?
+            (Nitro3DTextureSet::ImageData*)NSBXXNameList_Search(&tex0->textureList_, textureName) : NULL;
         if (texture != NULL)
         {
-            NSBXXMaterialPairing* pairing = imagePairingsList->GetEntryByIndex<NSBXXMaterialPairing>(i);
+            Nitro3DModelMaterials::Pair* pairing = imagePairingsList->GetEntryByIndex<Nitro3DModelMaterials::Pair>(i);
 
             if (!(pairing->flags_ & 1))
                 AttachTextureImageToModelMaterials(materialData, pairing, tex0, texture);
@@ -157,14 +157,14 @@ extern "C" bool NSBXX_AttachTextureImageToModel(NSBXXInternalModel* model, NSBXX
     return success;
 }
 
-extern "C" void NSBXX_DetachTextureImageFromModel(NSBXXInternalModel* model)
+extern "C" void NSBXX_DetachTextureImageFromModel(Nitro3DModel* model)
 {
-    NSBXXModelMaterialData* materialData = model->GetMaterialData();
-    NSBXXNameList* pairingList = (NSBXXNameList*)((intptr_t)materialData + materialData->texturePairingsOffset_);
+    Nitro3DModelMaterials* materialData = model->GetMaterialData();
+    Nitro3DNameList* pairingList = (Nitro3DNameList*)((intptr_t)materialData + materialData->texturePairingsOffset_);
 
     for (unsigned int i = 0; i < pairingList->numEntries_; i++)
     {
-        NSBXXMaterialPairing* pairing = pairingList->GetEntryByIndex<NSBXXMaterialPairing>(i);
+        Nitro3DModelMaterials::Pair* pairing = pairingList->GetEntryByIndex<Nitro3DModelMaterials::Pair>(i);
         if (pairing->flags_ & 1)
         {
             DetachTextureImageFromModelMaterials(materialData, pairing);
@@ -173,8 +173,8 @@ extern "C" void NSBXX_DetachTextureImageFromModel(NSBXXInternalModel* model)
 }
 
 extern "C" void AttachTexturePaletteToModelMaterials(
-    NSBXXModelMaterialData* materialData, NSBXXMaterialPairing* pairing,
-    NSBXXTex* tex0, NSBXXTexPalette* palette)
+    Nitro3DModelMaterials* materialData, Nitro3DModelMaterials::Pair* pairing,
+    Nitro3DTextureSet* tex0, Nitro3DTextureSet::PaletteData* palette)
 {
     uint8_t* indexArray = (uint8_t*)materialData + pairing->offsetToIndexArray_;
     
@@ -193,16 +193,16 @@ extern "C" void AttachTexturePaletteToModelMaterials(
     for (unsigned int i = 0; i < pairing->arraySize_; i++)
     {
         unsigned int materialIdx = indexArray[i];
-        NSBXXMaterial* material = materialData->GetMaterialByIndex(materialIdx);
+        Nitro3DMaterial* material = materialData->GetMaterialByIndex(materialIdx);
         material->texturePaletteVRAMOffset_ = paletteVramOffset + tex0vramOffset;
     }
     pairing->flags_ |= 1;
 }
 
-bool NSBXX_AttachTexturePaletteToModel(NSBXXInternalModel* model, NSBXXTex* tex0)
+bool NSBXX_AttachTexturePaletteToModel(Nitro3DModel* model, Nitro3DTextureSet* tex0)
 {
-    NSBXXModelMaterialData* materialData = model->GetMaterialData();
-    NSBXXNameList* palettePairingsList = (NSBXXNameList*)((const char*)materialData + materialData->palettePairingsOffset_);
+    Nitro3DModelMaterials* materialData = model->GetMaterialData();
+    Nitro3DNameList* palettePairingsList = (Nitro3DNameList*)((const char*)materialData + materialData->palettePairingsOffset_);
     unsigned int i;
     bool success = true;
 
@@ -210,15 +210,15 @@ bool NSBXX_AttachTexturePaletteToModel(NSBXXInternalModel* model, NSBXXTex* tex0
     {
         const char* paletteName = palettePairingsList->GetNameByIndex(i);
 
-        NSBXXTexPalette* palette;
+        Nitro3DTextureSet::PaletteData* palette;
         if (tex0 != NULL && tex0->paletteListOffset_ != 0)
-            palette = (NSBXXTexPalette*)NSBXXNameList_Search((NSBXXNameList*)((const char*)tex0 + tex0->paletteListOffset_), paletteName);
+            palette = (Nitro3DTextureSet::PaletteData*)NSBXXNameList_Search((Nitro3DNameList*)((const char*)tex0 + tex0->paletteListOffset_), paletteName);
         else
             palette = NULL;
 
         if (palette != NULL)
         {
-            NSBXXMaterialPairing* pairing = palettePairingsList->GetEntryByIndex<NSBXXMaterialPairing>(i);
+            Nitro3DModelMaterials::Pair* pairing = palettePairingsList->GetEntryByIndex<Nitro3DModelMaterials::Pair>(i);
             if ((pairing->flags_ & 1) == 0)
                 AttachTexturePaletteToModelMaterials(materialData, pairing, tex0, palette);
         }
@@ -228,39 +228,39 @@ bool NSBXX_AttachTexturePaletteToModel(NSBXXInternalModel* model, NSBXXTex* tex0
     return success;
 }
 
-extern "C" void NSBXX_DetachTexturePaletteFromModel(NSBXXInternalModel* model)
+extern "C" void NSBXX_DetachTexturePaletteFromModel(Nitro3DModel* model)
 {
-    NSBXXModelMaterialData* materialData = model->GetMaterialData();
-    NSBXXNameList* pairingList = (NSBXXNameList*)((const char*)materialData + materialData->palettePairingsOffset_);
+    Nitro3DModelMaterials* materialData = model->GetMaterialData();
+    Nitro3DNameList* pairingList = (Nitro3DNameList*)((const char*)materialData + materialData->palettePairingsOffset_);
 
     unsigned int i = 0;
     for (unsigned int i = 0; i < pairingList->numEntries_; i++)
     {
-        NSBXXMaterialPairing* pairing = pairingList->GetEntryByIndex<NSBXXMaterialPairing>(i);
+        Nitro3DModelMaterials::Pair* pairing = pairingList->GetEntryByIndex<Nitro3DModelMaterials::Pair>(i);
         if (pairing->flags_ & 1)
             pairing->flags_ &= ~1;
     }
 }
 
-extern "C" int NSBXX_LinkTEX0ToMDL0(NSBXXMdl* mdl0, NSBXXTex* tex0)
+extern "C" int NSBXX_LinkTEX0ToMDL0(Nitro3DModelSet* mdl0, Nitro3DTextureSet* tex0)
 {
     unsigned int i;
     int success = true;
     
     for (i = 0; i < mdl0->nameList_.numEntries_; i++)
     {
-        NSBXXInternalModel* internalModel = mdl0->GetInternalModelByIndex(i);
+        Nitro3DModel* internalModel = mdl0->GetInternalModelByIndex(i);
         success &= NSBXX_AttachTextureImageToModel(internalModel, tex0);
         success &= NSBXX_AttachTexturePaletteToModel(internalModel, tex0);
     }
     return success;
 }
 
-extern "C" void NSBXX_UnlinkTEX0FromMDL0(NSBXXMdl* mdl0)
+extern "C" void NSBXX_UnlinkTEX0FromMDL0(Nitro3DModelSet* mdl0)
 {
     for (unsigned int i = 0; i < mdl0->nameList_.numEntries_; i++)
     {
-        NSBXXInternalModel* internalModel = mdl0->GetInternalModelByIndex(i);
+        Nitro3DModel* internalModel = mdl0->GetInternalModelByIndex(i);
         NSBXX_DetachTextureImageFromModel(internalModel);
         NSBXX_DetachTexturePaletteFromModel(internalModel);
     }

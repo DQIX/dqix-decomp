@@ -112,8 +112,8 @@ void Model3D::ClearRawFileCache()
 void Model3D::ProcessRawFile(TextureStagingMode stagingMode)
 {
     bool block4Succeeded, block23Succeeded, block1Succeeded;
-    NSBXXTex* tex0;
-    NSBXXContainer* data = (NSBXXContainer*)rawBMD_;
+    Nitro3DTextureSet* tex0;
+    Nitro3DFileHeader* data = (Nitro3DFileHeader*)rawBMD_;
     if (data == NULL)
         return;
     switch (data->signature_)
@@ -131,7 +131,7 @@ void Model3D::ProcessRawFile(TextureStagingMode stagingMode)
         block23Succeeded = true;
         block4Succeeded = true;
         
-        tex0 = (NSBXXTex*)NSBXX_GetTEXFile(data);
+        tex0 = (Nitro3DTextureSet*)NSBXX_GetTEXFile(data);
         if (tex0 != NULL)
         {
             unsigned int block4Alloc, block2Alloc, block1Alloc;
@@ -185,14 +185,14 @@ void Model3D::ProcessRawFile(TextureStagingMode stagingMode)
         }
         if (data->signature_ == SIGNATURE_NSBMD)
         {
-            NSBXXMdl* mdl0 = (NSBXXMdl*)NSBXX_GetFirstSubfile(data);
+            Nitro3DModelSet* mdl0 = (Nitro3DModelSet*)NSBXX_GetFirstSubfile(data);
             if (tex0 != NULL)
                 NSBXX_LinkTEX0ToMDL0(mdl0, tex0);
         }
         break;
     }
     }
-    NSBXXTex* tex = (NSBXXTex*)NSBXX_GetTEXFile((NSBXXContainer*)rawBMD_);
+    Nitro3DTextureSet* tex = (Nitro3DTextureSet*)NSBXX_GetTEXFile((Nitro3DFileHeader*)rawBMD_);
     if (tex != NULL)
     {
         if (stagingMode == TextureStagingMode_Immediate)
@@ -209,11 +209,11 @@ void Model3D::ProcessRawFile(TextureStagingMode stagingMode)
         }
     }
 
-    NSBXXMdl* mdl0 = (NSBXXMdl*)NSBXX_GetFirstSubfile((NSBXXContainer*)rawBMD_);
-    NSBXXInternalModel* model;
+    Nitro3DModelSet* mdl0 = (Nitro3DModelSet*)NSBXX_GetFirstSubfile((Nitro3DFileHeader*)rawBMD_);
+    Nitro3DModel* model;
     if (mdl0 != NULL)
     {
-        NSBXXNameList* nameList = &mdl0->nameList_;
+        Nitro3DNameList* nameList = &mdl0->nameList_;
         intptr_t pModelOffset;
         unsigned int zero = 0; // prevents compiler from optimising > 0 to != 0
         if (nameList != NULL && mdl0->nameList_.numEntries_ > zero)
@@ -225,7 +225,7 @@ void Model3D::ProcessRawFile(TextureStagingMode stagingMode)
         
         if (pModelOffset != NULL)
         {
-            model = (NSBXXInternalModel*)((intptr_t)mdl0 + *(int*)pModelOffset);
+            model = (Nitro3DModel*)((intptr_t)mdl0 + *(int*)pModelOffset);
             goto found_a_model;
         }
     }
@@ -235,10 +235,10 @@ found_a_model:
     rawInternalModel_ = model;
     
     PopulateModelRenderContext(&renderContext_, model);
-    rawTEX_ = (NSBXXTex*)NSBXX_GetTEXFile((NSBXXContainer*)rawBMD_);
-    if (((NSBXXContainer*)rawBMD_)->signature_ == SIGNATURE_NSBMD)
+    rawTEX_ = (Nitro3DTextureSet*)NSBXX_GetTEXFile((Nitro3DFileHeader*)rawBMD_);
+    if (((Nitro3DFileHeader*)rawBMD_)->signature_ == SIGNATURE_NSBMD)
     {
-        NSBXXInternalModel* model = rawInternalModel_;
+        Nitro3DModel* model = rawInternalModel_;
         int32_t scale = model->maybeScale_;
 
         int32_t scaledXMin = FIX32_MULTIPLY(model->bounds_.xMin_, scale);
@@ -324,10 +324,10 @@ int Model3D::TestVisible()
     GXFIFO_POLYGON_ATTRIBUTES = (1 << 13) | (1 << 12) | (1 << 7) | (1 << 6) | (1 << 0);
     GXFIFO_POLYGON_BEGIN = 0;
     GXFIFO_POLYGON_END = 0;
-    NSBXXInternalModel* model = rawInternalModel_;
+    Nitro3DModel* model = rawInternalModel_;
 
     union {
-        ModelBoundingBox box;
+        Nitro3DBoundingBox box;
         struct {
             uint32_t a;
             uint32_t b;
@@ -369,23 +369,23 @@ void Model3D::ApplyTexturesFromModel(Model3D* otherModel)
 {
     if (!unknown_flags_a8_0_ || otherModel == NULL)
         return;
-    NSBXXMdl* mdl0 = GetMDL0();
-    NSBXXTex* tex0 = (NSBXXTex*)otherModel->rawTEX_;
+    Nitro3DModelSet* mdl0 = GetMDL0();
+    Nitro3DTextureSet* tex0 = (Nitro3DTextureSet*)otherModel->rawTEX_;
     if (mdl0 == NULL || tex0 == NULL)
         return;
     NSBXX_LinkTEX0ToMDL0(mdl0, tex0);
 }
 
-NSBXXMdl* Model3D::GetMDL0()
+Nitro3DModelSet* Model3D::GetMDL0()
 {
     if (rawBMD_ == NULL)
         return NULL;
-    return (NSBXXMdl*)NSBXX_GetFirstSubfile((NSBXXContainer*)rawBMD_);
+    return (Nitro3DModelSet*)NSBXX_GetFirstSubfile((Nitro3DFileHeader*)rawBMD_);
 }
 
 void Model3D::RemoveTextures()
 {
-    NSBXXMdl* mdl0 = GetMDL0();
+    Nitro3DModelSet* mdl0 = GetMDL0();
     if (mdl0 == NULL)
         return;
     NSBXX_UnlinkTEX0FromMDL0(mdl0);
@@ -475,12 +475,12 @@ void Model3D::SetMaterialDiffuseColor(unsigned int rgb)
         NSBXX_Model_SetDiffuseReflectionColor(rawInternalModel_, rgb);
 }
 
-NSBXXTex* Model3D::GetTEX0()
+Nitro3DTextureSet* Model3D::GetTEX0()
 {
     return rawTEX_;
 }
 
-void Model3D::SetTEX0(NSBXXTex* tex)
+void Model3D::SetTEX0(Nitro3DTextureSet* tex)
 {
     rawTEX_ = tex;
 }

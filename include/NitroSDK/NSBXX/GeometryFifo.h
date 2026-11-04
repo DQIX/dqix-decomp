@@ -3,6 +3,7 @@
 #include "std_library_functions.h"
 #include "../Matrix.h"
 #include "../Memory/AllocatorUnion.h"
+#include "Common.h"
 
 // Note: the convention seems to be that matrices act on *row vectors*
 // by right multiplication, rather than the more common setting of
@@ -138,8 +139,8 @@ extern "C"
 }
 
 struct ModelRenderContext;
-struct AnimationData;
-struct NSBXXInternalModel;
+struct Nitro3DAnimation;
+struct Nitro3DModel;
 
 // these don't really fit here but are a bit too random to have their own TU...
 

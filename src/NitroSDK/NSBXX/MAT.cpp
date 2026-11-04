@@ -16,9 +16,9 @@ extern "C"
 }
 
 // processing callback for M.AT animations
-extern void (*data_020f1c78)(void* data, AnimationData* anim, int arg);
+extern void (*data_020f1c78)(void* data, Nitro3DAnimation* anim, int arg);
 
-fix32_t SampleScalarFromMATTrack(NSBXXAnimationMAT* mat, unsigned int metadata, unsigned int offset, unsigned int frame)
+fix32_t SampleScalarFromMATTrack(Nitro3DMAT* mat, unsigned int metadata, unsigned int offset, unsigned int frame)
 {
     unsigned int lowWeightIdx;
     unsigned int highWeightIdx;
@@ -131,7 +131,7 @@ compute_average:
     return (sampleA + sampleB) >> 1;
 }
 
-uint32_t SampleSinCosFromMATTrack(NSBXXAnimationMAT* mat, unsigned int metadata, unsigned int offset, unsigned int frame)
+uint32_t SampleSinCosFromMATTrack(Nitro3DMAT* mat, unsigned int metadata, unsigned int offset, unsigned int frame)
 {
     unsigned int highWeightIdx;
     unsigned int lowWeightIdx;
@@ -229,9 +229,9 @@ compute_average:
     return (uint16_t)avgSine | (avgCosine << 16);
 }
 
-void CalculateTextureTransformFromMAT(NSBXXAnimationMAT* mat, unsigned short arg, unsigned int frame, MaterialRenderData* renderData)
+void CalculateTextureTransformFromMAT(Nitro3DMAT* mat, unsigned short arg, unsigned int frame, MaterialRenderData* renderData)
 {
-    NSBXXAnimationMAT::Track* track = mat->tracks_.GetEntryByIndex<NSBXXAnimationMAT::Track>(arg);
+    Nitro3DMAT::Track* track = mat->tracks_.GetEntryByIndex<Nitro3DMAT::Track>(arg);
     unsigned int renderFlags = renderData->flags_;
 
     fix32_t tx = SampleScalarFromMATTrack(mat, track->unk_18, track->unk_1c, frame);
@@ -278,12 +278,12 @@ void CalculateTextureTransformFromMAT(NSBXXAnimationMAT* mat, unsigned short arg
     renderData->flags_ = renderFlags;
 }
 
-void InitializeModelAnimationFromMAT(AnimationData* anim, void* pvMAT, NSBXXInternalModel* model)
+void InitializeModelAnimationFromMAT(Nitro3DAnimation* anim, void* pvMAT, Nitro3DModel* model)
 {
     unsigned int track;
-    NSBXXModelMaterialData* materials;
+    Nitro3DModelMaterials* materials;
     if (model != NULL && model->materialsOffset_ != 0)
-        materials = (NSBXXModelMaterialData*)((intptr_t)model + model->materialsOffset_);
+        materials = (Nitro3DModelMaterials*)((intptr_t)model + model->materialsOffset_);
     else
         materials = NULL;
     anim->callback_ = data_020f1c78;
@@ -291,7 +291,7 @@ void InitializeModelAnimationFromMAT(AnimationData* anim, void* pvMAT, NSBXXInte
     anim->numEntries_ = model->numMaterials_;
     func_020ca390(0, &anim->entries_[0], anim->numEntries_ * 2);
 
-    NSBXXAnimationMAT* mat = (NSBXXAnimationMAT*)pvMAT;
+    Nitro3DMAT* mat = (Nitro3DMAT*)pvMAT;
     
     track = 0;
     if (track < mat->tracks_.numEntries_)
@@ -317,10 +317,10 @@ void InitializeModelAnimationFromMAT(AnimationData* anim, void* pvMAT, NSBXXInte
     }
 }
 
-void MATAnimationProcessingCallback(void* data, AnimationData* anim, int arg)
+void MATAnimationProcessingCallback(void* data, Nitro3DAnimation* anim, int arg)
 {
     MaterialRenderData* renderData = (MaterialRenderData*)data;
-    CalculateTextureTransformFromMAT((NSBXXAnimationMAT*)anim->pRawData_, arg, anim->time_ >> 12, renderData);
+    CalculateTextureTransformFromMAT((Nitro3DMAT*)anim->pRawData_, arg, anim->time_ >> 12, renderData);
     // set texcoord transform source to 1 (texcoord source)
     renderData->paramTEXIMAGE_PARAMS_ = (renderData->paramTEXIMAGE_PARAMS_ & ~0xc0000000) | 0x40000000;
     renderData->flags_ |= 8; // use extension data

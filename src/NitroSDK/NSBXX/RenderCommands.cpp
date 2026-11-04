@@ -73,7 +73,7 @@ void SetUpRenderCommandHandler(RenderCommandHandler* handler, ModelRenderContext
     modelData->flags_ &= ~1;
 }
 
-void PopulateBitfieldFromAnimData(unsigned int* bitfield, AnimationData* anim)
+void PopulateBitfieldFromAnimData(unsigned int* bitfield, Nitro3DAnimation* anim)
 {
     while (anim != NULL)
     {
@@ -230,7 +230,7 @@ void RenderCommand_3(RenderCommandHandler* handler, int modifier)
     handler->instructionPointer_ += 2;
 }
 
-void MaterialBindProc(RenderCommandHandler* handler, int modifier, NSBXXMaterial* material, unsigned int idx)
+void MaterialBindProc(RenderCommandHandler* handler, int modifier, Nitro3DMaterial* material, unsigned int idx)
 {
     handler->boundMaterial_ = idx;
     handler->flags_ |= (1 << RCH_FLAG_3);
@@ -281,7 +281,7 @@ void MaterialBindProc(RenderCommandHandler* handler, int modifier, NSBXXMaterial
             }
 
             targetData->flags_ = 0;
-            NSBXXMaterial* lookupMaterial = handler->modelMaterials_->GetMaterialByIndex(idx);
+            Nitro3DMaterial* lookupMaterial = handler->modelMaterials_->GetMaterialByIndex(idx);
             if (lookupMaterial->flags_ & 0x20)
                 targetData->flags_ |= 0x20;
             
@@ -303,8 +303,8 @@ void MaterialBindProc(RenderCommandHandler* handler, int modifier, NSBXXMaterial
                 intptr_t extensionDataAddress = (intptr_t)(material + 1);
                 if (!(material->flags_ & 2))
                 {
-                    NSBXXMaterial::ExtensionData_Bit1* extensionData = 
-                        (NSBXXMaterial::ExtensionData_Bit1*)extensionDataAddress;
+                    Nitro3DMaterial::ExtensionData_Bit1* extensionData = 
+                        (Nitro3DMaterial::ExtensionData_Bit1*)extensionDataAddress;
                     targetData->extensionScaleX_ = extensionData->scaleX_;
                     targetData->extensionScaleY_ = extensionData->scaleY_;
                     extensionDataAddress += sizeof(*extensionData);
@@ -314,8 +314,8 @@ void MaterialBindProc(RenderCommandHandler* handler, int modifier, NSBXXMaterial
 
                 if (!(material->flags_ & 4))
                 {
-                    NSBXXMaterial::ExtensionData_Bit2* extensionData =
-                        (NSBXXMaterial::ExtensionData_Bit2*)extensionDataAddress;
+                    Nitro3DMaterial::ExtensionData_Bit2* extensionData =
+                        (Nitro3DMaterial::ExtensionData_Bit2*)extensionDataAddress;
                     targetData->rotationSine_ = extensionData->sine_;
                     targetData->rotationCosine_ = extensionData->cosine_;
                     extensionDataAddress += sizeof(*extensionData);
@@ -325,8 +325,8 @@ void MaterialBindProc(RenderCommandHandler* handler, int modifier, NSBXXMaterial
                 
                 if (!(material->flags_ & 8))
                 {
-                    NSBXXMaterial::ExtensionData_Bit3* extensionData = 
-                        (NSBXXMaterial::ExtensionData_Bit3*)extensionDataAddress;
+                    Nitro3DMaterial::ExtensionData_Bit3* extensionData = 
+                        (Nitro3DMaterial::ExtensionData_Bit3*)extensionDataAddress;
                     targetData->translateX_ = extensionData->translateX_;
                     targetData->translateY_ = extensionData->translateY_;
                 }
@@ -410,7 +410,7 @@ void RenderCommand_4(RenderCommandHandler* handler, int modifier)
         int materialIdx = handler->instructionPointer_[1];
         if ((handler->flags_ & (1 << RCH_FLAG_0)) || !(handler->flags_ & (1 << RCH_FLAG_3)) || materialIdx != handler->boundMaterial_)
         {
-            NSBXXMaterial* material = handler->modelMaterials_->GetMaterialByIndex(materialIdx);
+            Nitro3DMaterial* material = handler->modelMaterials_->GetMaterialByIndex(materialIdx);
             // MaterialBindProc
             data_020f1d08.materialBindFunctions[material->unk_0](handler, modifier, material, materialIdx);
         }
@@ -418,7 +418,7 @@ void RenderCommand_4(RenderCommandHandler* handler, int modifier)
     handler->instructionPointer_ += 2;
 }
 
-void MeshDrawProc(RenderCommandHandler* handler, int modifier, NSBXXMesh* mesh, unsigned int meshIdx)
+void MeshDrawProc(RenderCommandHandler* handler, int modifier, Nitro3DMesh* mesh, unsigned int meshIdx)
 {
     int callbackStage = (handler->hooks_[5] != NULL) ? handler->hookStages_[5] : 0;
     unsigned int flagbit6;
@@ -456,8 +456,8 @@ void RenderCommand_5(RenderCommandHandler* handler, int modifier)
     if (!(handler->flags_ & (1 << RCH_FLAG_9)) && (handler->flags_ & (1 << RCH_FLAG_0)) && !(handler->flags_ & (1 << RCH_FLAG_1)))
     {
         int meshIdx = handler->instructionPointer_[1];
-        NSBXXNameList* meshList = handler->meshList_;
-        NSBXXMesh* mesh = meshList->GetEntryFromu32Offset<NSBXXMesh>(meshIdx);
+        Nitro3DNameList* meshList = handler->meshList_;
+        Nitro3DMesh* mesh = meshList->GetEntryFromu32Offset<Nitro3DMesh>(meshIdx);
         data_020f1d08.meshDrawFunctions[mesh->unk_0](handler, modifier, mesh, meshIdx);
     }
     handler->instructionPointer_ += 2;
@@ -546,14 +546,14 @@ void RenderCommand_6(RenderCommandHandler* handler, int modifier)
             if (handler->modelContext_->jointAnimations_ == NULL ||
                 !handler->modelContext_->pfnProcessJointAnimations_(targetData, handler->modelContext_->jointAnimations_, boneIdx))
             {
-                NSBXXBoneMatrix* boneMatrix = handler->boneList_->GetEntryFromu32Offset<NSBXXBoneMatrix>(boneIdx);
+                Nitro3DBoneMatrix* boneMatrix = handler->boneList_->GetEntryFromu32Offset<Nitro3DBoneMatrix>(boneIdx);
                 intptr_t boneMatrixExtraPtr = (intptr_t)(boneMatrix + 1);
                 if ((boneMatrix->flags_ & 1)) // has no translation component
                     targetData->flags_ |= 4;
                 else
                 {
-                    NSBXXBoneMatrix::Translation* translation = 
-                        (NSBXXBoneMatrix::Translation*)boneMatrixExtraPtr;
+                    Nitro3DBoneMatrix::Translation* translation = 
+                        (Nitro3DBoneMatrix::Translation*)boneMatrixExtraPtr;
                     targetData->translate_.x = translation->x;
                     targetData->translate_.y = translation->y;
                     targetData->translate_.z = translation->z;
@@ -565,8 +565,8 @@ void RenderCommand_6(RenderCommandHandler* handler, int modifier)
                 else if (boneMatrix->flags_ & 8) // use pivot matrix
                 {
                     int form = (boneMatrix->flags_ & 0xf0) >> 4;
-                    NSBXXBoneMatrix::PivotMatrixData* pivot = 
-                        (NSBXXBoneMatrix::PivotMatrixData*)boneMatrixExtraPtr;
+                    Nitro3DBoneMatrix::PivotMatrixData* pivot = 
+                        (Nitro3DBoneMatrix::PivotMatrixData*)boneMatrixExtraPtr;
                     fix32_t entryA = pivot->a;
                     fix32_t entryB = pivot->b;
                     func_020ca7d0(&targetData->rotationMatrix_);
@@ -599,8 +599,8 @@ void RenderCommand_6(RenderCommandHandler* handler, int modifier)
                     // casting from fix16_t to fix32_t, this is okay because
                     // both have 12 bits after the point
                     targetData->rotationMatrix_.entries[0] = boneMatrix->m_11;
-                    NSBXXBoneMatrix::RotationMatrixData* rotation = 
-                        (NSBXXBoneMatrix::RotationMatrixData*)boneMatrixExtraPtr;
+                    Nitro3DBoneMatrix::RotationMatrixData* rotation = 
+                        (Nitro3DBoneMatrix::RotationMatrixData*)boneMatrixExtraPtr;
                     targetData->rotationMatrix_.entries[1] = rotation->entries[0];
                     targetData->rotationMatrix_.entries[2] = rotation->entries[1];
                     targetData->rotationMatrix_.entries[3] = rotation->entries[2];
@@ -613,7 +613,7 @@ void RenderCommand_6(RenderCommandHandler* handler, int modifier)
                 }
 
                 handler->boneMatrixRenderDataScalePopulateProc_(targetData,
-                    (NSBXXBoneMatrix::Scaling*)boneMatrixExtraPtr,
+                    (Nitro3DBoneMatrix::Scaling*)boneMatrixExtraPtr,
                     handler->instructionPointer_, boneMatrix->flags_);
             }
         }
@@ -947,13 +947,13 @@ void RenderCommand_8(RenderCommandHandler* handler, int modifier)
 void RenderCommand_9(RenderCommandHandler* handler, int modifier)
 {
     int64_t weight = 0;
-    NSBXXInternalModel* model = handler->modelContext_->internalModel_;    
-    const NSBXXInvBindMatrix* invBindMatrices = (NSBXXInvBindMatrix*)((intptr_t)model + model->inverseBindsOffset_);
+    Nitro3DModel* model = handler->modelContext_->internalModel_;    
+    const Nitro3DInvBindMatrix* invBindMatrices = (Nitro3DInvBindMatrix*)((intptr_t)model + model->inverseBindsOffset_);
     unsigned int numTerms = handler->instructionPointer_[2];
     uint8_t* instructionPtr = handler->instructionPointer_ + 3;
     
-    NSBXXInvBindMatrix localCopy;
-    func_020ca458(0, &localCopy, sizeof(NSBXXInvBindMatrix));
+    Nitro3DInvBindMatrix localCopy;
+    func_020ca458(0, &localCopy, sizeof(Nitro3DInvBindMatrix));
     SendQueuedDataToGeometryFifo();
 
     GXFIFO_MATRIX_MODE = 0; // projection
@@ -1157,18 +1157,18 @@ void RenderCommand_12(RenderCommandHandler* handler, int modifier)
         if (flagbit6 == 0)
         {
             unsigned int materialIdx = handler->instructionPointer_[1];
-            NSBXXMaterial* material = handler->modelMaterials_->GetMaterialByIndex(materialIdx);
+            Nitro3DMaterial* material = handler->modelMaterials_->GetMaterialByIndex(materialIdx);
             if (material->flags_ & 0x2000)
             {
                 intptr_t bit13data = (intptr_t)(material + 1);
                 if (!(material->flags_ & 2))
-                    bit13data += sizeof(NSBXXMaterial::ExtensionData_Bit1);
+                    bit13data += sizeof(Nitro3DMaterial::ExtensionData_Bit1);
                 if (!(material->flags_ & 4))
-                    bit13data += sizeof(NSBXXMaterial::ExtensionData_Bit2);
+                    bit13data += sizeof(Nitro3DMaterial::ExtensionData_Bit2);
                 if (!(material->flags_ & 8))
-                    bit13data += sizeof(NSBXXMaterial::ExtensionData_Bit3);
+                    bit13data += sizeof(Nitro3DMaterial::ExtensionData_Bit3);
                 
-                NSBXXMaterial::ExtensionData_Bit13* ptr = (NSBXXMaterial::ExtensionData_Bit13*)bit13data;
+                Nitro3DMaterial::ExtensionData_Bit13* ptr = (Nitro3DMaterial::ExtensionData_Bit13*)bit13data;
                 SubmitCommandToGeometryFifo(GXFifoCommand_MultiplyMat4x4, (uint32_t*)ptr->matrix_.entries, 16);
             }
         }
@@ -1274,20 +1274,20 @@ void RenderCommand_13(RenderCommandHandler* handler, int modifier)
         if (flagbit6 == 0)
         {
             unsigned int materialIdx = handler->instructionPointer_[1];
-            NSBXXModelMaterialData* materialData = handler->modelMaterials_;
-            NSBXXMaterial* material = materialData->GetMaterialByIndex(materialIdx);
+            Nitro3DModelMaterials* materialData = handler->modelMaterials_;
+            Nitro3DMaterial* material = materialData->GetMaterialByIndex(materialIdx);
 
             if (material->flags_ & 0x2000)
             {
                 intptr_t bit13addr = (intptr_t)(material + 1);
                 if (!(material->flags_ & 2))
-                    bit13addr += sizeof(NSBXXMaterial::ExtensionData_Bit1);
+                    bit13addr += sizeof(Nitro3DMaterial::ExtensionData_Bit1);
                 if (!(material->flags_ & 4))
-                    bit13addr += sizeof(NSBXXMaterial::ExtensionData_Bit2);
+                    bit13addr += sizeof(Nitro3DMaterial::ExtensionData_Bit2);
                 if (!(material->flags_ & 8))
-                    bit13addr += sizeof(NSBXXMaterial::ExtensionData_Bit3);
+                    bit13addr += sizeof(Nitro3DMaterial::ExtensionData_Bit3);
 
-                NSBXXMaterial::ExtensionData_Bit13* extData = (NSBXXMaterial::ExtensionData_Bit13*)bit13addr;
+                Nitro3DMaterial::ExtensionData_Bit13* extData = (Nitro3DMaterial::ExtensionData_Bit13*)bit13addr;
                 SubmitCommandToGeometryFifo(GXFifoCommand_MultiplyMat4x4, (uint32_t*)extData->matrix_.entries, 16);
             }
         }
@@ -1344,7 +1344,7 @@ void RenderCommand_13(RenderCommandHandler* handler, int modifier)
     handler->instructionPointer_ += 3;
 }
 
-void RenderMeshWithMaterial(NSBXXInternalModel* model, unsigned int materialIdx, unsigned int meshIdx, int bind)
+void RenderMeshWithMaterial(Nitro3DModel* model, unsigned int materialIdx, unsigned int meshIdx, int bind)
 {
     uint32_t commandParams[7];
     MaterialRenderData targetData;
@@ -1361,13 +1361,13 @@ void RenderMeshWithMaterial(NSBXXInternalModel* model, unsigned int materialIdx,
 
     if (bind && materialIdx < model->numMaterials_)
     {
-        NSBXXModelMaterialData* materialData;
+        Nitro3DModelMaterials* materialData;
         if (model != NULL && model->materialsOffset_ != 0)
-            materialData = (NSBXXModelMaterialData*)((intptr_t)model + model->materialsOffset_);
+            materialData = (Nitro3DModelMaterials*)((intptr_t)model + model->materialsOffset_);
         else
             materialData = NULL;
 
-        NSBXXMaterial* material = materialData->GetMaterialByIndex(materialIdx);
+        Nitro3DMaterial* material = materialData->GetMaterialByIndex(materialIdx);
 
         // if alpha = 0 don't draw
         if ((material->paramPOLYGON_ATTR_ & 0x1f0000) == 0)
@@ -1403,7 +1403,7 @@ void RenderMeshWithMaterial(NSBXXInternalModel* model, unsigned int materialIdx,
                 targetData.flags_ |= 1;
             else
             {
-                NSBXXMaterial::ExtensionData_Bit1* ext = (NSBXXMaterial::ExtensionData_Bit1*)extraDataAddr;
+                Nitro3DMaterial::ExtensionData_Bit1* ext = (Nitro3DMaterial::ExtensionData_Bit1*)extraDataAddr;
                 targetData.extensionScaleX_ = ext->scaleX_;
                 targetData.extensionScaleY_ = ext->scaleY_;
                 extraDataAddr += sizeof(*ext);
@@ -1411,7 +1411,7 @@ void RenderMeshWithMaterial(NSBXXInternalModel* model, unsigned int materialIdx,
 
             if (!(material->flags_ & 4))
             {
-                NSBXXMaterial::ExtensionData_Bit2* ext = (NSBXXMaterial::ExtensionData_Bit2*)extraDataAddr;
+                Nitro3DMaterial::ExtensionData_Bit2* ext = (Nitro3DMaterial::ExtensionData_Bit2*)extraDataAddr;
                 targetData.rotationSine_ = ext->sine_;
                 targetData.rotationCosine_ = ext->cosine_;
                 extraDataAddr += sizeof(*ext);
@@ -1421,7 +1421,7 @@ void RenderMeshWithMaterial(NSBXXInternalModel* model, unsigned int materialIdx,
 
             if (!(material->flags_ & 8))
             {
-                NSBXXMaterial::ExtensionData_Bit3* ext = (NSBXXMaterial::ExtensionData_Bit3*)extraDataAddr;
+                Nitro3DMaterial::ExtensionData_Bit3* ext = (Nitro3DMaterial::ExtensionData_Bit3*)extraDataAddr;
                 targetData.translateX_ = ext->translateX_;
                 targetData.translateY_ = ext->translateY_;
             }
@@ -1435,8 +1435,8 @@ void RenderMeshWithMaterial(NSBXXInternalModel* model, unsigned int materialIdx,
 
     if (meshIdx < model->numMeshes_)
     {
-        NSBXXNameList* meshList = model->GetMeshList();
-        NSBXXMesh* mesh = meshList->GetEntryFromu32Offset<NSBXXMesh>(meshIdx);
+        Nitro3DNameList* meshList = model->GetMeshList();
+        Nitro3DMesh* mesh = meshList->GetEntryFromu32Offset<Nitro3DMesh>(meshIdx);
 
         SendRawDataToGeometryFifo(mesh->GetGPUCommands(), mesh->gpuCommandsLength_);
     }

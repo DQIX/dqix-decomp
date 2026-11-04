@@ -462,7 +462,7 @@ void Object3D::AdvanceAnimations_v1()
     }
 }
 
-fix32_t GetAnimationFrameCountFix32(AnimationData* data)
+fix32_t GetAnimationFrameCountFix32(Nitro3DAnimation* data)
 {
     // bit ugly but we have to go into the raw data for this
     return *(uint16_t*)((intptr_t)data->pRawData_ + 4) << 12;
@@ -695,7 +695,7 @@ bool Object3D::Draw(bool applyClipping)
 
     if (alternativeTexturePaletteOffset_ != 0)
     {
-        NSBXXTex* tex0 = pModel_->GetTEX0();
+        Nitro3DTextureSet* tex0 = pModel_->GetTEX0();
         if (tex0 != NULL)
         {
             NSBXX_Tex_WritePaletteVRAMOffset(tex0, alternativeTexturePaletteOffset_);
@@ -962,7 +962,7 @@ void Object3D::LoadType0AnimationFromPersistentMemory(int slot, SafeAllocator* a
     Animation3D* anim3d = &loadedAnimationPackageList_->pAnim3Ds->data[slot];
     StopCurrentAnimation();
     anim3d->DefaultInitialize();
-    if (!anim3d->SetRawFile((NSBXXContainer*)rawData))
+    if (!anim3d->SetRawFile((Nitro3DFileHeader*)rawData))
         return;
     if (!anim3d->CreateData(pModel_, alloc, NULL))
         return;
@@ -1129,7 +1129,7 @@ bool Object3D::InternalLoadFromCHRArchive(ObjectArchiveLoadInfo* loadInfo)
             StopCurrentAnimation();
             anim3D->DefaultInitialize();
             // see comments on earlier const casts for why this is not totally evil
-            if (!anim3D->SetRawFile(const_cast<NSBXXContainer*>((const NSBXXContainer*)fileBytes)))
+            if (!anim3D->SetRawFile(const_cast<Nitro3DFileHeader*>((const Nitro3DFileHeader*)fileBytes)))
             {
                 NitroVM_FinishRead(&machine);
                 narc.Destroy();
@@ -1346,7 +1346,7 @@ bool Object3D::LoadFromCCHROrCMOTArchive(ObjectArchiveLoadInfo *loadInfo, int (*
                 {
                     Animation3D* anim = &ref->data[j];
                     anim->DefaultInitialize();
-                    anim->SetRawFile(static_cast<NSBXXContainer*>(rawAnimFilePointers[j]));
+                    anim->SetRawFile(static_cast<Nitro3DFileHeader*>(rawAnimFilePointers[j]));
                     anim->CreateData(pModel_, allocator, NULL);
                 }
             }
@@ -1766,7 +1766,7 @@ void Object3D::StageTextureData()
 {
     if (pModel_ == NULL)
         return;
-    NSBXXTex* tex0 = pModel_->GetTEX0();
+    Nitro3DTextureSet* tex0 = pModel_->GetTEX0();
     if (tex0 != NULL)
     {
         StageTexFilePaletteData(tex0, false);

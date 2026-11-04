@@ -1,7 +1,8 @@
 #pragma once
 
 #include "../Matrix.h"
-#include "NSBXX.h"
+#include "Common.h"
+#include "BoneMatrix.h"
 
 struct RenderCommandHandler;
 typedef void (*RenderCommandHook)(RenderCommandHandler*);
@@ -55,7 +56,10 @@ struct MaterialRenderData
     fix32_t materialyScale_;
 };
 
-struct AnimationData;
+struct Nitro3DAnimation;
+struct Nitro3DModel;
+struct Nitro3DModelMaterials;
+struct Nitro3DTextureSet;
 
 // sizeof == 0x54
 struct ModelRenderContext
@@ -63,16 +67,16 @@ struct ModelRenderContext
     // bits 0, 1, 2, 3 set flags 7, 8, 9, 10 in RenderCommandHandler
     // bit 4: animation bitfields dirty
     unsigned int flags_;
-    NSBXXInternalModel* internalModel_;
-    AnimationData* materialAnimations_; // M.AM, M.AT and M.PT animations
+    Nitro3DModel* internalModel_;
+    Nitro3DAnimation* materialAnimations_; // M.AM, M.AT and M.PT animations
     // points to ProcessMaterialAnimationsOnBoundMaterial (020b3ad0 usa)
-    bool (*pfnProcessMaterialAnimations_)(MaterialRenderData*, AnimationData*, unsigned int);
-    AnimationData* jointAnimations_; // J.AC animations
+    bool (*pfnProcessMaterialAnimations_)(MaterialRenderData*, Nitro3DAnimation*, unsigned int);
+    Nitro3DAnimation* jointAnimations_; // J.AC animations
     // points to ProcessJointAnimationsOnBoneMatrix (020b3bac usa)
-    bool (*pfnProcessJointAnimations_)(BoneMatrixRenderData*, AnimationData*, unsigned int);
-    AnimationData* visibilityAnimations_; // V.AV animations (never used?)
+    bool (*pfnProcessJointAnimations_)(BoneMatrixRenderData*, Nitro3DAnimation*, unsigned int);
+    Nitro3DAnimation* visibilityAnimations_; // V.AV animations (never used?)
     // points to ProcessVisibilityAnimations (020b3f98 usa)
-    bool (*pfnProcessVisibilityAnimations_)(int*, AnimationData*, unsigned int);
+    bool (*pfnProcessVisibilityAnimations_)(int*, Nitro3DAnimation*, unsigned int);
     void (*renderCommandHook_)(RenderCommandHandler*);
     unsigned char renderCommandHookCommandID_;
     unsigned char renderCommandHookStage_; // 1,2 or 3 depending on when in the function it gets called
@@ -112,13 +116,13 @@ struct RenderCommandHandler
     // no non-trivial scaling
     unsigned int boneMatrixBitfield_[2];
     unsigned int invBindBitfield_[2];
-    NSBXXNameList* boneList_;
-    NSBXXModelMaterialData* modelMaterials_;
-    NSBXXNameList* meshList_;
+    Nitro3DNameList* boneList_;
+    Nitro3DModelMaterials* modelMaterials_;
+    Nitro3DNameList* meshList_;
     fix32_t upScale_;
     fix32_t downScale_;
     // specifically seems to populate the scaling part
-    void (*boneMatrixRenderDataScalePopulateProc_)(BoneMatrixRenderData*, NSBXXBoneMatrix::Scaling* boneMatrixScaleData, uint8_t* ip, int boneMatrixFlags);
+    void (*boneMatrixRenderDataScalePopulateProc_)(BoneMatrixRenderData*, Nitro3DBoneMatrix::Scaling* boneMatrixScaleData, uint8_t* ip, int boneMatrixFlags);
     void (*boneMatrixRenderDataSubmitProc_)(BoneMatrixRenderData*);
     void (*textureMatrixCreateProc_)(MaterialRenderData*);
     MaterialRenderData scratchMaterialRenderData_;
@@ -159,4 +163,4 @@ void RenderModelFromRenderData(ModelRenderContext* renderData);
 // much more barebones implementation of rendering and just does a single
 // mesh / material pair. In practice this seems to be used for shadows
 // bindMaterial is really a bool
-void RenderMeshWithMaterial(NSBXXInternalModel* model, unsigned int materialIdx, unsigned int meshIdx, int bindMaterial);
+void RenderMeshWithMaterial(Nitro3DModel* model, unsigned int materialIdx, unsigned int meshIdx, int bindMaterial);

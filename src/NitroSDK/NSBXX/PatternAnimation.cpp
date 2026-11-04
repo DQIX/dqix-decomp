@@ -3,29 +3,29 @@
 
 #define SUBFILE_OFFSETS(nsb) ((uint32_t*)((intptr_t)(nsb) + nsb->headerSize_))
 
-void* NSBXX_GetFirstSubfile(NSBXXContainer* nsbxx)
+void* NSBXX_GetFirstSubfile(Nitro3DFileHeader* nsbxx)
 {
     return (char*)nsbxx + SUBFILE_OFFSETS(nsbxx)[0];
 }
 
-NSBXXTex* NSBXX_GetTEXFile(NSBXXContainer* nsbxx)
+Nitro3DTextureSet* NSBXX_GetTEXFile(Nitro3DFileHeader* nsbxx)
 {
     const uint32_t* subfiles = SUBFILE_OFFSETS(nsbxx);
     if (nsbxx->numSubfiles_ == 1)
     {
         if (nsbxx->signature_ == SIGNATURE_NSBTX)
-            return (NSBXXTex*)((intptr_t)nsbxx + subfiles[0]);
+            return (Nitro3DTextureSet*)((intptr_t)nsbxx + subfiles[0]);
 
         return NULL;
     }
-    return (NSBXXTex*)((intptr_t)nsbxx + subfiles[1]);
+    return (Nitro3DTextureSet*)((intptr_t)nsbxx + subfiles[1]);
 }
 
-void* NSBXX_GetObjectFromFirstSubfile(NSBXXContainer* nsbxx, unsigned int idx)
+void* NSBXX_GetObjectFromFirstSubfile(Nitro3DFileHeader* nsbxx, unsigned int idx)
 {
     if (nsbxx != NULL)
     {
-        NSBXXInnerFileCommon* innerData = (NSBXXInnerFileCommon*)((intptr_t)nsbxx + SUBFILE_OFFSETS(nsbxx)[0]);
+        Nitro3DInnerFileHeader* innerData = (Nitro3DInnerFileHeader*)((intptr_t)nsbxx + SUBFILE_OFFSETS(nsbxx)[0]);
 
         intptr_t namelistPtr = (intptr_t)&innerData->nameList;
         uint32_t* pInnerOffset;
@@ -47,7 +47,7 @@ void* NSBXX_GetObjectFromFirstSubfile(NSBXXContainer* nsbxx, unsigned int idx)
     return NULL;
 }
 
-const char* NSBXX_PatternAnimation_GetTextureName(NSBXXAnimationMPT* anim, unsigned int idx)
+const char* NSBXX_PatternAnimation_GetTextureName(Nitro3DMPT* anim, unsigned int idx)
 {
     if (anim != NULL && idx < anim->numTextureNames_)
     {
@@ -56,7 +56,7 @@ const char* NSBXX_PatternAnimation_GetTextureName(NSBXXAnimationMPT* anim, unsig
     return NULL;
 }
 
-const char* NSBXX_PatternAnimation_GetPaletteName(NSBXXAnimationMPT* anim, unsigned int idx)
+const char* NSBXX_PatternAnimation_GetPaletteName(Nitro3DMPT* anim, unsigned int idx)
 {
     if (anim != NULL && idx < anim->numPaletteNames_)
     {
@@ -65,12 +65,12 @@ const char* NSBXX_PatternAnimation_GetPaletteName(NSBXXAnimationMPT* anim, unsig
     return NULL;
 }
 
-NSBXXAnimationMPT::Track::Keyframe* NSBXX_PatternAnimation_GetKeyframe(
-    NSBXXAnimationMPT* anim, uint16_t track, uint16_t frameTime)
+Nitro3DMPT::Track::Keyframe* NSBXX_PatternAnimation_GetKeyframe(
+    Nitro3DMPT* anim, uint16_t track, uint16_t frameTime)
 {
-    NSBXXAnimationMPT::Track* pTrack = NSBXX_PatternAnimation_GetTrack(anim, track);
-    NSBXXAnimationMPT::Track::Keyframe* keyframes =
-        (NSBXXAnimationMPT::Track::Keyframe*)((intptr_t)anim + pTrack->keyframeArrayOffset_);
+    Nitro3DMPT::Track* pTrack = NSBXX_PatternAnimation_GetTrack(anim, track);
+    Nitro3DMPT::Track::Keyframe* keyframes =
+        (Nitro3DMPT::Track::Keyframe*)((intptr_t)anim + pTrack->keyframeArrayOffset_);
     
     // Start with a heuristic for the index
     unsigned int index = (unsigned int)(pTrack->maybeSpeed_4_ * frameTime) >> 12u;
@@ -85,15 +85,15 @@ NSBXXAnimationMPT::Track::Keyframe* NSBXX_PatternAnimation_GetKeyframe(
     return &keyframes[index];
 }
 
-NSBXXAnimationMPT::Track* NSBXX_PatternAnimation_GetTrack(
-    NSBXXAnimationMPT* anim, unsigned int track)
+Nitro3DMPT::Track* NSBXX_PatternAnimation_GetTrack(
+    Nitro3DMPT* anim, unsigned int track)
 {
     intptr_t nameList = (intptr_t)&anim->tracks_;
     if (nameList != 0 && track < anim->tracks_.numEntries_)
     {
         uint16_t stride = *(uint16_t*)(nameList + anim->tracks_.offsetToDataStart_);
         intptr_t ret = nameList + anim->tracks_.offsetToDataStart_ + 4 + stride * track;
-        return (NSBXXAnimationMPT::Track*)ret;
+        return (Nitro3DMPT::Track*)ret;
     }
     return NULL;
 }

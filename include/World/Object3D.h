@@ -5,7 +5,7 @@
 #include "../Resource/BCFG.h"
 #include "../Graphics/AlphaTween.h"
 
-fix32_t GetAnimationFrameCountFix32(AnimationData*);
+fix32_t GetAnimationFrameCountFix32(Nitro3DAnimation*);
 
 struct AnimationPackage
 {

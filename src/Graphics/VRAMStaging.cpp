@@ -31,7 +31,7 @@ void StageMemoryToVRAM(VRAMSubregion subregion, const void* data, unsigned int o
     g_stagingManagerInstance.Stage(subregion, data, offset, length, highPriority, allocateStagingSpace);
 }
 
-int StageTexFilePaletteData(volatile NSBXXTex* texture, bool highPriority)
+int StageTexFilePaletteData(volatile Nitro3DTextureSet* texture, bool highPriority)
 {
     if (texture == NULL)
         return -1;
@@ -47,7 +47,7 @@ int StageTexFilePaletteData(volatile NSBXXTex* texture, bool highPriority)
         src, offset, size, highPriority, false);
 }
 
-int StageTexFileImageData(volatile NSBXXTex* texture, bool highPriority)
+int StageTexFileImageData(volatile Nitro3DTextureSet* texture, bool highPriority)
 {
     if (texture == NULL)
         return -1;

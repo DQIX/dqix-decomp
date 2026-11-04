@@ -2,6 +2,15 @@
 
 #include "RenderCommands.h"
 
+struct Nitro3DAnimationSignature
+{
+    // holds e.g. "J\0AC" or "M\0PT" but in practice is read
+    // using a uint8_t and a uint16_t
+    uint8_t signatureInitial_;
+    uint8_t signatureNull_;
+    uint16_t signatureEnd_;
+};
+
 // Used to reference some kind of animation, specifically the innermost part
 // of the NSBxx files. For example in a .nsbca file, the header has signature
 // BCA0, the first file within this has signature JNT0, and the objects within
@@ -10,18 +19,18 @@
 // of form V.AV but it doesn't seem to be used anywhere in practice.
 // Note: the V.?? is completely undocumented as far as I know, and the fact it's
 // called V.AV just comes from looking at 0x020f1ca8 in the binary (USA)
-struct AnimationData
+struct Nitro3DAnimation
 {
-    typedef void (*Callback)(void*, AnimationData*, int);
+    typedef void (*Callback)(void*, Nitro3DAnimation*, int);
 
     fix32_t time_;
     // used for e.g. combining effects of multiple bones?
     fix32_t weight_;
     void* pRawData_;
     // call this to populate renderData as appropriate
-    void (*callback_)(void* renderData, AnimationData* animData, int arg);
-    AnimationData* pNext_;
-    NSBXXTex* pTex0_; // we always supply this, but only M.PT animations use it
+    void (*callback_)(void* renderData, Nitro3DAnimation* animData, int arg);
+    Nitro3DAnimation* pNext_;
+    Nitro3DTextureSet* pTex0_; // we always supply this, but only M.PT animations use it
     unsigned char unk_18;
     unsigned char numEntries_;
     // Not sure about max array length.
@@ -41,21 +50,21 @@ struct AnimationData
     unsigned short entries_[64];
 };
 
-void InitializeModelAnimation(AnimationData* anim, void* pRawData, NSBXXInternalModel* model, NSBXXTex* tex);
-void PopulateModelRenderContext(ModelRenderContext* context, NSBXXInternalModel* model);
+void InitializeModelAnimation(Nitro3DAnimation* anim, void* pRawData, Nitro3DModel* model, Nitro3DTextureSet* tex);
+void PopulateModelRenderContext(ModelRenderContext* context, Nitro3DModel* model);
 
 // Only the first animation in the list is checked to determine where to add it,
 // so maybe it's assumed that you only add one? But in theory you can add
 // multiple of the same type if they're already chained together
-void AddAnimationsToModelRenderContext(ModelRenderContext* context, AnimationData* anim);
+void AddAnimationsToModelRenderContext(ModelRenderContext* context, Nitro3DAnimation* anim);
 
-void RemoveAnimationFromModelRenderContext(ModelRenderContext* context, AnimationData* anim);
+void RemoveAnimationFromModelRenderContext(ModelRenderContext* context, Nitro3DAnimation* anim);
 
 // really doesn't fit here...
 void SetModelRenderContextRenderCommandHook(ModelRenderContext* context, RenderCommandHook hook, int unknown, int commandID, int stage);
 
 // Defined in AnimationProcessing.cpp 
 
-bool ProcessMaterialAnimationsOnBoundMaterial(MaterialRenderData* material, AnimationData* anim, unsigned int matIdx);
-bool ProcessJointAnimationsOnBoneMatrix(BoneMatrixRenderData* bone, AnimationData* anim, unsigned int boneIdx);
-bool ProcessVisibilityAnimations(int* output, AnimationData* anim, unsigned int boneIdx);
+bool ProcessMaterialAnimationsOnBoundMaterial(MaterialRenderData* material, Nitro3DAnimation* anim, unsigned int matIdx);
+bool ProcessJointAnimationsOnBoneMatrix(BoneMatrixRenderData* bone, Nitro3DAnimation* anim, unsigned int boneIdx);
+bool ProcessVisibilityAnimations(int* output, Nitro3DAnimation* anim, unsigned int boneIdx);

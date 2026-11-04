@@ -18,17 +18,17 @@ extern "C"
 
 extern unsigned int data_020f1c6c; // number of animation types (5)
 
-extern bool (*data_020f1c84)(int*, AnimationData*, unsigned int);
-extern bool (*data_020f1c88)(BoneMatrixRenderData*, AnimationData*, unsigned int);
-extern bool (*data_020f1c8c)(MaterialRenderData*, AnimationData*, unsigned int);
+extern bool (*data_020f1c84)(int*, Nitro3DAnimation*, unsigned int);
+extern bool (*data_020f1c88)(BoneMatrixRenderData*, Nitro3DAnimation*, unsigned int);
+extern bool (*data_020f1c8c)(MaterialRenderData*, Nitro3DAnimation*, unsigned int);
 
 struct AnimationTypeDescription
 {
-    NSBXXAnimationSignature signature;
-    void (*initializer)(AnimationData* anim, void* pvMAT, NSBXXInternalModel* model);
+    Nitro3DAnimationSignature signature;
+    void (*initializer)(Nitro3DAnimation* anim, void* pvMAT, Nitro3DModel* model);
 } extern data_020f1c90[];
 
-void InitializeModelAnimation(AnimationData *anim, void *pRawData, NSBXXInternalModel *model, NSBXXTex *tex)
+void InitializeModelAnimation(Nitro3DAnimation *anim, void *pRawData, Nitro3DModel *model, Nitro3DTextureSet *tex)
 {
     anim->time_ = 0;
     anim->pRawData_ = pRawData;
@@ -39,7 +39,7 @@ void InitializeModelAnimation(AnimationData *anim, void *pRawData, NSBXXInternal
     anim->numEntries_ = 0;
     anim->callback_ = NULL;
 
-    NSBXXAnimationSignature* signature = (NSBXXAnimationSignature*)pRawData;
+    Nitro3DAnimationSignature* signature = (Nitro3DAnimationSignature*)pRawData;
     int numAnimationTypes = data_020f1c6c;
     for (unsigned int animType = 0; animType < numAnimationTypes; animType++)
     {
@@ -53,7 +53,7 @@ void InitializeModelAnimation(AnimationData *anim, void *pRawData, NSBXXInternal
     }
 }
 
-void PopulateModelRenderContext(ModelRenderContext *context, NSBXXInternalModel *model)
+void PopulateModelRenderContext(ModelRenderContext *context, Nitro3DModel *model)
 {
     func_020ca3ec(0, context, sizeof(ModelRenderContext));
     context->pfnProcessMaterialAnimations_ = data_020f1c8c;
@@ -62,9 +62,9 @@ void PopulateModelRenderContext(ModelRenderContext *context, NSBXXInternalModel 
     context->internalModel_ = model;
 }
 
-void AddAnimationsToList(AnimationData** pListStart, AnimationData* newEntry)
+void AddAnimationsToList(Nitro3DAnimation** pListStart, Nitro3DAnimation* newEntry)
 {
-    AnimationData* mainListEntry = *pListStart;
+    Nitro3DAnimation* mainListEntry = *pListStart;
     
     if (mainListEntry == NULL)
     {
@@ -76,7 +76,7 @@ void AddAnimationsToList(AnimationData** pListStart, AnimationData* newEntry)
     {
         if (mainListEntry->unk_18 > newEntry->unk_18)
         {
-            AnimationData* newEntrySequenceEnd = newEntry;
+            Nitro3DAnimation* newEntrySequenceEnd = newEntry;
             if (newEntrySequenceEnd->pNext_ != NULL)
             {
                 do
@@ -93,7 +93,7 @@ void AddAnimationsToList(AnimationData** pListStart, AnimationData* newEntry)
         }
         return;
     }
-    AnimationData* mainListNextEntry = mainListEntry->pNext_;
+    Nitro3DAnimation* mainListNextEntry = mainListEntry->pNext_;
     
     if (mainListEntry->pNext_ != NULL)
     {
@@ -103,7 +103,7 @@ void AddAnimationsToList(AnimationData** pListStart, AnimationData* newEntry)
             unsigned int nextOrder = mainListNextEntry->unk_18;
             if (nextOrder >= targetOrder)
             {
-                AnimationData* newEntrySequenceEnd = newEntry;
+                Nitro3DAnimation* newEntrySequenceEnd = newEntry;
                 if (newEntrySequenceEnd->pNext_ != NULL)
                 {
                     do
@@ -126,7 +126,7 @@ void AddAnimationsToList(AnimationData** pListStart, AnimationData* newEntry)
 
 // the exact same function exists in RenderCommands.cpp so we give it a slightly
 // different name to distinguish it. Later can make both versions static
-void PopulateBitfieldFromAnimData0(unsigned int* bitfield, AnimationData* anim)
+void PopulateBitfieldFromAnimData0(unsigned int* bitfield, Nitro3DAnimation* anim)
 {
     if (anim == NULL)
         return;
@@ -149,12 +149,12 @@ void PopulateBitfieldFromAnimData0(unsigned int* bitfield, AnimationData* anim)
     } while (anim != NULL);
 }
 
-void AddAnimationsToModelRenderContext(ModelRenderContext *context, AnimationData *anim)
+void AddAnimationsToModelRenderContext(ModelRenderContext *context, Nitro3DAnimation *anim)
 {
     if (anim == NULL || anim->pRawData_ == NULL)
         return;
 
-    NSBXXAnimationSignature* signature = (NSBXXAnimationSignature*)anim->pRawData_;
+    Nitro3DAnimationSignature* signature = (Nitro3DAnimationSignature*)anim->pRawData_;
 
     switch (signature->signatureInitial_)
     {
@@ -174,9 +174,9 @@ void AddAnimationsToModelRenderContext(ModelRenderContext *context, AnimationDat
 }
 
 // can be made static
-bool RemoveAnimationFromList(AnimationData** pList, AnimationData* entry)
+bool RemoveAnimationFromList(Nitro3DAnimation** pList, Nitro3DAnimation* entry)
 {
-    AnimationData* firstEntry = *pList;
+    Nitro3DAnimation* firstEntry = *pList;
     if (*pList == NULL)
         return false;
     
@@ -188,8 +188,8 @@ bool RemoveAnimationFromList(AnimationData** pList, AnimationData* entry)
         return true;
     }
     
-    AnimationData* nextEntry = firstEntry->pNext_;
-    AnimationData* listEntry = firstEntry;
+    Nitro3DAnimation* nextEntry = firstEntry->pNext_;
+    Nitro3DAnimation* listEntry = firstEntry;
     if (nextEntry != NULL)
     {
         do
@@ -208,7 +208,7 @@ bool RemoveAnimationFromList(AnimationData** pList, AnimationData* entry)
     return false;
 }
 
-void RemoveAnimationFromModelRenderContext(ModelRenderContext *context, AnimationData *anim)
+void RemoveAnimationFromModelRenderContext(ModelRenderContext *context, Nitro3DAnimation *anim)
 {
     if (RemoveAnimationFromList(&context->materialAnimations_, anim) ||
         RemoveAnimationFromList(&context->jointAnimations_, anim) ||

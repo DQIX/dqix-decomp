@@ -96,7 +96,7 @@ void BoneMatrixDataSubmissionProc_Type0(BoneMatrixRenderData* renderData)
     }
 }
 
-void BoneMatrixScaleCalculationProc_Type0(BoneMatrixRenderData* renderData, NSBXXBoneMatrix::Scaling* scaling, uint8_t* ip, int boneMatrixFlags)
+void BoneMatrixScaleCalculationProc_Type0(BoneMatrixRenderData* renderData, Nitro3DBoneMatrix::Scaling* scaling, uint8_t* ip, int boneMatrixFlags)
 {
     if (boneMatrixFlags & 4) // bone matrix has no scaling data
         renderData->flags_ |= 1;
@@ -150,7 +150,7 @@ void BoneMatrixDataSubmissionProc_Type1(BoneMatrixRenderData* renderData)
     }
 }
 
-void BoneMatrixScaleCalculationProc_Type1(BoneMatrixRenderData* renderData, NSBXXBoneMatrix::Scaling* scaling, uint8_t* ip, int boneMatrixFlags)
+void BoneMatrixScaleCalculationProc_Type1(BoneMatrixRenderData* renderData, Nitro3DBoneMatrix::Scaling* scaling, uint8_t* ip, int boneMatrixFlags)
 {
     int thirdArg = ip[3];
     if (boneMatrixFlags & 4) // no scaling
@@ -435,7 +435,7 @@ void BoneMatrixDataSubmissionProc_Type2(BoneMatrixRenderData* renderData)
         SubmitCommandToGeometryFifo(GXFifoCommand_ScaleMatrix, (uint32_t*)&renderData->scale_v0_, 3);
 }
 
-void BoneMatrixScaleCalculationProc_Type2(BoneMatrixRenderData* renderData, NSBXXBoneMatrix::Scaling* scaling, uint8_t* ip, int boneMatrixFlags)
+void BoneMatrixScaleCalculationProc_Type2(BoneMatrixRenderData* renderData, Nitro3DBoneMatrix::Scaling* scaling, uint8_t* ip, int boneMatrixFlags)
 {
     unsigned int thisBoneIdx = ip[1];
     unsigned int parentBoneIdx = ip[2];

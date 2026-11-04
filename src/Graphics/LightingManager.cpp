@@ -640,7 +640,7 @@ void LightingManager::Initialize()
 
 void LightingManager::SetZone(Zone3D *zone) { pZone_ = zone; }
 
-void LightingManager::ModelTransformTintBrightnessContrast(NSBXXInternalModel *model)
+void LightingManager::ModelTransformTintBrightnessContrast(Nitro3DModel *model)
 {
     GameState* gameState = GameState::GetInstance();
     (void)GetGameResources();
@@ -689,7 +689,7 @@ void LightingManager::ModelTransformTintBrightnessContrast(NSBXXInternalModel *m
         }
     }
 
-    NSBXXNameList* meshList = model->GetMeshListSafe();
+    Nitro3DNameList* meshList = model->GetMeshListSafe();
     
     lightingInfo->basic_.FillMissingEntries();
     func_0207ba28(lightingInfo, index, &redMix_2c_, &greenMix_30_, &blueMix_34_);
@@ -713,7 +713,7 @@ void LightingManager::ModelTransformTintBrightnessContrast(NSBXXInternalModel *m
         unsigned char opcode2;
         unsigned char opcode3;
 
-        NSBXXMesh* mesh = meshList->GetEntryFromu32Offset<NSBXXMesh>(meshIndex);
+        Nitro3DMesh* mesh = meshList->GetEntryFromu32Offset<Nitro3DMesh>(meshIndex);
         
         if (!(mesh->unk_4 & 2))
             continue;
@@ -984,7 +984,7 @@ void LightingManager::SubmitToRenderConfig()
     }
 }
 
-void LightingManager::ApplyAmbientColorToModel(NSBXXInternalModel* model)
+void LightingManager::ApplyAmbientColorToModel(Nitro3DModel* model)
 {
     NSBXX_Model_SetAmbientReflectionColor(model, ambientColor_);
 }

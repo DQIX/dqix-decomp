@@ -1,6 +1,6 @@
 #include "NitroSDK/NSBXX/NSBXX.h"
 
-extern "C" void* NSBXXNameList_Search(const NSBXXNameList* nameList, const char* name)
+extern "C" void* NSBXXNameList_Search(const Nitro3DNameList* nameList, const char* name)
 {
     const uint32_t* target = (const uint32_t*)name;
     if (name == NULL)
@@ -26,11 +26,11 @@ extern "C" void* NSBXXNameList_Search(const NSBXXNameList* nameList, const char*
     }
     else // list is long, use the binary search tree
     {   
-        NSBXXNameList::SearchTreeEntry* entryArray = (NSBXXNameList::SearchTreeEntry*)&nameList->treeRoot_8_;
+        Nitro3DNameList::SearchTreeEntry* entryArray = (Nitro3DNameList::SearchTreeEntry*)&nameList->treeRoot_8_;
         int firstChild = entryArray[0].children_[0];
         if (firstChild != 0)
         {
-            NSBXXNameList::SearchTreeEntry* searchCursor = &entryArray[firstChild];
+            Nitro3DNameList::SearchTreeEntry* searchCursor = &entryArray[firstChild];
             int bitIndex = entryArray[firstChild].bitIndex_;
             unsigned int prevBitIndex = entryArray[0].bitIndex_;
             while (prevBitIndex > bitIndex)
@@ -58,7 +58,7 @@ extern "C" void* NSBXXNameList_Search(const NSBXXNameList* nameList, const char*
     return NULL;
 }
 
-extern "C" int NSBXXNameList_SearchIndex(const NSBXXNameList* nameList, const char* name)
+extern "C" int NSBXXNameList_SearchIndex(const Nitro3DNameList* nameList, const char* name)
 {
     const uint32_t* target = (const uint32_t*)name;
     if (name == NULL)
@@ -83,11 +83,11 @@ extern "C" int NSBXXNameList_SearchIndex(const NSBXXNameList* nameList, const ch
     }
     else // list is long, use the binary search tree
     {   
-        NSBXXNameList::SearchTreeEntry* entryArray = (NSBXXNameList::SearchTreeEntry*)&nameList->treeRoot_8_;
+        Nitro3DNameList::SearchTreeEntry* entryArray = (Nitro3DNameList::SearchTreeEntry*)&nameList->treeRoot_8_;
         int firstChild = entryArray[0].children_[0];
         if (firstChild != 0)
         {
-            NSBXXNameList::SearchTreeEntry* searchCursor = &entryArray[firstChild];
+            Nitro3DNameList::SearchTreeEntry* searchCursor = &entryArray[firstChild];
             int bitIndex = entryArray[firstChild].bitIndex_;   
             unsigned int prevBitIndex = entryArray[0].bitIndex_;
             while (prevBitIndex > bitIndex)

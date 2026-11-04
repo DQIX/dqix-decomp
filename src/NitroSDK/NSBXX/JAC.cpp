@@ -14,23 +14,23 @@ extern "C"
     void func_020ca390(int value, void* dst, unsigned len);
 }
 
-void CalculateBoneMatrixRenderDataFromJAC(NSBXXAnimationJAC* jac, int arg,
+void CalculateBoneMatrixRenderDataFromJAC(Nitro3DJAC* jac, int arg,
     fix32_t time, BoneMatrixRenderData* bmrd);
 
 void CalculateTranslationAmountFrameAligned(fix32_t* out, fix32_t time,
-    NSBXXAnimationJAC::Track::ChannelNonConst* channel, NSBXXAnimationJAC* jac);
+    Nitro3DJAC::Track::ChannelNonConst* channel, Nitro3DJAC* jac);
 void CalculateTranslationAmountSmooth(fix32_t* out, fix32_t time,
-    NSBXXAnimationJAC::Track::ChannelNonConst* channel, NSBXXAnimationJAC* jac);
+    Nitro3DJAC::Track::ChannelNonConst* channel, Nitro3DJAC* jac);
 
 void CalculateScalingAmountFrameAligned(fix32_t* out, fix32_t time,
-    NSBXXAnimationJAC::Track::ChannelNonConst* channel, NSBXXAnimationJAC* jac);
+    Nitro3DJAC::Track::ChannelNonConst* channel, Nitro3DJAC* jac);
 void CalculateScalingAmountSmooth(fix32_t* out, fix32_t time,
-    NSBXXAnimationJAC::Track::ChannelNonConst* channel, NSBXXAnimationJAC* jac);
+    Nitro3DJAC::Track::ChannelNonConst* channel, Nitro3DJAC* jac);
 
 void CalculateRotationFrameAligned(Matrix3x3* out, fix32_t time,
-    NSBXXAnimationJAC::Track::ChannelNonConst* channel, NSBXXAnimationJAC* jac);
+    Nitro3DJAC::Track::ChannelNonConst* channel, Nitro3DJAC* jac);
 void CalculateRotationSmooth(Matrix3x3* out, fix32_t time,
-    NSBXXAnimationJAC::Track::ChannelNonConst* channel, NSBXXAnimationJAC* jac);
+    Nitro3DJAC::Track::ChannelNonConst* channel, Nitro3DJAC* jac);
 bool GetMatrixFromIndex(Matrix3x3* out, intptr_t pivotList, intptr_t basisList, int index);
 
 static inline void CalculateThirdRowByCrossProduct(Matrix3x3* mat)
@@ -48,11 +48,11 @@ static inline void CalculateThirdRowByCrossProduct(Matrix3x3* mat)
 }
 
 // processing callback for J.AC animations
-extern void (*data_020f1c74)(void*, AnimationData*, int);
+extern void (*data_020f1c74)(void*, Nitro3DAnimation*, int);
 
-void InitializeModelAnimationFromJAC(AnimationData* anim, void* pvJAC, NSBXXInternalModel* model)
+void InitializeModelAnimationFromJAC(Nitro3DAnimation* anim, void* pvJAC, Nitro3DModel* model)
 {
-    NSBXXAnimationJAC* jac = (NSBXXAnimationJAC*)pvJAC;
+    Nitro3DJAC* jac = (Nitro3DJAC*)pvJAC;
     anim->pRawData_ = jac;
     anim->callback_ = data_020f1c74;
     anim->numEntries_ = model->numBoneMatrices_;
@@ -62,18 +62,18 @@ void InitializeModelAnimationFromJAC(AnimationData* anim, void* pvJAC, NSBXXInte
     uint16_t* trackOffsets = jac->trackOffsets_;
     for (trackIdx = 0; trackIdx < jac->numTracks_; trackIdx++)
     {
-        NSBXXAnimationJAC::Track* track =
-                (NSBXXAnimationJAC::Track*)((char*)jac + trackOffsets[trackIdx]);
+        Nitro3DJAC::Track* track =
+                (Nitro3DJAC::Track*)((char*)jac + trackOffsets[trackIdx]);
             anim->entries_[trackIdx] = track->flagsAndTargetBoneMatrix_ >> 24 | 0x100;
     }
 }
 
-void JACAnimationProcessingCallback(void* data, AnimationData* anim, int arg)
+void JACAnimationProcessingCallback(void* data, Nitro3DAnimation* anim, int arg)
 {
     BoneMatrixRenderData* boneRenderData = (BoneMatrixRenderData*)data;
 
     fix32_t time = anim->time_;
-    NSBXXAnimationJAC* jac = (NSBXXAnimationJAC*)anim->pRawData_;
+    Nitro3DJAC* jac = (Nitro3DJAC*)anim->pRawData_;
 
     if (time >= jac->numFrames_ << 12)
         time = (jac->numFrames_ << 12) - 1;
@@ -88,15 +88,15 @@ void ApplyBindPoseTranslation(BoneMatrixRenderData* bmrd)
     RenderCommandHandler* handler = data_0210a274;
     // this is super cursed, but I guess this executes during command 6 when
     // ip[1] holds the bone index to apply stuff to
-    NSBXXBoneMatrix* boneMatrix = 
-        handler->boneList_->GetEntryFromu32Offset<NSBXXBoneMatrix>(handler->instructionPointer_[1]);
+    Nitro3DBoneMatrix* boneMatrix = 
+        handler->boneList_->GetEntryFromu32Offset<Nitro3DBoneMatrix>(handler->instructionPointer_[1]);
     if (boneMatrix->flags_ & 1) // no translation data
     {
         bmrd->flags_ |= 4;
     }
     else
     {
-        NSBXXBoneMatrix::Translation* tdata = (NSBXXBoneMatrix::Translation*)((intptr_t)boneMatrix + 4);
+        Nitro3DBoneMatrix::Translation* tdata = (Nitro3DBoneMatrix::Translation*)((intptr_t)boneMatrix + 4);
         bmrd->translate_.x = tdata->x;
         bmrd->translate_.y = tdata->y;
         bmrd->translate_.z = tdata->z;
@@ -107,39 +107,39 @@ void ApplyBindPoseScaling(BoneMatrixRenderData* bmrd)
 {
     RenderCommandHandler* handler = data_0210a274;
     uint8_t* ip = handler->instructionPointer_;
-    NSBXXBoneMatrix* boneMatrix = handler->boneList_->GetEntryFromu32Offset<NSBXXBoneMatrix>(ip[1]);
+    Nitro3DBoneMatrix* boneMatrix = handler->boneList_->GetEntryFromu32Offset<Nitro3DBoneMatrix>(ip[1]);
     intptr_t addrScaling = (intptr_t)(boneMatrix + 1);
     unsigned int flags = boneMatrix->flags_;
     if (!(flags & 1)) // has translation data
-        addrScaling += sizeof(NSBXXBoneMatrix::Translation);
+        addrScaling += sizeof(Nitro3DBoneMatrix::Translation);
     if (!(flags & 2))
     {
         if (flags & 8)
-            addrScaling += sizeof(NSBXXBoneMatrix::PivotMatrixData);
+            addrScaling += sizeof(Nitro3DBoneMatrix::PivotMatrixData);
         else
-            addrScaling += sizeof(NSBXXBoneMatrix::RotationMatrixData);
+            addrScaling += sizeof(Nitro3DBoneMatrix::RotationMatrixData);
     }
     handler->boneMatrixRenderDataScalePopulateProc_(bmrd,
-        (NSBXXBoneMatrix::Scaling*)addrScaling, ip, flags);
+        (Nitro3DBoneMatrix::Scaling*)addrScaling, ip, flags);
 }
 
 void ApplyBindPoseRotation(BoneMatrixRenderData* bmrd)
 {
     RenderCommandHandler* handler = data_0210a274;
-    NSBXXBoneMatrix* boneMatrix = 
-        handler->boneList_->GetEntryFromu32Offset<NSBXXBoneMatrix>(handler->instructionPointer_[1]);
+    Nitro3DBoneMatrix* boneMatrix = 
+        handler->boneList_->GetEntryFromu32Offset<Nitro3DBoneMatrix>(handler->instructionPointer_[1]);
 
     const char* addrRotation = (const char*)(boneMatrix + 1);
     if (!(boneMatrix->flags_ & 1)) // has translation data
-        addrRotation += sizeof(NSBXXBoneMatrix::Translation);
+        addrRotation += sizeof(Nitro3DBoneMatrix::Translation);
 
     if (!(boneMatrix->flags_ & 2)) // has rotation data
     {
         if (boneMatrix->flags_ & 8) // pivot matrix format
         {
             unsigned long pivotForm = (boneMatrix->flags_ & 0xf0) >> 4;
-            NSBXXBoneMatrix::PivotMatrixData* pivot =
-                (NSBXXBoneMatrix::PivotMatrixData*)addrRotation;
+            Nitro3DBoneMatrix::PivotMatrixData* pivot =
+                (Nitro3DBoneMatrix::PivotMatrixData*)addrRotation;
             fix32_t entryA = pivot->a;
             fix32_t entryB = pivot->b;
 
@@ -157,8 +157,8 @@ void ApplyBindPoseRotation(BoneMatrixRenderData* bmrd)
         else // generic 3x3 matrix format
         {
             bmrd->rotationMatrix_.entries[0] = boneMatrix->m_11;
-            NSBXXBoneMatrix::RotationMatrixData* rot = 
-                (NSBXXBoneMatrix::RotationMatrixData*)addrRotation;
+            Nitro3DBoneMatrix::RotationMatrixData* rot = 
+                (Nitro3DBoneMatrix::RotationMatrixData*)addrRotation;
             bmrd->rotationMatrix_.entries[1] = rot->entries[0];
             bmrd->rotationMatrix_.entries[2] = rot->entries[1];
             bmrd->rotationMatrix_.entries[3] = rot->entries[2];
@@ -175,13 +175,13 @@ void ApplyBindPoseRotation(BoneMatrixRenderData* bmrd)
     }
 }
 
-void CalculateBoneMatrixRenderDataFromJAC(NSBXXAnimationJAC* jac, int arg, 
+void CalculateBoneMatrixRenderDataFromJAC(Nitro3DJAC* jac, int arg, 
     fix32_t time, BoneMatrixRenderData* bmrd)
 {
-    NSBXXAnimationJAC::Track* track = 
-        (NSBXXAnimationJAC::Track*)((intptr_t)jac + jac->trackOffsets_[arg]);
+    Nitro3DJAC::Track* track = 
+        (Nitro3DJAC::Track*)((intptr_t)jac + jac->trackOffsets_[arg]);
 
-    NSBXXBoneMatrix::Scaling scaleData;
+    Nitro3DBoneMatrix::Scaling scaleData;
 
     unsigned int trackFlags = track->flagsAndTargetBoneMatrix_;
 
@@ -204,11 +204,11 @@ void CalculateBoneMatrixRenderDataFromJAC(NSBXXAnimationJAC* jac, int arg,
             {
                 if (smooth)
                     CalculateTranslationAmountSmooth(&bmrd->translate_.x, time,
-                        (NSBXXAnimationJAC::Track::ChannelNonConst*)channelAddr, jac);
+                        (Nitro3DJAC::Track::ChannelNonConst*)channelAddr, jac);
                 else
                     CalculateTranslationAmountFrameAligned(&bmrd->translate_.x, time,
-                        (NSBXXAnimationJAC::Track::ChannelNonConst*)channelAddr, jac);
-                channelAddr += sizeof(NSBXXAnimationJAC::Track::ChannelNonConst);
+                        (Nitro3DJAC::Track::ChannelNonConst*)channelAddr, jac);
+                channelAddr += sizeof(Nitro3DJAC::Track::ChannelNonConst);
             }
             else // x-translation constant
             {
@@ -220,11 +220,11 @@ void CalculateBoneMatrixRenderDataFromJAC(NSBXXAnimationJAC* jac, int arg,
             {
                 if (smooth)
                     CalculateTranslationAmountSmooth(&bmrd->translate_.y, time,
-                        (NSBXXAnimationJAC::Track::ChannelNonConst*)channelAddr, jac);
+                        (Nitro3DJAC::Track::ChannelNonConst*)channelAddr, jac);
                 else
                     CalculateTranslationAmountFrameAligned(&bmrd->translate_.y, time,
-                        (NSBXXAnimationJAC::Track::ChannelNonConst*)channelAddr, jac);
-                channelAddr += sizeof(NSBXXAnimationJAC::Track::ChannelNonConst);
+                        (Nitro3DJAC::Track::ChannelNonConst*)channelAddr, jac);
+                channelAddr += sizeof(Nitro3DJAC::Track::ChannelNonConst);
             }
             else // y-translation constant
             {
@@ -236,11 +236,11 @@ void CalculateBoneMatrixRenderDataFromJAC(NSBXXAnimationJAC* jac, int arg,
             {
                 if (smooth)
                     CalculateTranslationAmountSmooth(&bmrd->translate_.z, time,
-                        (NSBXXAnimationJAC::Track::ChannelNonConst*)channelAddr, jac);
+                        (Nitro3DJAC::Track::ChannelNonConst*)channelAddr, jac);
                 else
                     CalculateTranslationAmountFrameAligned(&bmrd->translate_.z, time,
-                        (NSBXXAnimationJAC::Track::ChannelNonConst*)channelAddr, jac);
-                channelAddr += sizeof(NSBXXAnimationJAC::Track::ChannelNonConst);
+                        (Nitro3DJAC::Track::ChannelNonConst*)channelAddr, jac);
+                channelAddr += sizeof(Nitro3DJAC::Track::ChannelNonConst);
             }
             else // z-translation constant
             {
@@ -263,11 +263,11 @@ void CalculateBoneMatrixRenderDataFromJAC(NSBXXAnimationJAC* jac, int arg,
             {
                 if (smooth)
                     CalculateRotationSmooth(&bmrd->rotationMatrix_, time, 
-                        (NSBXXAnimationJAC::Track::ChannelNonConst*)channelAddr, jac);
+                        (Nitro3DJAC::Track::ChannelNonConst*)channelAddr, jac);
                 else
                     CalculateRotationFrameAligned(&bmrd->rotationMatrix_, time,
-                        (NSBXXAnimationJAC::Track::ChannelNonConst*)channelAddr, jac);
-                channelAddr += sizeof(NSBXXAnimationJAC::Track::ChannelNonConst);
+                        (Nitro3DJAC::Track::ChannelNonConst*)channelAddr, jac);
+                channelAddr += sizeof(Nitro3DJAC::Track::ChannelNonConst);
             }
             else // rotation channel constant
             {
@@ -310,10 +310,10 @@ void CalculateBoneMatrixRenderDataFromJAC(NSBXXAnimationJAC* jac, int arg,
                 fix32_t xscales[2];
                 if (smooth)
                     CalculateScalingAmountSmooth(xscales, time,
-                        (NSBXXAnimationJAC::Track::ChannelNonConst*)channelAddr, jac);
+                        (Nitro3DJAC::Track::ChannelNonConst*)channelAddr, jac);
                 else
                     CalculateScalingAmountFrameAligned(xscales, time,
-                        (NSBXXAnimationJAC::Track::ChannelNonConst*)channelAddr, jac);
+                        (Nitro3DJAC::Track::ChannelNonConst*)channelAddr, jac);
                 scaleData.x = xscales[0];
                 scaleData.x_v2 = xscales[1];
             }
@@ -329,10 +329,10 @@ void CalculateBoneMatrixRenderDataFromJAC(NSBXXAnimationJAC* jac, int arg,
                 fix32_t yscales[2];
                 if (smooth)
                     CalculateScalingAmountSmooth(yscales, time,
-                        (NSBXXAnimationJAC::Track::ChannelNonConst*)channelAddr, jac);
+                        (Nitro3DJAC::Track::ChannelNonConst*)channelAddr, jac);
                 else
                     CalculateScalingAmountFrameAligned(yscales, time,
-                        (NSBXXAnimationJAC::Track::ChannelNonConst*)channelAddr, jac);
+                        (Nitro3DJAC::Track::ChannelNonConst*)channelAddr, jac);
                 scaleData.y = yscales[0];
                 scaleData.y_v2 = yscales[1];
             }
@@ -348,10 +348,10 @@ void CalculateBoneMatrixRenderDataFromJAC(NSBXXAnimationJAC* jac, int arg,
                 fix32_t zscales[2];
                 if (smooth)
                     CalculateScalingAmountSmooth(zscales, time,
-                        (NSBXXAnimationJAC::Track::ChannelNonConst*)channelAddr, jac);
+                        (Nitro3DJAC::Track::ChannelNonConst*)channelAddr, jac);
                 else
                     CalculateScalingAmountFrameAligned(zscales, time,
-                        (NSBXXAnimationJAC::Track::ChannelNonConst*)channelAddr, jac);
+                        (Nitro3DJAC::Track::ChannelNonConst*)channelAddr, jac);
                 scaleData.z = zscales[0];
                 scaleData.z_v2 = zscales[1];
             }
@@ -378,7 +378,7 @@ void CalculateBoneMatrixRenderDataFromJAC(NSBXXAnimationJAC* jac, int arg,
 }
 
 void CalculateTranslationAmountFrameAligned(fix32_t* out, fix32_t time,
-    NSBXXAnimationJAC::Track::ChannelNonConst* channel, NSBXXAnimationJAC* jac)
+    Nitro3DJAC::Track::ChannelNonConst* channel, Nitro3DJAC* jac)
 {
     unsigned int highWeightFrame, lowWeightFrame;
     unsigned int metadata;
@@ -481,7 +481,7 @@ compute_directly:
 }
 
 void CalculateTranslationAmountSmooth(fix32_t* out, fix32_t time,
-    NSBXXAnimationJAC::Track::ChannelNonConst* channel, NSBXXAnimationJAC* jac)
+    Nitro3DJAC::Track::ChannelNonConst* channel, Nitro3DJAC* jac)
 {
     unsigned int frameIdx = time >> 12;
     fix32_t* samples = (fix32_t*)((intptr_t)jac + channel->samplesOffset_);
@@ -591,13 +591,13 @@ skip_default_values:
 }
 
 void CalculateScalingAmountFrameAligned(fix32_t* out, fix32_t time,
-    NSBXXAnimationJAC::Track::ChannelNonConst* channel, NSBXXAnimationJAC* jac)
+    Nitro3DJAC::Track::ChannelNonConst* channel, Nitro3DJAC* jac)
 {
     unsigned int thisFrame = time >> 12;
     
-    NSBXXAnimationJAC::ScaleSample32* samples =
-        (NSBXXAnimationJAC::ScaleSample32*)((char*)jac + channel->samplesOffset_);
-    NSBXXAnimationJAC::ScaleSample16* samples16 = (NSBXXAnimationJAC::ScaleSample16*)samples;
+    Nitro3DJAC::ScaleSample32* samples =
+        (Nitro3DJAC::ScaleSample32*)((char*)jac + channel->samplesOffset_);
+    Nitro3DJAC::ScaleSample16* samples16 = (Nitro3DJAC::ScaleSample16*)samples;
 
     unsigned int metadata = channel->metadata_;
     unsigned int highWeightFrame;
@@ -724,11 +724,11 @@ compute_average:
 }
 
 void CalculateScalingAmountSmooth(fix32_t* out, fix32_t time,
-    NSBXXAnimationJAC::Track::ChannelNonConst* channel, NSBXXAnimationJAC* jac)
+    Nitro3DJAC::Track::ChannelNonConst* channel, Nitro3DJAC* jac)
 {
-    NSBXXAnimationJAC::ScaleSample32* samples =
-        (NSBXXAnimationJAC::ScaleSample32*)((intptr_t)jac + channel->samplesOffset_);
-    NSBXXAnimationJAC::ScaleSample16* samples16 = (NSBXXAnimationJAC::ScaleSample16*)samples;
+    Nitro3DJAC::ScaleSample32* samples =
+        (Nitro3DJAC::ScaleSample32*)((intptr_t)jac + channel->samplesOffset_);
+    Nitro3DJAC::ScaleSample16* samples16 = (Nitro3DJAC::ScaleSample16*)samples;
     unsigned int flags = channel->metadata_;
     unsigned int frameIdx = time >> 12;
     unsigned int lerpEndIdx;
@@ -842,7 +842,7 @@ skip_default_values:
 }
 
 void CalculateRotationFrameAligned(Matrix3x3* out, fix32_t time,
-    NSBXXAnimationJAC::Track::ChannelNonConst* channel, NSBXXAnimationJAC* jac)
+    Nitro3DJAC::Track::ChannelNonConst* channel, Nitro3DJAC* jac)
 {
     unsigned int flags = channel->metadata_;
     unsigned int frameIdx = time >> 12;
@@ -987,7 +987,7 @@ calculate_exact_frame:
 }
 
 void CalculateRotationSmooth(Matrix3x3* out, fix32_t time,
-    NSBXXAnimationJAC::Track::ChannelNonConst* channel, NSBXXAnimationJAC* jac)
+    Nitro3DJAC::Track::ChannelNonConst* channel, Nitro3DJAC* jac)
 {
     unsigned int basisOffset, pivotOffset;
     pivotOffset = jac->pivotDataOffset_;
@@ -1119,8 +1119,8 @@ bool GetMatrixFromIndex(Matrix3x3* out, intptr_t pivotList, intptr_t basisList, 
         out->entries[0] = out->entries[1] = out->entries[2] =
         out->entries[3] = out->entries[4] = out->entries[5] = 
         out->entries[6] = out->entries[7] = out->entries[8] = 0;
-        NSBXXAnimationJAC::PivotMatrix* pivot =
-            (NSBXXAnimationJAC::PivotMatrix*)(pivotList + (((index & 0x7fff) * 3) << 1));
+        Nitro3DJAC::PivotMatrix* pivot =
+            (Nitro3DJAC::PivotMatrix*)(pivotList + (((index & 0x7fff) * 3) << 1));
         fix32_t entryA = pivot->a;
         fix32_t entryB = pivot->b;
         
@@ -1140,8 +1140,8 @@ bool GetMatrixFromIndex(Matrix3x3* out, intptr_t pivotList, intptr_t basisList, 
     }
     else // basis matrix
     {
-        NSBXXAnimationJAC::BasisMatrix* basis =
-            (NSBXXAnimationJAC::BasisMatrix*)(basisList + (((index & 0x7fff) * 5) << 1));
+        Nitro3DJAC::BasisMatrix* basis =
+            (Nitro3DJAC::BasisMatrix*)(basisList + (((index & 0x7fff) * 5) << 1));
         short accumulation = 0;
 
         int d4 = basis->data[4];
