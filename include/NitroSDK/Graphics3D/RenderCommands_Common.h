@@ -19,10 +19,7 @@
 #define data_020f1ce0 data_020f1e4c
 #define data_020f1cec data_020f1e58
 #define data_020f1cf8 data_020f1e64
-#define data_020f1d08 data_020f1e74
-#define data_020f1d78 data_020f1ee4
-#define data_020f1dc0 data_020f1f2c
-#define data_020f1e08 data_020f1f74
+
 #define data_0210a274 data_02109f2c
 #define data_0210a278 data_02109f30
 #define data_0210b078 data_0210ad30
@@ -73,45 +70,6 @@ extern void (*data_020f1cec[])(BoneMatrixRenderData*, Nitro3DBoneMatrix::Scaling
 extern void (*data_020f1ce0[])(BoneMatrixRenderData*);
 // Holds { func_020ba11c func_020ba5ac, func_020bac74, func_020bb29c }
 extern void (*data_020f1cf8[])(MaterialRenderData*);
-
-extern struct Struct_020f1d08
-{
-    // used for render command 13
-    unsigned int commandTexImageParams_0_; // holds 0x2A = GXFifoCommand_SetTexImageParams
-    unsigned int texImageParamsArg_4_;
-    // used for render command 12
-    unsigned int commandTexImageParams_8_; // holds 0x2a = GXFifoCommand_SetTexImageParams
-    unsigned int texImageParamsArg_c_;
-
-    // only one of these is not null
-    void (*materialBindFunctions[4])(Nitro3DRenderCommandHandler*, int modifier, Nitro3DMaterial*, unsigned int idx);
-    // only one of these is not null
-    void (*meshDrawFunctions[4])(Nitro3DRenderCommandHandler*, int modifier, Nitro3DMesh*, unsigned int idx);
-
-    Matrix4x4 command13Matrix4x4_;
-} data_020f1d08;
-
-// a blob of GXFIFO data used by command 7. The entries are
-// - combined command (12, 10, 17, 1b) = (pop matrix, matrix mode, load 3x4, scale)
-// - 1 (parameter for pop matrix)
-// - 2 (parameter for matrix mode: position + vector)
-// - nine entries for the identity matrix
-// - 3 entries that make up the translation component of the matrix. Initially
-//   zero but can be modified
-// - 3 parameters for the scaling command
-struct Struct_020f1d78 {
-    // is always (12, 10, 17, 1b) = (pop matrix, matrix mode, load 4x3, scale)
-    // which can be merged with subsequent data as a single command to the GXFIFO.
-    uint32_t commandsCombined;
-    // always 1
-    uint32_t popMatrixParameter;
-    // always 2 (position + vector?)
-    uint32_t matrixModeParameter;
-    // this is always the 3x3 identity, but combined with translation gives a 4x3 matrix
-    Matrix4x3 rotationTranslation;
-
-    Vector3fix scaling;
-} extern data_020f1d78, data_020f1dc0;
 
 // render command lookup
 extern void (*data_020f1e08[])(Nitro3DRenderCommandHandler*, int);

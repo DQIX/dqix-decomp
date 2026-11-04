@@ -1,5 +1,101 @@
 #include "NitroSDK/Graphics3D/RenderCommands_Common.h"
 
+void MaterialBindProc(Nitro3DRenderCommandHandler* handler, int modifier, Nitro3DMaterial* material, unsigned int idx);
+void MeshDrawProc(Nitro3DRenderCommandHandler* handler, int modifier, Nitro3DMesh* mesh, unsigned int meshIdx);
+
+void RenderCommand_0(Nitro3DRenderCommandHandler* handler, int modifier);
+void RenderCommand_1(Nitro3DRenderCommandHandler* handler, int modifier);
+void RenderCommand_2(Nitro3DRenderCommandHandler* handler, int modifier);
+void RenderCommand_3(Nitro3DRenderCommandHandler* handler, int modifier);
+void RenderCommand_4(Nitro3DRenderCommandHandler* handler, int modifier);
+void RenderCommand_5(Nitro3DRenderCommandHandler* handler, int modifier);
+void RenderCommand_6(Nitro3DRenderCommandHandler* handler, int modifier);
+void RenderCommand_7(Nitro3DRenderCommandHandler* handler, int modifier);
+void RenderCommand_8(Nitro3DRenderCommandHandler* handler, int modifier);
+void RenderCommand_9(Nitro3DRenderCommandHandler* handler, int modifier);
+void RenderCommand_10(Nitro3DRenderCommandHandler* handler, int modifier);
+void RenderCommand_11(Nitro3DRenderCommandHandler* handler, int modifier);
+void RenderCommand_12(Nitro3DRenderCommandHandler* handler, int modifier);
+void RenderCommand_13(Nitro3DRenderCommandHandler* handler, int modifier);
+
+struct BillboardFIFOData {
+    // is always (12, 10, 17, 1b) = (pop matrix, matrix mode, load 4x3, scale)
+    // which can be merged with subsequent data as a single command to the GXFIFO.
+    uint32_t commandsCombined;
+    // always 1
+    uint32_t popMatrixParameter;
+    // always 2 (position + vector?)
+    uint32_t matrixModeParameter;
+    Matrix4x3 rotationTranslation;
+    Vector3fix scaling;
+};
+
+static void (*s_renderCommands[32])(Nitro3DRenderCommandHandler*, int) =
+{
+    &RenderCommand_0, &RenderCommand_1, &RenderCommand_2, 
+    &RenderCommand_3, &RenderCommand_4, &RenderCommand_5,
+    &RenderCommand_6, &RenderCommand_7, &RenderCommand_8,
+    &RenderCommand_9, &RenderCommand_10, &RenderCommand_11,
+    &RenderCommand_12, &RenderCommand_13
+};
+
+static void (*s_meshDrawProcs[])(Nitro3DRenderCommandHandler*, int modifier, Nitro3DMesh*, unsigned int idx) =
+{
+    &MeshDrawProc, NULL, NULL, NULL
+};
+
+static void (*s_materialBindProcs[])(Nitro3DRenderCommandHandler*, int modifier, Nitro3DMaterial*, unsigned int idx) =
+{
+    &MaterialBindProc, NULL, NULL, NULL
+};
+
+static BillboardFIFOData s_freeBillboardFifo =
+{
+    COMBINE_GXFIFO_COMMANDS4(GXFifoCommand_PopMatrix,
+        GXFifoCommand_SetMatrixMode,
+        GXFifoCommand_LoadMat4x3,
+        GXFifoCommand_ScaleMatrix),
+    1, // Pop matrix argument
+    2, // matrix mode 2 (position + vector)
+    { 1 << 12, 0, 0, //
+      0, 1 << 12, 0, // rotation part of matrix 
+      0, 0, 1 << 12, //
+      0, 0, 0 }, // translation
+    { 0, 0, 0 } // scale
+};
+
+static BillboardFIFOData s_axisBillboardFifo =
+{
+    COMBINE_GXFIFO_COMMANDS4(GXFifoCommand_PopMatrix,
+        GXFifoCommand_SetMatrixMode,
+        GXFifoCommand_LoadMat4x3,
+        GXFifoCommand_ScaleMatrix),
+    1, // Pop matrix argument
+    2, // matrix mode 2 (position + vector)
+    { 1 << 12, 0, 0, //
+      0, 1 << 12, 0, // rotation part of matrix 
+      0, 0, 1 << 12, //
+      0, 0, 0 }, // translation
+    { 0, 0, 0 } // scale
+};
+
+static unsigned int s_command12TexImageParamsFifo[] = 
+{
+    GXFifoCommand_SetTexImageParams, 0
+};
+
+static unsigned int s_command13TexImageParamsFifo[] = 
+{
+    GXFifoCommand_SetTexImageParams, 0
+};
+static Matrix4x4 s_command13TextureMatrix = 
+{
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 16 << 12, 0,
+    0, 0, 0, 16 << 12
+};
+
 static inline int TestBitfieldBit(const unsigned int* bitfield, unsigned int idx)
 {
     return bitfield[idx >> 5] & (1 << (idx & 31));
@@ -16,7 +112,7 @@ void ExecuteRenderCommands(Nitro3DRenderCommandHandler* handler)
     {
         handler->flags &= ~(1 << RCH_FLAG_6);
         uint8_t opcode = handler->instructionPointer[0];
-        data_020f1e08[opcode & 0x1f](handler, opcode & 0xe0);
+        s_renderCommands[opcode & 0x1f](handler, opcode & 0xe0);
     } while (!(handler->flags & (1 << RCH_FLAG_5)));
 }
 
@@ -412,7 +508,7 @@ void RenderCommand_4(Nitro3DRenderCommandHandler* handler, int modifier)
         {
             Nitro3DMaterial* material = handler->modelMaterials->GetMaterialByIndex(materialIdx);
             // MaterialBindProc
-            data_020f1d08.materialBindFunctions[material->bindMethod](handler, modifier, material, materialIdx);
+            s_materialBindProcs[material->bindMethod](handler, modifier, material, materialIdx);
         }
     }
     handler->instructionPointer += 2;
@@ -458,7 +554,7 @@ void RenderCommand_5(Nitro3DRenderCommandHandler* handler, int modifier)
         int meshIdx = handler->instructionPointer[1];
         Nitro3DNameList* meshList = handler->meshList;
         Nitro3DMesh* mesh = meshList->GetEntryFromu32Offset<Nitro3DMesh>(meshIdx);
-        data_020f1d08.meshDrawFunctions[mesh->drawMethod](handler, modifier, mesh, meshIdx);
+        s_meshDrawProcs[mesh->drawMethod](handler, modifier, mesh, meshIdx);
     }
     handler->instructionPointer += 2;
 }
@@ -669,8 +765,8 @@ void RenderCommand_6(Nitro3DRenderCommandHandler* handler, int modifier)
 void RenderCommand_7(Nitro3DRenderCommandHandler* handler, int modifier)
 {
     int numBytesConsumed = 2;
-    Vector3fix* pTranslation = &data_020f1d78.rotationTranslation.translation;
-    Vector3fix* pScaling = &data_020f1d78.scaling;
+    Vector3fix* pTranslation = &s_freeBillboardFifo.rotationTranslation.translation;
+    Vector3fix* pScaling = &s_freeBillboardFifo.scaling;
     if (handler->flags & (1 << RCH_FLAG_9))
     {
         if (modifier == 0x40 || modifier == 0x60)
@@ -748,28 +844,28 @@ void RenderCommand_7(Nitro3DRenderCommandHandler* handler, int modifier)
         if (data_0210a010.flags & (1 << RENDER_CONFIG_FLAG_0))
         {
             GXFIFO = COMBINE_GXFIFO_COMMANDS3(GXFifoCommand_PopMatrix, GXFifoCommand_SetMatrixMode, GXFifoCommand_LoadMat4x3);
-            func_020ca430(&data_020f1d78.popMatrixParameter, &GXFIFO, 8); // pass pop / matrix mode commands
+            func_020ca430(&s_freeBillboardFifo.popMatrixParameter, &GXFIFO, 8); // pass pop / matrix mode commands
             // load the matrix returned by func_020b3a24(), inverse of func_020b39ec()
             func_020ca430(Nitro3DRenderConfig::GetInverseCombinedWorldViewMatrix(), &GXFIFO, 4*3 * sizeof(fix32_t));
             // the matrix to multiply by is a translation matrix, so we're composing
             // scaling with translation (remember the final operation represents
             // the first matrix transformation to carry out)
             GXFIFO = COMBINE_GXFIFO_COMMANDS2(GXFifoCommand_MultiplyMat4x3, GXFifoCommand_ScaleMatrix);
-            func_020ca430(&data_020f1d78.rotationTranslation, &GXFIFO, (4*3 + 3) * sizeof(fix32_t));
+            func_020ca430(&s_freeBillboardFifo.rotationTranslation, &GXFIFO, (4*3 + 3) * sizeof(fix32_t));
         }
         else if (data_0210a010.flags & (1 << RENDER_CONFIG_FLAG_1))
         {
             GXFIFO = COMBINE_GXFIFO_COMMANDS3(GXFifoCommand_PopMatrix, GXFifoCommand_SetMatrixMode, GXFifoCommand_LoadMat4x3);
-            func_020ca430(&data_020f1d78.popMatrixParameter, &GXFIFO, 8);
+            func_020ca430(&s_freeBillboardFifo.popMatrixParameter, &GXFIFO, 8);
             func_020ca430(Nitro3DRenderConfig::GetInverseViewMatrix(), &GXFIFO, 4*3 * sizeof(fix32_t));
             GXFIFO = COMBINE_GXFIFO_COMMANDS2(GXFifoCommand_MultiplyMat4x3, GXFifoCommand_ScaleMatrix);
-            func_020ca430(&data_020f1d78.rotationTranslation, &GXFIFO, (4*3 + 3) * sizeof(fix32_t));
+            func_020ca430(&s_freeBillboardFifo.rotationTranslation, &GXFIFO, (4*3 + 3) * sizeof(fix32_t));
         }
         else
         {
             // send all the commands at once: pop the matrix, set matrix mode to 2,
             // then load a translation + scaling matrix
-            func_020ca430(&data_020f1d78, &GXFIFO, sizeof(data_020f1d78));
+            func_020ca430(&s_freeBillboardFifo, &GXFIFO, sizeof(s_freeBillboardFifo));
         }
 
     }
@@ -801,9 +897,9 @@ void RenderCommand_7(Nitro3DRenderCommandHandler* handler, int modifier)
 void RenderCommand_8(Nitro3DRenderCommandHandler* handler, int modifier)
 {
     int numBytesConsumed = 2;
-    Vector3fix* pTranslation = &data_020f1dc0.rotationTranslation.translation;
-    Vector3fix* pScaling = &data_020f1dc0.scaling;
-    Matrix3x3* pRotation = &data_020f1dc0.rotationTranslation.rotation;
+    Vector3fix* pTranslation = &s_axisBillboardFifo.rotationTranslation.translation;
+    Vector3fix* pScaling = &s_axisBillboardFifo.scaling;
+    Matrix3x3* pRotation = &s_axisBillboardFifo.rotationTranslation.rotation;
     if (handler->flags & (1 << RCH_FLAG_9))
     {
         if (modifier == 0x40 || modifier == 0x60)
@@ -895,30 +991,30 @@ void RenderCommand_8(Nitro3DRenderCommandHandler* handler, int modifier)
         if (data_0210a010.flags & (1 << RENDER_CONFIG_FLAG_0))
         {
             GXFIFO = COMBINE_GXFIFO_COMMANDS3(GXFifoCommand_PopMatrix, GXFifoCommand_SetMatrixMode, GXFifoCommand_LoadMat4x3);
-            func_020ca430(&data_020f1dc0.popMatrixParameter, &GXFIFO, 8); // pass pop / matrix mode commands
+            func_020ca430(&s_axisBillboardFifo.popMatrixParameter, &GXFIFO, 8); // pass pop / matrix mode commands
             func_020ca430(Nitro3DRenderConfig::GetInverseCombinedWorldViewMatrix(), &GXFIFO, 3 * 4 * sizeof(fix32_t));
             // the 4x3 matrix is a rotate-then-translate matrix. Recall that matrix multiplication
             // commands put the parameter on the inside, so we are actually ending 
             // up with (scale) -> (rotate then translate) -> (apply matrix from above)
             GXFIFO = COMBINE_GXFIFO_COMMANDS2(GXFifoCommand_MultiplyMat4x3, GXFifoCommand_ScaleMatrix);
-            func_020ca430(&data_020f1dc0.rotationTranslation, &GXFIFO, (4*3 + 3) * sizeof(fix32_t));
+            func_020ca430(&s_axisBillboardFifo.rotationTranslation, &GXFIFO, (4*3 + 3) * sizeof(fix32_t));
         }
         else if (data_0210a010.flags & (1 << RENDER_CONFIG_FLAG_1))
         {
             GXFIFO = COMBINE_GXFIFO_COMMANDS3(GXFifoCommand_PopMatrix, GXFifoCommand_SetMatrixMode, GXFifoCommand_LoadMat4x3);
-            func_020ca430(&data_020f1dc0.popMatrixParameter, &GXFIFO, 8);
+            func_020ca430(&s_axisBillboardFifo.popMatrixParameter, &GXFIFO, 8);
             func_020ca430(Nitro3DRenderConfig::GetInverseViewMatrix(), &GXFIFO, 4*3 * sizeof(fix32_t));
             // the 4x3 matrix is a rotate-then-translate matrix. Recall that matrix multiplication
             // commands put the parameter on the inside, so we are actually ending 
             // up with (scale) -> (rotate then translate) -> (apply matrix from above)
             GXFIFO = COMBINE_GXFIFO_COMMANDS2(GXFifoCommand_MultiplyMat4x3, GXFifoCommand_ScaleMatrix);
-            func_020ca430(&data_020f1dc0.rotationTranslation, &GXFIFO, (4*3 + 3) * sizeof(fix32_t));
+            func_020ca430(&s_axisBillboardFifo.rotationTranslation, &GXFIFO, (4*3 + 3) * sizeof(fix32_t));
         }
         else
         {
             // send all the commands at once: pop the matrix, set matrix mode to 2,
             // then pre-apply a translation, then pre-apply a scaling
-            func_020ca430(&data_020f1dc0, &GXFIFO, sizeof(data_020f1dc0));
+            func_020ca430(&s_axisBillboardFifo, &GXFIFO, sizeof(s_axisBillboardFifo));
         }
     }
 
@@ -1107,9 +1203,9 @@ void RenderCommand_12(Nitro3DRenderCommandHandler* handler, int modifier)
         {
             handler->pMaterialRenderData->paramTEXIMAGE_PARAMS &= ~0xc0000000;
             handler->pMaterialRenderData->paramTEXIMAGE_PARAMS |= 0x80000000;
-            data_020f1d08.texImageParamsArg_c_ = handler->pMaterialRenderData->paramTEXIMAGE_PARAMS;
-            SubmitCommandToGeometryFifo(data_020f1d08.commandTexImageParams_8_,
-                &data_020f1d08.texImageParamsArg_c_, 1);
+            s_command12TexImageParamsFifo[1] = handler->pMaterialRenderData->paramTEXIMAGE_PARAMS;
+            SubmitCommandToGeometryFifo(s_command12TexImageParamsFifo[0],
+                &s_command12TexImageParamsFifo[1], 1);
         }
         // switch the matrix mode to texture
         uint32_t textureMatrixMode = 3;
@@ -1232,9 +1328,9 @@ void RenderCommand_13(Nitro3DRenderCommandHandler* handler, int modifier)
         {
             handler->pMaterialRenderData->paramTEXIMAGE_PARAMS &= ~0xc0000000;
             handler->pMaterialRenderData->paramTEXIMAGE_PARAMS |= 0xc0000000;
-            data_020f1d08.texImageParamsArg_4_ = handler->pMaterialRenderData->paramTEXIMAGE_PARAMS;
-            SubmitCommandToGeometryFifo(data_020f1d08.commandTexImageParams_0_,
-                &data_020f1d08.texImageParamsArg_4_, 1);
+            s_command13TexImageParamsFifo[1] = handler->pMaterialRenderData->paramTEXIMAGE_PARAMS;
+            SubmitCommandToGeometryFifo(s_command13TexImageParamsFifo[0],
+                &s_command13TexImageParamsFifo[1], 1);
         }
 
         int callbackStage = (handler->hooks[13] != NULL) ? handler->hookStages[13] : 0;
@@ -1254,11 +1350,11 @@ void RenderCommand_13(Nitro3DRenderCommandHandler* handler, int modifier)
             unsigned int materialWidth = handler->pMaterialRenderData->materialWidth;
             unsigned int materialHeight = handler->pMaterialRenderData->materialHeight;
 
-            data_020f1d08.command13Matrix4x4_.entries[0] = materialWidth * 0x8000;
-            data_020f1d08.command13Matrix4x4_.entries[5] = -materialHeight * 0x8000;
-            data_020f1d08.command13Matrix4x4_.entries[12] = materialWidth * 0x8000;
-            data_020f1d08.command13Matrix4x4_.entries[13] = materialHeight * 0x8000;
-            SubmitCommandToGeometryFifo(GXFifoCommand_LoadMat4x4, (uint32_t*)data_020f1d08.command13Matrix4x4_.entries, 16);
+            s_command13TextureMatrix.entries[0] = materialWidth * 0x8000;
+            s_command13TextureMatrix.entries[5] = -materialHeight * 0x8000;
+            s_command13TextureMatrix.entries[12] = materialWidth * 0x8000;
+            s_command13TextureMatrix.entries[13] = materialHeight * 0x8000;
+            SubmitCommandToGeometryFifo(GXFifoCommand_LoadMat4x4, (uint32_t*)s_command13TextureMatrix.entries, 16);
         }
 
         if (callbackStage == 2)

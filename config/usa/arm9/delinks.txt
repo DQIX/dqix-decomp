@@ -245,6 +245,7 @@ src/NitroSDK/Graphics3D/AnimationProcessing.cpp:
 src/NitroSDK/Graphics3D/RenderCommands.cpp:
     complete
     .text start:0x020b4020 end:0x020b6998
+    .data start:0x020f1d08 end:0x020f1e88
 
 src/NitroSDK/Graphics3D/GeometryFifo.cpp:
     complete

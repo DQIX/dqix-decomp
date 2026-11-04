@@ -7278,23 +7278,14 @@ data_020f1e00 kind:data(any) addr:0x020f1e00
 data_020f1e4c kind:data(any) addr:0x020f1e4c
 data_020f1e58 kind:data(any) addr:0x020f1e58
 data_020f1e64 kind:data(any) addr:0x020f1e64
-data_020f1e74 kind:data(any) addr:0x020f1e74
-data_020f1e78 kind:data(any) addr:0x020f1e78
-data_020f1e80 kind:data(any) addr:0x020f1e80
-data_020f1e84 kind:data(any) addr:0x020f1e84
-data_020f1e94 kind:data(any) addr:0x020f1e94
-data_020f1ea4 kind:data(any) addr:0x020f1ea4
-data_020f1ee4 kind:data(any) addr:0x020f1ee4
-data_020f1ee8 kind:data(any) addr:0x020f1ee8
-data_020f1ef0 kind:data(any) addr:0x020f1ef0
-data_020f1f14 kind:data(any) addr:0x020f1f14
-data_020f1f20 kind:data(any) addr:0x020f1f20
-data_020f1f2c kind:data(any) addr:0x020f1f2c
-data_020f1f30 kind:data(any) addr:0x020f1f30
-data_020f1f38 kind:data(any) addr:0x020f1f38
-data_020f1f5c kind:data(any) addr:0x020f1f5c
-data_020f1f68 kind:data(any) addr:0x020f1f68
-data_020f1f74 kind:data(any) addr:0x020f1f74
+s_command13TexImageParamsFifo kind:data(any) addr:0x020f1e74 local
+s_command12TexImageParamsFifo kind:data(any) addr:0x020f1e7c local
+s_materialBindProcs kind:data(any) addr:0x020f1e84 local
+s_meshDrawProcs kind:data(any) addr:0x020f1e94 local
+s_command13TextureMatrix kind:data(any) addr:0x020f1ea4 local
+s_freeBillboardFifo kind:data(any) addr:0x020f1ee4 local
+s_axisBillboardFifo kind:data(any) addr:0x020f1f2c local
+s_renderCommands kind:data(any) addr:0x020f1f74 local 
 data_020f1ff4 kind:data(any) addr:0x020f1ff4
 data_020f2014 kind:data(any) addr:0x020f2014
 data_020f2034 kind:data(any) addr:0x020f2034
