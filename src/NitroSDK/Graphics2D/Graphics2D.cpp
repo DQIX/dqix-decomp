@@ -4,8 +4,13 @@
 #include "NitroSDK/LoadToVRAM.h"
 #include <globaldefs.h>
 
+#ifdef jpn
+#define data_020e9180 data_020e928c
+#define data_020e9198 data_020e92a4
+#endif
+
+extern const unsigned short data_020e9180[3][4];
 extern const unsigned short data_020e9198[3][4]; // x-dimensions
-extern const unsigned short data_020e9180[3][4]; // y-dimensions
 
 #define SIGNATURE_ABNK 0x41424e4b
 #define SIGNATURE_CEBK 0x4345424b

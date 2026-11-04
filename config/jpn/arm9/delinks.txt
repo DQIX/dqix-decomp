@@ -104,6 +104,10 @@ src/Graphics/LightingManager.cpp:
     .data start:0x020f033c end:0x020f0450
     .bss start:0x02107860 end:0x02107910
 
+src/Graphics/OBJSpriteSet.cpp:
+    complete
+    .text start:0x0205b510 end:0x0205c548
+
 src/Util/Random.cpp:
 	complete
 	.text start:0x0207535c end:0x02075634
@@ -215,6 +219,10 @@ src/NitroSDK/Memory/AllocatorTypes.cpp:
 src/NitroSDK/Memory/AllocatorUnion.cpp:
     complete
     .text start:0x020b1938 end:0x020b1990
+
+src/NitroSDK/Graphics2D/Graphics2D.cpp:
+    complete
+    .text start:0x020b1990 end:0x020b284c
 
 src/NitroSDK/NSBXX/Animation.cpp:
     complete

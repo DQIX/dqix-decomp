@@ -88,6 +88,8 @@ public:
         void UpdateAll(int numTicks);
 
         void PlaySpriteAnimation(unsigned int spriteID);
+        // only present in jpn version, used in ov003? I couldn't trigger it
+        void MaybePauseSpriteAnimation(unsigned int spriteID);
         void StopSpriteAnimation(unsigned int spriteID);
     };
 

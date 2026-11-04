@@ -4,6 +4,19 @@
 #include "Resource/PAC.h"
 #include <asmhacks.h>
 
+#if defined(jpn)
+#define data_020e9450 data_020e955c
+
+#define func_0203bd08 func_0203b760
+#define func_0203be40 func_0203b898
+#define func_0203be4c func_0203b8a4
+
+#define data_020f0504 data_020f0570
+#define data_020f0509 data_020f0575
+#define data_020f050e data_020f057a
+#define data_020f0513 data_020f057f
+#endif
+
 // sin/cos table
 extern const fix16_t data_020e9450[0x1000 * 2];
 
@@ -133,6 +146,15 @@ void OBJSpriteSet::List::PlaySpriteAnimation(unsigned int id)
     }
     sprite->flags &= ~7;
     sprite->flags |= 2;
+}
+
+void OBJSpriteSet::List::MaybePauseSpriteAnimation(unsigned int id)
+{
+    Sprite* sprite = GetSprite(id);
+    if (sprite == NULL)
+        return;
+    sprite->flags &= ~7;
+    sprite->flags |= 4;
 }
 
 void OBJSpriteSet::List::StopSpriteAnimation(unsigned int id)
