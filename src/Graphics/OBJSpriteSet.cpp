@@ -5,29 +5,19 @@
 #include <asmhacks.h>
 
 #if defined(jpn)
-#define data_020e9450 data_020e955c
-
 #define func_0203bd08 func_0203b760
 #define func_0203be40 func_0203b898
 #define func_0203be4c func_0203b8a4
-
-#define data_020f0504 data_020f0570
-#define data_020f0509 data_020f0575
-#define data_020f050e data_020f057a
-#define data_020f0513 data_020f057f
 #endif
-
-// sin/cos table
-extern const fix16_t data_020e9450[0x1000 * 2];
 
 static inline fix16_t LookupSine(int idx)
 {
-    return data_020e9450[2 * idx];
+    return g_fixSinCosTable[2 * idx];
 }
 
 static inline fix16_t LookupCosine(int idx)
 {
-    return data_020e9450[2 * idx + 1];
+    return g_fixSinCosTable[2 * idx + 1];
 }
 
 extern "C"
@@ -39,11 +29,6 @@ extern "C"
     // get main engine obj oam entries for staging
     OAMEntryEXT* func_0203be40(void*);
 }
-
-extern char data_020f0504[]; // "RECN"
-extern char data_020f0509[]; // "RNAN"
-extern char data_020f050e[]; // "RGCN"
-extern char data_020f0513[]; // "RLCN"
 
 void OBJSpriteSet::Metatile::Reset()
 {
@@ -231,22 +216,22 @@ bool OBJSpriteSet::LoadFromNitroFile(void* data, unsigned int length, SafeAlloca
 {
     char signatureString[5] = {0};
     memcpy(signatureString, data, 4);
-    if (memcmp(signatureString, data_020f0504, 4) == 0)
+    if (memcmp(signatureString, "RECN", 4) == 0)
     {
         if (LoadNCER(data, length, alloc))
             return true;
     }
-    if (memcmp(signatureString, data_020f0509, 4) == 0)
+    if (memcmp(signatureString, "RNAN", 4) == 0)
     {
         if (LoadNANR(data, length, alloc))
             return true;
     }
-    else if (memcmp(signatureString, data_020f050e, 4) == 0)
+    else if (memcmp(signatureString, "RGCN", 4) == 0)
     {
         if (LoadNCGR(data, length))
             return true;
     }
-    else if (memcmp(signatureString, data_020f0513, 4) == 0)
+    else if (memcmp(signatureString, "RLCN", 4) == 0)
     {
         if (LoadNCLR(data, length))
             return true;

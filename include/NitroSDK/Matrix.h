@@ -99,6 +99,8 @@ typedef union Matrix4x4
     Vector4fix rows[4];
 } Matrix4x4;
 
+extern const fix16_t g_fixSinCosTable[0x1000 * 2];
+
 // These are probably nitro SDK functions, and some are handwritten in assembly.
 // The others are a massive pain because of 64-bit, so I'm not matching them now
 // but it should be useful for clarity to have them named.

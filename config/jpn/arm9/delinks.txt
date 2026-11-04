@@ -107,6 +107,7 @@ src/Graphics/LightingManager.cpp:
 src/Graphics/OBJSpriteSet.cpp:
     complete
     .text start:0x0205b510 end:0x0205c548
+    .data start:0x020f0570 end:0x020f0584
 
 src/Util/Random.cpp:
 	complete

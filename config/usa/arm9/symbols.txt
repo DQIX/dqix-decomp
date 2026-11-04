@@ -6483,7 +6483,7 @@ data_020e92a8 kind:data(any) addr:0x020e92a8
 data_020e9338 kind:data(any) addr:0x020e9338
 data_020e9348 kind:data(any) addr:0x020e9348
 data_020e93fc kind:data(any) addr:0x020e93fc
-data_020e9450 kind:data(any) addr:0x020e9450
+g_fixSinCosTable kind:data(any) addr:0x020e9450
 data_020e9a50 kind:data(any) addr:0x020e9a50
 data_020ed450 kind:data(any) addr:0x020ed450
 data_020ed554 kind:data(any) addr:0x020ed554
@@ -7012,10 +7012,7 @@ data_020f04a7 kind:data(any) addr:0x020f04a7
 data_020f04ad kind:data(any) addr:0x020f04ad
 data_020f04b4 kind:data(any) addr:0x020f04b4
 data_020f04b8 kind:data(any) addr:0x020f04b8
-data_020f0504 kind:data(any) addr:0x020f0504
-data_020f0509 kind:data(any) addr:0x020f0509
-data_020f050e kind:data(any) addr:0x020f050e
-data_020f0513 kind:data(any) addr:0x020f0513
+@stringBase0 kind:data(any) addr:0x020f0504 local
 data_020f0518 kind:data(any) addr:0x020f0518
 data_020f051c kind:data(any) addr:0x020f051c
 data_020f057c kind:data(any) addr:0x020f057c
