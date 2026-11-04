@@ -89,7 +89,7 @@ void OBJSpriteSet::List::Update(unsigned char id, int numTicks)
         {
         case 0:
             break;
-        case 1:
+        case 1: // stop at end
         {
             sprite->currentFrame++;
             if (sprite->numFrames <= sprite->currentFrame)
@@ -100,7 +100,7 @@ void OBJSpriteSet::List::Update(unsigned char id, int numTicks)
             }
             break;
         }
-        case 2:
+        case 2: // looping
             sprite->currentFrame++;
             if (sprite->numFrames <= sprite->currentFrame)
                 sprite->currentFrame = 0;
@@ -124,7 +124,7 @@ void OBJSpriteSet::List::PlaySpriteAnimation(unsigned int id)
     Sprite* sprite = GetSprite(id);
     if (sprite == NULL)
         return;
-    if (sprite->flags & 1)
+    if (sprite->flags & 1) // if stopped, restart from beginning
     {
         sprite->currentFrame = 0;
         sprite->frameTime = 0;
@@ -207,9 +207,9 @@ bool OBJSpriteSet::LoadFromPAC(void* data, unsigned int length, SafeAllocator* a
             if (innerFile != NULL)
                 LoadFromNitroFile(innerFile, innerLength, alloc);
         }
-        return false; // wtf?
+        return false;
     }
-    return true; // wtf?
+    return true;
 }
 
 bool OBJSpriteSet::LoadFromNitroFile(void* data, unsigned int length, SafeAllocator* alloc)
@@ -245,12 +245,12 @@ bool OBJSpriteSet::LoadNCER(void* argData, unsigned int length, SafeAllocator* a
     void* data = argData;
     Nitro2DCellBank* cellBank;
     if (data == NULL)
-        data = NULL; // yes, this is real code
+        data = NULL; // ...
     else if (length == 0)
         data = NULL;
     else
     {
-        // ah yes. memcpy from data to data. my favorite
+        // if you get here then data == argData, ...just why
         memcpy(data, argData, length);
         if (!Nitro2D_GetCellBank(data, &cellBank))
             data = NULL;
@@ -374,15 +374,15 @@ bool OBJSpriteSet::LoadNANR(void* data, unsigned int length, SafeAllocator* allo
         return true;
 
     Sprite* sprite;
-    Nitro2DAnimationBank::AnimationBlock* block;
-    List* animList = sprites_;
-    if (animList != NULL && alloc != NULL)
+    List* spriteList = sprites_;
+    if (spriteList != NULL && alloc != NULL)
     {
+        Nitro2DAnimationBank::AnimationBlock* block;
         unsigned short i;
         unsigned short numSprites = animBank->numAnimBlocks;
         Sprite* spriteBuffer = (Sprite*)alloc->Allocate(numSprites * sizeof(Sprite));
-        animList->sprites_ = spriteBuffer;
-        animList->count_ = numSprites;
+        spriteList->sprites_ = spriteBuffer;
+        spriteList->count_ = numSprites;
 
         for (i = 0; i < numSprites; i++)
         {
@@ -517,6 +517,7 @@ void OBJSpriteSet::DrawMetatile(Metatile* metatile)
     }
 }
 
+// proably IsVisible()
 static inline bool TestSpriteBit3(OBJSpriteSet::Sprite* sprite)
 {
     if (sprite != NULL)
@@ -580,7 +581,7 @@ void OBJSpriteSet::SetMetatileTransformFlags(Metatile* metatile, bool transformE
         return;
     unsigned short flags = transformEnabled;
     flags |= (unsigned short)(doubleSize << 1);
-    if (SetOAMWord(metatile, 0, 0x300, 8, flags))
+    if (SetOAMWord(metatile, 0, 0x300, 8, flags) != false)
         return;
     metatile->useTransform = transformEnabled;
     metatile->doubleSize = doubleSize;

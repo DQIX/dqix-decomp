@@ -61,30 +61,30 @@ CBool Nitro2D_GetAnimationBank(void* fileData, Nitro2DAnimationBank** output)
     return InternalGetAnimationBank(fileData, output);
 }
 
-static void PrepareABNK(Nitro2DAnimationBank* ptr)
+static void PrepareABNK(Nitro2DAnimationBank* bank)
 {
-    FixPointerOffsetRight(&ptr->pAnimBlocks, ptr);
-    FixPointerOffsetRight(&ptr->pFrameBlocks, ptr);
-    FixPointerOffsetRight(&ptr->pFrameData, ptr);
+    FixPointerOffsetRight(&bank->pAnimBlocks, bank);
+    FixPointerOffsetRight(&bank->pFrameBlocks, bank);
+    FixPointerOffsetRight(&bank->pFrameData, bank);
 
     unsigned short blockIndex;
     unsigned short frameIndex;
-    uint16_t* frameData = ptr->pFrameData;
-    Nitro2DAnimationBank::AnimationBlock* animBlocks = ptr->pAnimBlocks;
-    Nitro2DAnimationBank::FrameBlock* frameBlocks = ptr->pFrameBlocks;
+    uint16_t* frameData = bank->pFrameData;
+    Nitro2DAnimationBank::AnimationBlock* animBlocks = bank->pAnimBlocks;
+    Nitro2DAnimationBank::FrameBlock* frameBlocks = bank->pFrameBlocks;
 
-    for (blockIndex = 0; ptr->numAnimBlocks > blockIndex; blockIndex++)
+    for (blockIndex = 0; bank->numAnimBlocks > blockIndex; blockIndex++)
     {
         FixPointerOffsetLeft(&animBlocks[blockIndex].pFrames, frameBlocks);
         for (frameIndex = 0; animBlocks[blockIndex].numFrames > frameIndex; frameIndex++)
             FixPointerOffsetLeft(&animBlocks[blockIndex].pFrames[frameIndex].metatileIndices, frameData);
     }
 
-    if (ptr->unknown_14 == NULL)
+    if (bank->unknown_14 == NULL)
         return;
 
-    FixPointerOffsetRight(&ptr->unknown_14, ptr);
-    Nitro2DAnimationBank::Subsubstruct* subsub = &ptr->unknown_14->unknown_8;
+    FixPointerOffsetRight(&bank->unknown_14, bank);
+    Nitro2DAnimationBank::Subsubstruct* subsub = &bank->unknown_14->unknown_8;
     FixPointerOffsetRight(&subsub->unknown_4, subsub);
     for (unsigned int i = 0; i < subsub->unknown_0; i++)
     {
@@ -113,9 +113,9 @@ static OAMEntry* GetCellBankOBJAttributes(Nitro2DCellBank* bank)
         return (OAMEntry*)(bank->pMetatiles + bank->numMetatiles);
 }
 
-static void PrepareCellBankSubstruct14(Nitro2DCellBank::Substruct14* ptr)
+static void PrepareCellBankSubstruct14(Nitro2DCellBank::Substruct14* subs)
 {
-    InternalPrepareCellBankSubstruct14(&ptr->interior);
+    InternalPrepareCellBankSubstruct14(&subs->interior);
 }
 
 CBool Nitro2D_GetCellBank(void* fileData, Nitro2DCellBank** output)
@@ -141,28 +141,28 @@ Nitro2DCellBank::Metatile* Nitro2D_GetCellBankMetatile(Nitro2DCellBank* bank, un
         return bank->pMetatiles + idx;
 }
 
-static void PrepareCEBK(Nitro2DCellBank* ptr)
+static void PrepareCEBK(Nitro2DCellBank* bank)
 {
-    FixPointerOffsetRight(&ptr->pMetatiles, ptr);
-    OAMEntry* oam = GetCellBankOBJAttributes(ptr);
+    FixPointerOffsetRight(&bank->pMetatiles, bank);
+    OAMEntry* oam = GetCellBankOBJAttributes(bank);
 
-    for (unsigned short i = 0; i < ptr->numMetatiles; i++)
+    for (unsigned short i = 0; i < bank->numMetatiles; i++)
     {
-        Nitro2DCellBank::Metatile* metatile = Nitro2D_GetCellBankMetatile(ptr, i);
+        Nitro2DCellBank::Metatile* metatile = Nitro2D_GetCellBankMetatile(bank, i);
         FixPointerOffsetRight(&metatile->pAttributes, oam);
     }
 
-    if (ptr->unknown_c != NULL)
+    if (bank->unknown_c != NULL)
     {
-        Nitro2DCellBank::SubstructC* subc = FixPointerOffsetRight(&ptr->unknown_c, ptr);
+        Nitro2DCellBank::SubstructC* subc = FixPointerOffsetRight(&bank->unknown_c, bank);
         FixPointerOffsetRight(&subc->unknown_4, subc);
-        ptr->unknown_c = subc; // why write this twice?
+        bank->unknown_c = subc; // why write this twice?
     }
 
-    if (ptr->unknown_14 != NULL)
+    if (bank->unknown_14 != NULL)
     {
-        FixPointerOffsetRight(&ptr->unknown_14, ptr);
-        PrepareCellBankSubstruct14(ptr->unknown_14);
+        FixPointerOffsetRight(&bank->unknown_14, bank);
+        PrepareCellBankSubstruct14(bank->unknown_14);
     }
 }
 
@@ -179,9 +179,9 @@ CBool Nitro2D_GetCharacter(void* fileData, Nitro2DCharacter** output)
     return true;
 }
 
-static void PrepareCHAR(Nitro2DCharacter* ptr)
+static void PrepareCHAR(Nitro2DCharacter* character)
 {
-    FixPointerOffsetRight(&ptr->pTileData, ptr);
+    FixPointerOffsetRight(&character->pTileData, character);
 }
 
 CBool Nitro2D_GetPalette(void* fileData, Nitro2DPalette** output)
@@ -210,14 +210,14 @@ CBool Nitro2D_GetPaletteCMP(void* fileData, Nitro2DPaletteCMP** output)
     return true;
 }
 
-static void PreparePCMP(Nitro2DPaletteCMP* ptr)
+static void PreparePCMP(Nitro2DPaletteCMP* pcmp)
 {
-    FixPointerOffsetRight(&ptr->pPaletteIDs, ptr);
+    FixPointerOffsetRight(&pcmp->pPaletteIDs, pcmp);
 }
 
-static void PreparePLTT(Nitro2DPalette* ptr)
+static void PreparePLTT(Nitro2DPalette* palette)
 {
-    FixPointerOffsetRight(&ptr->pPaletteData, ptr);
+    FixPointerOffsetRight(&palette->pPaletteData, palette);
 }
 
 Nitro2DInnerFileHeader* Nitro2D_GetInnerFileBySignature(void* fileData, uint32_t signature)
@@ -233,12 +233,12 @@ Nitro2DInnerFileHeader* Nitro2D_GetInnerFileBySignature(void* fileData, uint32_t
     return NULL;
 }
 
-static void InternalPrepareCellBankSubstruct14(Nitro2DCellBank::Substruct14::Interior* ptr)
+static void InternalPrepareCellBankSubstruct14(Nitro2DCellBank::Substruct14::Interior* subs)
 {
-    FixPointerOffsetRight(&ptr->pointers_4, ptr);
-    for (unsigned short i = 0; i < ptr->numPointers_0; i++)
+    FixPointerOffsetRight(&subs->pointers_4, subs);
+    for (unsigned short i = 0; i < subs->numPointers_0; i++)
     {
-        FixPointerOffsetLeft(&ptr->pointers_4[i], ptr);
+        FixPointerOffsetLeft(&subs->pointers_4[i], subs);
     }
 }
 
@@ -456,7 +456,8 @@ void Nitro2D_LoadPaletteWithCMPToVRAM(Nitro2DPalette* palette, Nitro2DPaletteCMP
     StorePaletteVRAMLoadOffset(output, vramType, vramOffset);
 }
 
-static inline void TransformVectorByMatrix(const Matrix2x2* mat, const Vector2fix* in, Vector2fix* out) {
+static inline void TransformVectorByMatrix(const Matrix2x2* mat, const Vector2fix* in, Vector2fix* out)
+{
     Vector2fix scratch;
     Vector2fix* writePtr = out;
     if (out == in)

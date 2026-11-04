@@ -101,7 +101,7 @@ public:
     int charVRAMLoadOffset_;
     int usedObjVRAMEnd_;
     unsigned short numMetatiles_;
-    unsigned short numMetatilesCopy_;
+    unsigned short numMetatilesCopy_; // only ever written to?
     // 0 = main engine, 1 = sub engine. might be bool
     unsigned char engine_;
 
@@ -110,6 +110,7 @@ public:
 
     // Note: the file data is modified to turn offsets into pointers so it must
     // be kept in memory while the sprite is being used
+    // returns true on fail, false on success?!
     bool LoadFromPAC(void* data, unsigned int length, SafeAllocator* alloc);
 
     // Note: the file data is modified to turn offsets into pointers so it must
@@ -144,5 +145,4 @@ public:
     unsigned int GetMetatilePaletteInternal(const Metatile* metatile) const;
 };
 
-// returns false on success, true on fail?!
 bool GetCharBlockFromNitroFile(Nitro2DCharacter** out, void* data, unsigned int length);
