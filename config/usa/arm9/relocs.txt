@@ -10651,9 +10651,9 @@ from:0x0205a5f4 kind:arm_call to:0x0205aaf8 module:main
 from:0x0205a614 kind:arm_call to:0x02001aec module:main
 from:0x0205a62c kind:arm_call to:0x0205ab78 module:main
 from:0x0205a648 kind:load to:0x020f0504 module:main
-from:0x0205a64c kind:load to:0x020f0509 module:main
-from:0x0205a650 kind:load to:0x020f050e module:main
-from:0x0205a654 kind:load to:0x020f0513 module:main
+from:0x0205a64c kind:load to:0x020f0504 add:0x5 module:main
+from:0x0205a650 kind:load to:0x020f0504 add:0xa module:main
+from:0x0205a654 kind:load to:0x020f0504 add:0xf module:main
 from:0x0205a684 kind:arm_call to:0x02001a40 module:main
 from:0x0205a690 kind:arm_call to:0x020b00a4 module:main
 from:0x0205a6d4 kind:arm_call to:0x02032544 module:main
