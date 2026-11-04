@@ -36,14 +36,14 @@ static inline int Log2Discrete(int x)
     return 0;
 }
 
-void InternalPrepareCellBankSubstruct14(Nitro2DCellBank::Substruct14::Interior* ptr);
-void PrepareABNK(Nitro2DAnimationBank* ptr);
-void PrepareCEBK(Nitro2DCellBank* ptr);
-void PrepareCHAR(Nitro2DCharacter* ptr);
-void PreparePLTT(Nitro2DPalette* ptr);
-void PreparePCMP(Nitro2DPaletteCMP* ptr);
+static void InternalPrepareCellBankSubstruct14(Nitro2DCellBank::Substruct14::Interior* ptr);
+static void PrepareABNK(Nitro2DAnimationBank* ptr);
+static void PrepareCEBK(Nitro2DCellBank* ptr);
+static void PrepareCHAR(Nitro2DCharacter* ptr);
+static void PreparePLTT(Nitro2DPalette* ptr);
+static void PreparePCMP(Nitro2DPaletteCMP* ptr);
 
-CBool InternalGetAnimationBank(void* fileData, Nitro2DAnimationBank** output)
+static CBool InternalGetAnimationBank(void* fileData, Nitro2DAnimationBank** output)
 {
     Nitro2DInnerFileHeader* fileHeader = Nitro2D_GetInnerFileBySignature(fileData, SIGNATURE_ABNK);
     if (fileHeader == NULL)
@@ -61,7 +61,7 @@ CBool Nitro2D_GetAnimationBank(void* fileData, Nitro2DAnimationBank** output)
     return InternalGetAnimationBank(fileData, output);
 }
 
-void PrepareABNK(Nitro2DAnimationBank* ptr)
+static void PrepareABNK(Nitro2DAnimationBank* ptr)
 {
     FixPointerOffsetRight(&ptr->pAnimBlocks, ptr);
     FixPointerOffsetRight(&ptr->pFrameBlocks, ptr);
@@ -104,7 +104,7 @@ Nitro2DAnimationBank::AnimationBlock* Nitro2D_AnimationBankGetAnimationBlock(Nit
     return NULL;
 }
 
-OAMEntry* GetCellBankOBJAttributes(Nitro2DCellBank* bank)
+static OAMEntry* GetCellBankOBJAttributes(Nitro2DCellBank* bank)
 {
     // OBJ attributes begin at the end of the metatile table
     if (bank->hasExtraMetatileData & 1)
@@ -113,7 +113,7 @@ OAMEntry* GetCellBankOBJAttributes(Nitro2DCellBank* bank)
         return (OAMEntry*)(bank->pMetatiles + bank->numMetatiles);
 }
 
-void PrepareCellBankSubstruct14(Nitro2DCellBank::Substruct14* ptr)
+static void PrepareCellBankSubstruct14(Nitro2DCellBank::Substruct14* ptr)
 {
     InternalPrepareCellBankSubstruct14(&ptr->interior);
 }
@@ -141,7 +141,7 @@ Nitro2DCellBank::Metatile* Nitro2D_GetCellBankMetatile(Nitro2DCellBank* bank, un
         return bank->pMetatiles + idx;
 }
 
-void PrepareCEBK(Nitro2DCellBank* ptr)
+static void PrepareCEBK(Nitro2DCellBank* ptr)
 {
     FixPointerOffsetRight(&ptr->pMetatiles, ptr);
     OAMEntry* oam = GetCellBankOBJAttributes(ptr);
@@ -179,7 +179,7 @@ CBool Nitro2D_GetCharacter(void* fileData, Nitro2DCharacter** output)
     return true;
 }
 
-void PrepareCHAR(Nitro2DCharacter* ptr)
+static void PrepareCHAR(Nitro2DCharacter* ptr)
 {
     FixPointerOffsetRight(&ptr->pTileData, ptr);
 }
@@ -210,12 +210,12 @@ CBool Nitro2D_GetPaletteCMP(void* fileData, Nitro2DPaletteCMP** output)
     return true;
 }
 
-void PreparePCMP(Nitro2DPaletteCMP* ptr)
+static void PreparePCMP(Nitro2DPaletteCMP* ptr)
 {
     FixPointerOffsetRight(&ptr->pPaletteIDs, ptr);
 }
 
-void PreparePLTT(Nitro2DPalette* ptr)
+static void PreparePLTT(Nitro2DPalette* ptr)
 {
     FixPointerOffsetRight(&ptr->pPaletteData, ptr);
 }
@@ -233,7 +233,7 @@ Nitro2DInnerFileHeader* Nitro2D_GetInnerFileBySignature(void* fileData, uint32_t
     return NULL;
 }
 
-void InternalPrepareCellBankSubstruct14(Nitro2DCellBank::Substruct14::Interior* ptr)
+static void InternalPrepareCellBankSubstruct14(Nitro2DCellBank::Substruct14::Interior* ptr)
 {
     FixPointerOffsetRight(&ptr->pointers_4, ptr);
     for (unsigned short i = 0; i < ptr->numPointers_0; i++)
@@ -248,7 +248,7 @@ void Nitro2D_ClearCharacterLoadDesc(Nitro2DCharacterLoadDesc* desc)
         desc->loadOffsets[i] = -1;
 }
 
-void StoreCharacterVRAMLoadOffset(Nitro2DCharacterLoadDesc* output, int vramType, unsigned int offset)
+static void StoreCharacterVRAMLoadOffset(Nitro2DCharacterLoadDesc* output, int vramType, unsigned int offset)
 {
     output->loadOffsets[vramType] = offset;
 }
@@ -259,7 +259,7 @@ void Nitro2D_ClearPaletteLoadDesc(Nitro2DPaletteLoadDesc* desc)
         desc->loadOffsets[i] = -1;
 }
 
-void StorePaletteVRAMLoadOffset(Nitro2DPaletteLoadDesc* output, int screen, unsigned int offset)
+static void StorePaletteVRAMLoadOffset(Nitro2DPaletteLoadDesc* output, int screen, unsigned int offset)
 {
     output->loadOffsets[screen] = offset;
 }
