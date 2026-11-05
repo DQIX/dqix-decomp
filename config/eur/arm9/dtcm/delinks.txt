@@ -1,0 +1,3 @@
+    .data       start:0x027e0000 end:0x027e0060 kind:data align:32
+    .bss        start:0x027e0060 end:0x027e0080 kind:bss align:32
+

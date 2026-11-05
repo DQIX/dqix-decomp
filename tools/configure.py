@@ -18,7 +18,7 @@ parser.add_argument('-w', type=str, default=DEFAULT_WIBO_PATH, dest="wine", requ
 parser.add_argument("--compiler", type=Path, required=False, help="Path to pre-installed compiler root directory")
 parser.add_argument("--no-extract", action="store_true", help="Skip extract step")
 parser.add_argument("--dsd", type=Path, required=False, help="Path to pre-installed dsd CLI")
-parser.add_argument('version', help='Game version')
+parser.add_argument('version', choices=["usa", "jpn", "eur"], help='Game version')
 args = parser.parse_args()
 
 
@@ -124,10 +124,6 @@ class Project:
         self.game_config = config_path / game_version
         '''Root directory for dsd configs'''
 
-        if not self.game_config.is_dir():
-            print(f"Version '{game_version}' not recognized")
-            exit(1)
-
         self.game_build = build_path / game_version
         '''Path to build directory'''
         self.game_extract = extract_path / game_version
@@ -145,6 +141,9 @@ class Project:
 
     def arm9_config_yaml(self) -> Path:
         return self.game_config / "arm9" / "config.yaml"
+
+    def is_initialized(self) -> bool:
+        return self.arm9_config_yaml().is_file()
 
     def baserom(self) -> Path:
         return extract_path / f'baserom_{GAME}_{self.game_version}.nds'
@@ -219,7 +218,8 @@ def main():
         
         n.variable("opt_level", "-O2")
         # -MMD excludes all includes instead of just system includes for some reason, so use -MD instead.
-        mwcc_cmd = f'{WINE} "$mwcc_version" $opt_level {CC_FLAGS} {CC_INCLUDES} $cc_flags -d $game_version -MD -c $in -o $basedir'
+        region_defines = "-d usa -d eur" if args.version == "eur" else "-d $game_version"
+        mwcc_cmd = f'{WINE} "$mwcc_version" $opt_level {CC_FLAGS} {CC_INCLUDES} $cc_flags {region_defines} -MD -c $in -o $basedir'
         mwcc_implicit = [get_compiler_version("")] + WINE_DEP
         if platform.system != "windows":
             transform_dep = "tools/transform_dep.py"
@@ -295,6 +295,11 @@ def main():
 
         add_download_tool_builds(n)
         add_extract_build(n, project)
+        if not project.is_initialized():
+            if not args.no_extract:
+                n.default("extract")
+            print(f"{project.arm9_config_yaml()} not found, so only the extract step was generated.")
+            return
         add_delink_and_lcf_builds(n, project)
         add_mwcc_builds(n, project, mwcc_implicit)
         add_mwld_and_rom_builds(n, project)
@@ -371,6 +376,13 @@ def add_extract_build(n: ninja_syntax.Writer, project: Project):
             variables={
                 "output_path": str(project.game_extract)
             }
+        )
+        n.newline()
+
+        n.build(
+            inputs=str(project.baserom_config()),
+            rule="phony",
+            outputs="extract",
         )
         n.newline()
 

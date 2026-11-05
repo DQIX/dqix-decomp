@@ -6,3 +6,4 @@ Put the base ROM(s) in this directory. Please verify that your dumped ROM matche
 | ------- | -------------------- | ------------------------------------------ |
 | USA     | `baserom_dqix_usa.nds` | `c7c3014c237900c8281289b8bc76a781969b6278` |
 | JPN     | `baserom_dqix_jpn.nds` | `4b219246c06343ad56cedfb183ea3bd737776eda` |
+| EUR     | `baserom_dqix_eur.nds` | `ff761d349709f329c8ac4bd0023fdce21861e8a1` |
