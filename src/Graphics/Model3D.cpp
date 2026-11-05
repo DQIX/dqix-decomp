@@ -425,7 +425,7 @@ void Model3D::SetAlpha(int alpha)
 {
     if (rawInternalModel_ != NULL)
     {
-        NSBXX_Model_SetAlpha(rawInternalModel_, alpha);
+        Nitro3D_SetModelAlpha(rawInternalModel_, alpha);
         alpha_ = alpha;
     }
 }
@@ -465,13 +465,13 @@ BoneMatrixRenderData* Model3D::GetBoneMatrixRenderData()
 void Model3D::ApplyRenderConfigMaterialDiffuseColor()
 {
     if (rawInternalModel_ != NULL)
-        NSBXX_Model_SetAllMaterialFlags(rawInternalModel_, false, 1 << 6);
+        Nitro3D_ConfigureModelMaterialFlags(rawInternalModel_, false, 1 << 6);
 }
 
 void Model3D::SetMaterialDiffuseColor(unsigned int rgb)
 {
     if (rawInternalModel_ != NULL)
-        NSBXX_Model_SetDiffuseReflectionColor(rawInternalModel_, rgb);
+        Nitro3D_SetModelDiffuseColor(rawInternalModel_, rgb);
 }
 
 Nitro3DTextureSet* Model3D::GetTEX0()

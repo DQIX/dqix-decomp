@@ -624,7 +624,7 @@ bool AtmosphericEffectSet::Draw()
                 Nitro3DRenderConfig::SubmitToFifo();
                 Nitro3D_FlushFifoQueue();
                 // clear the polygon ID from the POLYGON_ATTR bitmask
-                NSBXX_Model_AdjustPolygonAttrMask(loopObject->object_.pModel_->rawInternalModel_, false, 0x3f000000);
+                Nitro3D_ConfigureModelPolygonAttrMask(loopObject->object_.pModel_->rawInternalModel_, false, 0x3f000000);
                 Nitro3DRenderConfig::SetPolygonAttributes(0, 0, 2 | 1, polygonID, 31, 0);
                 loopObject->object_.Draw(true);
             }

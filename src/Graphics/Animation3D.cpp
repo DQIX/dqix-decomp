@@ -50,7 +50,7 @@ bool Animation3D::CreateData(Model3D *attachedModel, SafeAllocator *alloc, Model
     if (rawInnerAnim == NULL)
         return false;
 
-    Nitro3DAnimation* allocatedData = NSBXX_Model_AllocateAnimationData(&alloc->allocUnion, rawInnerAnim, internalModel);
+    Nitro3DAnimation* allocatedData = Nitro3D_AllocateModelAnimation(&alloc->allocUnion, rawInnerAnim, internalModel);
     if (allocatedData == NULL)
         return false;
 

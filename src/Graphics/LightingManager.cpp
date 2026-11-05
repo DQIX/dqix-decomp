@@ -986,7 +986,7 @@ void LightingManager::SubmitToRenderConfig()
 
 void LightingManager::ApplyAmbientColorToModel(Nitro3DModel* model)
 {
-    NSBXX_Model_SetAmbientReflectionColor(model, ambientColor_);
+    Nitro3D_SetModelAmbientColor(model, ambientColor_);
 }
 
 void LightingManager::MaybeComputeHorizonPosition()

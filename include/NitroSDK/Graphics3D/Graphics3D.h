@@ -29,42 +29,6 @@
 extern "C"
 {
 
-// usa: func_020b66f4
-void NSBXX_Model_DrawShadow(Nitro3DModel* model, unsigned int arg_2, unsigned int arg_3, unsigned int arg_4);
-
-// 
-struct Nitro3DAnimation* NSBXX_Model_AllocateAnimationData(class AllocatorUnion* alloc, const void* rawAnim, Nitro3DModel* model);
-
-// usa: func_020b6ebc
-// applies to all materials of the model. If value == 0 then the bits specified
-// by mask will be cleared, otherwise they will be set
-void NSBXX_Model_SetAllMaterialFlags(Nitro3DModel* model, int value, unsigned int mask);
-
-// usa: func_020b6f64
-// applies to all materials of the model. If value == 0 then the bits specified
-// by mask will be cleared, otherwise they will be set
-void NSBXX_Model_AdjustPolygonAttrMask(Nitro3DModel* model, int setBits, unsigned int mask);
-
-// usa: func_020b7184
-// The alpha value can be between 0-31.
-// (This function should become static later)
-void NSBXX_Model_SetMaterialAlpha(Nitro3DModel* model, unsigned int materialIndex, int alpha);
-
-// usa: func_020b71fc
-int NSBXX_Model_GetMaterialPolygonID(Nitro3DModel* model, unsigned int materialIndex);
-
-// usa: func_020b726c
-// color to be specified with red in bits 0-4, green in bits 5-9, blue in bits 10-14
-void NSBXX_Model_SetDiffuseReflectionColor(Nitro3DModel* model, int rgb);
-
-// usa: func_020b72ac
-// color to be specified with red in bits 0-4, green in bits 5-9, blue in bits 10-14
-void NSBXX_Model_SetAmbientReflectionColor(Nitro3DModel* model, int col);
-
-// usa: func_020b732c
-// The alpha value can be between 0-31.
-void NSBXX_Model_SetAlpha(Nitro3DModel* model, int alpha);
-
 // usa: func_020b736c
 // Gets the entry in a NameList given its string.
 // The string passed should be a 16-byte buffer padded with zeros, a regular

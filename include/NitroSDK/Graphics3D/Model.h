@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Common.h"
+#include "../Memory/AllocatorUnion.h"
 
 struct Nitro3DBoundingBox
 {
@@ -121,3 +122,32 @@ struct Nitro3DModelSet
         return NULL;
     }
 };
+
+struct Nitro3DAnimation;
+
+Nitro3DAnimation* Nitro3D_AllocateModelAnimation(AllocatorUnion* alloc, const void* rawAnim, Nitro3DModel* model);
+
+// usa: func_020b6ebc
+// applies to all materials of the model. If value == 0 then the bits specified
+// by mask will be cleared, otherwise they will be set
+void Nitro3D_ConfigureModelMaterialFlags(Nitro3DModel* model, CBool set, unsigned int mask);
+
+// usa: func_020b6f64
+// applies to all materials of the model. If value == 0 then the bits specified
+// by mask will be cleared, otherwise they will be set
+void Nitro3D_ConfigureModelPolygonAttrMask(Nitro3DModel* model, int setBits, unsigned int mask);
+
+// usa: func_020b71fc
+int Nitro3D_GetModelMaterialPolygonID(Nitro3DModel* model, unsigned int materialIndex);
+
+// usa: func_020b726c
+// color to be specified with red in bits 0-4, green in bits 5-9, blue in bits 10-14
+void Nitro3D_SetModelDiffuseColor(Nitro3DModel* model, int rgb);
+
+// usa: func_020b72ac
+// color to be specified with red in bits 0-4, green in bits 5-9, blue in bits 10-14
+void Nitro3D_SetModelAmbientColor(Nitro3DModel* model, int col);
+
+// usa: func_020b732c
+// The alpha value can be between 0-31.
+void Nitro3D_SetModelAlpha(Nitro3DModel* model, int alpha);
