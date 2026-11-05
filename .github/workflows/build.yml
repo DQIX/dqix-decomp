@@ -41,6 +41,7 @@ jobs:
             dsd
             objdiff-cli
             wibo
+            wibo-link
           key: toolchain-${{ runner.os }}-${{ hashFiles('tools/download_tool.py', 'tools/configure.py') }}
 
       - run: python tools/configure.py ${{ inputs.version }}
@@ -80,6 +81,7 @@ jobs:
             dsd
             objdiff-cli
             wibo
+            wibo-link
           key: toolchain-${{ runner.os }}-${{ hashFiles('tools/download_tool.py', 'tools/configure.py') }}
 
       - name: Fetch baserom and BIOS
@@ -104,7 +106,7 @@ jobs:
       - name: Date sources and compiler before the compiled objects
         run: |
           git ls-files -z | xargs -0 touch -h -d @946684800
-          for tool in tools/mwccarm wibo; do
+          for tool in tools/mwccarm wibo wibo-link; do
             [ ! -e "$tool" ] || find "$tool" -exec touch -h -d @946684800 {} +
           done
 

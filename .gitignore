@@ -16,5 +16,6 @@ build.ninja
 .ninja_log*
 .ninja_lock
 /wibo
+/wibo-link
 ninja.exe
 .clang-format
