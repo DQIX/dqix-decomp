@@ -2,20 +2,9 @@
 #include <globaldefs.h>
 #include "NitroSDK/Memory/AllocatorUnion.h"
 
-#if defined(jpn)
-#define func_020b2a6c func_020b4538
-#endif
-
-extern "C"
-{
-    // get allocation size for animation data
-    unsigned int func_020b2a6c(const void* rawAnim, Nitro3DModel* model);
-}
-
-
 extern "C" Nitro3DAnimation* NSBXX_Model_AllocateAnimationData(AllocatorUnion* alloc, const void* rawAnim, Nitro3DModel* model)
 {
-    unsigned int size = func_020b2a6c(rawAnim, model);
+    unsigned int size = Nitro3D_GetRequiredAnimationSize(rawAnim, model);
     return (Nitro3DAnimation*)alloc->Allocate(size);
 }
 

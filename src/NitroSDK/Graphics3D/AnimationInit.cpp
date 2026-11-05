@@ -29,6 +29,23 @@ static struct AnimationTypeDescription
     { 'J', 0, 0x4341, &InitializeModelAnimationFromJAC }
 };
 
+unsigned int Nitro3D_GetRequiredAnimationSize(const void* animData, const Nitro3DModel* model)
+{
+    if (animData == NULL || model == NULL)
+        return 0;
+    const Nitro3DAnimationSignature* sig = (const Nitro3DAnimationSignature*)animData;
+    switch (sig->signatureInitial)
+    {
+    case 'M':
+        return (model->numMaterials * 2 + 0x1c) & ~3;
+        break;
+    case 'J':
+    case 'V':
+        return (model->numBoneMatrices * 2 + 0x1c) & ~3;
+    }
+    return 0;
+}
+
 void InitializeModelAnimation(Nitro3DAnimation *anim, void *pRawData, Nitro3DModel *model, Nitro3DTextureSet *tex)
 {
     anim->time = 0;

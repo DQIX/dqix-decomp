@@ -50,6 +50,8 @@ struct Nitro3DAnimation
     unsigned short entries[64];
 };
 
+
+unsigned int Nitro3D_GetRequiredAnimationSize(const void* animData, const Nitro3DModel* model);
 void InitializeModelAnimation(Nitro3DAnimation* anim, void* pRawData, Nitro3DModel* model, Nitro3DTextureSet* tex);
 void PopulateModelRenderContext(Nitro3DRenderContext* context, Nitro3DModel* model);
 

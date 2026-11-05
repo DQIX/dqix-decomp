@@ -228,7 +228,7 @@ src/NitroSDK/Graphics2D/Graphics2D.cpp:
 
 src/NitroSDK/Graphics3D/AnimationInit.cpp:
     complete
-    .text start:0x020b4598 end:0x020b4638
+    .text start:0x020b4538 end:0x020b4638
     .data start:0x020f1dd8 end:0x020f1e4c
 
 src/NitroSDK/Graphics3D/Animation.cpp:
