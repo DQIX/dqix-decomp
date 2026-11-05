@@ -10,6 +10,7 @@ from get_platform import get_platform
 
 
 DEFAULT_WIBO_PATH = "./wibo"
+DEFAULT_LINK_WIBO_PATH = "./wibo-link"
 
 
 parser = argparse.ArgumentParser(description="Generates build.ninja")
@@ -24,7 +25,8 @@ args = parser.parse_args()
 # Config
 GAME = "dqix"
 DSD_VERSION = 'v0.10.2'
-WIBO_VERSION = '0.6.16'
+WIBO_VERSION = 'sha256:bab06c516326680535fe1d35594a1b4640ea9da4663affd874d5cbe76463d42f' # master 355e082: decompals/wibo#137 (53-bit x87) is in no release yet
+LINK_WIBO_VERSION = '0.6.16' # mwldarm runs ~15x slower under wibo master and needs no x87 fix
 OBJDIFF_VERSION = 'v2.7.1'
 
 DEFAULT_MWCC_VERSION = "2.0/sp2p2"
@@ -106,6 +108,8 @@ if platform is None:
 EXE = platform.exe
 WINE = args.wine if platform.system != "windows" else ""
 WINE_DEP = [WINE] if platform.system != "windows" and WINE == DEFAULT_WIBO_PATH else []
+LINK_WINE = DEFAULT_LINK_WIBO_PATH if WINE_DEP else WINE
+LINK_WINE_DEP = [LINK_WINE] if WINE_DEP else []
 DSD = str(args.dsd or os.path.join('.', str(root_path / f"dsd{EXE}")))
 OBJDIFF = os.path.join('.', str(root_path / f"objdiff-cli{EXE}"))
 LD = os.path.join('.', str(mwcc_root / DEFAULT_MWCC_VERSION / "mwldarm.exe"))
@@ -236,7 +240,7 @@ def main():
 
         n.rule(
             name="mwld",
-            command=f'{WINE} "{LD}" {LD_FLAGS} @$objects_file $lcf_file -o $out'
+            command=f'{LINK_WINE} "{LD}" {LD_FLAGS} @$objects_file $lcf_file -o $out'
         )
         n.newline()
 
@@ -344,6 +348,16 @@ def add_download_tool_builds(n: ninja_syntax.Writer):
             },
         )
         n.newline()
+        n.build(
+            rule="download_tool",
+            outputs=LINK_WINE,
+            variables={
+                "tool": "wibo",
+                "tag": LINK_WIBO_VERSION,
+                "path": LINK_WINE,
+            },
+        )
+        n.newline()
 
 
 def add_extract_build(n: ninja_syntax.Writer, project: Project):
@@ -367,7 +381,7 @@ def add_mwld_and_rom_builds(n: ninja_syntax.Writer, project: Project):
     elf_file = str(project.arm9_o())
     n.build(
         inputs=project.source_object_files() + [lcf_file, objects_file, delink_file],
-        implicit=[LD] + WINE_DEP,
+        implicit=[LD] + LINK_WINE_DEP,
         rule="mwld",
         outputs=elf_file,
         variables={
