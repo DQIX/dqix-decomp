@@ -8,7 +8,7 @@ Nitro3DRenderConfig g_nitro3DRenderConfig;
 #define RGB(r,g,b) (((unsigned)(r)) | ((unsigned)(g) << 5) | ((unsigned)(b) << 10))
 #define BUILD_LIGHT_COLOR(idx, r,g,b) (((unsigned)(idx) << 30) | RGB((r),(g),(b)))
 
-// kind of evil but this prevents invoking Vector3fix::operator=
+// kind of evil but this prevents invoking Vector3fix::operator= / C++-style copy assignment
 static inline void ArrayCopyVec3(void* dst, const void* src)
 {
     struct ArrayVec3 { fix32_t values[3]; };
@@ -107,7 +107,7 @@ void Nitro3DRenderConfig::SubmitToFifo()
 #else
 #error need to hardcode address of RenderConfig instance
 #endif
-    SubmitCommandToGeometryFifo(instance->magicCommands_0, commands + 1, 0x3e);
+    Nitro3Di_SendFifoCommand(instance->magicCommands_0, commands + 1, 0x3e);
 
     instance->flags &= ~(1 << RENDER_CONFIG_FLAG_0);
     instance->flags &= ~(1 << RENDER_CONFIG_FLAG_1);
@@ -167,8 +167,7 @@ const Matrix4x3* Nitro3DRenderConfig::GetInverseViewMatrix()
     return &g_nitro3DRenderConfig.cachedInverseView;
 }
 
-// can be made static later
-void RecalculateWorldViewAndInverse()
+static void RecalculateWorldViewAndInverse()
 {
     Mat4x3_Multiply(&g_nitro3DRenderConfig.objectRotationPosition, &g_nitro3DRenderConfig.viewMatrix, &g_nitro3DRenderConfig.cachedWorldView);
     Mat4x3_ApplyScale(&g_nitro3DRenderConfig.cachedWorldView, &g_nitro3DRenderConfig.cachedWorldView,

@@ -67,6 +67,6 @@ void Nitro3D_SetRenderHook(Nitro3DRenderContext* context, RenderCommandHook hook
 
 // Defined in AnimationProcessing.cpp 
 
-bool ProcessMaterialAnimationsOnBoundMaterial(MaterialRenderData* material, Nitro3DAnimation* anim, unsigned int matIdx);
-bool ProcessJointAnimationsOnBoneMatrix(BoneMatrixRenderData* bone, Nitro3DAnimation* anim, unsigned int boneIdx);
-bool ProcessVisibilityAnimations(int* output, Nitro3DAnimation* anim, unsigned int boneIdx);
+bool Nitro3Di_DefaultProcessMaterialAnimations(MaterialRenderData* material, Nitro3DAnimation* anim, unsigned int matIdx);
+bool Nitro3Di_DefaultProcessJointAnimations(BoneMatrixRenderData* bone, Nitro3DAnimation* anim, unsigned int boneIdx);
+bool Nitro3Di_ProcessVisibilityAnimations(int* output, Nitro3DAnimation* anim, unsigned int boneIdx);

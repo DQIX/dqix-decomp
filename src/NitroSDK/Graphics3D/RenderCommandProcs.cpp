@@ -67,21 +67,21 @@ void BoneMatrixDataSubmissionProc_Type0(BoneMatrixRenderData* renderData)
         if (!(renderData->flags & 2))
         {
             // Combine rotation matrix with translation part
-            SubmitCommandToGeometryFifo(GXFifoCommand_MultiplyMat4x3, (uint32_t*)renderData->rotationMatrix.entries, 12);
+            Nitro3Di_SendFifoCommand(GXFifoCommand_MultiplyMat4x3, (uint32_t*)renderData->rotationMatrix.entries, 12);
         }
         else
         {
-            SubmitCommandToGeometryFifo(GXFifoCommand_TranslateMatrix, (uint32_t*)&renderData->translate, 3);
+            Nitro3Di_SendFifoCommand(GXFifoCommand_TranslateMatrix, (uint32_t*)&renderData->translate, 3);
         }
     }
     else if (!(renderData->flags & 2))
     {
-        SubmitCommandToGeometryFifo(GXFifoCommand_MultiplyMat3x3, (uint32_t*)renderData->rotationMatrix.entries, 9);
+        Nitro3Di_SendFifoCommand(GXFifoCommand_MultiplyMat3x3, (uint32_t*)renderData->rotationMatrix.entries, 9);
     }
 
     if (!(renderData->flags & 1))
     {
-        SubmitCommandToGeometryFifo(GXFifoCommand_ScaleMatrix, (uint32_t*)&renderData->scale_v0, 3);
+        Nitro3Di_SendFifoCommand(GXFifoCommand_ScaleMatrix, (uint32_t*)&renderData->scale_v0, 3);
     }
 }
 
@@ -109,11 +109,11 @@ void BoneMatrixDataSubmissionProc_Type1(BoneMatrixRenderData* renderData)
     {
         if (needSubmitTranslateCommand)
         {
-            SubmitCommandToGeometryFifo(GXFifoCommand_TranslateMatrix, (uint32_t*)&renderData->translate, 3);
+            Nitro3Di_SendFifoCommand(GXFifoCommand_TranslateMatrix, (uint32_t*)&renderData->translate, 3);
             needSubmitTranslateCommand = false;
         }
         // secondary scaling should happen before translation but after everything else
-        SubmitCommandToGeometryFifo(GXFifoCommand_ScaleMatrix, (uint32_t*)&renderData->scale_v1, 3);
+        Nitro3Di_SendFifoCommand(GXFifoCommand_ScaleMatrix, (uint32_t*)&renderData->scale_v1, 3);
     }
 
     if (!(renderData->flags & 2)) // has rotation
@@ -121,21 +121,21 @@ void BoneMatrixDataSubmissionProc_Type1(BoneMatrixRenderData* renderData)
         if (needSubmitTranslateCommand)
         {
             // this 4x3 matrix represents rotating first, then translating
-            SubmitCommandToGeometryFifo(GXFifoCommand_MultiplyMat4x3, (uint32_t*)renderData->rotationMatrix.entries, 12);
+            Nitro3Di_SendFifoCommand(GXFifoCommand_MultiplyMat4x3, (uint32_t*)renderData->rotationMatrix.entries, 12);
             needSubmitTranslateCommand = false; // unused
         }
         else
-            SubmitCommandToGeometryFifo(GXFifoCommand_MultiplyMat3x3, (uint32_t*)renderData->rotationMatrix.entries, 9);
+            Nitro3Di_SendFifoCommand(GXFifoCommand_MultiplyMat3x3, (uint32_t*)renderData->rotationMatrix.entries, 9);
     }
     else if (needSubmitTranslateCommand)
     {
-        SubmitCommandToGeometryFifo(GXFifoCommand_TranslateMatrix, (uint32_t*)&renderData->translate, 3);
+        Nitro3Di_SendFifoCommand(GXFifoCommand_TranslateMatrix, (uint32_t*)&renderData->translate, 3);
         needSubmitTranslateCommand = false; // unused
     }
 
     if (!(renderData->flags & 1)) // has scale
     {
-        SubmitCommandToGeometryFifo(GXFifoCommand_ScaleMatrix, (uint32_t*)&renderData->scale_v0, 3);
+        Nitro3Di_SendFifoCommand(GXFifoCommand_ScaleMatrix, (uint32_t*)&renderData->scale_v0, 3);
     }
 }
 
@@ -393,7 +393,7 @@ void MaterialTextureMatrixLoadProc_Type0(MaterialRenderData* renderData)
         fifoData.matrix.entries[13] = ((int64_t)renderData->materialScaleY * fifoData.matrix.entries[13]) >> 12;
     }
 
-    SubmitCommandToGeometryFifo(fifoData.commands, (uint32_t*)&fifoData + 1, 18);
+    Nitro3Di_SendFifoCommand(fifoData.commands, (uint32_t*)&fifoData + 1, 18);
 }
 
 void BoneMatrixDataSubmissionProc_Type2(BoneMatrixRenderData* renderData)
@@ -402,7 +402,7 @@ void BoneMatrixDataSubmissionProc_Type2(BoneMatrixRenderData* renderData)
     int flag10orflag8 = renderData->flags & 0x18;
     if (!flag10orflag8)
     {
-        SubmitCommandToGeometryFifo(GXFifoCommand_ScaleMatrix, (uint32_t*)&renderData->scale_v2, 3);
+        Nitro3Di_SendFifoCommand(GXFifoCommand_ScaleMatrix, (uint32_t*)&renderData->scale_v2, 3);
     }
     if (!(renderData->flags & 4)) // has translation
     {
@@ -414,27 +414,27 @@ void BoneMatrixDataSubmissionProc_Type2(BoneMatrixRenderData* renderData)
             scaledTranslation[0] = ((int64_t)renderData->translate.x * renderData->scale_v1.x) >> 12;
             scaledTranslation[1] = ((int64_t)renderData->translate.y * renderData->scale_v1.y) >> 12;
             scaledTranslation[2] = ((int64_t)renderData->translate.z * renderData->scale_v1.z) >> 12;
-            SubmitCommandToGeometryFifo(GXFifoCommand_TranslateMatrix, scaledTranslation, 3);
+            Nitro3Di_SendFifoCommand(GXFifoCommand_TranslateMatrix, scaledTranslation, 3);
         }
     }
 
     if (!(renderData->flags & 2)) // has rotation
     {
         if (bVar2) // do rotation then translation
-            SubmitCommandToGeometryFifo(GXFifoCommand_MultiplyMat4x3, (uint32_t*)renderData->rotationMatrix.entries, 12);
+            Nitro3Di_SendFifoCommand(GXFifoCommand_MultiplyMat4x3, (uint32_t*)renderData->rotationMatrix.entries, 12);
         else
-            SubmitCommandToGeometryFifo(GXFifoCommand_MultiplyMat3x3, (uint32_t*)renderData->rotationMatrix.entries, 9);
+            Nitro3Di_SendFifoCommand(GXFifoCommand_MultiplyMat3x3, (uint32_t*)renderData->rotationMatrix.entries, 9);
     }
     else if (bVar2)
     {
-        SubmitCommandToGeometryFifo(GXFifoCommand_TranslateMatrix, (uint32_t*)&renderData->translate, 3);
+        Nitro3Di_SendFifoCommand(GXFifoCommand_TranslateMatrix, (uint32_t*)&renderData->translate, 3);
     }
 
     if (!flag10orflag8)
-        SubmitCommandToGeometryFifo(GXFifoCommand_ScaleMatrix, (uint32_t*)&renderData->scale_v1, 3);
+        Nitro3Di_SendFifoCommand(GXFifoCommand_ScaleMatrix, (uint32_t*)&renderData->scale_v1, 3);
 
     if (!(renderData->flags & 1)) // has scale
-        SubmitCommandToGeometryFifo(GXFifoCommand_ScaleMatrix, (uint32_t*)&renderData->scale_v0, 3);
+        Nitro3Di_SendFifoCommand(GXFifoCommand_ScaleMatrix, (uint32_t*)&renderData->scale_v0, 3);
 }
 
 void BoneMatrixScaleCalculationProc_Type2(BoneMatrixRenderData* renderData, Nitro3DBoneMatrix::Scaling* scaling, uint8_t* ip, int boneMatrixFlags)
@@ -550,7 +550,7 @@ void MaterialTextureMatrixLoadProc_Type1(MaterialRenderData* renderData)
         fifoData.matrix.entries[10] = ((int64_t)renderData->materialScaleY * fifoData.matrix.entries[10]) >> 12;
     }
 
-    SubmitCommandToGeometryFifo(fifoData.commands, (uint32_t*)&fifoData + 1, 14);
+    Nitro3Di_SendFifoCommand(fifoData.commands, (uint32_t*)&fifoData + 1, 14);
 }
 
 extern "C" static void CreateTextureMatrix_v2_TranslateRotateScale(Matrix4x4* matrix, MaterialRenderData* renderData)
@@ -788,7 +788,7 @@ void MaterialTextureMatrixLoadProc_Type2(MaterialRenderData* renderData)
         fifoData.matrix.entries[13] = ((int64_t)renderData->materialScaleY * fifoData.matrix.entries[13]) >> 12;
     }
 
-    SubmitCommandToGeometryFifo(fifoData.commands, (uint32_t*)&fifoData + 1, 18);
+    Nitro3Di_SendFifoCommand(fifoData.commands, (uint32_t*)&fifoData + 1, 18);
 }
 
 extern "C" static void CreateTextureMatrix_v3_RotateTranslateScale(Matrix4x4* matrix, MaterialRenderData* renderData)
@@ -1045,5 +1045,5 @@ void MaterialTextureMatrixLoadProc_Type3(MaterialRenderData* renderData)
         fifoData.matrix.entries[13] = ((int64_t)renderData->materialScaleY * fifoData.matrix.entries[13]) >> 12;
     }
 
-    SubmitCommandToGeometryFifo(fifoData.commands, (uint32_t*)&fifoData + 1, 18);
+    Nitro3Di_SendFifoCommand(fifoData.commands, (uint32_t*)&fifoData + 1, 18);
 }

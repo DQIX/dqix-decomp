@@ -21480,7 +21480,7 @@ from:0x020b5c24 kind:arm_call to:0x020c552c module:main
 from:0x020b5e38 kind:arm_call to:0x020c5188 module:main
 from:0x020b5e4c kind:arm_call to:0x020c5188 module:main
 from:0x020b5ea8 kind:load to:0x0210b078 add:0x600 module:main
-from:0x020b5eb0 kind:load to:0x0210b078 add:0x600 module:main
+from:0x020b5eb0 kind:load to:0x0210b078 add:0x640 module:main
 from:0x020b5f5c kind:arm_call to:0x020b6a18 module:main
 from:0x020b5fe8 kind:arm_call to:0x020b6acc module:main
 from:0x020b6068 kind:arm_call to:0x020b6acc module:main

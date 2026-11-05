@@ -32,6 +32,6 @@ void MATAnimationProcessingCallback(void* data, Nitro3DAnimation* anim, int arg)
 void MPTAnimationProcessingCallback(void* data, Nitro3DAnimation* anim, int arg);
 void VAVAnimationProcessingCallback(void* data, Nitro3DAnimation* anim, int arg);
 
-bool ProcessMaterialAnimationsOnBoundMaterial(MaterialRenderData* material, Nitro3DAnimation* anim, unsigned int matIdx);
-bool ProcessJointAnimationsOnBoneMatrix(BoneMatrixRenderData* bone, Nitro3DAnimation* anim, unsigned int boneIdx);
-bool ProcessVisibilityAnimations(int* output, Nitro3DAnimation* anim, unsigned int boneIdx);
+bool Nitro3Di_DefaultProcessMaterialAnimations(MaterialRenderData* material, Nitro3DAnimation* anim, unsigned int matIdx);
+bool Nitro3Di_DefaultProcessJointAnimations(BoneMatrixRenderData* bone, Nitro3DAnimation* anim, unsigned int boneIdx);
+bool Nitro3Di_DefaultProcessVisibilityAnimations(int* output, Nitro3DAnimation* anim, unsigned int boneIdx);

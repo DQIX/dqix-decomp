@@ -4,9 +4,9 @@
 // We seriously have a translation unit for a single function, because the data
 // is laid out in such a ridiculous way that this is the most sensible way to match it
 
-PFNProcessMaterialAnimations g_pfnNitro3DProcessMaterialAnimations = &ProcessMaterialAnimationsOnBoundMaterial;
-PFNProcessJointAnimations g_pfnNitro3DProcessJointAnimations = &ProcessJointAnimationsOnBoneMatrix;
-PFNProcessVisibilityAnimations g_pfnNitro3DProcessVisibilityAnimations = &ProcessVisibilityAnimations;
+PFNProcessMaterialAnimations g_pfnNitro3DProcessMaterialAnimations = &Nitro3Di_DefaultProcessMaterialAnimations;
+PFNProcessJointAnimations g_pfnNitro3DProcessJointAnimations = &Nitro3Di_DefaultProcessJointAnimations;
+PFNProcessVisibilityAnimations g_pfnNitro3DProcessVisibilityAnimations = &Nitro3Di_DefaultProcessVisibilityAnimations;
 
 PFNProcessAnimation g_pfnNitro3DProcessMAM = &MAMAnimationProcessingCallback;
 PFNProcessAnimation g_pfnNitro3DProcessMPT = &MPTAnimationProcessingCallback;

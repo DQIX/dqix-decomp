@@ -111,7 +111,7 @@ static inline int SetBitfieldBit(unsigned int* bitfield, unsigned int idx)
     bitfield[idx >> 5] |= (1 << (idx & 31));
 }
 
-void ExecuteRenderCommands(Nitro3DRenderCommandHandler* handler)
+static void ExecuteRenderCommands(Nitro3DRenderCommandHandler* handler)
 {
     do
     {
@@ -121,7 +121,7 @@ void ExecuteRenderCommands(Nitro3DRenderCommandHandler* handler)
     } while (!(handler->flags & (1 << RCH_FLAG_5)));
 }
 
-void SetUpRenderCommandHandler(Nitro3DRenderCommandHandler* handler, Nitro3DRenderContext* modelData)
+static void SetUpRenderCommandHandler(Nitro3DRenderCommandHandler* handler, Nitro3DRenderContext* modelData)
 {
     func_020ca458(0, handler, sizeof(Nitro3DRenderCommandHandler));
     handler->boneMatrixBitfield[0] = 1;
@@ -150,8 +150,7 @@ void SetUpRenderCommandHandler(Nitro3DRenderCommandHandler* handler, Nitro3DRend
 
     if (modelData->renderCommandHook != NULL && modelData->renderCommandHookCommandID < 32)
     {
-        handler->hooks[modelData->renderCommandHookCommandID] =
-            (void(*)(Nitro3DRenderCommandHandler*))modelData->renderCommandHook;
+        handler->hooks[modelData->renderCommandHookCommandID] = modelData->renderCommandHook;
         handler->hookStages[modelData->renderCommandHookCommandID] = modelData->renderCommandHookStage;
     }
 
@@ -174,20 +173,20 @@ void SetUpRenderCommandHandler(Nitro3DRenderCommandHandler* handler, Nitro3DRend
     modelData->flags &= ~1;
 }
 
-void PopulateBitfieldFromAnimData(unsigned int* bitfield, Nitro3DAnimation* anim)
+static void PopulateBitfieldFromAnimData(unsigned int* bitfield, Nitro3DAnimation* anim)
 {
     while (anim != NULL)
     {
-        for (int counter = 0; counter < anim->numEntries; counter++)
+        for (int i = 0; i < anim->numEntries; i++)
         {
-            if (anim->entries[counter] & 0x100)
-                bitfield[counter >> 5] |= 1 << (counter & 0x1f);
+            if (anim->entries[i] & 0x100)
+                bitfield[i >> 5] |= 1 << (i & 0x1f);
         }
         anim = anim->pNext;
     }
 }
 
-void RenderModelFromRenderData(Nitro3DRenderContext* renderData)
+void Nitro3D_Render(Nitro3DRenderContext* renderData)
 {
     Nitro3DRenderCommandHandler handler;
     
@@ -319,7 +318,7 @@ static void RenderCommand_3(Nitro3DRenderCommandHandler* handler, int modifier)
         {
             uint32_t stackPos = handler->instructionPointer[1];
             if (!(handler->flags & (1 << RCH_FLAG_8)))
-                SubmitCommandToGeometryFifo(GXFifoCommand_GetMatrix, &stackPos, 1);
+                Nitro3Di_SendFifoCommand(GXFifoCommand_GetMatrix, &stackPos, 1);
         }
 
         if (callbackStage == 3)
@@ -491,7 +490,7 @@ static void MaterialBindProc(Nitro3DRenderCommandHandler* handler, int modifier,
                     GXFifoCommand_SetTexturePaletteBase);
                 commands[5] = targetData->paramTEXIMAGE_PARAMS;
                 commands[6] = targetData->texturePaletteBase;
-                SubmitCommandToGeometryFifo(commands[0], &commands[1], 6);
+                Nitro3Di_SendFifoCommand(commands[0], &commands[1], 6);
 
                 if (targetData->flags & (0x10 | 0x08))
                     handler->pfnTextureMatrixCreate(targetData);
@@ -540,7 +539,7 @@ static void MeshDrawProc(Nitro3DRenderCommandHandler* handler, int modifier, Nit
         flagbit6 = 0;
 
     if (flagbit6 == 0 && !(handler->flags & (1 << RCH_FLAG_8)))
-        SendRawDataToGeometryFifo(mesh->GetGPUCommands(), mesh->gpuCommandsLength);
+        Nitro3Di_SendRawDataToFifo(mesh->GetGPUCommands(), mesh->gpuCommandsLength);
 
     if (callbackStage == 2)
     {
@@ -594,7 +593,7 @@ static void RenderCommand_6(Nitro3DRenderCommandHandler* handler, int modifier)
             if (!(handler->flags & (1 << RCH_FLAG_8)))
             {
                 uint32_t retrievalPosition = handler->instructionPointer[4];
-                SubmitCommandToGeometryFifo(GXFifoCommand_GetMatrix, &retrievalPosition, 1);
+                Nitro3Di_SendFifoCommand(GXFifoCommand_GetMatrix, &retrievalPosition, 1);
             }
         }
         handler->instructionPointer += numBytesConsumed;
@@ -613,7 +612,7 @@ static void RenderCommand_6(Nitro3DRenderCommandHandler* handler, int modifier)
             retrievalPosition = instructionPtr[5];
         numBytesConsumed++;
         if (!(handler->flags & (1 << RCH_FLAG_8)))
-            SubmitCommandToGeometryFifo(GXFifoCommand_GetMatrix, &retrievalPosition, 1);
+            Nitro3Di_SendFifoCommand(GXFifoCommand_GetMatrix, &retrievalPosition, 1);
     }
 
     handler->pBoneMatrixRenderData = &handler->scratchBoneMatrixRenderData;
@@ -772,7 +771,7 @@ static void RenderCommand_6(Nitro3DRenderCommandHandler* handler, int modifier)
         if (flagbit6 == 0 && !(handler->flags & (1 << RCH_FLAG_8)))
         {
             uint32_t storagePosition = handler->instructionPointer[4];
-            SubmitCommandToGeometryFifo(GXFifoCommand_StoreMatrix, &storagePosition, 1);
+            Nitro3Di_SendFifoCommand(GXFifoCommand_StoreMatrix, &storagePosition, 1);
         }
     }
 
@@ -812,7 +811,7 @@ static void RenderCommand_7(Nitro3DRenderCommandHandler* handler, int modifier)
                 retrievalPosition = instructionPtr[2];
             else
                 retrievalPosition = instructionPtr[3];
-            SubmitCommandToGeometryFifo(GXFifoCommand_GetMatrix, &retrievalPosition, 1);
+            Nitro3Di_SendFifoCommand(GXFifoCommand_GetMatrix, &retrievalPosition, 1);
         }
     }
 
@@ -830,7 +829,7 @@ static void RenderCommand_7(Nitro3DRenderCommandHandler* handler, int modifier)
 
     if (!(handler->flags & (1 << RCH_FLAG_8)) && flagbit6 == 0)
     {
-        SendQueuedDataToGeometryFifo();
+        Nitro3D_FlushFifoQueue();
         GXFIFO = COMBINE_GXFIFO_COMMANDS3(GXFifoCommand_SetMatrixMode, GXFifoCommand_PushMatrix, GXFifoCommand_LoadMatIdentity);
         GXFIFO = 0; // matrix mode 0: projection
         GXFIFO = 0; // why is this here?
@@ -910,7 +909,7 @@ static void RenderCommand_7(Nitro3DRenderCommandHandler* handler, int modifier)
         if (newFlagbit6 == 0 && !(handler->flags & (1 << RCH_FLAG_8)))
         {
             uint32_t storePosition = handler->instructionPointer[2];
-            SubmitCommandToGeometryFifo(GXFifoCommand_StoreMatrix, &storePosition, 1);
+            Nitro3Di_SendFifoCommand(GXFifoCommand_StoreMatrix, &storePosition, 1);
         }
     }
     handler->instructionPointer += numBytesConsumed;
@@ -945,7 +944,7 @@ static void RenderCommand_8(Nitro3DRenderCommandHandler* handler, int modifier)
                 retrievalPosition = instructionPtr[2];
             else
                 retrievalPosition = instructionPtr[3];
-            SubmitCommandToGeometryFifo(GXFifoCommand_GetMatrix, &retrievalPosition, 1);
+            Nitro3Di_SendFifoCommand(GXFifoCommand_GetMatrix, &retrievalPosition, 1);
         }
     }
 
@@ -963,7 +962,7 @@ static void RenderCommand_8(Nitro3DRenderCommandHandler* handler, int modifier)
 
     if (!(handler->flags & (1 << RCH_FLAG_8)) && flagbit6 == 0)
     {
-        SendQueuedDataToGeometryFifo();
+        Nitro3D_FlushFifoQueue();
         GXFIFO = COMBINE_GXFIFO_COMMANDS3(GXFifoCommand_SetMatrixMode, GXFifoCommand_PushMatrix, GXFifoCommand_LoadMatIdentity);
         GXFIFO = 0; // matrix mode 0: projection
         GXFIFO = 0; // why is this here?
@@ -1058,7 +1057,7 @@ static void RenderCommand_8(Nitro3DRenderCommandHandler* handler, int modifier)
         if (newFlagbit6 == 0 && !(handler->flags & (1 << RCH_FLAG_8)))
         {
             uint32_t storePosition = handler->instructionPointer[2];
-            SubmitCommandToGeometryFifo(GXFifoCommand_StoreMatrix, &storePosition, 1);
+            Nitro3Di_SendFifoCommand(GXFifoCommand_StoreMatrix, &storePosition, 1);
         }
     }
     handler->instructionPointer += numBytesConsumed;
@@ -1074,7 +1073,7 @@ static void RenderCommand_9(Nitro3DRenderCommandHandler* handler, int modifier)
     
     Nitro3DInvBindMatrix localCopy;
     func_020ca458(0, &localCopy, sizeof(Nitro3DInvBindMatrix));
-    SendQueuedDataToGeometryFifo();
+    Nitro3D_FlushFifoQueue();
 
     GXFIFO_MATRIX_MODE = 0; // projection
     GXFIFO_MATRIX_STORE = 1;
@@ -1182,7 +1181,7 @@ static void RenderCommand_10(Nitro3DRenderCommandHandler* handler, int modifier)
         uint8_t* instructionPtr = handler->instructionPointer;
         uint32_t startOffset = (instructionPtr[1] | (instructionPtr[2] << 8) | (instructionPtr[3] << 16) | (instructionPtr[4] << 24));
         uint32_t length = (instructionPtr[5] | (instructionPtr[6] << 8) | (instructionPtr[7] << 16) | (instructionPtr[8] << 24));
-        SendRawDataToGeometryFifo((uint32_t*)(instructionPtr + startOffset), length); 
+        Nitro3Di_SendRawDataToFifo((uint32_t*)(instructionPtr + startOffset), length); 
     }
 
     if (callbackStage == 3)
@@ -1204,7 +1203,7 @@ static void RenderCommand_11(Nitro3DRenderCommandHandler* handler, int modifier)
         else
             scaleParams[0] = scaleParams[1] = scaleParams[2] = handler->downScale;
 
-        SubmitCommandToGeometryFifo(GXFifoCommand_ScaleMatrix, scaleParams, 3);
+        Nitro3Di_SendFifoCommand(GXFifoCommand_ScaleMatrix, scaleParams, 3);
     }
     handler->instructionPointer++;
 }
@@ -1228,12 +1227,12 @@ static void RenderCommand_12(Nitro3DRenderCommandHandler* handler, int modifier)
             handler->pMaterialRenderData->paramTEXIMAGE_PARAMS &= ~0xc0000000;
             handler->pMaterialRenderData->paramTEXIMAGE_PARAMS |= 0x80000000;
             s_command12TexImageParamsFifo[1] = handler->pMaterialRenderData->paramTEXIMAGE_PARAMS;
-            SubmitCommandToGeometryFifo(s_command12TexImageParamsFifo[0],
+            Nitro3Di_SendFifoCommand(s_command12TexImageParamsFifo[0],
                 &s_command12TexImageParamsFifo[1], 1);
         }
         // switch the matrix mode to texture
         uint32_t textureMatrixMode = 3;
-        SubmitCommandToGeometryFifo(GXFifoCommand_SetMatrixMode, &textureMatrixMode, 1);
+        Nitro3Di_SendFifoCommand(GXFifoCommand_SetMatrixMode, &textureMatrixMode, 1);
 
         int callbackStage = (handler->hooks[12] != NULL) ? handler->hookStages[12] : 0;
         unsigned int flagbit6;
@@ -1256,12 +1255,12 @@ static void RenderCommand_12(Nitro3DRenderCommandHandler* handler, int modifier)
             scaleParams[0] = materialWidth * 0x8000;
             scaleParams[1] = -materialHeight * 0x8000;
             scaleParams[2] = 0x10000;
-            SubmitCommandToGeometryFifo(GXFifoCommand_ScaleMatrix, scaleParams, 3);
+            Nitro3Di_SendFifoCommand(GXFifoCommand_ScaleMatrix, scaleParams, 3);
             // Due to 4 bits after the fixed point, this * 8 is really a division by 2
             short xcoord = materialWidth * 8;
             short ycoord = materialHeight * 8;
             uint32_t texCoordPack = (unsigned short)xcoord | ((unsigned short)ycoord << 16);
-            SubmitCommandToGeometryFifo(GXFifoCommand_SetTextureCoords, &texCoordPack, 1);
+            Nitro3Di_SendFifoCommand(GXFifoCommand_SetTextureCoords, &texCoordPack, 1);
         }
 
         if (callbackStage == 2)
@@ -1289,7 +1288,7 @@ static void RenderCommand_12(Nitro3DRenderCommandHandler* handler, int modifier)
                     bit13data += sizeof(Nitro3DMaterial::ExtensionData_Bit3);
                 
                 Nitro3DMaterial::ExtensionData_Bit13* ptr = (Nitro3DMaterial::ExtensionData_Bit13*)bit13data;
-                SubmitCommandToGeometryFifo(GXFifoCommand_MultiplyMat4x4, (uint32_t*)ptr->matrix.entries, 16);
+                Nitro3Di_SendFifoCommand(GXFifoCommand_MultiplyMat4x4, (uint32_t*)ptr->matrix.entries, 16);
             }
         }
 
@@ -1305,30 +1304,30 @@ static void RenderCommand_12(Nitro3DRenderCommandHandler* handler, int modifier)
         if (flagbit6 == 0)
         {
             uint32_t posVectorMode = 2;
-            SubmitCommandToGeometryFifo(GXFifoCommand_SetMatrixMode, &posVectorMode, 1);
+            Nitro3Di_SendFifoCommand(GXFifoCommand_SetMatrixMode, &posVectorMode, 1);
             
-            GetCurrentPositionAndDirectionMatrices(NULL, &directionMat3x3);
+            Nitro3D_GetCurrentPosDirMatrices(NULL, &directionMat3x3);
             uint32_t textureMode = 3;
-            SubmitCommandToGeometryFifo(GXFifoCommand_SetMatrixMode, &textureMode, 1);
+            Nitro3Di_SendFifoCommand(GXFifoCommand_SetMatrixMode, &textureMode, 1);
             if (g_nitro3DRenderConfig.flags & (1 << RENDER_CONFIG_FLAG_0))
             {
-                SubmitCommandToGeometryFifo(GXFifoCommand_MultiplyMat3x3, (uint32_t*)&g_nitro3DRenderConfig.viewMatrix.entries, 9);
-                SubmitCommandToGeometryFifo(GXFifoCommand_MultiplyMat3x3, (uint32_t*)&g_nitro3DRenderConfig.objectRotationPosition.rotation.entries, 9);
-                SubmitCommandToGeometryFifo(GXFifoCommand_MultiplyMat3x3, (uint32_t*)&directionMat3x3.entries, 9);
+                Nitro3Di_SendFifoCommand(GXFifoCommand_MultiplyMat3x3, (uint32_t*)&g_nitro3DRenderConfig.viewMatrix.entries, 9);
+                Nitro3Di_SendFifoCommand(GXFifoCommand_MultiplyMat3x3, (uint32_t*)&g_nitro3DRenderConfig.objectRotationPosition.rotation.entries, 9);
+                Nitro3Di_SendFifoCommand(GXFifoCommand_MultiplyMat3x3, (uint32_t*)&directionMat3x3.entries, 9);
             }
             else if (g_nitro3DRenderConfig.flags & (1 << RENDER_CONFIG_FLAG_1))
             {
-                SubmitCommandToGeometryFifo(GXFifoCommand_MultiplyMat3x3, (uint32_t*)&g_nitro3DRenderConfig.viewMatrix.entries, 9);
-                SubmitCommandToGeometryFifo(GXFifoCommand_MultiplyMat3x3, (uint32_t*)&directionMat3x3.entries, 9);
+                Nitro3Di_SendFifoCommand(GXFifoCommand_MultiplyMat3x3, (uint32_t*)&g_nitro3DRenderConfig.viewMatrix.entries, 9);
+                Nitro3Di_SendFifoCommand(GXFifoCommand_MultiplyMat3x3, (uint32_t*)&directionMat3x3.entries, 9);
             }
             else
             {
-                SubmitCommandToGeometryFifo(GXFifoCommand_MultiplyMat3x3, (uint32_t*)&directionMat3x3.entries, 9);
+                Nitro3Di_SendFifoCommand(GXFifoCommand_MultiplyMat3x3, (uint32_t*)&directionMat3x3.entries, 9);
             }
         }
         // switch back to position+vector mode
         uint32_t endMode = 2;
-        SubmitCommandToGeometryFifo(GXFifoCommand_SetMatrixMode, &endMode, 1);
+        Nitro3Di_SendFifoCommand(GXFifoCommand_SetMatrixMode, &endMode, 1);
     }
     handler->instructionPointer += 3;
 }
@@ -1341,11 +1340,11 @@ static void RenderCommand_13(Nitro3DRenderCommandHandler* handler, int modifier)
     if (!(handler->flags & (1 << RCH_FLAG_9)) && (handler->flags & (1 << RCH_FLAG_0)))
     {
         Matrix4x3 worldView;
-        GetCurrentPositionAndDirectionMatrices(&worldView, NULL);
+        Nitro3D_GetCurrentPosDirMatrices(&worldView, NULL);
 
         // store onto the position+vector stack
         uint32_t storeMatrixPos = 30;
-        SubmitCommandToGeometryFifo(GXFifoCommand_StoreMatrix, &storeMatrixPos, 1);
+        Nitro3Di_SendFifoCommand(GXFifoCommand_StoreMatrix, &storeMatrixPos, 1);
         
         // if texcoord transform mode != 3 (vertex source), set it to 3
         if ((handler->pMaterialRenderData->paramTEXIMAGE_PARAMS & 0xc0000000) != 0xc0000000)
@@ -1353,7 +1352,7 @@ static void RenderCommand_13(Nitro3DRenderCommandHandler* handler, int modifier)
             handler->pMaterialRenderData->paramTEXIMAGE_PARAMS &= ~0xc0000000;
             handler->pMaterialRenderData->paramTEXIMAGE_PARAMS |= 0xc0000000;
             s_command13TexImageParamsFifo[1] = handler->pMaterialRenderData->paramTEXIMAGE_PARAMS;
-            SubmitCommandToGeometryFifo(s_command13TexImageParamsFifo[0],
+            Nitro3Di_SendFifoCommand(s_command13TexImageParamsFifo[0],
                 &s_command13TexImageParamsFifo[1], 1);
         }
 
@@ -1378,7 +1377,7 @@ static void RenderCommand_13(Nitro3DRenderCommandHandler* handler, int modifier)
             s_command13TextureMatrix.entries[5] = -materialHeight * 0x8000;
             s_command13TextureMatrix.entries[12] = materialWidth * 0x8000;
             s_command13TextureMatrix.entries[13] = materialHeight * 0x8000;
-            SubmitCommandToGeometryFifo(GXFifoCommand_LoadMat4x4, (uint32_t*)s_command13TextureMatrix.entries, 16);
+            Nitro3Di_SendFifoCommand(GXFifoCommand_LoadMat4x4, (uint32_t*)s_command13TextureMatrix.entries, 16);
         }
 
         if (callbackStage == 2)
@@ -1408,7 +1407,7 @@ static void RenderCommand_13(Nitro3DRenderCommandHandler* handler, int modifier)
                     bit13addr += sizeof(Nitro3DMaterial::ExtensionData_Bit3);
 
                 Nitro3DMaterial::ExtensionData_Bit13* extData = (Nitro3DMaterial::ExtensionData_Bit13*)bit13addr;
-                SubmitCommandToGeometryFifo(GXFifoCommand_MultiplyMat4x4, (uint32_t*)extData->matrix.entries, 16);
+                Nitro3Di_SendFifoCommand(GXFifoCommand_MultiplyMat4x4, (uint32_t*)extData->matrix.entries, 16);
             }
         }
 
@@ -1425,22 +1424,22 @@ static void RenderCommand_13(Nitro3DRenderCommandHandler* handler, int modifier)
         {
             if (g_nitro3DRenderConfig.flags & (1 << RENDER_CONFIG_FLAG_0))
             {
-                SubmitCommandToGeometryFifo(GXFifoCommand_TranslateMatrix, (uint32_t*)&g_nitro3DRenderConfig.objectRotationPosition.translation, 3);
-                SubmitCommandToGeometryFifo(GXFifoCommand_MultiplyMat3x3, (uint32_t*)&g_nitro3DRenderConfig.objectRotationPosition.rotation.entries, 9);
-                SubmitCommandToGeometryFifo(GXFifoCommand_MultiplyMat4x3, (uint32_t*)&worldView.entries, 12);
+                Nitro3Di_SendFifoCommand(GXFifoCommand_TranslateMatrix, (uint32_t*)&g_nitro3DRenderConfig.objectRotationPosition.translation, 3);
+                Nitro3Di_SendFifoCommand(GXFifoCommand_MultiplyMat3x3, (uint32_t*)&g_nitro3DRenderConfig.objectRotationPosition.rotation.entries, 9);
+                Nitro3Di_SendFifoCommand(GXFifoCommand_MultiplyMat4x3, (uint32_t*)&worldView.entries, 12);
             }
             else if (g_nitro3DRenderConfig.flags & (1 << RENDER_CONFIG_FLAG_1))
             {
-                SubmitCommandToGeometryFifo(GXFifoCommand_MultiplyMat4x3, (uint32_t*)&worldView.entries, 12);
+                Nitro3Di_SendFifoCommand(GXFifoCommand_MultiplyMat4x3, (uint32_t*)&worldView.entries, 12);
             }
             else
             {
                 const Matrix4x3* invView = Nitro3DRenderConfig::GetInverseViewMatrix();
-                SubmitCommandToGeometryFifo(GXFifoCommand_MultiplyMat4x3, (uint32_t*)invView, 12);
-                SubmitCommandToGeometryFifo(GXFifoCommand_MultiplyMat4x3, (uint32_t*)&worldView.entries, 12);
+                Nitro3Di_SendFifoCommand(GXFifoCommand_MultiplyMat4x3, (uint32_t*)invView, 12);
+                Nitro3Di_SendFifoCommand(GXFifoCommand_MultiplyMat4x3, (uint32_t*)&worldView.entries, 12);
             }
 
-            SendQueuedDataToGeometryFifo();
+            Nitro3D_FlushFifoQueue();
             GXFIFO_MATRIX_MODE = 0; // projection
             GXFIFO_MATRIX_PUSH = 0;
             GXFIFO_MATRIX_IDENTITY = 0;
@@ -1448,23 +1447,23 @@ static void RenderCommand_13(Nitro3DRenderCommandHandler* handler, int modifier)
             while (func_020c54fc(&worldViewAgain) != 0) {}
             GXFIFO_MATRIX_POP = 1;
             GXFIFO_MATRIX_MODE = 3; // texture matrix
-            SubmitCommandToGeometryFifo(GXFifoCommand_LoadMat4x4, (uint32_t*)worldViewAgain.entries, 16);
+            Nitro3Di_SendFifoCommand(GXFifoCommand_LoadMat4x4, (uint32_t*)worldViewAgain.entries, 16);
             
             // casting to short then unsigned short is necessary to match assembly
             uint16_t xCoordIntPart = (short)((unsigned int)(worldViewAgain.entries[12] >> 4) >> 8);
             uint16_t yCoordIntPart = (short)((unsigned int)(worldViewAgain.entries[13] >> 4) >> 8);
             uint32_t texCoordsPacked = xCoordIntPart | (yCoordIntPart << 16);
-            SubmitCommandToGeometryFifo(GXFifoCommand_SetTextureCoords, &texCoordsPacked, 1);
+            Nitro3Di_SendFifoCommand(GXFifoCommand_SetTextureCoords, &texCoordsPacked, 1);
         }
         uint32_t posVectorMode = 2;
-        SubmitCommandToGeometryFifo(GXFifoCommand_SetMatrixMode, &posVectorMode, 1);
+        Nitro3Di_SendFifoCommand(GXFifoCommand_SetMatrixMode, &posVectorMode, 1);
         uint32_t retrievePos = 30;
-        SubmitCommandToGeometryFifo(GXFifoCommand_GetMatrix, &retrievePos, 1);
+        Nitro3Di_SendFifoCommand(GXFifoCommand_GetMatrix, &retrievePos, 1);
     }
     handler->instructionPointer += 3;
 }
 
-void RenderMeshWithMaterial(Nitro3DModel* model, unsigned int materialIdx, unsigned int meshIdx, int bind)
+void Nitro3D_RenderMeshWithMaterial(Nitro3DModel* model, unsigned int materialIdx, unsigned int meshIdx, int bind)
 {
     uint32_t commandParams[7];
     MaterialRenderData targetData;
@@ -1476,7 +1475,7 @@ void RenderMeshWithMaterial(Nitro3DModel* model, unsigned int materialIdx, unsig
         upScaleParams[0] = upScale;
         upScaleParams[1] = upScale;
         upScaleParams[2] = upScale;
-        SubmitCommandToGeometryFifo(GXFifoCommand_ScaleMatrix, upScaleParams, 3);
+        Nitro3Di_SendFifoCommand(GXFifoCommand_ScaleMatrix, upScaleParams, 3);
     }
 
     if (bind && materialIdx < model->numMaterials)
@@ -1509,7 +1508,7 @@ void RenderMeshWithMaterial(Nitro3DModel* model, unsigned int materialIdx, unsig
             GXFifoCommand_SetTexturePaletteBase);
         commandParams[5] = material->paramTEXIMAGE_PARAMS;
         commandParams[6] = material->texturePaletteVRAMOffset;
-        SubmitCommandToGeometryFifo(commandParams[0], &commandParams[1], 6);
+        Nitro3Di_SendFifoCommand(commandParams[0], &commandParams[1], 6);
         
         if (material->flags & 1)
         {
@@ -1558,7 +1557,7 @@ void RenderMeshWithMaterial(Nitro3DModel* model, unsigned int materialIdx, unsig
         Nitro3DNameList* meshList = model->GetMeshList();
         Nitro3DMesh* mesh = meshList->GetEntryFromu32Offset<Nitro3DMesh>(meshIdx);
 
-        SendRawDataToGeometryFifo(mesh->GetGPUCommands(), mesh->gpuCommandsLength);
+        Nitro3Di_SendRawDataToFifo(mesh->GetGPUCommands(), mesh->gpuCommandsLength);
     }
 
     fix32_t downScale = model->downScale;
@@ -1568,6 +1567,6 @@ void RenderMeshWithMaterial(Nitro3DModel* model, unsigned int materialIdx, unsig
         downScaleParams[0] = downScale;
         downScaleParams[1] = downScale;
         downScaleParams[2] = downScale;
-        SubmitCommandToGeometryFifo(GXFifoCommand_ScaleMatrix, downScaleParams, 3);
+        Nitro3Di_SendFifoCommand(GXFifoCommand_ScaleMatrix, downScaleParams, 3);
     }
 }

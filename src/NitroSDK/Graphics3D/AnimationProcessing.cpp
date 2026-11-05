@@ -11,7 +11,7 @@ extern "C"
     void func_020ca458(int value, void* data, unsigned len);
 }
 
-bool ProcessMaterialAnimationsOnBoundMaterial(MaterialRenderData* material, Nitro3DAnimation* anim, unsigned int matIdx)
+bool Nitro3Di_DefaultProcessMaterialAnimations(MaterialRenderData* material, Nitro3DAnimation* anim, unsigned int matIdx)
 {
     bool success = false;
     if (anim != NULL)
@@ -33,7 +33,7 @@ bool ProcessMaterialAnimationsOnBoundMaterial(MaterialRenderData* material, Nitr
     return success;
 }
 
-void AccumulateScaleVector(BoneMatrixRenderData::Scale* accumulator, const BoneMatrixRenderData::Scale* source, fix32_t scale, int useIdentity)
+static void AccumulateScaleVector(BoneMatrixRenderData::Scale* accumulator, const BoneMatrixRenderData::Scale* source, fix32_t scale, int useIdentity)
 {
     if (useIdentity)
     {
@@ -49,7 +49,7 @@ void AccumulateScaleVector(BoneMatrixRenderData::Scale* accumulator, const BoneM
     }
 }
 
-bool ProcessJointAnimationsOnBoneMatrix(BoneMatrixRenderData* bone, Nitro3DAnimation* anim, unsigned int boneIdx)
+bool Nitro3Di_DefaultProcessJointAnimations(BoneMatrixRenderData* bone, Nitro3DAnimation* anim, unsigned int boneIdx)
 {
     if (anim == NULL)
         return false;
@@ -67,9 +67,9 @@ bool ProcessJointAnimationsOnBoneMatrix(BoneMatrixRenderData* bone, Nitro3DAnima
                 anim->callback(bone, anim, anim->entries[boneIdx] & 0xff);
                 return true;
             }
-            else return false;
+            return false;
         }
-        else return false;
+        return false;
     }
 
     
@@ -191,7 +191,7 @@ bool ProcessJointAnimationsOnBoneMatrix(BoneMatrixRenderData* bone, Nitro3DAnima
     return true;
 }
 
-bool ProcessVisibilityAnimations(int* output, Nitro3DAnimation* anim, unsigned int boneIdx)
+bool Nitro3Di_DefaultProcessVisibilityAnimations(int* output, Nitro3DAnimation* anim, unsigned int boneIdx)
 {
     bool success = false;
     *output = 0;

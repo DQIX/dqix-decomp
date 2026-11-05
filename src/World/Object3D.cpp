@@ -1796,13 +1796,13 @@ void Object3D::ComputeShadowPosition()
     }
     else
     {
-        if (GetModelBonePositionAndDirectionMatrices(context, NULL, NULL, shadowBoneIndex_))
+        if (Nitro3D_GetBonePosDirMatrices(context, NULL, NULL, shadowBoneIndex_))
         {
             Matrix4x3 boneWorldTransform;
             Mat4x3_WriteIdentity(&boneWorldTransform);
             const Matrix4x3* inverseView = Nitro3DRenderConfig::GetInverseViewMatrix();
             // fix this cast later
-            GetCurrentPositionAndDirectionMatrices(&boneWorldTransform, NULL);
+            Nitro3D_GetCurrentPosDirMatrices(&boneWorldTransform, NULL);
             Mat4x3_Multiply(&boneWorldTransform, inverseView, &boneWorldTransform);
             fix32_t z = boneWorldTransform.translation.z;
             fix32_t y = boneWorldTransform.translation.y;
@@ -1940,7 +1940,7 @@ void Object3D::DrawChildren(Object3D *topLevelObject)
             Matrix4x3 positionMatrix;
             Matrix3x3 directionMatrix;
             Nitro3DRenderContext* context = GetModel3DContext(topLevelObject->pModel_);
-            if (context != NULL && GetModelBonePositionAndDirectionMatrices(context,
+            if (context != NULL && Nitro3D_GetBonePosDirMatrices(context,
                 &positionMatrix, &directionMatrix, pNextChild_->attachmentBoneIndex_))
             {
                 // bug? flags is 32-bit, we lose upper 16 bits...
@@ -2050,7 +2050,7 @@ void BoneTrackingRenderCommandHook(Nitro3DRenderCommandHandler* handler)
         if (!(handler->flags & (1 << RCH_FLAG_4)) || handler->currentBoneMatrix != tracker->boneIndex)
             continue;
         
-        GetCurrentPositionAndDirectionMatrices(&tracker->matrix, NULL);
+        Nitro3D_GetCurrentPosDirMatrices(&tracker->matrix, NULL);
         boneTracking.boneMatrixWithView = tracker->matrix;
         Mat4x3_Multiply(&tracker->matrix, Nitro3DRenderConfig::GetInverseViewMatrix(), &tracker->matrix);
     }

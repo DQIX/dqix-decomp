@@ -280,17 +280,17 @@ bool Model3D::Draw(bool applyClipping)
     if (unknown_flags_a8_2_)
     {
         renderContext_.flags |= 1;
-        RenderModelFromRenderData(&renderContext_);
+        Nitro3D_Render(&renderContext_);
         renderContext_.flags &= ~1;
         unknown_flags_a8_2_ = false;
     }
     else if (unknown_flags_a8_1_)
     {
         renderContext_.flags |= 1;
-        RenderModelFromRenderData(&renderContext_);
+        Nitro3D_Render(&renderContext_);
     }
     else
-        RenderModelFromRenderData(&renderContext_);
+        Nitro3D_Render(&renderContext_);
     return true;
 }
 
@@ -302,7 +302,7 @@ bool Model3D::DrawMeshWithMaterial(bool applyClipping, unsigned int material, un
     if (applyClipping && !TestVisible())
         return false;
 
-    RenderMeshWithMaterial(rawInternalModel_, material, mesh, bind);
+    Nitro3D_RenderMeshWithMaterial(rawInternalModel_, material, mesh, bind);
     return true;
 }
 

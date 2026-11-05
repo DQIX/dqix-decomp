@@ -622,7 +622,7 @@ bool AtmosphericEffectSet::Draw()
                 loopObject->object_.position_.y = -45 << 12;
                 loopObject->object_.position_.z = finalZ;
                 Nitro3DRenderConfig::SubmitToFifo();
-                SendQueuedDataToGeometryFifo();
+                Nitro3D_FlushFifoQueue();
                 // clear the polygon ID from the POLYGON_ATTR bitmask
                 NSBXX_Model_AdjustPolygonAttrMask(loopObject->object_.pModel_->rawInternalModel_, false, 0x3f000000);
                 Nitro3DRenderConfig::SetPolygonAttributes(0, 0, 2 | 1, polygonID, 31, 0);
@@ -645,7 +645,7 @@ bool AtmosphericEffectSet::Draw()
     }
 
     Nitro3DRenderConfig::SubmitToFifo();
-    SendQueuedDataToGeometryFifo();
+    Nitro3D_FlushFifoQueue();
     return true;
 }
 

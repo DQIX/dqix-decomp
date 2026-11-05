@@ -159,8 +159,8 @@ struct Nitro3DRenderCommandHandler
 // 6 to return early
 #define RCH_FLAG_10 10
 
-void RenderModelFromRenderData(Nitro3DRenderContext* renderData);
+void Nitro3D_Render(Nitro3DRenderContext* renderData);
 // much more barebones implementation of rendering and just does a single
 // mesh / material pair. In practice this seems to be used for shadows
 // bindMaterial is really a bool
-void RenderMeshWithMaterial(Nitro3DModel* model, unsigned int materialIdx, unsigned int meshIdx, int bindMaterial);
+void Nitro3D_RenderMeshWithMaterial(Nitro3DModel* model, unsigned int materialIdx, unsigned int meshIdx, int bindMaterial);
