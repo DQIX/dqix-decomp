@@ -7261,17 +7261,16 @@ data_020f1d74 kind:data(any) addr:0x020f1d74
 data_020f1d8c kind:data(any) addr:0x020f1d8c
 data_020f1da4 kind:data(any) addr:0x020f1da4
 data_020f1dbd kind:data(any) addr:0x020f1dbd
-data_020f1dd8 kind:data(any) addr:0x020f1dd8
-data_020f1ddc kind:data(any) addr:0x020f1ddc
-data_020f1de0 kind:data(any) addr:0x020f1de0
-data_020f1de4 kind:data(any) addr:0x020f1de4
-data_020f1de8 kind:data(any) addr:0x020f1de8
-data_020f1dec kind:data(any) addr:0x020f1dec
-data_020f1df0 kind:data(any) addr:0x020f1df0
-data_020f1df4 kind:data(any) addr:0x020f1df4
-data_020f1df8 kind:data(any) addr:0x020f1df8
-data_020f1dfc kind:data(any) addr:0x020f1dfc
-data_020f1e00 kind:data(any) addr:0x020f1e00
+s_numAnimationTypes kind:data(any) addr:0x020f1dd8 local
+g_pfnNitro3DProcessVAV kind:data(any) addr:0x020f1ddc
+g_pfnNitro3DProcessJAC kind:data(any) addr:0x020f1de0
+g_pfnNitro3DProcessMAT kind:data(any) addr:0x020f1de4
+g_pfnNitro3DProcessMPT kind:data(any) addr:0x020f1de8
+g_pfnNitro3DProcessMAM kind:data(any) addr:0x020f1dec
+g_pfnNitro3DProcessVisibilityAnimations kind:data(any) addr:0x020f1df0
+g_pfnNitro3DProcessJointAnimations kind:data(any) addr:0x020f1df4
+g_pfnNitro3DProcessMaterialAnimations kind:data(any) addr:0x020f1df8
+s_animationInitLookup kind:data(any) addr:0x020f1dfc local
 data_020f1e4c kind:data(any) addr:0x020f1e4c
 data_020f1e58 kind:data(any) addr:0x020f1e58
 data_020f1e64 kind:data(any) addr:0x020f1e64

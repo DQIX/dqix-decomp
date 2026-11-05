@@ -21299,7 +21299,7 @@ from:0x020b28d4 kind:arm_call to:0x020b0288 module:main
 from:0x020b2a40 kind:arm_call to:0x020b29f8 module:main
 from:0x020b2b60 kind:load to:0x020f1c6c module:main
 from:0x020b2b64 kind:load to:0x020f1c90 module:main
-from:0x020b2b68 kind:load to:0x020f1c94 module:main
+from:0x020b2b68 kind:load to:0x020f1c90 add:0x4 module:main
 from:0x020b2b84 kind:arm_call to:0x020ca3ec module:main
 from:0x020b2bb4 kind:load to:0x020f1c8c module:main
 from:0x020b2bb8 kind:load to:0x020f1c88 module:main

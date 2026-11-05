@@ -1,9 +1,9 @@
 #include "NitroSDK/Graphics3D/Graphics3D.h"
+#include "NitroSDK/Graphics3D/AnimationProcessing.h"
 #include "NitroSDK/Graphics3D/RenderCommands_Common.h"
 
 #if defined(jpn)
 #define func_020ca390 func_020cbe5c
-#define data_020f1c80 data_020f1dec
 #endif
 
 extern "C"
@@ -11,9 +11,6 @@ extern "C"
     // memset
     void func_020ca390(int, void*, unsigned);
 }
-
-// processing callback for M.AM animations
-extern void (*data_020f1c80)(void* data, Nitro3DAnimation* anim, int arg);
 
 unsigned short GetColorFromMaterialAnimation(Nitro3DMAM* mam, unsigned int trackEntry, unsigned int frame)
 {
@@ -162,7 +159,7 @@ void InitializeModelAnimationFromMAM(Nitro3DAnimation* anim, void* pvMAM, Nitro3
 {   
     
     Nitro3DModelMaterials* materials = model->GetMaterialData();
-    anim->callback = data_020f1c80;
+    anim->callback = g_pfnNitro3DProcessMAM;
 
     anim->numEntries = model->numMaterials;
     func_020ca390(0, &anim->entries[0], anim->numEntries * 2);

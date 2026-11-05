@@ -1,9 +1,9 @@
 #include "NitroSDK/Graphics3D/Graphics3D.h"
+#include "NitroSDK/Graphics3D/AnimationProcessing.h"
 #include "NitroSDK/Graphics3D/RenderCommands_Common.h"
 
 #if defined(jpn)
 #define func_020ca390 func_020cbe5c
-#define data_020f1c78 data_020f1de4
 #endif
 
 extern "C"
@@ -11,9 +11,6 @@ extern "C"
     // memset
     void func_020ca390(int, void*, unsigned);
 }
-
-// processing callback for M.AT animations
-extern void (*data_020f1c78)(void* data, Nitro3DAnimation* anim, int arg);
 
 fix32_t SampleScalarFromMATTrack(Nitro3DMAT* mat, unsigned int metadata, unsigned int offset, unsigned int frame)
 {
@@ -277,38 +274,29 @@ void CalculateTextureTransformFromMAT(Nitro3DMAT* mat, unsigned short arg, unsig
 
 void InitializeModelAnimationFromMAT(Nitro3DAnimation* anim, void* pvMAT, Nitro3DModel* model)
 {
-    unsigned int track;
-    Nitro3DModelMaterials* materials;
-    if (model != NULL && model->materialsOffset != 0)
-        materials = (Nitro3DModelMaterials*)((intptr_t)model + model->materialsOffset);
-    else
-        materials = NULL;
-    anim->callback = data_020f1c78;
+    
+    Nitro3DModelMaterials* materials = model->GetMaterialData();
+    anim->callback = g_pfnNitro3DProcessMAT;
 
     anim->numEntries = model->numMaterials;
     func_020ca390(0, &anim->entries[0], anim->numEntries * 2);
 
     Nitro3DMAT* mat = (Nitro3DMAT*)pvMAT;
     
-    track = 0;
-    if (track < mat->tracks.numEntries)
-    {
-        do
-        {   
-            const char* str = mat->tracks.GetNameByIndex(track);
-            int idx;
+    for (unsigned int track = 0; track < mat->tracks.numEntries; track++)
+    { 
+        const char* str = mat->tracks.GetNameByIndex(track);
+        int idx;
 
-            if (materials == NULL)
-                idx = -1;
-            else
-                idx = NSBXXNameList_SearchIndex(&materials->materialOffsetList, str);
+        if (materials == NULL)
+            idx = -1;
+        else
+            idx = NSBXXNameList_SearchIndex(&materials->materialOffsetList, str);
 
-            if (idx >= 0)
-            {
-                anim->entries[idx] = track | 0x100;
-            }
-            track++;
-        } while (track < mat->tracks.numEntries);
+        if (idx >= 0)
+        {
+            anim->entries[idx] = track | 0x100;
+        }
     }
 }
 

@@ -45,9 +45,6 @@ extern void (*data_020f1ce0[])(BoneMatrixRenderData*);
 // Holds { func_020ba11c func_020ba5ac, func_020bac74, func_020bb29c }
 extern void (*data_020f1cf8[])(MaterialRenderData*);
 
-// render command lookup
-extern void (*data_020f1e08[])(Nitro3DRenderCommandHandler*, int);
-
 extern Nitro3DRenderCommandHandler* g_nitro3DActiveRenderCommandHandler;
 struct Nitro3DSkinningScale
 {

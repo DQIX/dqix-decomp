@@ -1,10 +1,9 @@
 #include "NitroSDK/Graphics3D/Graphics3D.h"
+#include "NitroSDK/Graphics3D/AnimationProcessing.h"
 #include "NitroSDK/Graphics3D/RenderCommands_Common.h"
 
 #if defined(jpn)
 #define func_020ca390 func_020cbe5c
-
-#define data_020f1c74 data_020f1de0
 #endif
 
 extern "C"
@@ -46,14 +45,11 @@ static inline void CalculateThirdRowByCrossProduct(Matrix3x3* mat)
     mat->entries[8] = (m11 * m22 - m12 * m21) >> 12;
 }
 
-// processing callback for J.AC animations
-extern void (*data_020f1c74)(void*, Nitro3DAnimation*, int);
-
 void InitializeModelAnimationFromJAC(Nitro3DAnimation* anim, void* pvJAC, Nitro3DModel* model)
 {
     Nitro3DJAC* jac = (Nitro3DJAC*)pvJAC;
     anim->pRawData = jac;
-    anim->callback = data_020f1c74;
+    anim->callback = g_pfnNitro3DProcessJAC;
     anim->numEntries = model->numBoneMatrices;
     func_020ca390(0, anim->entries, 2 * anim->numEntries);
 

@@ -226,9 +226,14 @@ src/NitroSDK/Graphics2D/Graphics2D.cpp:
     .rodata start:0x020e9180 end:0x020e91b0
     .text start:0x020afec4 end:0x020b0d80
 
+src/NitroSDK/Graphics3D/AnimationInit.cpp:
+    complete
+    .text start:0x020b2acc end:0x020b2b6c
+    .data start:0x020f1c6c end:0x020f1ce0
+
 src/NitroSDK/Graphics3D/Animation.cpp:
     complete
-    .text start:0x020b2acc end:0x020b2e3c
+    .text start:0x020b2b6c end:0x020b2e3c
 
 src/NitroSDK/Graphics3D/TEX.cpp:
     complete

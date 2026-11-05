@@ -1,13 +1,8 @@
 #include "NitroSDK/Graphics3D/Animation.h"
+#include "NitroSDK/Graphics3D/AnimationProcessing.h"
 
 #if defined(jpn)
 #define func_020ca3ec func_020cbeb8
-
-#define data_020f1c6c data_020f1dd8
-#define data_020f1c84 data_020f1df0
-#define data_020f1c88 data_020f1df4
-#define data_020f1c8c data_020f1df8
-#define data_020f1c90 data_020f1dfc
 #endif
 
 extern "C"
@@ -16,49 +11,13 @@ extern "C"
     void func_020ca3ec(int value, void* dst, unsigned len);
 }
 
-extern unsigned int data_020f1c6c; // number of animation types (5)
-
-extern bool (*data_020f1c84)(int*, Nitro3DAnimation*, unsigned int);
-extern bool (*data_020f1c88)(BoneMatrixRenderData*, Nitro3DAnimation*, unsigned int);
-extern bool (*data_020f1c8c)(MaterialRenderData*, Nitro3DAnimation*, unsigned int);
-
-struct AnimationTypeDescription
-{
-    Nitro3DAnimationSignature signature;
-    void (*initializer)(Nitro3DAnimation* anim, void* pvMAT, Nitro3DModel* model);
-} extern data_020f1c90[];
-
-void InitializeModelAnimation(Nitro3DAnimation *anim, void *pRawData, Nitro3DModel *model, Nitro3DTextureSet *tex)
-{
-    anim->time = 0;
-    anim->pRawData = pRawData;
-    anim->pNext = NULL;
-    anim->unknown_18 = 0x7f;
-    anim->weight = 1 << 12;
-    anim->pTex0 = tex;
-    anim->numEntries = 0;
-    anim->callback = NULL;
-
-    Nitro3DAnimationSignature* signature = (Nitro3DAnimationSignature*)pRawData;
-    int numAnimationTypes = data_020f1c6c;
-    for (unsigned int animType = 0; animType < numAnimationTypes; animType++)
-    {
-        if (signature->signatureInitial != data_020f1c90[animType].signature.signatureInitial ||
-            signature->signatureEnd != data_020f1c90[animType].signature.signatureEnd)
-            continue;
-        
-        if (data_020f1c90[animType].initializer != NULL)
-            data_020f1c90[animType].initializer(anim, pRawData, model);
-        break;
-    }
-}
 
 void PopulateModelRenderContext(Nitro3DRenderContext *context, Nitro3DModel *model)
 {
     func_020ca3ec(0, context, sizeof(Nitro3DRenderContext));
-    context->pfnProcessMaterialAnimations = data_020f1c8c;
-    context->pfnProcessJointAnimations = data_020f1c88;
-    context->pfnProcessVisibilityAnimations = data_020f1c84;
+    context->pfnProcessMaterialAnimations = g_pfnNitro3DProcessMaterialAnimations;
+    context->pfnProcessJointAnimations = g_pfnNitro3DProcessJointAnimations;
+    context->pfnProcessVisibilityAnimations = g_pfnNitro3DProcessVisibilityAnimations;
     context->model = model;
 }
 

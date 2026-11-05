@@ -1,9 +1,9 @@
 #include "NitroSDK/Graphics3D/Graphics3D.h"
+#include "NitroSDK/Graphics3D/AnimationProcessing.h"
 #include "NitroSDK/Graphics3D/RenderCommands_Common.h"
 
 #if defined(jpn)
 #define func_020ca390 func_020cbe5c
-#define data_020f1c7c data_020f1de8
 #endif
 
 extern "C"
@@ -11,9 +11,6 @@ extern "C"
     // memset
     void func_020ca390(int, void*, unsigned);
 }
-
-// processing callback for M.PT animations
-extern void (*data_020f1c7c)(void*, Nitro3DAnimation*, int);
 
 void InitializeModelAnimationFromMPT(Nitro3DAnimation* anim, void* pvMPT, Nitro3DModel* model)
 {
@@ -24,7 +21,7 @@ void InitializeModelAnimationFromMPT(Nitro3DAnimation* anim, void* pvMPT, Nitro3
     else
         materials = NULL;
     
-    anim->callback = data_020f1c7c;
+    anim->callback = g_pfnNitro3DProcessMPT;
 
     anim->numEntries = model->numMaterials;
     Nitro3DMPT* mpt = (Nitro3DMPT*)pvMPT;
