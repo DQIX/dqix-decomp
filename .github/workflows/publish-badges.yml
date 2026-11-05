@@ -2,10 +2,6 @@ name: Publish badges
 
 on:
   workflow_call:
-    inputs:
-      version:
-        required: true
-        type: string
 
 permissions:
   contents: write
@@ -16,7 +12,8 @@ jobs:
     steps:
       - uses: actions/download-artifact@v4
         with:
-          name: badges-${{ inputs.version }}
+          pattern: badges-*
+          merge-multiple: true
           path: badges
 
       - name: Publish to badges branch
@@ -37,5 +34,5 @@ jobs:
           fi
           git -c user.name='github-actions[bot]' \
               -c user.email='41898282+github-actions[bot]@users.noreply.github.com' \
-              commit -q -m "Update ${{ inputs.version }} progress badges for ${{ github.sha }}"
+              commit -q -m "Update progress badges for ${{ github.sha }}"
           git push -q origin badges

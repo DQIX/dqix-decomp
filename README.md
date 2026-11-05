@@ -4,6 +4,8 @@
 [![USA bytes](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2FDQIX%2Fdqix-decomp%2Fbadges%2Fusa%2Fbytes.json)](https://github.com/DQIX/dqix-decomp/actions/workflows/match.yml)
 [![JPN functions](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2FDQIX%2Fdqix-decomp%2Fbadges%2Fjpn%2Ffunctions.json)](https://github.com/DQIX/dqix-decomp/actions/workflows/match.yml)
 [![JPN bytes](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2FDQIX%2Fdqix-decomp%2Fbadges%2Fjpn%2Fbytes.json)](https://github.com/DQIX/dqix-decomp/actions/workflows/match.yml)
+[![EUR functions](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2FDQIX%2Fdqix-decomp%2Fbadges%2Feur%2Ffunctions.json)](https://github.com/DQIX/dqix-decomp/actions/workflows/match.yml)
+[![EUR bytes](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2FDQIX%2Fdqix-decomp%2Fbadges%2Feur%2Fbytes.json)](https://github.com/DQIX/dqix-decomp/actions/workflows/match.yml)
 
 ## 📖 About
 This project aims to create a **1:1 disassembly and decompilation** of *Dragon Quest IX: Sentinels of the Starry Skies* for the Nintendo DS.  
@@ -24,7 +26,7 @@ GCC 9+ (available through installers like MINGW on windows, usually included on 
 #### Setup
 Place a clean ROM of the original game in the 'extract' folder and name it <baserom_dqix_(region).nds>, with (region) being the appropriate region identifier. ex: baserom_dqix_usa.nds
 
-(Note: currently only the usa and jpn roms are supported)
+(Note: currently only the usa, jpn and eur roms are supported. EUR builds from the USA sources and its configs are ported from USA with `python tools/port_eur_config.py --sync`)
 
 Install the Python dependencies with pip
 ```shell
@@ -32,7 +34,7 @@ python -m pip install -r tools/requirements.txt
 ```
 Run the script to configure Ninja (Do this any time a file is added or removed)
 ```shell
-python tools/configure.py <usa|jpn>
+python tools/configure.py <usa|jpn|eur>
 ```
 
 If using ghidra, be sure to create a successful build using ninja (see: [Building the Project](#-building-the-project)) at least once before loading the game's config.yaml with ghidra. (For more information see See [Decompiling.md](Decompiling.md))

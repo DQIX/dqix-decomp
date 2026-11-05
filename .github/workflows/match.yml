@@ -33,24 +33,19 @@ jobs:
       publish-badges: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
     secrets: inherit
 
-  badges-usa:
-    needs: usa
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    uses: ./.github/workflows/publish-badges.yml
+  eur:
+    if: github.event_name != 'pull_request'
+    uses: ./.github/workflows/build.yml
     with:
-      version: usa
-    permissions:
-      contents: write
-    concurrency:
-      group: publish-badges
-      cancel-in-progress: false
+      version: eur
+      label: EUR
+      publish-badges: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+    secrets: inherit
 
-  badges-jpn:
-    needs: jpn
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+  badges:
+    needs: [usa, jpn, eur]
+    if: ${{ !cancelled() && github.event_name == 'push' && github.ref == 'refs/heads/main' }}
     uses: ./.github/workflows/publish-badges.yml
-    with:
-      version: jpn
     permissions:
       contents: write
     concurrency:
