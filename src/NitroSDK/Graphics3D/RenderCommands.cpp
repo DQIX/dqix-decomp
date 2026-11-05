@@ -1,22 +1,22 @@
 #include "NitroSDK/Graphics3D/RenderCommands_Common.h"
 
-void MaterialBindProc(Nitro3DRenderCommandHandler* handler, int modifier, Nitro3DMaterial* material, unsigned int idx);
-void MeshDrawProc(Nitro3DRenderCommandHandler* handler, int modifier, Nitro3DMesh* mesh, unsigned int meshIdx);
+static void MaterialBindProc(Nitro3DRenderCommandHandler* handler, int modifier, Nitro3DMaterial* material, unsigned int idx);
+static void MeshDrawProc(Nitro3DRenderCommandHandler* handler, int modifier, Nitro3DMesh* mesh, unsigned int meshIdx);
 
-void RenderCommand_0(Nitro3DRenderCommandHandler* handler, int modifier);
-void RenderCommand_1(Nitro3DRenderCommandHandler* handler, int modifier);
-void RenderCommand_2(Nitro3DRenderCommandHandler* handler, int modifier);
-void RenderCommand_3(Nitro3DRenderCommandHandler* handler, int modifier);
-void RenderCommand_4(Nitro3DRenderCommandHandler* handler, int modifier);
-void RenderCommand_5(Nitro3DRenderCommandHandler* handler, int modifier);
-void RenderCommand_6(Nitro3DRenderCommandHandler* handler, int modifier);
-void RenderCommand_7(Nitro3DRenderCommandHandler* handler, int modifier);
-void RenderCommand_8(Nitro3DRenderCommandHandler* handler, int modifier);
-void RenderCommand_9(Nitro3DRenderCommandHandler* handler, int modifier);
-void RenderCommand_10(Nitro3DRenderCommandHandler* handler, int modifier);
-void RenderCommand_11(Nitro3DRenderCommandHandler* handler, int modifier);
-void RenderCommand_12(Nitro3DRenderCommandHandler* handler, int modifier);
-void RenderCommand_13(Nitro3DRenderCommandHandler* handler, int modifier);
+static void RenderCommand_0(Nitro3DRenderCommandHandler* handler, int modifier);
+static void RenderCommand_1(Nitro3DRenderCommandHandler* handler, int modifier);
+static void RenderCommand_2(Nitro3DRenderCommandHandler* handler, int modifier);
+static void RenderCommand_3(Nitro3DRenderCommandHandler* handler, int modifier);
+static void RenderCommand_4(Nitro3DRenderCommandHandler* handler, int modifier);
+static void RenderCommand_5(Nitro3DRenderCommandHandler* handler, int modifier);
+static void RenderCommand_6(Nitro3DRenderCommandHandler* handler, int modifier);
+static void RenderCommand_7(Nitro3DRenderCommandHandler* handler, int modifier);
+static void RenderCommand_8(Nitro3DRenderCommandHandler* handler, int modifier);
+static void RenderCommand_9(Nitro3DRenderCommandHandler* handler, int modifier);
+static void RenderCommand_10(Nitro3DRenderCommandHandler* handler, int modifier);
+static void RenderCommand_11(Nitro3DRenderCommandHandler* handler, int modifier);
+static void RenderCommand_12(Nitro3DRenderCommandHandler* handler, int modifier);
+static void RenderCommand_13(Nitro3DRenderCommandHandler* handler, int modifier);
 
 struct BillboardFIFOData {
     // is always (12, 10, 17, 1b) = (pop matrix, matrix mode, load 4x3, scale)
@@ -219,7 +219,7 @@ void RenderModelFromRenderData(Nitro3DRenderContext* renderData)
 }
 
 // nsbmd docs call this 'nop' though the callback still occurs
-void RenderCommand_0(Nitro3DRenderCommandHandler* handler, int modifier)
+static void RenderCommand_0(Nitro3DRenderCommandHandler* handler, int modifier)
 {
     if (handler->hooks[0] != NULL)
         handler->hooks[0](handler);
@@ -227,7 +227,7 @@ void RenderCommand_0(Nitro3DRenderCommandHandler* handler, int modifier)
 }
 
 // signal end of render commands
-void RenderCommand_1(Nitro3DRenderCommandHandler* handler, int modifier)
+static void RenderCommand_1(Nitro3DRenderCommandHandler* handler, int modifier)
 {
     if (handler->hooks[1] != NULL)
         handler->hooks[1](handler);
@@ -236,7 +236,7 @@ void RenderCommand_1(Nitro3DRenderCommandHandler* handler, int modifier)
 
 // apply visibility condition to be used by animation
 // params: condition index, default value (lowest bit used)
-void RenderCommand_2(Nitro3DRenderCommandHandler* handler, int modifier)
+static void RenderCommand_2(Nitro3DRenderCommandHandler* handler, int modifier)
 {
     if (!(handler->flags & (1 << RCH_FLAG_9)))
     {
@@ -298,7 +298,7 @@ void RenderCommand_2(Nitro3DRenderCommandHandler* handler, int modifier)
 
 // load matrix from stack
 // parameters: index to load from
-void RenderCommand_3(Nitro3DRenderCommandHandler* handler, int modifier)
+static void RenderCommand_3(Nitro3DRenderCommandHandler* handler, int modifier)
 {
     if (!(handler->flags & (1 << RCH_FLAG_9)) && (handler->flags & (1 << RCH_FLAG_0)))
     {
@@ -331,7 +331,7 @@ void RenderCommand_3(Nitro3DRenderCommandHandler* handler, int modifier)
     handler->instructionPointer += 2;
 }
 
-void MaterialBindProc(Nitro3DRenderCommandHandler* handler, int modifier, Nitro3DMaterial* material, unsigned int idx)
+static void MaterialBindProc(Nitro3DRenderCommandHandler* handler, int modifier, Nitro3DMaterial* material, unsigned int idx)
 {
     handler->boundMaterial = idx;
     handler->flags |= (1 << RCH_FLAG_3);
@@ -510,7 +510,7 @@ void MaterialBindProc(Nitro3DRenderCommandHandler* handler, int modifier, Nitro3
 
 // bind material
 // parameters: index of material within the model's MaterialList
-void RenderCommand_4(Nitro3DRenderCommandHandler* handler, int modifier)
+static void RenderCommand_4(Nitro3DRenderCommandHandler* handler, int modifier)
 {
     if (!(handler->flags & (1 << RCH_FLAG_9)))
     {
@@ -525,7 +525,7 @@ void RenderCommand_4(Nitro3DRenderCommandHandler* handler, int modifier)
     handler->instructionPointer += 2;
 }
 
-void MeshDrawProc(Nitro3DRenderCommandHandler* handler, int modifier, Nitro3DMesh* mesh, unsigned int meshIdx)
+static void MeshDrawProc(Nitro3DRenderCommandHandler* handler, int modifier, Nitro3DMesh* mesh, unsigned int meshIdx)
 {
     int callbackStage = (handler->hooks[5] != NULL) ? handler->hookStages[5] : 0;
     unsigned int flagbit6;
@@ -558,7 +558,7 @@ void MeshDrawProc(Nitro3DRenderCommandHandler* handler, int modifier, Nitro3DMes
 
 // draw mesh
 // parameters: index of mesh to draw
-void RenderCommand_5(Nitro3DRenderCommandHandler* handler, int modifier)
+static void RenderCommand_5(Nitro3DRenderCommandHandler* handler, int modifier)
 {
     if (!(handler->flags & (1 << RCH_FLAG_9)) && (handler->flags & (1 << RCH_FLAG_0)) && !(handler->flags & (1 << RCH_FLAG_1)))
     {
@@ -578,7 +578,7 @@ void RenderCommand_5(Nitro3DRenderCommandHandler* handler, int modifier)
 // if modifier & 0x20: stack position to store result at the end
 // if modifier & 0x40: stack position of matrix to retrieve at the start, i.e. 
 // you'll retrieve a matrix off the stack and pre-multiply that by the bone matrix
-void RenderCommand_6(Nitro3DRenderCommandHandler* handler, int modifier)
+static void RenderCommand_6(Nitro3DRenderCommandHandler* handler, int modifier)
 {
     int boneIdx = handler->instructionPointer[1];
     int numBytesConsumed = 4; // by default it's opcode + 3 args
@@ -786,7 +786,7 @@ void RenderCommand_6(Nitro3DRenderCommandHandler* handler, int modifier)
 // if modifier & 0x20: stack position to store result at the end
 // if modifier & 0x40: stack position of matrix to retrieve at the start, i.e. 
 // you'll retrieve a matrix off the stack and pre-multiply that by the bone matrix
-void RenderCommand_7(Nitro3DRenderCommandHandler* handler, int modifier)
+static void RenderCommand_7(Nitro3DRenderCommandHandler* handler, int modifier)
 {
     int numBytesConsumed = 2;
     Vector3fix* pTranslation = &s_freeBillboardFifo.rotationTranslation.translation;
@@ -918,7 +918,7 @@ void RenderCommand_7(Nitro3DRenderCommandHandler* handler, int modifier)
 
 // seems to be used for axis-aligned billboarding - noticeable on trees in
 // Angel Falls & lights in cave grottos
-void RenderCommand_8(Nitro3DRenderCommandHandler* handler, int modifier)
+static void RenderCommand_8(Nitro3DRenderCommandHandler* handler, int modifier)
 {
     int numBytesConsumed = 2;
     Vector3fix* pTranslation = &s_axisBillboardFifo.rotationTranslation.translation;
@@ -1064,7 +1064,7 @@ void RenderCommand_8(Nitro3DRenderCommandHandler* handler, int modifier)
     handler->instructionPointer += numBytesConsumed;
 }
 
-void RenderCommand_9(Nitro3DRenderCommandHandler* handler, int modifier)
+static void RenderCommand_9(Nitro3DRenderCommandHandler* handler, int modifier)
 {
     int64_t weight = 0;
     Nitro3DModel* model = handler->context->model;    
@@ -1163,7 +1163,7 @@ void RenderCommand_9(Nitro3DRenderCommandHandler* handler, int modifier)
 // notably, the instruction pointer only advances past the offset and
 // length data, so presumably this is stored past the end, like constants
 // in assembly coming after the return statement
-void RenderCommand_10(Nitro3DRenderCommandHandler* handler, int modifier)
+static void RenderCommand_10(Nitro3DRenderCommandHandler* handler, int modifier)
 {
     int callbackStage = (handler->hooks[10] != NULL) ? handler->hookStages[10] : 0;
     unsigned int flagbit6;
@@ -1194,7 +1194,7 @@ void RenderCommand_10(Nitro3DRenderCommandHandler* handler, int modifier)
     handler->instructionPointer += 9;
 }
 
-void RenderCommand_11(Nitro3DRenderCommandHandler* handler, int modifier)
+static void RenderCommand_11(Nitro3DRenderCommandHandler* handler, int modifier)
 {
     if (!(handler->flags & (1 << RCH_FLAG_8)) && !(handler->flags & (1 << RCH_FLAG_9)))
     {
@@ -1214,7 +1214,7 @@ void RenderCommand_11(Nitro3DRenderCommandHandler* handler, int modifier)
 // as in commands 7 and 8, this might be something like matcap lighting
 // 2 parameters: 1) index of material in model's material list to use
 // second parameter is unknown / seems to be unused
-void RenderCommand_12(Nitro3DRenderCommandHandler* handler, int modifier)
+static void RenderCommand_12(Nitro3DRenderCommandHandler* handler, int modifier)
 {
     Matrix3x3 directionMat3x3;
     if (!(handler->flags & (1 << RCH_FLAG_9)) && (handler->flags & (1 << RCH_FLAG_0)))
@@ -1336,7 +1336,7 @@ void RenderCommand_12(Nitro3DRenderCommandHandler* handler, int modifier)
 // I have no idea what this is, but it's texture related. I couldn't find any
 // use of it in the game.
 // 2 parameters: 1) index of material in model's material list, 2) unknown/unused
-void RenderCommand_13(Nitro3DRenderCommandHandler* handler, int modifier)
+static void RenderCommand_13(Nitro3DRenderCommandHandler* handler, int modifier)
 {
     if (!(handler->flags & (1 << RCH_FLAG_9)) && (handler->flags & (1 << RCH_FLAG_0)))
     {
