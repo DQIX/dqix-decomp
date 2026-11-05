@@ -25,7 +25,7 @@ args = parser.parse_args()
 GAME = "dqix"
 DSD_VERSION = 'v0.10.2'
 WIBO_VERSION = '0.6.16'
-OBJDIFF_VERSION = 'v2.7.1'
+OBJDIFF_VERSION = 'v3.8.1'
 
 DEFAULT_MWCC_VERSION = "2.0/sp2p2"
 SDK_MWCC_VERSION = "2.0/sp1p2"
@@ -260,7 +260,7 @@ def main():
 
         n.rule(
             name="objdiff_report",
-            command=f"{OBJDIFF} report generate -o $out"
+            command=f"{OBJDIFF} report generate -c combineTextSections=false -o $out"
         )
         n.newline()
 
