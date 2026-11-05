@@ -295,6 +295,7 @@ src/NitroSDK/Graphics3D/VAV.cpp:
 src/NitroSDK/Graphics3D/RenderCommandProcs.cpp:
     complete
     .text start:0x020bb47c end:0x020bcef0
+    .data start:0x020f1ff4 end:0x020f2054
 
 src/NitroSDK/VRAMAllocationBase.cpp:
     complete

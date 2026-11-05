@@ -60,23 +60,6 @@
 // S = ( s_x  0  ) with translation (0, 16h(1 - s_y))
 //     (  0  s_y )
 
-#if defined(jpn)
-#define data_020f1e88 data_020f1ff4
-#define data_020f1ea8 data_020f2014
-#define data_020f1ec8 data_020f2034
-#endif
-
-extern void (*data_020f1e88[8])(Matrix4x4*, MaterialRenderData*);
-extern void (*data_020f1ea8[8])(Matrix4x4*, MaterialRenderData*);
-extern void (*data_020f1ec8[8])(Matrix4x4*, MaterialRenderData*);
-
-// annoying thing because C++ does struct assignment differently to C
-static inline void CopyVector3(Vector3fix* dst, const Vector3fix* src)
-{
-    struct RawVector { fix32_t vals[3]; };
-    *(RawVector*)dst = *(const RawVector*)src;
-}
-
 void BoneMatrixDataSubmissionProc_Type0(BoneMatrixRenderData* renderData)
 {
     if (!(renderData->flags & 4))
@@ -200,7 +183,7 @@ void BoneMatrixScaleCalculationProc_Type1(BoneMatrixRenderData* renderData, Nitr
     renderData->flags |= 0x10;
 }
 
-extern "C" void CreateTextureMatrix_v0_RotateTranslateScale(Matrix4x4* matrix, MaterialRenderData* renderData)
+extern "C" static void CreateTextureMatrix_v0_RotateTranslateScale(Matrix4x4* matrix, MaterialRenderData* renderData)
 {
     fix32_t matWidth = renderData->materialWidth << 12;
     fix32_t matHeight = renderData->materialHeight << 12;
@@ -233,7 +216,7 @@ extern "C" void CreateTextureMatrix_v0_RotateTranslateScale(Matrix4x4* matrix, M
     matrix->entries[4] = (scaleXsin * invAspectRatio) >> 12;
 }
 
-extern "C" void CreateTextureMatrix_v0_RotateTranslate(Matrix4x4* matrix, MaterialRenderData* renderData)
+extern "C" static void CreateTextureMatrix_v0_RotateTranslate(Matrix4x4* matrix, MaterialRenderData* renderData)
 {
     fix32_t matWidth = renderData->materialWidth << 12;
     fix32_t matHeight = renderData->materialHeight << 12;
@@ -257,7 +240,7 @@ extern "C" void CreateTextureMatrix_v0_RotateTranslate(Matrix4x4* matrix, Materi
     matrix->entries[4] = (renderData->rotationSine * invAspectRatio) >> 12;
 }
 
-extern "C" void CreateTextureMatrix_v0_TranslateScale(Matrix4x4* matrix, MaterialRenderData* renderData)
+extern "C" static void CreateTextureMatrix_v0_TranslateScale(Matrix4x4* matrix, MaterialRenderData* renderData)
 {
     matrix->entries[0] = renderData->extensionScaleX;
     matrix->entries[5] = renderData->extensionScaleY;
@@ -272,7 +255,7 @@ extern "C" void CreateTextureMatrix_v0_TranslateScale(Matrix4x4* matrix, Materia
     matrix->entries[4] = 0;
 }
 
-extern "C" void CreateTextureMatrix_v0_Translate(Matrix4x4* matrix, MaterialRenderData* renderData)
+extern "C" static void CreateTextureMatrix_v0_Translate(Matrix4x4* matrix, MaterialRenderData* renderData)
 {
     matrix->entries[0] = 1 << 12;
     matrix->entries[5] = 1 << 12;
@@ -282,7 +265,7 @@ extern "C" void CreateTextureMatrix_v0_Translate(Matrix4x4* matrix, MaterialRend
     matrix->entries[4] = 0;
 }
 
-extern "C" void CreateTextureMatrix_v0_RotateScale(Matrix4x4* matrix, MaterialRenderData* renderData)
+extern "C" static void CreateTextureMatrix_v0_RotateScale(Matrix4x4* matrix, MaterialRenderData* renderData)
 {
     fix32_t matWidth = renderData->materialWidth << 12;
     fix32_t matHeight = renderData->materialHeight << 12;
@@ -307,7 +290,7 @@ extern "C" void CreateTextureMatrix_v0_RotateScale(Matrix4x4* matrix, MaterialRe
     matrix->entries[4] = (scaleXsin * invAspectRatio) >> 12;
 }
 
-extern "C" void CreateTextureMatrix_v0_Rotate(Matrix4x4* matrix, MaterialRenderData* renderData)
+extern "C" static void CreateTextureMatrix_v0_Rotate(Matrix4x4* matrix, MaterialRenderData* renderData)
 {
     fix32_t matWidth = renderData->materialWidth << 12;
     fix32_t matHeight = renderData->materialHeight << 12;
@@ -335,7 +318,7 @@ extern "C" void CreateTextureMatrix_v0_Rotate(Matrix4x4* matrix, MaterialRenderD
     matrix->entries[4] = (renderData->rotationSine * invAspectRatio) >> 12;
 }
 
-extern "C" void CreateTextureMatrix_v0_Scale(Matrix4x4* matrix, MaterialRenderData* renderData)
+extern "C" static void CreateTextureMatrix_v0_Scale(Matrix4x4* matrix, MaterialRenderData* renderData)
 {
     matrix->entries[0] = renderData->extensionScaleX;
     matrix->entries[5] = renderData->extensionScaleY;
@@ -347,7 +330,7 @@ extern "C" void CreateTextureMatrix_v0_Scale(Matrix4x4* matrix, MaterialRenderDa
     matrix->entries[4] = 0;
 }
 
-extern "C" void CreateTextureMatrix_v0_NoExtensions(Matrix4x4* matrix, MaterialRenderData* renderData)
+extern "C" static void CreateTextureMatrix_v0_NoExtensions(Matrix4x4* matrix, MaterialRenderData* renderData)
 {
     matrix->entries[0] = 1 << 12;
     matrix->entries[1] = 0;
@@ -379,9 +362,22 @@ void MaterialTextureMatrixLoadProc_Type0(MaterialRenderData* renderData)
         = fifoData.matrix.entries[7] = fifoData.matrix.entries[8] = fifoData.matrix.entries[9]
         = fifoData.matrix.entries[10] = fifoData.matrix.entries[11] = fifoData.matrix.entries[14] = 0;
     fifoData.matrix.entries[15] = 1 << 12;
+
+    static void (*matrixCompositionProcs[])(Matrix4x4*, MaterialRenderData*) =
+    {
+        &CreateTextureMatrix_v0_RotateTranslateScale,
+        &CreateTextureMatrix_v0_RotateTranslate,
+        &CreateTextureMatrix_v0_TranslateScale,
+        &CreateTextureMatrix_v0_Translate,
+        &CreateTextureMatrix_v0_RotateScale,
+        &CreateTextureMatrix_v0_Rotate,
+        &CreateTextureMatrix_v0_Scale,
+        &CreateTextureMatrix_v0_NoExtensions
+    };
+
     // Build the six nontrivial entries of the matrix by composing rotation,
     // translation and scale in that order (keep only the ones we have data for)
-    data_020f1e88[renderData->flags & 7](&fifoData.matrix, renderData);
+    matrixCompositionProcs[renderData->flags & 7](&fifoData.matrix, renderData);
     
     if (renderData->materialScaleX != 1 << 12)
     {
@@ -557,7 +553,7 @@ void MaterialTextureMatrixLoadProc_Type1(MaterialRenderData* renderData)
     SubmitCommandToGeometryFifo(fifoData.commands, (uint32_t*)&fifoData + 1, 14);
 }
 
-extern "C" void CreateTextureMatrix_v2_TranslateRotateScale(Matrix4x4* matrix, MaterialRenderData* renderData)
+extern "C" static void CreateTextureMatrix_v2_TranslateRotateScale(Matrix4x4* matrix, MaterialRenderData* renderData)
 {
     fix32_t matWidth = renderData->materialWidth << 12;
     fix32_t matHeight = renderData->materialHeight << 12;
@@ -592,7 +588,7 @@ extern "C" void CreateTextureMatrix_v2_TranslateRotateScale(Matrix4x4* matrix, M
     matrix->entries[4] = (-scaleXsin * invAspectRatio) >> 12;
 }
 
-extern "C" void CreateTextureMatrix_v2_TranslateRotate(Matrix4x4* matrix, MaterialRenderData* renderData)
+extern "C" static void CreateTextureMatrix_v2_TranslateRotate(Matrix4x4* matrix, MaterialRenderData* renderData)
 {
     fix32_t matWidth = renderData->materialWidth << 12;
     fix32_t matHeight = renderData->materialHeight << 12;
@@ -622,7 +618,7 @@ extern "C" void CreateTextureMatrix_v2_TranslateRotate(Matrix4x4* matrix, Materi
     matrix->entries[4] = (-renderData->rotationSine * invAspectRatio) >> 12;
 }
 
-extern "C" void CreateTextureMatrix_v2_TranslateScale(Matrix4x4* matrix, MaterialRenderData* renderData)
+extern "C" static void CreateTextureMatrix_v2_TranslateScale(Matrix4x4* matrix, MaterialRenderData* renderData)
 {
     matrix->entries[0] = renderData->extensionScaleX;
     matrix->entries[5] = renderData->extensionScaleY;
@@ -638,7 +634,7 @@ extern "C" void CreateTextureMatrix_v2_TranslateScale(Matrix4x4* matrix, Materia
     matrix->entries[4] = 0;
 }
 
-extern "C" void CreateTextureMatrix_v2_Translate(Matrix4x4* matrix, MaterialRenderData* renderData)
+extern "C" static void CreateTextureMatrix_v2_Translate(Matrix4x4* matrix, MaterialRenderData* renderData)
 {
     matrix->entries[0] = 1 << 12;
     matrix->entries[5] = 1 << 12;
@@ -648,7 +644,7 @@ extern "C" void CreateTextureMatrix_v2_Translate(Matrix4x4* matrix, MaterialRend
     matrix->entries[4] = 0;
 }
 
-extern "C" void CreateTextureMatrix_v2_RotateScale(Matrix4x4* matrix, MaterialRenderData* renderData)
+extern "C" static void CreateTextureMatrix_v2_RotateScale(Matrix4x4* matrix, MaterialRenderData* renderData)
 {
     fix32_t matWidth = renderData->materialWidth << 12;
     fix32_t matHeight = renderData->materialHeight << 12;
@@ -685,7 +681,7 @@ extern "C" void CreateTextureMatrix_v2_RotateScale(Matrix4x4* matrix, MaterialRe
     matrix->entries[4] = (-scaleXsin * invAspectRatio) >> 12;
 }
 
-extern "C" void CreateTextureMatrix_v2_Rotate(Matrix4x4* matrix, MaterialRenderData* renderData)
+extern "C" static void CreateTextureMatrix_v2_Rotate(Matrix4x4* matrix, MaterialRenderData* renderData)
 {
     fix32_t matWidth = renderData->materialWidth << 12;
     fix32_t matHeight = renderData->materialHeight << 12;
@@ -716,7 +712,7 @@ extern "C" void CreateTextureMatrix_v2_Rotate(Matrix4x4* matrix, MaterialRenderD
     matrix->entries[4] = (-renderData->rotationSine * invAspectRatio) >> 12;
 }
 
-extern "C" void CreateTextureMatrix_v2_Scale(Matrix4x4* matrix, MaterialRenderData* renderData)
+extern "C" static void CreateTextureMatrix_v2_Scale(Matrix4x4* matrix, MaterialRenderData* renderData)
 {
     matrix->entries[0] = renderData->extensionScaleX;
     matrix->entries[5] = renderData->extensionScaleY;
@@ -729,7 +725,7 @@ extern "C" void CreateTextureMatrix_v2_Scale(Matrix4x4* matrix, MaterialRenderDa
     matrix->entries[4] = 0;
 }
 
-extern "C" void CreateTextureMatrix_v2_NoExtensions(Matrix4x4* matrix, MaterialRenderData* renderData)
+extern "C" static void CreateTextureMatrix_v2_NoExtensions(Matrix4x4* matrix, MaterialRenderData* renderData)
 {
     matrix->entries[0] = 1 << 12;
     matrix->entries[1] = 0;
@@ -761,10 +757,22 @@ void MaterialTextureMatrixLoadProc_Type2(MaterialRenderData* renderData)
         = fifoData.matrix.entries[10] = fifoData.matrix.entries[11] = fifoData.matrix.entries[14] = 0;
     fifoData.matrix.entries[15] = 1 << 12;
 
+    static void (*matrixCompositionProcs[])(Matrix4x4*, MaterialRenderData*) =
+    {
+        &CreateTextureMatrix_v2_TranslateRotateScale,
+        &CreateTextureMatrix_v2_TranslateRotate,
+        &CreateTextureMatrix_v2_TranslateScale,
+        &CreateTextureMatrix_v2_Translate,
+        &CreateTextureMatrix_v2_RotateScale,
+        &CreateTextureMatrix_v2_Rotate,
+        &CreateTextureMatrix_v2_Scale,
+        &CreateTextureMatrix_v2_NoExtensions
+    };
+
     // apply whichever of translation, rotation, scale are available.
     // Note that this time, translation happens first. Also rotation is stupid,
     // the center of rotation is not (8w, 8h) like in v0.
-    data_020f1ea8[renderData->flags & 7](&fifoData.matrix, renderData);
+    matrixCompositionProcs[renderData->flags & 7](&fifoData.matrix, renderData);
 
     if (renderData->materialScaleX != (1 << 12))
     {
@@ -783,7 +791,7 @@ void MaterialTextureMatrixLoadProc_Type2(MaterialRenderData* renderData)
     SubmitCommandToGeometryFifo(fifoData.commands, (uint32_t*)&fifoData + 1, 18);
 }
 
-extern "C" void CreateTextureMatrix_v3_ScaleTranslateRotate(Matrix4x4* matrix, MaterialRenderData* renderData)
+extern "C" static void CreateTextureMatrix_v3_RotateTranslateScale(Matrix4x4* matrix, MaterialRenderData* renderData)
 {
     fix32_t matWidth = renderData->materialWidth << 12;
     fix32_t matHeight = renderData->materialHeight << 12;
@@ -831,7 +839,7 @@ extern "C" void CreateTextureMatrix_v3_ScaleTranslateRotate(Matrix4x4* matrix, M
     matrix->entries[4] = (-scaleXsin * invAspectRatio) >> 12;
 }
 
-extern "C" void CreateTextureMatrix_v3_TranslateRotate(Matrix4x4* matrix, MaterialRenderData* renderData)
+extern "C" static void CreateTextureMatrix_v3_RotateTranslate(Matrix4x4* matrix, MaterialRenderData* renderData)
 {
     fix32_t matWidth = renderData->materialWidth << 12;
     fix32_t matHeight = renderData->materialHeight << 12;
@@ -866,7 +874,7 @@ extern "C" void CreateTextureMatrix_v3_TranslateRotate(Matrix4x4* matrix, Materi
     matrix->entries[4] = (-renderData->rotationSine * invAspectRatio) >> 12;
 }
 
-extern "C" void CreateTextureMatrix_v3_TranslateScale(Matrix4x4* matrix, MaterialRenderData* renderData)
+extern "C" static void CreateTextureMatrix_v3_TranslateScale(Matrix4x4* matrix, MaterialRenderData* renderData)
 {
     matrix->entries[0] = renderData->extensionScaleX;
     matrix->entries[5] = renderData->extensionScaleY;
@@ -882,7 +890,7 @@ extern "C" void CreateTextureMatrix_v3_TranslateScale(Matrix4x4* matrix, Materia
     matrix->entries[4] = 0;
 }
 
-extern "C" void CreateTextureMatrix_v3_Translate(Matrix4x4* matrix, MaterialRenderData* renderData)
+extern "C" static void CreateTextureMatrix_v3_Translate(Matrix4x4* matrix, MaterialRenderData* renderData)
 {
     matrix->entries[0] = 1 << 12;
     matrix->entries[5] = 1 << 12;
@@ -896,7 +904,7 @@ extern "C" void CreateTextureMatrix_v3_Translate(Matrix4x4* matrix, MaterialRend
     matrix->entries[4] = 0;
 }
 
-extern "C" void CreateTextureMatrix_v3_RotateScale(Matrix4x4* matrix, MaterialRenderData* renderData)
+extern "C" static void CreateTextureMatrix_v3_RotateScale(Matrix4x4* matrix, MaterialRenderData* renderData)
 {
     fix32_t matWidth = renderData->materialWidth << 12;
     fix32_t matHeight = renderData->materialHeight << 12;
@@ -929,7 +937,7 @@ extern "C" void CreateTextureMatrix_v3_RotateScale(Matrix4x4* matrix, MaterialRe
     matrix->entries[4] = (-xsin * invAspectRatio) >> 12;
 }
 
-extern "C" void CreateTextureMatrix_v3_Rotate(Matrix4x4* matrix, MaterialRenderData* renderData)
+extern "C" static void CreateTextureMatrix_v3_Rotate(Matrix4x4* matrix, MaterialRenderData* renderData)
 {
     fix32_t matWidth = renderData->materialWidth << 12;
     fix32_t matHeight = renderData->materialHeight << 12;
@@ -951,7 +959,7 @@ extern "C" void CreateTextureMatrix_v3_Rotate(Matrix4x4* matrix, MaterialRenderD
     matrix->entries[4] = (-renderData->rotationSine * invAspectRatio) >> 12;
 }
 
-extern "C" void CreateTextureMatrix_v3_Scale(Matrix4x4* matrix, MaterialRenderData* renderData)
+extern "C" static void CreateTextureMatrix_v3_Scale(Matrix4x4* matrix, MaterialRenderData* renderData)
 {
     matrix->entries[0] = renderData->extensionScaleX;
     matrix->entries[5] = renderData->extensionScaleY;
@@ -961,7 +969,7 @@ extern "C" void CreateTextureMatrix_v3_Scale(Matrix4x4* matrix, MaterialRenderDa
     matrix->entries[4] = 0;
 }
 
-extern "C" void CreateTextureMatrix_v3_NoExtensions(Matrix4x4* matrix, MaterialRenderData* renderData)
+extern "C" static void CreateTextureMatrix_v3_NoExtensions(Matrix4x4* matrix, MaterialRenderData* renderData)
 {
     matrix->entries[0] = 1 << 12;
     matrix->entries[1] = 0;
@@ -1009,7 +1017,19 @@ void MaterialTextureMatrixLoadProc_Type3(MaterialRenderData* renderData)
         renderData->translateX = renderData->translateY = 0;
     }
 
-    data_020f1ec8[renderData->flags & 7](&fifoData.matrix, renderData);
+    static void (*matrixCompositionProcs[])(Matrix4x4*, MaterialRenderData*) =
+    {
+        &CreateTextureMatrix_v3_RotateTranslateScale,
+        &CreateTextureMatrix_v3_RotateTranslate,
+        &CreateTextureMatrix_v3_TranslateScale,
+        &CreateTextureMatrix_v3_Translate,
+        &CreateTextureMatrix_v3_RotateScale,
+        &CreateTextureMatrix_v3_Rotate,
+        &CreateTextureMatrix_v3_Scale,
+        &CreateTextureMatrix_v3_NoExtensions
+    };
+
+    matrixCompositionProcs[renderData->flags & 7](&fifoData.matrix, renderData);
 
     if (renderData->materialScaleX != (1 << 12))
     {
