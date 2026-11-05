@@ -560,15 +560,15 @@ bool AtmosphericEffectSet::Draw()
         Mat4x4_WriteProjectionUnknown(
             effectiveScreenHeight >> 1, -effectiveScreenHeight >> 1,
             -effectiveScreenWidth >> 1, effectiveScreenWidth >> 1,
-            1 << 12, 100 << 12, 1 << 12, &data_0210a010.projectionMatrix);
+            1 << 12, 100 << 12, 1 << 12, &g_nitro3DRenderConfig.projectionMatrix);
 
-        data_0210a010.flags &= ~((1 << RENDER_CONFIG_FLAG_4) | (1 << RENDER_CONFIG_FLAG_6));
-        data_0210a010.eyeVector = eye;
-        data_0210a010.upVector = up;
-        data_0210a010.targetVector = target;
-        Mat4x3_WriteViewMatrix(&eye, &up, &target, &data_0210a010.viewMatrix);
+        g_nitro3DRenderConfig.flags &= ~((1 << RENDER_CONFIG_FLAG_4) | (1 << RENDER_CONFIG_FLAG_6));
+        g_nitro3DRenderConfig.eyeVector = eye;
+        g_nitro3DRenderConfig.upVector = up;
+        g_nitro3DRenderConfig.targetVector = target;
+        Mat4x3_WriteViewMatrix(&eye, &up, &target, &g_nitro3DRenderConfig.viewMatrix);
         
-        data_0210a010.flags &= ~(
+        g_nitro3DRenderConfig.flags &= ~(
             (1 << RENDER_CONFIG_FLAG_INVERSE_VIEW_CACHE_VALID) |
             (1 << RENDER_CONFIG_FLAG_WORLDVIEW_CACHE_VALID) |
             (1 << RENDER_CONFIG_FLAG_5) | (1 << RENDER_CONFIG_FLAG_6));

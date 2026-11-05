@@ -7589,20 +7589,7 @@ data_02109c98 kind:bss addr:0x02109c98
 data_02109ca0 kind:bss addr:0x02109ca0
 _ZN13AllocatorTree19initializedTopLevelE kind:bss addr:0x02109cb4 local
 data_02109cc4 kind:bss addr:0x02109cc4
-data_02109cc8 kind:bss addr:0x02109cc8
-data_02109cd0 kind:bss addr:0x02109cd0
-data_02109d14 kind:bss addr:0x02109d14
-data_02109d48 kind:bss addr:0x02109d48
-data_02109d70 kind:bss addr:0x02109d70
-data_02109d84 kind:bss addr:0x02109d84
-data_02109da8 kind:bss addr:0x02109da8
-data_02109db4 kind:bss addr:0x02109db4
-data_02109dc8 kind:bss addr:0x02109dc8
-data_02109df8 kind:bss addr:0x02109df8
-data_02109e28 kind:bss addr:0x02109e28
-data_02109f08 kind:bss addr:0x02109f08
-data_02109f14 kind:bss addr:0x02109f14
-data_02109f20 kind:bss addr:0x02109f20
+g_nitro3DRenderConfig kind:bss addr:0x02109cc8
 g_nitro3DActiveRenderCommandHandler kind:bss addr:0x02109f2c
 s_boundMaterialStorage kind:bss addr:0x02109f30 local
 g_nitro3DSkinningEquationBuffer kind:bss addr:0x0210ad30

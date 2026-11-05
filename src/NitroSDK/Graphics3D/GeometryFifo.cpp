@@ -206,9 +206,9 @@ int ConvertWorldToScreenCoordinates(const Vector3fix *world, int *outX, int *out
     int success;
     Vector3fix viewVector;
 
-    Matrix4x4* proj = &data_0210a010.projectionMatrix;
+    Matrix4x4* proj = &g_nitro3DRenderConfig.projectionMatrix;
 
-    Mat4x3_ApplyToVector(world, &data_0210a010.viewMatrix, &viewVector);
+    Mat4x3_ApplyToVector(world, &g_nitro3DRenderConfig.viewMatrix, &viewVector);
 
     int64_t projectedW = (uint64_t)viewVector.x * proj->entries[3] +
         (int64_t)viewVector.y * proj->entries[7] +

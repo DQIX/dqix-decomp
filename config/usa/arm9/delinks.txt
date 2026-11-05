@@ -237,6 +237,7 @@ src/NitroSDK/Graphics3D/TEX.cpp:
 src/NitroSDK/Graphics3D/RenderConfig.cpp:
     complete
     .text start:0x020b36c0 end:0x020b3ad0
+    .bss start:0x0210a010 end:0x0210a274
 
 src/NitroSDK/Graphics3D/AnimationProcessing.cpp:
     complete

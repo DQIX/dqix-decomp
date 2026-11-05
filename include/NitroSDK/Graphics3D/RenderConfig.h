@@ -129,8 +129,4 @@ struct Nitro3DRenderConfig
 #define RENDER_CONFIG_FLAG_6 6
 #define RENDER_CONFIG_FLAG_WORLDVIEW_CACHE_VALID 7
 
-#if defined(jpn)
-#define data_0210a010 data_02109cc8
-#endif
-
-extern Nitro3DRenderConfig data_0210a010;
+extern Nitro3DRenderConfig g_nitro3DRenderConfig;
