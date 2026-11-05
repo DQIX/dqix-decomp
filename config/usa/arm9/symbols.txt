@@ -6470,11 +6470,8 @@ data_020e91c8 kind:data(any) addr:0x020e91c8
 data_020e91d4 kind:data(any) addr:0x020e91d4
 data_020e91e0 kind:data(any) addr:0x020e91e0
 data_020e9200 kind:data(any) addr:0x020e9200
-data_020e9240 kind:data(any) addr:0x020e9240
-data_020e9260 kind:data(any) addr:0x020e9260
-data_020e9261 kind:data(any) addr:0x020e9261
-data_020e9262 kind:data(any) addr:0x020e9262
-data_020e9263 kind:data(any) addr:0x020e9263
+maskLookup$828 kind:data(any) addr:0x020e9240 local
+indexLookup$1130 kind:data(any) addr:0x020e9260 local
 data_020e9284 kind:data(any) addr:0x020e9284
 data_020e9285 kind:data(any) addr:0x020e9285
 data_020e9286 kind:data(any) addr:0x020e9286

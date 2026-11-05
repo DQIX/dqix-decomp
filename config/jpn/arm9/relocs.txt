@@ -21407,9 +21407,9 @@ from:0x020b6820 kind:arm_call to:0x020b8598 module:main
 from:0x020b69b8 kind:arm_call_thumb to:0x020cc29c module:main
 from:0x020b6b90 kind:arm_call to:0x020b8598 module:main
 from:0x020b6ba8 kind:load to:0x020e936c module:main
-from:0x020b6bac kind:load to:0x020e936d module:main
-from:0x020b6bb0 kind:load to:0x020e936e module:main
-from:0x020b6bb4 kind:load to:0x020e936f module:main
+from:0x020b6bac kind:load to:0x020e936c add:0x1 module:main
+from:0x020b6bb0 kind:load to:0x020e936c add:0x2 module:main
+from:0x020b6bb4 kind:load to:0x020e936c add:0x3 module:main
 from:0x020b6c48 kind:arm_call to:0x020b8598 module:main
 from:0x020b6cac kind:arm_call to:0x020b8464 module:main
 from:0x020b6cd0 kind:arm_call to:0x020c6fc8 module:main

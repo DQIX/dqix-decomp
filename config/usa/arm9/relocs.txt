@@ -21410,9 +21410,9 @@ from:0x020b4d54 kind:arm_call to:0x020b6acc module:main
 from:0x020b4eec kind:arm_call_thumb to:0x020ca7d0 module:main
 from:0x020b50c4 kind:arm_call to:0x020b6acc module:main
 from:0x020b50dc kind:load to:0x020e9260 module:main
-from:0x020b50e0 kind:load to:0x020e9261 module:main
-from:0x020b50e4 kind:load to:0x020e9262 module:main
-from:0x020b50e8 kind:load to:0x020e9263 module:main
+from:0x020b50e0 kind:load to:0x020e9260 add:0x1 module:main
+from:0x020b50e4 kind:load to:0x020e9260 add:0x2 module:main
+from:0x020b50e8 kind:load to:0x020e9260 add:0x3 module:main
 from:0x020b517c kind:arm_call to:0x020b6acc module:main
 from:0x020b51e0 kind:arm_call to:0x020b6998 module:main
 from:0x020b5204 kind:arm_call to:0x020c54fc module:main

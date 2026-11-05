@@ -6291,11 +6291,8 @@ data_020e92d4 kind:data(any) addr:0x020e92d4
 data_020e92e0 kind:data(any) addr:0x020e92e0
 data_020e92ec kind:data(any) addr:0x020e92ec
 data_020e930c kind:data(any) addr:0x020e930c
-data_020e934c kind:data(any) addr:0x020e934c
-data_020e936c kind:data(any) addr:0x020e936c
-data_020e936d kind:data(any) addr:0x020e936d
-data_020e936e kind:data(any) addr:0x020e936e
-data_020e936f kind:data(any) addr:0x020e936f
+maskLookup$828 kind:data(any) addr:0x020e934c local
+indexLookup$1130 kind:data(any) addr:0x020e936c local
 data_020e9390 kind:data(any) addr:0x020e9390
 data_020e9391 kind:data(any) addr:0x020e9391
 data_020e9392 kind:data(any) addr:0x020e9392

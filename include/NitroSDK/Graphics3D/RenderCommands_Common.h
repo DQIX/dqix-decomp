@@ -43,24 +43,11 @@
 #define func_020ca7d0 func_020cc29c
 #endif
 
-// holds values:
-// { 0, 0x00007fff, 0x7fff0000, 0x7fff7fff, 
-//   0x00008000, 0x0000ffff, 0x7fff8000, 0x7fffffff }
-// i.e. data_020e9240[idx] sets bits
-//    0-14 if (idx & 1)
-//    16-30 if (idx & 2)
-//    15 if (idx & 4)
-// For DIF_AMB these are masks corresponding to diffuse reflection color,
-// ambient reflection color and (set vertex color yes/no)
-// For SPE_EMI these are masks corresponding to specular reflection color,
-// emission color and (enable specular reflection shininess table yes/no)
-extern unsigned int const data_020e9240[];
-
 // pivot matrix a/b/c/d position lookup
 // both arrays are identical
 extern struct {
     uint8_t a, b, c, d;
-} const data_020e9260[], data_020e9284[];
+} const data_020e9284[];
 
 // Holds { func_020b9a2c, func_020b9b30, func_020ba390 }.
 // Called by command 6 to populate scaling data for the bone matrix

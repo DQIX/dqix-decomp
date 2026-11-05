@@ -380,12 +380,18 @@ void MaterialBindProc(Nitro3DRenderCommandHandler* handler, int modifier, Nitro3
             Nitro3DMaterial* lookupMaterial = handler->modelMaterials->GetMaterialByIndex(idx);
             if (lookupMaterial->flags & 0x20)
                 targetData->flags |= 0x20;
+
+            static const unsigned int maskLookup[] = 
+            {
+                0, 0x7fff, 0x7fff0000, 0x7fff7fff,
+                0x8000, 0xffff, 0x7fff8000, 0x7fffffff
+            };
             
-            int difambMask = data_020e9240[(material->flags >> 6) & 7];
+            int difambMask = maskLookup[(material->flags >> 6) & 7];
             targetData->paramDIF_AMB = (data_0210a010.diffuseAmbientArg & ~difambMask) |
                 (material->paramDIF_AMB & difambMask);
 
-            int speemiMask = data_020e9240[(material->flags >> 9) & 7];
+            int speemiMask = maskLookup[(material->flags >> 9) & 7];
             targetData->paramSPE_EMI = (data_0210a010.specularArg & ~speemiMask) |
                 (material->paramSPE_EMI & speemiMask);
 
@@ -675,18 +681,31 @@ void RenderCommand_6(Nitro3DRenderCommandHandler* handler, int modifier)
 
                     targetData->rotationMatrix.entries[form] = unit;
 
-                    uint8_t indexA = data_020e9260[form].a;
-                    uint8_t indexB = data_020e9260[form].b;
+                    struct { uint8_t a, b, c, d; } static const indexLookup[] = 
+                    {
+                        { 4, 5, 7, 8 },
+                        { 3, 5, 6, 8 },
+                        { 3, 4, 6, 7 },
+                        { 1, 2, 7, 8 },
+                        { 0, 2, 6, 8 },
+                        { 0, 1, 6, 7 },
+                        { 1, 2, 4, 5 },
+                        { 0, 2, 3, 5 },
+                        { 0, 1, 3, 4 }
+                    };
+
+                    uint8_t indexA = indexLookup[form].a;
+                    uint8_t indexB = indexLookup[form].b;
 
                     targetData->rotationMatrix.entries[indexA] = entryA;
                     targetData->rotationMatrix.entries[indexB] = entryB;
 
                     fix32_t entryC = (boneMatrix->flags & 0x200) ? -entryB : entryB;
-                    uint8_t indexC = data_020e9260[form].c;
+                    uint8_t indexC = indexLookup[form].c;
                     targetData->rotationMatrix.entries[indexC] = entryC;
 
                     fix32_t entryD = (boneMatrix->flags & 0x400) ? -entryA : entryA;
-                    uint8_t indexD = data_020e9260[form].d;
+                    uint8_t indexD = indexLookup[form].d;
                     targetData->rotationMatrix.entries[indexD] = entryD;
                     boneMatrixExtraPtr += sizeof(*pivot);
                 }
