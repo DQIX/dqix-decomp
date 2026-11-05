@@ -27,7 +27,7 @@ GAME = "dqix"
 DSD_VERSION = 'v0.10.2'
 WIBO_VERSION = 'sha256:bab06c516326680535fe1d35594a1b4640ea9da4663affd874d5cbe76463d42f' # master 355e082: decompals/wibo#137 (53-bit x87) is in no release yet
 LINK_WIBO_VERSION = '0.6.16' # mwldarm runs ~15x slower under wibo master and needs no x87 fix
-OBJDIFF_VERSION = 'v2.7.1'
+OBJDIFF_VERSION = 'v3.8.1'
 
 DEFAULT_MWCC_VERSION = "2.0/sp2p2"
 SDK_MWCC_VERSION = "2.0/sp1p2"
@@ -265,7 +265,7 @@ def main():
 
         n.rule(
             name="objdiff_report",
-            command=f"{OBJDIFF} report generate -o $out"
+            command=f"{OBJDIFF} report generate -c combineTextSections=false -o $out"
         )
         n.newline()
 
