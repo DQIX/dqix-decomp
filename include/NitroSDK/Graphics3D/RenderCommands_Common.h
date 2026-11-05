@@ -36,14 +36,14 @@ extern struct {
     uint8_t a, b, c, d;
 } const data_020e9284[];
 
-// Holds { func_020b9a2c, func_020b9b30, func_020ba390 }.
-// Called by command 6 to populate scaling data for the bone matrix
-extern void (*data_020f1cec[])(BoneMatrixRenderData*, Nitro3DBoneMatrix::Scaling* boneMatrixScaleData, uint8_t* ip, int boneMatrixFlags);
 // Holds { func_020b99b0, func_020b9a6c, func_020ba264 }
 // Called by command 6 to apply bone matrix transformations via the GXFifo
-extern void (*data_020f1ce0[])(BoneMatrixRenderData*);
+extern void (*g_nitro2DSubmitBoneMatrixProcs[])(BoneMatrixRenderData*);
+// Holds { func_020b9a2c, func_020b9b30, func_020ba390 }.
+// Called by command 6 to populate scaling data for the bone matrix
+extern void (*g_nitro2DPopulateBoneMatrixScalingProcs[])(BoneMatrixRenderData*, Nitro3DBoneMatrix::Scaling* boneMatrixScaleData, uint8_t* ip, int boneMatrixFlags);
 // Holds { func_020ba11c func_020ba5ac, func_020bac74, func_020bb29c }
-extern void (*data_020f1cf8[])(MaterialRenderData*);
+extern void (*g_nitro2DLoadMaterialTextureMatrixProcs[])(MaterialRenderData*);
 
 extern Nitro3DRenderCommandHandler* g_nitro3DActiveRenderCommandHandler;
 struct Nitro3DSkinningScale

@@ -248,6 +248,10 @@ src/NitroSDK/Graphics3D/AnimationProcessing.cpp:
     complete
     .text start:0x020b3ad0 end:0x020b4020
 
+src/NitroSDK/Graphics3D/RenderCommandProcLookup.cpp:
+    complete
+    .data start:0x020f1ce0 end:0x020f1d08
+
 src/NitroSDK/Graphics3D/RenderCommands.cpp:
     complete
     .text start:0x020b4020 end:0x020b6998

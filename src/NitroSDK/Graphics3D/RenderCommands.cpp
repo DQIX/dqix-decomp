@@ -141,9 +141,9 @@ void SetUpRenderCommandHandler(Nitro3DRenderCommandHandler* handler, Nitro3DRend
 
     handler->modelMaterials = modelData->model->GetMaterialData();
     handler->meshList = modelData->model->GetMeshList();
-    handler->pfnBoneMatrixRenderDataScalePopulate = data_020f1cec[modelData->model->boneScalingMode];
-    handler->pfnBoneMatrixRenderDataSubmit = data_020f1ce0[modelData->model->boneScalingMode];
-    handler->pfnTextureMatrixCreate = data_020f1cf8[modelData->model->materialCallbackType];
+    handler->pfnBoneMatrixRenderDataScalePopulate = g_nitro2DPopulateBoneMatrixScalingProcs[modelData->model->boneScalingMode];
+    handler->pfnBoneMatrixRenderDataSubmit = g_nitro2DSubmitBoneMatrixProcs[modelData->model->boneScalingMode];
+    handler->pfnTextureMatrixCreate = g_nitro2DLoadMaterialTextureMatrixProcs[modelData->model->materialCallbackType];
 
     handler->upScale = modelData->model->upScale;
     handler->downScale = modelData->model->downScale;
@@ -1548,8 +1548,8 @@ void RenderMeshWithMaterial(Nitro3DModel* model, unsigned int materialIdx, unsig
             else
                 targetData.flags |= 4;
 
-            if (data_020f1cf8[model->materialCallbackType])
-                data_020f1cf8[model->materialCallbackType](&targetData);
+            if (g_nitro2DLoadMaterialTextureMatrixProcs[model->materialCallbackType])
+                g_nitro2DLoadMaterialTextureMatrixProcs[model->materialCallbackType](&targetData);
         }
     }
 
