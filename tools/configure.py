@@ -184,9 +184,12 @@ def main():
     with build_ninja_path.open("w") as file:
         n = ninja_syntax.Writer(file)
 
+        n.variable("python", f'"{PYTHON}"')
+        n.newline()
+
         n.rule(
             name="download_tool",
-            command=f'{PYTHON} tools/download_tool.py $tool $tag --path $path'
+            command=f'$python tools/download_tool.py $tool $tag --path $path'
         )
         n.newline()
 
@@ -263,7 +266,7 @@ def main():
 
         n.rule(
             name="m2ctx",
-            command=f"{PYTHON} tools/m2ctx.py -f $out $in"
+            command=f"$python tools/m2ctx.py -f $out $in"
         )
         n.newline()
 
@@ -281,7 +284,7 @@ def main():
 
         n.rule(
             name="sha1",
-            command=f"{PYTHON} tools/sha1.py $in -c $sha1_file"
+            command=f"$python tools/sha1.py $in -c $sha1_file"
         )
         n.newline()
 
