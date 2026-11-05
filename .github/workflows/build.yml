@@ -113,7 +113,7 @@ jobs:
           for archive in objects/*.tar; do tar -xf "$archive"; done
           cat .ninja_log.* | awk 'NR == 1 || !/^#/' > .ninja_log
 
-      - run: ninja
+      - run: ninja check sha1 report
 
       - name: Progress summary
         run: |
