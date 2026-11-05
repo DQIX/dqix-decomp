@@ -13,24 +13,11 @@
 #include <asmhacks.h>
 
 #if defined(jpn)
-#define data_020e9240 data_020e934c
-#define data_020e9260 data_020e936c
 #define data_020e9284 data_020e9390
 #define data_020f1ce0 data_020f1e4c
 #define data_020f1cec data_020f1e58
 #define data_020f1cf8 data_020f1e64
 
-#define data_0210a274 data_02109f2c
-#define data_0210a278 data_02109f30
-#define data_0210b078 data_0210ad30
-#define data_0210b678 data_0210b330
-
-#define func_020c1868 func_020c3334
-#define func_020c223c func_020c3d08
-#define func_020c2c5c func_020c4728
-#define func_020c2cf0 func_020c47bc
-#define func_020c2eb8 func_020c4984
-#define func_020c2f18 func_020c49e4
 #define func_020c5188 func_020c6c54
 #define func_020c51a4 func_020c6c70
 #define func_020c51c0 func_020c6c8c
@@ -61,48 +48,26 @@ extern void (*data_020f1cf8[])(MaterialRenderData*);
 // render command lookup
 extern void (*data_020f1e08[])(Nitro3DRenderCommandHandler*, int);
 
-extern struct Nitro3DRenderCommandHandler* data_0210a274;
-// sizeof == 0x38
-MaterialRenderData extern data_0210a278[64];
-
-struct Struct_0210b078
+extern Nitro3DRenderCommandHandler* g_nitro3DActiveRenderCommandHandler;
+struct Nitro3DSkinningScale
 {
-    BoneMatrixRenderData::Scale vec0_;
-    BoneMatrixRenderData::Scale vec1_;
+    BoneMatrixRenderData::Scale vec0;
+    BoneMatrixRenderData::Scale vec1;
 };
-
-struct Struct_0210b678
+struct Nitro3DSSkinningInvBindMatrix
 {
     Matrix4x4 mat4x4;
     Matrix3x3 mat3x3;
 };
 
-extern struct
+struct Nitro3DSkinningEquationBuffer
 {
-    Struct_0210b078 vectorData[64];
-    Struct_0210b678 matrixData[64];
-} data_0210b078;
+    Nitro3DSkinningScale scaleVectors[64];
+    Nitro3DSSkinningInvBindMatrix matrices[64];
+} extern g_nitro3DSkinningEquationBuffer;
 
 extern "C"
 {  
-#if true
-    // expand a 3x4 matrix (param 1) into a 4x4 matrix (param 2)
-    void func_020c1868(const void*, void*);
-    // multiply 4x4 matrices, store in param 3.
-    // set up so that you can safely have param_3 = param_1 or param_2
-    // The arrangement is such that param_3 represents the transformation
-    // (do param_1) then (do param_2). In row major representation this is
-    // param_1 * param_2, in col major it's param_2 * param_1.
-    void func_020c223c(const void*, const void*, void*);
-    // get length of vector3
-    fix32_t func_020c2eb8(const void*);
-    // fix32_t division: retrieve result from hardware divider
-    fix32_t func_020c2c5c();
-    // fix32_t division: set up hardware divider
-    void func_020c2cf0(fix32_t a, fix32_t b);
-    // normalize vector3 (param 1) into vector3 (param 2)
-    void func_020c2f18(const void*, void*);
-#endif
     // load the specified matrix into the current matrix (3x4).
     void func_020c5188(const fix32_t*);
     // multiply the current matrix by the specified one (3x4), i.e carry

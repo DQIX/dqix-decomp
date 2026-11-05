@@ -39,15 +39,18 @@ static void (*s_renderCommands[32])(Nitro3DRenderCommandHandler*, int) =
     &RenderCommand_12, &RenderCommand_13
 };
 
+static void (*s_materialBindProcs[])(Nitro3DRenderCommandHandler*, int modifier, Nitro3DMaterial*, unsigned int idx) =
+{
+    &MaterialBindProc, NULL, NULL, NULL
+};
+static MaterialRenderData s_boundMaterialStorage[64];
+
 static void (*s_meshDrawProcs[])(Nitro3DRenderCommandHandler*, int modifier, Nitro3DMesh*, unsigned int idx) =
 {
     &MeshDrawProc, NULL, NULL, NULL
 };
 
-static void (*s_materialBindProcs[])(Nitro3DRenderCommandHandler*, int modifier, Nitro3DMaterial*, unsigned int idx) =
-{
-    &MaterialBindProc, NULL, NULL, NULL
-};
+Nitro3DRenderCommandHandler* g_nitro3DActiveRenderCommandHandler;
 
 static BillboardFIFOData s_freeBillboardFifo =
 {
@@ -78,6 +81,8 @@ static BillboardFIFOData s_axisBillboardFifo =
       0, 0, 0 }, // translation
     { 0, 0, 0 } // scale
 };
+
+Nitro3DSkinningEquationBuffer g_nitro3DSkinningEquationBuffer;
 
 static unsigned int s_command12TexImageParamsFifo[] = 
 {
@@ -201,15 +206,15 @@ void RenderModelFromRenderData(Nitro3DRenderContext* renderData)
         renderData->flags &= ~0x10;
     }
 
-    if (data_0210a274 != NULL)
+    if (g_nitro3DActiveRenderCommandHandler != NULL)
     {
-        SetUpRenderCommandHandler(data_0210a274, renderData);
+        SetUpRenderCommandHandler(g_nitro3DActiveRenderCommandHandler, renderData);
     }
     else
     {
-        data_0210a274 = &handler;
+        g_nitro3DActiveRenderCommandHandler = &handler;
         SetUpRenderCommandHandler(&handler, renderData);
-        data_0210a274 = NULL;
+        g_nitro3DActiveRenderCommandHandler = NULL;
     }
 }
 
@@ -356,7 +361,7 @@ void MaterialBindProc(Nitro3DRenderCommandHandler* handler, int modifier, Nitro3
             if (modelMaterialArray != NULL)
                 targetData = &modelMaterialArray[idx];
             else
-                targetData = &data_0210a278[idx];
+                targetData = &s_boundMaterialStorage[idx];
         }
         else
         {
@@ -370,7 +375,7 @@ void MaterialBindProc(Nitro3DRenderCommandHandler* handler, int modifier, Nitro3
                 if (!(modifier != 0x40))
                 {
                     SetBitfieldBit(handler->materialBitfield, idx);
-                    targetData = &data_0210a278[idx];
+                    targetData = &s_boundMaterialStorage[idx];
                 }
                 else
                     targetData = &handler->scratchMaterialRenderData;
@@ -1084,7 +1089,7 @@ void RenderCommand_9(Nitro3DRenderCommandHandler* handler, int modifier)
         unsigned int inverseBindIndex = instructionPtr[1];
         
         int inBitfield = TestBitfieldBit(handler->invBindBitfield, inverseBindIndex);
-        cachedPosMatrix = &data_0210b078.matrixData[inverseBindIndex].mat4x4;
+        cachedPosMatrix = &g_nitro3DSkinningEquationBuffer.matrices[inverseBindIndex].mat4x4;
         if (!inBitfield)
         {
             SetBitfieldBit(handler->invBindBitfield, inverseBindIndex);
@@ -1127,7 +1132,7 @@ void RenderCommand_9(Nitro3DRenderCommandHandler* handler, int modifier)
         localCopy.mat4x3.entries[11] += (weight * cachedPosMatrix->entries[14]) >> 12;
 
         instructionPtr += 3;
-        cachedDirMatrix = &data_0210b078.matrixData[inverseBindIndex].mat3x3;
+        cachedDirMatrix = &g_nitro3DSkinningEquationBuffer.matrices[inverseBindIndex].mat3x3;
         if (!inBitfield)
         {
             while (func_020c552c(cachedDirMatrix) != 0) {}

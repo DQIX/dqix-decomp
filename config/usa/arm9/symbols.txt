@@ -7761,16 +7761,9 @@ data_0210a170 kind:bss addr:0x0210a170
 data_0210a250 kind:bss addr:0x0210a250
 data_0210a25c kind:bss addr:0x0210a25c
 data_0210a268 kind:bss addr:0x0210a268
-data_0210a274 kind:bss addr:0x0210a274
-data_0210a278 kind:bss addr:0x0210a278
-data_0210b078 kind:bss addr:0x0210b078
-data_0210b07c kind:bss addr:0x0210b07c
-data_0210b080 kind:bss addr:0x0210b080
-data_0210b084 kind:bss addr:0x0210b084
-data_0210b088 kind:bss addr:0x0210b088
-data_0210b08c kind:bss addr:0x0210b08c
-data_0210b678 kind:bss addr:0x0210b678
-data_0210b6b8 kind:bss addr:0x0210b6b8
+g_nitro3DActiveRenderCommandHandler kind:bss addr:0x0210a274
+s_boundMaterialStorage kind:bss addr:0x0210a278 local
+g_nitro3DSkinningEquationBuffer kind:bss addr:0x0210b078
 data_0210cf78 kind:bss addr:0x0210cf78
 data_0210cf7c kind:bss addr:0x0210cf7c
 s_numImageBanks kind:data(byte[0x2]) addr:0x0210cf84 local
