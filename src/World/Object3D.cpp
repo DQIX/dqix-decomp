@@ -697,9 +697,9 @@ bool Object3D::Draw(bool applyClipping)
         Nitro3DTextureSet* tex0 = pModel_->GetTEX0();
         if (tex0 != NULL)
         {
-            NSBXX_Tex_WritePaletteVRAMOffset(tex0, alternativeTexturePaletteOffset_);
-            NSBXX_DetachTexturePaletteFromModel(pModel_->rawInternalModel_);
-            NSBXX_AttachTexturePaletteToModel(pModel_->rawInternalModel_, tex0);
+            Nitro3D_StoreTexturePaletteVRAMOffsets(tex0, alternativeTexturePaletteOffset_);
+            Nitro3D_DetachTexturePalette(pModel_->rawInternalModel_);
+            Nitro3D_AttachTexturePalette(pModel_->rawInternalModel_, tex0);
         }
     }
 

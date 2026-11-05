@@ -105,7 +105,7 @@ struct Nitro3DModelSet
     char unk_4[4];
     Nitro3DNameList nameList;
 
-    Nitro3DModel* GetInternalModelByIndex(unsigned int n) const
+    Nitro3DModel* GetModelByIndex(unsigned int n) const
     {
         Nitro3DModel* internalModel;
         if (this != NULL)

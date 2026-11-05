@@ -63,3 +63,31 @@ struct Nitro3DTextureSet
         uint16_t unknown_2;
     };
 };
+
+// usa: func_020b2e3c
+int Nitro3D_GetTextureBlock1Length(const Nitro3DTextureSet* tex);
+// usa: func_020b2e50
+int Nitro3D_GetTextureBlock2Length(const Nitro3DTextureSet* tex);
+// usa: func_020b2e64
+void Nitro3D_StoreTextureImageVRAMOffsets(Nitro3DTextureSet* tex, int block1, int block2_3);
+// usa: func_020b28e78
+void Nitro3D_LoadTextureImageToVRAM(Nitro3DTextureSet* tex, bool needsMapping);
+// usa: func_020b2f30
+int Nitro3D_GetTextureBlock4Length(const Nitro3DTextureSet* tex);
+// usa: func_020b2f44
+void Nitro3D_StoreTexturePaletteVRAMOffsets(Nitro3DTextureSet* tex, int offset);
+// usa: func_020b2f4c
+void Nitro3D_LoadTexturePaletteToVRAM(Nitro3DTextureSet* tex, bool needsMapping);
+
+// usa: func_020b3184
+bool Nitro3D_AttachTextureImage(Nitro3DModel* model, Nitro3DTextureSet* tex0);
+// usa: func_020b3284
+void Nitro3D_DetachTextureImage(Nitro3DModel* model);
+// usa: func_020b33f0
+bool Nitro3D_AttachTexturePalette(Nitro3DModel* model, Nitro3DTextureSet* tex0);
+// usa: func_020b34f8
+void Nitro3D_DetachTexturePalette(Nitro3DModel* model);
+// usa: func_020b357c
+int Nitro3D_LinkTexturesToModels(Nitro3DModelSet* mdl0, Nitro3DTextureSet* tex0);
+// usa: func_020b362c
+void Nitro3D_UnlinkTexturesFromModels(Nitro3DModelSet* mdl0);

@@ -28,33 +28,6 @@
 
 extern "C"
 {
-// usa: func_020b2e3c
-int NSBXX_Tex_GetBlock1Length(Nitro3DTextureSet* tex);
-// usa: func_020b2e50
-int NSBXX_Tex_GetBlock2Length(Nitro3DTextureSet* tex);
-// usa: func_020b2e64
-void NSBXX_Tex_WriteImageVRAMOffsets(Nitro3DTextureSet* tex, int block1, int block2_3);
-// usa: func_020b28e78
-void NSBXX_Tex_LoadImageToVRAM(Nitro3DTextureSet* tex, bool needsMapping);
-// usa: func_020b2f30
-int NSBXX_Tex_GetBlock4Length(Nitro3DTextureSet* tex);
-// usa: func_020b2f44
-void NSBXX_Tex_WritePaletteVRAMOffset(Nitro3DTextureSet* tex, int offset);
-// usa: func_020b2f4c
-void NSBXX_Tex_LoadPaletteToVRAM(Nitro3DTextureSet* tex, bool needsMapping);
-
-// usa: func_020b3184
-bool NSBXX_AttachTextureImageToModel(Nitro3DModel* model, Nitro3DTextureSet* tex0);
-// usa: func_020b3284
-void NSBXX_DetachTextureImageFromModel(Nitro3DModel* model);
-// usa: func_020b33f0
-bool NSBXX_AttachTexturePaletteToModel(Nitro3DModel* model, Nitro3DTextureSet* tex0);
-// usa: func_020b34f8
-void NSBXX_DetachTexturePaletteFromModel(Nitro3DModel* model);
-// usa: func_020b357c
-int NSBXX_LinkTEX0ToMDL0(Nitro3DModelSet* mdl0, Nitro3DTextureSet* tex0);
-// usa: func_020b362c
-void NSBXX_UnlinkTEX0FromMDL0(Nitro3DModelSet* mdl0);
 
 // usa: func_020b66f4
 void NSBXX_Model_DrawShadow(Nitro3DModel* model, unsigned int arg_2, unsigned int arg_3, unsigned int arg_4);

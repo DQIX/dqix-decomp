@@ -3,17 +3,17 @@
 #include <globaldefs.h>
 #include <asmhacks.h>
 
-int NSBXX_Tex_GetBlock1Length(Nitro3DTextureSet* tex)
+int Nitro3D_GetTextureBlock1Length(const Nitro3DTextureSet* tex)
 {
     return (tex != NULL) ? tex->block1NumEightBytes << 3 : 0;
 }
 
-int NSBXX_Tex_GetBlock2Length(Nitro3DTextureSet* tex)
+int Nitro3D_GetTextureBlock2Length(const Nitro3DTextureSet* tex)
 {
     return (tex != NULL) ? tex->block2NumEightBytes << 3 : 0;
 }
 
-void NSBXX_Tex_WriteImageVRAMOffsets(Nitro3DTextureSet* tex, int block1, int block2_3)
+void Nitro3D_StoreTextureImageVRAMOffsets(Nitro3DTextureSet* tex, int block1, int block2_3)
 {
     if (block1 != 0)
         tex->block1VRAMLoadOffset = block1;
@@ -21,7 +21,7 @@ void NSBXX_Tex_WriteImageVRAMOffsets(Nitro3DTextureSet* tex, int block1, int blo
         tex->block2Or3VRAMLoadOffset = block2_3;
 }
 
-void NSBXX_Tex_LoadImageToVRAM(Nitro3DTextureSet* tex, bool needsMapping)
+void Nitro3D_LoadTextureImageToVRAM(Nitro3DTextureSet* tex, bool needsMapping)
 {
     if (needsMapping)
         MemoryMapTextureImage();
@@ -42,14 +42,14 @@ void NSBXX_Tex_LoadImageToVRAM(Nitro3DTextureSet* tex, bool needsMapping)
         
         LoadToTextureImage((const void*)((intptr_t)tex + block2SourceOffset),
             block2WriteOffset, block2Length);
-        // I think the idea here is as follows: texture image data consists
-        // of some of VRAM units A,B,C,D, which are each 0x20000 bytes.
-        // If offset & 0x40000 == 0 then block 2 is put into the first
-        // available unit and block 3 in the second, while if offset & 0x40000 != 0
-        // then block 2 is put into the third unit and block 3 in the fourth.
-        // I'm assuming the 0x20000 bit won't be set, as then things will be weird
-        // (though I guess you could have block 2 in second unit and block 3
-        // in latter half of the third).
+        // picture: texture image data consists of of some of VRAM units A,B,C,D
+        // which are 0x20000 bytes each. The valid cases are:
+        //  a) block2WriteOffset in range 0 - 1ffff, then block 2 goes in first 
+        //     unit and block 3 in first half of second unit
+        //  b) block2WriteOffset in range 40000 - 5ffff, then block 2 goes in 
+        //     third unit and block 3 in second half of second unit
+        // calculation gets weird in other cases but these two behave well and
+        // are consistent with VRAM allocation functions
         LoadToTextureImage((const void*)((intptr_t)tex + block3SourceOffset),
             (block2WriteOffset & 0x1ffff) / 2 + 0x20000 + ((block2WriteOffset & 0x40000) >> 2),
             block2Length >> 1);
@@ -59,17 +59,17 @@ void NSBXX_Tex_LoadImageToVRAM(Nitro3DTextureSet* tex, bool needsMapping)
         MemoryUnmapTextureImage();
 }
 
-int NSBXX_Tex_GetBlock4Length(Nitro3DTextureSet* tex)
+int Nitro3D_GetTextureBlock4Length(const Nitro3DTextureSet* tex)
 {
     return (tex != NULL) ? tex->block4NumEightBytes << 3 : 0;
 }
 
-void NSBXX_Tex_WritePaletteVRAMOffset(Nitro3DTextureSet* tex, int offset)
+void Nitro3D_StoreTexturePaletteVRAMOffsets(Nitro3DTextureSet* tex, int offset)
 {
     tex->block4VRAMLoadOffset = offset;
 }
 
-void NSBXX_Tex_LoadPaletteToVRAM(Nitro3DTextureSet* tex, bool needsMapping)
+void Nitro3D_LoadTexturePaletteToVRAM(Nitro3DTextureSet* tex, bool needsMapping)
 {
     if (needsMapping)
         MemoryMapTexturePalette();
@@ -83,7 +83,7 @@ void NSBXX_Tex_LoadPaletteToVRAM(Nitro3DTextureSet* tex, bool needsMapping)
         MemoryUnmapTexturePalette();
 }
 
-extern "C" void AttachTextureImageToModelMaterials(
+static void AttachTextureImageToModelMaterials(
     Nitro3DModelMaterials* materialData, Nitro3DModelMaterials::Pair* pairing,
     Nitro3DTextureSet* tex0, Nitro3DTextureSet::ImageData* texture)
 {
@@ -118,13 +118,13 @@ extern "C" void AttachTextureImageToModelMaterials(
     pairing->flags |= 1;
 }
 
-extern "C" void DetachTextureImageFromModelMaterials(Nitro3DModelMaterials* materialData, Nitro3DModelMaterials::Pair* pairing)
+static void DetachTextureImageFromModelMaterials(Nitro3DModelMaterials* materialData, Nitro3DModelMaterials::Pair* pairing)
 {
     uint8_t* indexArray = (uint8_t*)materialData + pairing->offsetToIndexArray;
     for (unsigned int i = 0; i < pairing->arraySize; i++)
     {
         Nitro3DMaterial* material = materialData->GetMaterialByIndex(indexArray[i]);
-        // keep only bits 30-31 and 16,17,18,19
+        // keep only bits 30-31 (transform mode) and 16,17,18,19 (repeat/flip flags)
         material->paramTEXIMAGE_PARAMS &= 0xc00f0000;
         material->xScale = 1 << 12;
         material->yScale = 1 << 12;
@@ -132,7 +132,7 @@ extern "C" void DetachTextureImageFromModelMaterials(Nitro3DModelMaterials* mate
     pairing->flags &= ~1;
 }
 
-extern "C" bool NSBXX_AttachTextureImageToModel(Nitro3DModel* model, Nitro3DTextureSet* tex0)
+bool Nitro3D_AttachTextureImage(Nitro3DModel* model, Nitro3DTextureSet* tex0)
 {
     Nitro3DModelMaterials* materialData = model->GetMaterialData();
     Nitro3DNameList* imagePairingsList = (Nitro3DNameList*)((const char*)materialData + materialData->texturePairingsOffset);
@@ -157,7 +157,7 @@ extern "C" bool NSBXX_AttachTextureImageToModel(Nitro3DModel* model, Nitro3DText
     return success;
 }
 
-extern "C" void NSBXX_DetachTextureImageFromModel(Nitro3DModel* model)
+void Nitro3D_DetachTextureImage(Nitro3DModel* model)
 {
     Nitro3DModelMaterials* materialData = model->GetMaterialData();
     Nitro3DNameList* pairingList = (Nitro3DNameList*)((intptr_t)materialData + materialData->texturePairingsOffset);
@@ -166,13 +166,11 @@ extern "C" void NSBXX_DetachTextureImageFromModel(Nitro3DModel* model)
     {
         Nitro3DModelMaterials::Pair* pairing = pairingList->GetEntryByIndex<Nitro3DModelMaterials::Pair>(i);
         if (pairing->flags & 1)
-        {
             DetachTextureImageFromModelMaterials(materialData, pairing);
-        }
     }
 }
 
-extern "C" void AttachTexturePaletteToModelMaterials(
+static void AttachTexturePaletteToModelMaterials(
     Nitro3DModelMaterials* materialData, Nitro3DModelMaterials::Pair* pairing,
     Nitro3DTextureSet* tex0, Nitro3DTextureSet::PaletteData* palette)
 {
@@ -199,7 +197,7 @@ extern "C" void AttachTexturePaletteToModelMaterials(
     pairing->flags |= 1;
 }
 
-bool NSBXX_AttachTexturePaletteToModel(Nitro3DModel* model, Nitro3DTextureSet* tex0)
+bool Nitro3D_AttachTexturePalette(Nitro3DModel* model, Nitro3DTextureSet* tex0)
 {
     Nitro3DModelMaterials* materialData = model->GetMaterialData();
     Nitro3DNameList* palettePairingsList = (Nitro3DNameList*)((const char*)materialData + materialData->palettePairingsOffset);
@@ -228,12 +226,11 @@ bool NSBXX_AttachTexturePaletteToModel(Nitro3DModel* model, Nitro3DTextureSet* t
     return success;
 }
 
-extern "C" void NSBXX_DetachTexturePaletteFromModel(Nitro3DModel* model)
+void Nitro3D_DetachTexturePalette(Nitro3DModel* model)
 {
     Nitro3DModelMaterials* materialData = model->GetMaterialData();
     Nitro3DNameList* pairingList = (Nitro3DNameList*)((const char*)materialData + materialData->palettePairingsOffset);
 
-    unsigned int i = 0;
     for (unsigned int i = 0; i < pairingList->numEntries; i++)
     {
         Nitro3DModelMaterials::Pair* pairing = pairingList->GetEntryByIndex<Nitro3DModelMaterials::Pair>(i);
@@ -242,26 +239,26 @@ extern "C" void NSBXX_DetachTexturePaletteFromModel(Nitro3DModel* model)
     }
 }
 
-extern "C" int NSBXX_LinkTEX0ToMDL0(Nitro3DModelSet* mdl0, Nitro3DTextureSet* tex0)
+int Nitro3D_LinkTexturesToModels(Nitro3DModelSet* mdl0, Nitro3DTextureSet* tex0)
 {
     unsigned int i;
     int success = true;
     
     for (i = 0; i < mdl0->nameList.numEntries; i++)
     {
-        Nitro3DModel* internalModel = mdl0->GetInternalModelByIndex(i);
-        success &= NSBXX_AttachTextureImageToModel(internalModel, tex0);
-        success &= NSBXX_AttachTexturePaletteToModel(internalModel, tex0);
+        Nitro3DModel* internalModel = mdl0->GetModelByIndex(i);
+        success &= Nitro3D_AttachTextureImage(internalModel, tex0);
+        success &= Nitro3D_AttachTexturePalette(internalModel, tex0);
     }
     return success;
 }
 
-extern "C" void NSBXX_UnlinkTEX0FromMDL0(Nitro3DModelSet* mdl0)
+void Nitro3D_UnlinkTexturesFromModels(Nitro3DModelSet* mdl0)
 {
     for (unsigned int i = 0; i < mdl0->nameList.numEntries; i++)
     {
-        Nitro3DModel* internalModel = mdl0->GetInternalModelByIndex(i);
-        NSBXX_DetachTextureImageFromModel(internalModel);
-        NSBXX_DetachTexturePaletteFromModel(internalModel);
+        Nitro3DModel* internalModel = mdl0->GetModelByIndex(i);
+        Nitro3D_DetachTextureImage(internalModel);
+        Nitro3D_DetachTexturePalette(internalModel);
     }
 }

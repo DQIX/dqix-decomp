@@ -135,9 +135,9 @@ void Model3D::ProcessRawFile(TextureStagingMode stagingMode)
         {
             unsigned int block4Alloc, block2Alloc, block1Alloc;
 
-            unsigned int block1Len = NSBXX_Tex_GetBlock1Length(tex0);
-            unsigned int block2Len = NSBXX_Tex_GetBlock2Length(tex0);
-            unsigned int block4Len = NSBXX_Tex_GetBlock4Length(tex0);            
+            unsigned int block1Len = Nitro3D_GetTextureBlock1Length(tex0);
+            unsigned int block2Len = Nitro3D_GetTextureBlock2Length(tex0);
+            unsigned int block4Len = Nitro3D_GetTextureBlock4Length(tex0);            
 
             if (block1Len != 0)
             {
@@ -178,15 +178,15 @@ void Model3D::ProcessRawFile(TextureStagingMode stagingMode)
             }
             else
             {
-                NSBXX_Tex_WriteImageVRAMOffsets(tex0, block1Alloc, block2Alloc);
-                NSBXX_Tex_WritePaletteVRAMOffset(tex0, block4Alloc);
+                Nitro3D_StoreTextureImageVRAMOffsets(tex0, block1Alloc, block2Alloc);
+                Nitro3D_StoreTexturePaletteVRAMOffsets(tex0, block4Alloc);
             }
         }
         if (data->signature == SIGNATURE_NSBMD)
         {
             Nitro3DModelSet* mdl0 = (Nitro3DModelSet*)NSBXX_GetFirstSubfile(data);
             if (tex0 != NULL)
-                NSBXX_LinkTEX0ToMDL0(mdl0, tex0);
+                Nitro3D_LinkTexturesToModels(mdl0, tex0);
         }
         break;
     }
@@ -197,8 +197,8 @@ void Model3D::ProcessRawFile(TextureStagingMode stagingMode)
         if (stagingMode == TextureStagingMode_Immediate)
         {
             LockStagedTextureVRAMCopying();
-            NSBXX_Tex_LoadPaletteToVRAM(tex, true);
-            NSBXX_Tex_LoadImageToVRAM(tex, true);
+            Nitro3D_LoadTexturePaletteToVRAM(tex, true);
+            Nitro3D_LoadTextureImageToVRAM(tex, true);
             UnlockStagedTextureVRAMCopying();
         }
         else
@@ -372,7 +372,7 @@ void Model3D::ApplyTexturesFromModel(Model3D* otherModel)
     Nitro3DTextureSet* tex0 = (Nitro3DTextureSet*)otherModel->rawTEX_;
     if (mdl0 == NULL || tex0 == NULL)
         return;
-    NSBXX_LinkTEX0ToMDL0(mdl0, tex0);
+    Nitro3D_LinkTexturesToModels(mdl0, tex0);
 }
 
 Nitro3DModelSet* Model3D::GetMDL0()
@@ -387,7 +387,7 @@ void Model3D::RemoveTextures()
     Nitro3DModelSet* mdl0 = GetMDL0();
     if (mdl0 == NULL)
         return;
-    NSBXX_UnlinkTEX0FromMDL0(mdl0);
+    Nitro3D_UnlinkTexturesFromModels(mdl0);
 }
 
 void Model3D::CreateBoneMatrixAndMaterialArrays(SafeAllocator *alloc, int args)
