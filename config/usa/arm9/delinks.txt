@@ -253,6 +253,7 @@ src/NitroSDK/Graphics3D/RenderCommands.cpp:
 src/NitroSDK/Graphics3D/GeometryFifo.cpp:
     complete
     .text start:0x020b6998 end:0x020b6e98
+    .bss start:0x0210cf78 end:0x0210cf84
 
 src/NitroSDK/Graphics3D/NSBXX.cpp:
     complete

@@ -16,8 +16,6 @@
 #define func_020ca2ac func_020cbd78
 #define func_020ca4b4 func_020cbf80
 #define func_020ca430 func_020cbefc
-
-#define data_0210cf78 data_0210cc30
 #endif
 
 extern "C"
@@ -61,29 +59,26 @@ struct QueuedData
     uint32_t data[0xc0];
 };
 
-struct Struct_0210cf78
-{
-    QueuedData* pQueuedData;
-    volatile int fifoProcessingFlag; // 1 = processing, 0 = done
-    int unknown_8;
-} extern data_0210cf78;
+static volatile CBool s_isFifoProcessing;
+static QueuedData* s_queuedData;
+static CBool s_unknown;
 
 extern "C" void SendQueuedDataToGeometryFifo()
 {
-    if (data_0210cf78.fifoProcessingFlag)
+    if (s_isFifoProcessing)
         WaitForFifoProcessingDone();
 
-    if (data_0210cf78.pQueuedData != NULL && data_0210cf78.pQueuedData->amountQueued != 0)
+    if (s_queuedData != NULL && s_queuedData->amountQueued != 0)
     {
-        func_020ca430(data_0210cf78.pQueuedData->data, &GXFIFO, data_0210cf78.pQueuedData->amountQueued * 4);
-        data_0210cf78.pQueuedData->amountQueued = 0;
+        func_020ca430(s_queuedData->data, &GXFIFO, s_queuedData->amountQueued * 4);
+        s_queuedData->amountQueued = 0;
     }
 }
 
 // can be made static. 020b69f4
 void WaitForFifoProcessingDone()
 {
-    while (data_0210cf78.fifoProcessingFlag) {}
+    while (s_isFifoProcessing) {}
 }
 
 // can be made static. 020b6a0c
@@ -100,49 +95,49 @@ extern "C" void SendRawDataToGeometryFifo(const uint32_t* data, unsigned int num
     else
     {
         SendQueuedDataToGeometryFifo();
-        data_0210cf78.fifoProcessingFlag = 1;
-        if (data_0210cf78.unknown_8)
+        s_isFifoProcessing = 1;
+        if (s_unknown)
             func_020ca2ac(data_020f2270, data, numBytes, &OnGeometryFifoProcessingDone,
-                reinterpret_cast<int>(&data_0210cf78.fifoProcessingFlag));
+                reinterpret_cast<int>(&s_isFifoProcessing));
         else
             func_020ca0a8(data_020f2270, data, numBytes, &OnGeometryFifoProcessingDone,
-                reinterpret_cast<int>(&data_0210cf78.fifoProcessingFlag));
+                reinterpret_cast<int>(&s_isFifoProcessing));
     }
 }
 
 extern "C" void SubmitCommandToGeometryFifo(int command, const uint32_t* params, unsigned int numParams)
 {
-    if (data_0210cf78.pQueuedData != NULL)
+    if (s_queuedData != NULL)
     {
-        if (data_0210cf78.fifoProcessingFlag)
+        if (s_isFifoProcessing)
         {
-            uint32_t priorSize = data_0210cf78.pQueuedData->amountQueued;
+            uint32_t priorSize = s_queuedData->amountQueued;
             if (priorSize + 1 + numParams <= 0xc0)
             {
-                data_0210cf78.pQueuedData->amountQueued = priorSize + 1;
-                data_0210cf78.pQueuedData->data[priorSize] = command;
+                s_queuedData->amountQueued = priorSize + 1;
+                s_queuedData->data[priorSize] = command;
                 if (numParams != 0)
                 {
                     func_020ca4b4(params,
-                        &data_0210cf78.pQueuedData->data[data_0210cf78.pQueuedData->amountQueued],
+                        &s_queuedData->data[s_queuedData->amountQueued],
                         numParams * 4);
-                    data_0210cf78.pQueuedData->amountQueued += numParams;
+                    s_queuedData->amountQueued += numParams;
                 }
                 return;
             }
         }
 
-        if (data_0210cf78.pQueuedData->amountQueued != 0)
+        if (s_queuedData->amountQueued != 0)
             SendQueuedDataToGeometryFifo();
         else
         {
-            if (data_0210cf78.fifoProcessingFlag)
+            if (s_isFifoProcessing)
                 WaitForFifoProcessingDone();
         }
     }
     else
     {
-        if (data_0210cf78.fifoProcessingFlag)
+        if (s_isFifoProcessing)
             WaitForFifoProcessingDone();
     }
 

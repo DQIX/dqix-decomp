@@ -12,6 +12,7 @@ extern "C"
     unsigned int func_020b2a6c(const void* rawAnim, Nitro3DModel* model);
 }
 
+
 extern "C" Nitro3DAnimation* NSBXX_Model_AllocateAnimationData(AllocatorUnion* alloc, const void* rawAnim, Nitro3DModel* model)
 {
     unsigned int size = func_020b2a6c(rawAnim, model);

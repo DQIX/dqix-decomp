@@ -7751,8 +7751,9 @@ g_nitro3DRenderConfig kind:bss addr:0x0210a010
 g_nitro3DActiveRenderCommandHandler kind:bss addr:0x0210a274
 s_boundMaterialStorage kind:bss addr:0x0210a278 local
 g_nitro3DSkinningEquationBuffer kind:bss addr:0x0210b078
-data_0210cf78 kind:bss addr:0x0210cf78
-data_0210cf7c kind:bss addr:0x0210cf7c
+s_queuedData kind:bss addr:0x0210cf78 local
+s_isFifoProcessing kind:bss addr:0x0210cf7c local
+s_unknown kind:bss addr:0x0210cf80 local
 s_numImageBanks kind:data(byte[0x2]) addr:0x0210cf84 local
 s_paletteData kind:bss addr:0x0210cf88 local
 data_0210cf94 kind:bss addr:0x0210cf94
