@@ -207,7 +207,7 @@ def main():
 
         n.rule(
             name="delink",
-            command=f"{DSD} delink --config-path $config_path"
+            command=f'$python tools/stamp.py $out {DSD} delink --config-path $config_path'
         )
         n.newline()
 
@@ -493,7 +493,7 @@ def add_delink_and_lcf_builds(n: ninja_syntax.Writer, project: Project):
     delinks_path = project.arm9_delinks()
     n.build(
         inputs=project.dsd_configs() + [rom_config],
-        implicit=DSD,
+        implicit=[DSD, "tools/stamp.py"],
         rule="delink",
         outputs=str(delinks_path / "delink.yaml"),
         variables={
