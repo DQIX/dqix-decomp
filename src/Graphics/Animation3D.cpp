@@ -54,7 +54,7 @@ bool Animation3D::CreateData(Model3D *attachedModel, SafeAllocator *alloc, Model
     if (allocatedData == NULL)
         return false;
 
-    InitializeModelAnimation(allocatedData, rawInnerAnim, internalModel, tex0);
+    Nitro3Di_InitModelAnimation(allocatedData, rawInnerAnim, internalModel, tex0);
     pAnimData_ = allocatedData;
     return true;
 }

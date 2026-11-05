@@ -2039,7 +2039,7 @@ void Object3D::EnableBoneTracking()
     Nitro3DRenderContext* context = GetModel3DContext(pModel_);
     if (context == NULL)
         return;
-    SetModelRenderContextRenderCommandHook(context, &BoneTrackingRenderCommandHook, 0, 6, 3);
+    Nitro3D_SetRenderHook(context, &BoneTrackingRenderCommandHook, 0, 6, 3);
 }
 
 void BoneTrackingRenderCommandHook(Nitro3DRenderCommandHandler* handler)

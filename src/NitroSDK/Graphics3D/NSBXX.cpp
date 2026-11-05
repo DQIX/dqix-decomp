@@ -4,7 +4,7 @@
 
 extern "C" Nitro3DAnimation* NSBXX_Model_AllocateAnimationData(AllocatorUnion* alloc, const void* rawAnim, Nitro3DModel* model)
 {
-    unsigned int size = Nitro3D_GetRequiredAnimationSize(rawAnim, model);
+    unsigned int size = Nitro3Di_GetRequiredAnimationSize(rawAnim, model);
     return (Nitro3DAnimation*)alloc->Allocate(size);
 }
 

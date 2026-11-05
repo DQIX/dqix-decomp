@@ -233,7 +233,7 @@ void Model3D::ProcessRawFile(TextureStagingMode stagingMode)
 found_a_model:
     rawInternalModel_ = model;
     
-    PopulateModelRenderContext(&renderContext_, model);
+    Nitro3D_PopulateRenderContext(&renderContext_, model);
     rawTEX_ = (Nitro3DTextureSet*)NSBXX_GetTEXFile((Nitro3DFileHeader*)rawBMD_);
     if (((Nitro3DFileHeader*)rawBMD_)->signature == SIGNATURE_NSBMD)
     {
@@ -437,19 +437,19 @@ void Model3D::AddAnimation(Animation3D* anim)
     if (anim == NULL || anim->GetBasicAnimationData() == NULL)
         return;
 
-    AddAnimationsToModelRenderContext(&renderContext_, anim->GetBasicAnimationData());
+    Nitro3D_AddAnimationToContext(&renderContext_, anim->GetBasicAnimationData());
 }
 
 void Model3D::RemoveAnimations()
 {
     while (renderContext_.materialAnimations != NULL)
-        RemoveAnimationFromModelRenderContext(&renderContext_, renderContext_.materialAnimations);
+        Nitro3D_RemoveAnimationFromContext(&renderContext_, renderContext_.materialAnimations);
 
     while (renderContext_.jointAnimations != NULL)
-        RemoveAnimationFromModelRenderContext(&renderContext_, renderContext_.jointAnimations);
+        Nitro3D_RemoveAnimationFromContext(&renderContext_, renderContext_.jointAnimations);
 
     while (renderContext_.visibilityAnimations != NULL)
-        RemoveAnimationFromModelRenderContext(&renderContext_, renderContext_.visibilityAnimations);
+        Nitro3D_RemoveAnimationFromContext(&renderContext_, renderContext_.visibilityAnimations);
 }
 
 void Model3D::SetBoneMatrixRenderData(BoneMatrixRenderData* data)

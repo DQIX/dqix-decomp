@@ -51,19 +51,19 @@ struct Nitro3DAnimation
 };
 
 
-unsigned int Nitro3D_GetRequiredAnimationSize(const void* animData, const Nitro3DModel* model);
-void InitializeModelAnimation(Nitro3DAnimation* anim, void* pRawData, Nitro3DModel* model, Nitro3DTextureSet* tex);
-void PopulateModelRenderContext(Nitro3DRenderContext* context, Nitro3DModel* model);
+unsigned int Nitro3Di_GetRequiredAnimationSize(const void* animData, const Nitro3DModel* model);
+void Nitro3Di_InitModelAnimation(Nitro3DAnimation* anim, void* pRawData, Nitro3DModel* model, Nitro3DTextureSet* tex);
+void Nitro3D_PopulateRenderContext(Nitro3DRenderContext* context, Nitro3DModel* model);
 
 // Only the first animation in the list is checked to determine where to add it,
 // so maybe it's assumed that you only add one? But in theory you can add
 // multiple of the same type if they're already chained together
-void AddAnimationsToModelRenderContext(Nitro3DRenderContext* context, Nitro3DAnimation* anim);
+void Nitro3D_AddAnimationToContext(Nitro3DRenderContext* context, Nitro3DAnimation* anim);
 
-void RemoveAnimationFromModelRenderContext(Nitro3DRenderContext* context, Nitro3DAnimation* anim);
+void Nitro3D_RemoveAnimationFromContext(Nitro3DRenderContext* context, Nitro3DAnimation* anim);
 
 // really doesn't fit here...
-void SetModelRenderContextRenderCommandHook(Nitro3DRenderContext* context, RenderCommandHook hook, int unknown, int commandID, int stage);
+void Nitro3D_SetRenderHook(Nitro3DRenderContext* context, RenderCommandHook hook, int unknown, int commandID, int stage);
 
 // Defined in AnimationProcessing.cpp 
 
