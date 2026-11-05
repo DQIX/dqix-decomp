@@ -41,6 +41,25 @@ someone can pick up the remaining difference with you.
 
 ---
 
+## ⏩ Starting from a matching source
+
+The [`decomp-matching` branch of ZevyaDev/dqix-decomp](https://github.com/ZevyaDev/dqix-decomp/tree/decomp-matching)
+byte-matches every function in the USA, JPN and EUR ROMs. Use it to save time writing code: take a
+function's matching source from there as your starting point instead of writing it from scratch.
+
+Names that branch didn't take from this repository are placeholders (`func_`, `data_`, `Struct_`,
+`unknown_<offset>`, `arg`, `var`), and most of its code is uncommented. Code taken from it is merged here
+only after a human has verified it and:
+
+- named every function, variable, type and member for what it does, in the source and in `symbols.txt`
+- commented it wherever the names alone don't explain what it does or why
+- checked that it reads like code a developer would have written, not just code that compiles to the
+  same bytes
+
+Everything under [What gets merged](#-what-gets-merged) still applies.
+
+---
+
 ## 🐛 Issues and questions
 
 Bug reports about the build or the tooling belong in GitHub issues. Questions about a specific

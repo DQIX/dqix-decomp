@@ -66,6 +66,8 @@ We recommend joining the DQIX discord server **The Quester's Rest** (https://dis
 ### Decompiling code
 See [Decompiling.md](Decompiling.md)
 
+Matching source for every function is on the [`decomp-matching` branch of ZevyaDev/dqix-decomp](https://github.com/ZevyaDev/dqix-decomp/tree/decomp-matching). Start from it to save time, but it uses placeholder names and is mostly uncommented: see [Starting from a matching source](CONTRIBUTING.md#-starting-from-a-matching-source) for what it needs before it's merged.
+
 Contributions are welcome, though make sure you've read the pages linked above first. If you're new to decompilation, some possible tasks to get started with include:
 1. Find and decompile additional uses for [the game's scripting system](src/Resource/Script.cpp). Some existing uses can be found [here](src/World/LootableContainer.cpp) and [here](src/Graphics/AtmosphericEffect.cpp) as a guideline. (You don't need to worry about matching global variables, it's okay to mark everything as extern for the time being - just focus on matching the .text section). You may find [this script disassembler](https://github.com/DQIX/dqix-script-disasm) helpful.
 2. Help to match additional pieces of the Zone3D class. This is very experimental/WIP, so we have [a separate branch](https://github.com/DQIX/dqix-decomp/tree/zone3d-experimental) to work off of for this.
