@@ -106,6 +106,7 @@ if platform is None:
 EXE = platform.exe
 WINE = args.wine if platform.system != "windows" else ""
 WINE_DEP = [WINE] if platform.system != "windows" and WINE == DEFAULT_WIBO_PATH else []
+SHELL = "cmd /c " if platform.system == "windows" else ""
 DSD = str(args.dsd or os.path.join('.', str(root_path / f"dsd{EXE}")))
 OBJDIFF = os.path.join('.', str(root_path / f"objdiff-cli{EXE}"))
 LD = os.path.join('.', str(mwcc_root / DEFAULT_MWCC_VERSION / "mwldarm.exe"))
@@ -207,7 +208,7 @@ def main():
 
         n.rule(
             name="delink",
-            command=f'$python tools/stamp.py $out {DSD} delink --config-path $config_path'
+            command=f'{SHELL}{DSD} delink --config-path $config_path && $python tools/stamp.py $out'
         )
         n.newline()
 
