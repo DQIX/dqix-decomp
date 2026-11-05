@@ -108,6 +108,7 @@ if platform is None:
 EXE = platform.exe
 WINE = args.wine if platform.system != "windows" else ""
 WINE_DEP = [WINE] if platform.system != "windows" and WINE == DEFAULT_WIBO_PATH else []
+SHELL = "cmd /c " if platform.system == "windows" else ""
 LINK_WINE = DEFAULT_LINK_WIBO_PATH if WINE_DEP else WINE
 LINK_WINE_DEP = [LINK_WINE] if WINE_DEP else []
 DSD = str(args.dsd or os.path.join('.', str(root_path / f"dsd{EXE}")))
@@ -211,7 +212,7 @@ def main():
 
         n.rule(
             name="delink",
-            command=f"{DSD} delink --config-path $config_path"
+            command=f'{SHELL}{DSD} delink --config-path $config_path && $python tools/stamp.py $out'
         )
         n.newline()
 
@@ -507,7 +508,7 @@ def add_delink_and_lcf_builds(n: ninja_syntax.Writer, project: Project):
     delinks_path = project.arm9_delinks()
     n.build(
         inputs=project.dsd_configs() + [rom_config],
-        implicit=DSD,
+        implicit=[DSD, "tools/stamp.py"],
         rule="delink",
         outputs=str(delinks_path / "delink.yaml"),
         variables={
