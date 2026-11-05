@@ -31,6 +31,19 @@ void CalculateRotationSmooth(Matrix3x3* out, fix32_t time,
     Nitro3DJAC::Track::ChannelNonConst* channel, Nitro3DJAC* jac);
 bool GetMatrixFromIndex(Matrix3x3* out, intptr_t pivotList, intptr_t basisList, int index);
 
+static const struct { uint8_t a, b, c, d; } s_pivotIndices[] = 
+{
+    { 4, 5, 7, 8 },
+    { 3, 5, 6, 8 },
+    { 3, 4, 6, 7 },
+    { 1, 2, 7, 8 },
+    { 0, 2, 6, 8 },
+    { 0, 1, 6, 7 },
+    { 1, 2, 4, 5 },
+    { 0, 2, 3, 5 },
+    { 0, 1, 3, 4 }
+};
+
 static inline void CalculateThirdRowByCrossProduct(Matrix3x3* mat)
 {
     fix32_t m23 = mat->entries[5]; // yes, this order is actually important
@@ -140,14 +153,14 @@ void ApplyBindPoseRotation(BoneMatrixRenderData* bmrd)
 
             func_020ca7d0(&bmrd->rotationMatrix);
             bmrd->rotationMatrix.entries[pivotForm] = (boneMatrix->flags & 0x100) ? -1 << 12 : 1 << 12;
-            bmrd->rotationMatrix.entries[data_020e9284[pivotForm].a] = entryA;
-            bmrd->rotationMatrix.entries[data_020e9284[pivotForm].b] = entryB;
+            bmrd->rotationMatrix.entries[s_pivotIndices[pivotForm].a] = entryA;
+            bmrd->rotationMatrix.entries[s_pivotIndices[pivotForm].b] = entryB;
 
             fix32_t entryC = (boneMatrix->flags & 0x200) ? -entryB : entryB;
-            bmrd->rotationMatrix.entries[data_020e9284[pivotForm].c] = entryC;
+            bmrd->rotationMatrix.entries[s_pivotIndices[pivotForm].c] = entryC;
 
             fix32_t entryD = (boneMatrix->flags & 0x400) ? -entryA : entryA;
-            bmrd->rotationMatrix.entries[data_020e9284[pivotForm].d] = entryD;
+            bmrd->rotationMatrix.entries[s_pivotIndices[pivotForm].d] = entryD;
         }
         else // generic 3x3 matrix format
         {
@@ -1122,14 +1135,14 @@ bool GetMatrixFromIndex(Matrix3x3* out, intptr_t pivotList, intptr_t basisList, 
         int form = pivot->flags & 0xf;
         out->entries[form] = (pivot->flags & 0x10) ? -1 << 12 : 1 << 12;
 
-        out->entries[data_020e9284[form].a] = entryA;
-        out->entries[data_020e9284[form].b] = entryB;
+        out->entries[s_pivotIndices[form].a] = entryA;
+        out->entries[s_pivotIndices[form].b] = entryB;
 
         fix32_t entryC = (pivot->flags & 0x20) ? -entryB : entryB;
-        out->entries[data_020e9284[form].c] = entryC;
+        out->entries[s_pivotIndices[form].c] = entryC;
         
         fix32_t entryD = (pivot->flags & 0x40) ? -entryA : entryA;
-        out->entries[data_020e9284[form].d] = entryD;
+        out->entries[s_pivotIndices[form].d] = entryD;
 
         return false;
     }

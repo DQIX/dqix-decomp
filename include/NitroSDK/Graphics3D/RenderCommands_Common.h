@@ -30,12 +30,6 @@
 #define func_020ca7d0 func_020cc29c
 #endif
 
-// pivot matrix a/b/c/d position lookup
-// both arrays are identical
-extern struct {
-    uint8_t a, b, c, d;
-} const data_020e9284[];
-
 // Holds { func_020b99b0, func_020b9a6c, func_020ba264 }
 // Called by command 6 to apply bone matrix transformations via the GXFifo
 extern void (*g_nitro2DSubmitBoneMatrixProcs[])(BoneMatrixRenderData*);

@@ -279,6 +279,7 @@ src/NitroSDK/Graphics3D/PatternAnimation.cpp:
 src/NitroSDK/Graphics3D/JAC.cpp:
     complete
     .text start:0x020b7840 end:0x020b8e60
+    .rodata start:0x020e9284 end:0x020e92a8
 
 src/NitroSDK/Graphics3D/MAM.cpp:
     complete

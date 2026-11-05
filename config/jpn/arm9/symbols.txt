@@ -6293,10 +6293,7 @@ data_020e92ec kind:data(any) addr:0x020e92ec
 data_020e930c kind:data(any) addr:0x020e930c
 maskLookup$828 kind:data(any) addr:0x020e934c local
 indexLookup$1130 kind:data(any) addr:0x020e936c local
-data_020e9390 kind:data(any) addr:0x020e9390
-data_020e9391 kind:data(any) addr:0x020e9391
-data_020e9392 kind:data(any) addr:0x020e9392
-data_020e9393 kind:data(any) addr:0x020e9393
+s_pivotIndices kind:data(any) addr:0x020e9390 local
 data_020e93b4 kind:data(any) addr:0x020e93b4
 data_020e9444 kind:data(any) addr:0x020e9444
 data_020e9454 kind:data(any) addr:0x020e9454
