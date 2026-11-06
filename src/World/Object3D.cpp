@@ -1,5 +1,5 @@
 #include "World/Object3D.h"
-#include "NitroSDK/Graphics3D/RenderConfig.h"
+#include "NitroSDK/Graphics3D/Graphics3D.h"
 #include "NitroSDK/Graphics.h"
 #include "GameState/GameState.h"
 #include "Filesystem/BackgroundLoader.h"

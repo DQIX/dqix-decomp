@@ -1,6 +1,5 @@
 #include "NitroSDK/Graphics.h"
 #include "NitroSDK/Graphics3D/Graphics3D.h"
-#include "NitroSDK/Graphics3D/RenderConfig.h"
 #include "NitroSDK/DMA.h"
 #include <globaldefs.h>
 
