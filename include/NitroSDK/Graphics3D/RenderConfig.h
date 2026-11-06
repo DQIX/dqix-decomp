@@ -8,7 +8,7 @@
 // matrices and lighting settings. The data is interspersed with various magic
 // constants so that you can just send the whole thing over to the geometry
 // FIFO prior to rendering a model.
-struct RenderConfig
+struct Nitro3DRenderConfig
 {
     // holds 0x17101610 (set matrix mode, load 4x4, set matrix mode, load 4x3)
     uint32_t magicCommands_0;
@@ -129,8 +129,4 @@ struct RenderConfig
 #define RENDER_CONFIG_FLAG_6 6
 #define RENDER_CONFIG_FLAG_WORLDVIEW_CACHE_VALID 7
 
-#if defined(jpn)
-#define data_0210a010 data_02109cc8
-#endif
-
-extern RenderConfig data_0210a010;
+extern Nitro3DRenderConfig g_nitro3DRenderConfig;

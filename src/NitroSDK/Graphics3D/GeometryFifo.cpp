@@ -1,7 +1,5 @@
-#include "NitroSDK/NSBXX/GeometryFifo.h"
 #include "NitroSDK/Graphics.h"
-#include "NitroSDK/NSBXX/RenderCommands.h"
-#include "NitroSDK/NSBXX/RenderConfig.h"
+#include "NitroSDK/Graphics3D/Graphics3D.h"
 #include "NitroSDK/DMA.h"
 #include <globaldefs.h>
 
@@ -17,24 +15,10 @@
 #define func_020ca2ac func_020cbd78
 #define func_020ca4b4 func_020cbf80
 #define func_020ca430 func_020cbefc
-
-#define data_0210cf78 data_0210cc30
 #endif
 
 extern "C"
 {
-    // transform 3-dimensional vector (treated as 4D in usual way) by 4x3 matrix
-    void func_020c2034(const fix32_t* vec, const fix32_t* mat, fix32_t* outVec);
-
-    // reduce 4x4 matrix to 4x3 matrix
-    void func_020c2208(const fix32_t* in, fix32_t* out);
-
-    // get high precision division result
-    int64_t func_020c2c38();
-
-    // prime hardware divider to calculate fixed point representation of 2^32/x
-    void func_020c2c94(fix32_t);
-
     // reset various geometry registers
     void func_020c51dc();
 
@@ -54,7 +38,7 @@ extern "C"
 
 }
 
-void WaitForFifoProcessingDone();
+static void WaitForFifoProcessingDone();
 
 struct QueuedData
 {
@@ -62,88 +46,83 @@ struct QueuedData
     uint32_t data[0xc0];
 };
 
-struct Struct_0210cf78
-{
-    QueuedData* pQueuedData;
-    volatile int fifoProcessingFlag; // 1 = processing, 0 = done
-    int unknown_8;
-} extern data_0210cf78;
+static volatile CBool s_isFifoProcessing;
+static QueuedData* s_queuedData;
+static CBool s_unknown;
 
-extern "C" void SendQueuedDataToGeometryFifo()
+void Nitro3D_FlushFifoQueue()
 {
-    if (data_0210cf78.fifoProcessingFlag)
+    if (s_isFifoProcessing)
         WaitForFifoProcessingDone();
 
-    if (data_0210cf78.pQueuedData != NULL && data_0210cf78.pQueuedData->amountQueued != 0)
+    if (s_queuedData != NULL && s_queuedData->amountQueued != 0)
     {
-        func_020ca430(data_0210cf78.pQueuedData->data, &GXFIFO, data_0210cf78.pQueuedData->amountQueued * 4);
-        data_0210cf78.pQueuedData->amountQueued = 0;
+        func_020ca430(s_queuedData->data, &GXFIFO, s_queuedData->amountQueued * 4);
+        s_queuedData->amountQueued = 0;
     }
 }
 
-// can be made static. 020b69f4
-void WaitForFifoProcessingDone()
+static void WaitForFifoProcessingDone()
 {
-    while (data_0210cf78.fifoProcessingFlag) {}
+    while (s_isFifoProcessing) {}
 }
 
-// can be made static. 020b6a0c
-void OnGeometryFifoProcessingDone(int userdata)
+static void OnGeometryFifoProcessingDone(int userdata)
 {
     volatile int* pFlag = reinterpret_cast<volatile int*>(userdata);
     *pFlag = 0;
 }
 
-extern "C" void SendRawDataToGeometryFifo(const uint32_t* data, unsigned int numBytes)
+void Nitro3Di_SendRawDataToFifo(const uint32_t* data, unsigned int numBytes)
 {
     if (numBytes < 256 || data_020f2270 == -1)
-        SubmitCommandToGeometryFifo(data[0], &data[1], (numBytes / 4) - 1);
+        Nitro3Di_SendFifoCommand(data[0], &data[1], (numBytes / 4) - 1);
     else
     {
-        SendQueuedDataToGeometryFifo();
-        data_0210cf78.fifoProcessingFlag = 1;
-        if (data_0210cf78.unknown_8)
+        Nitro3D_FlushFifoQueue();
+        s_isFifoProcessing = 1;
+        if (s_unknown)
             func_020ca2ac(data_020f2270, data, numBytes, &OnGeometryFifoProcessingDone,
-                reinterpret_cast<int>(&data_0210cf78.fifoProcessingFlag));
+                reinterpret_cast<int>(&s_isFifoProcessing));
         else
             func_020ca0a8(data_020f2270, data, numBytes, &OnGeometryFifoProcessingDone,
-                reinterpret_cast<int>(&data_0210cf78.fifoProcessingFlag));
+                reinterpret_cast<int>(&s_isFifoProcessing));
     }
 }
 
-extern "C" void SubmitCommandToGeometryFifo(int command, const uint32_t* params, unsigned int numParams)
+extern "C" void Nitro3Di_SendFifoCommand(int command, const uint32_t* params, unsigned int numParams)
 {
-    if (data_0210cf78.pQueuedData != NULL)
+    if (s_queuedData != NULL)
     {
-        if (data_0210cf78.fifoProcessingFlag)
+        if (s_isFifoProcessing)
         {
-            uint32_t priorSize = data_0210cf78.pQueuedData->amountQueued;
+            uint32_t priorSize = s_queuedData->amountQueued;
             if (priorSize + 1 + numParams <= 0xc0)
             {
-                data_0210cf78.pQueuedData->amountQueued = priorSize + 1;
-                data_0210cf78.pQueuedData->data[priorSize] = command;
+                s_queuedData->amountQueued = priorSize + 1;
+                s_queuedData->data[priorSize] = command;
                 if (numParams != 0)
                 {
                     func_020ca4b4(params,
-                        &data_0210cf78.pQueuedData->data[data_0210cf78.pQueuedData->amountQueued],
+                        &s_queuedData->data[s_queuedData->amountQueued],
                         numParams * 4);
-                    data_0210cf78.pQueuedData->amountQueued += numParams;
+                    s_queuedData->amountQueued += numParams;
                 }
                 return;
             }
         }
 
-        if (data_0210cf78.pQueuedData->amountQueued != 0)
-            SendQueuedDataToGeometryFifo();
+        if (s_queuedData->amountQueued != 0)
+            Nitro3D_FlushFifoQueue();
         else
         {
-            if (data_0210cf78.fifoProcessingFlag)
+            if (s_isFifoProcessing)
                 WaitForFifoProcessingDone();
         }
     }
     else
     {
-        if (data_0210cf78.fifoProcessingFlag)
+        if (s_isFifoProcessing)
             WaitForFifoProcessingDone();
     }
 
@@ -151,9 +130,9 @@ extern "C" void SubmitCommandToGeometryFifo(int command, const uint32_t* params,
     func_020ca430(params, &GXFIFO, numParams * 4);
 }
 
-void GetCurrentPositionAndDirectionMatrices(Matrix4x3* position, Matrix3x3* direction)
+void Nitro3D_GetCurrentPosDirMatrices(Matrix4x3* position, Matrix3x3* direction)
 {
-    SendQueuedDataToGeometryFifo();
+    Nitro3D_FlushFifoQueue();
     GXFIFO_MATRIX_MODE = 0; // projection
     GXFIFO_MATRIX_PUSH = 0;
     GXFIFO_MATRIX_IDENTITY = 0;
@@ -174,42 +153,42 @@ void GetCurrentPositionAndDirectionMatrices(Matrix4x3* position, Matrix3x3* dire
     GXFIFO_MATRIX_MODE = 2; // return to position+direction mode
 }
 
-bool GetModelBonePositionAndDirectionMatrices(ModelRenderContext *context,
+bool Nitro3D_GetBonePosDirMatrices(Nitro3DRenderContext *context,
     Matrix4x3* outPos, Matrix3x3* outDir, unsigned int boneIndex)
 {
-    NSBXXInternalModel* model = context->internalModel_;
-    NSBXXNameList* boneList = &model->boneList_;
-    NSBXXBoneMatrix* boneMatrix = boneList->GetEntryFromu32Offset_v2<NSBXXBoneMatrix>(boneIndex);
+    Nitro3DModel* model = context->model;
+    Nitro3DNameList* boneList = &model->boneList;
+    Nitro3DBoneMatrix* boneMatrix = boneList->GetEntryFromu32Offset<Nitro3DBoneMatrix>(boneIndex);
 
-    unsigned int stackPos = ((unsigned int)boneMatrix->flags_ & 0xf800) >> 11;
+    unsigned int stackPos = ((unsigned int)boneMatrix->flags & 0xf800) >> 11;
     if (stackPos != 31)
     {
         uint32_t arg = stackPos;
-        SubmitCommandToGeometryFifo(GXFifoCommand_GetMatrix, &arg, 1);
+        Nitro3Di_SendFifoCommand(GXFifoCommand_GetMatrix, &arg, 1);
         if (outPos != NULL || outDir != NULL)
-            GetCurrentPositionAndDirectionMatrices(outPos, outDir);
+            Nitro3D_GetCurrentPosDirMatrices(outPos, outDir);
 
         return true;
     }
     return false;
 }
 
-void Finish3DRendering()
+void Nitro3D_FinishRender()
 {
     func_020c51dc();
-    RenderConfig::Reset();
+    Nitro3DRenderConfig::Reset();
     // set IRQ mode to 2: irq when fifo becomes empty
     GXSTATUS = GXSTATUS & ~0xc0000000 | 0x80000000;
 }
 
-int ConvertWorldToScreenCoordinates(const Vector3fix *world, int *outX, int *outY)
+int Nitro3D_WorldToScreen(const Vector3fix *world, int *outX, int *outY)
 {
     int success;
     Vector3fix viewVector;
 
-    Matrix4x4* proj = &data_0210a010.projectionMatrix;
+    Matrix4x4* proj = &g_nitro3DRenderConfig.projectionMatrix;
 
-    Mat4x3_ApplyToVector(world, &data_0210a010.viewMatrix, &viewVector);
+    Mat4x3_ApplyToVector(world, &g_nitro3DRenderConfig.viewMatrix, &viewVector);
 
     int64_t projectedW = (uint64_t)viewVector.x * proj->entries[3] +
         (int64_t)viewVector.y * proj->entries[7] +
@@ -243,7 +222,7 @@ int ConvertWorldToScreenCoordinates(const Vector3fix *world, int *outX, int *out
 
     int left, top, right, bottom;
 
-    RenderConfig::GetViewport(&left, &top, &right, &bottom);
+    Nitro3DRenderConfig::GetViewport(&left, &top, &right, &bottom);
 
     int width = right - left;
     int height = bottom - top;

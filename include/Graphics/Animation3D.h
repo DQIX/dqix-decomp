@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../NitroSDK/NSBXX/Animation.h"
+#include "../NitroSDK/Graphics3D/Graphics3D.h"
 #include "Memory/SafeAllocator.h"
 
 class Model3D;
@@ -10,15 +10,15 @@ class Model3D;
 class Animation3D
 {
 public:
-    NSBXXContainer* pRawFile_; // top-level file e.g. the NSBCA, NSBMA etc (decompressed)
-    AnimationData* pAnimData_;
+    Nitro3DFileHeader* pRawFile_; // top-level file e.g. the NSBCA, NSBMA etc (decompressed)
+    Nitro3DAnimation* pAnimData_;
     fix32_t playbackSpeed_;
     // bit 0: set if animation doesn't loop
     unsigned int flags_;
 
     void DefaultInitialize(); // might be a constructor
 
-    bool SetRawFile(NSBXXContainer* file);
+    bool SetRawFile(Nitro3DFileHeader* file);
 
     // Creates the underlying AnimationData object assuming that the pointer to the
     // raw animation file has been set.
@@ -28,6 +28,6 @@ public:
 
     void AdvanceTimer(fix32_t dt);
 
-    AnimationData* GetBasicAnimationData();
+    Nitro3DAnimation* GetBasicAnimationData();
     void SetAnimationTime(fix32_t);
 };

@@ -1,12 +1,7 @@
-#include "NitroSDK/NSBXX/NSBXX.h"
-#include "NitroSDK/NSBXX/RenderCommands_Common.h"
-#include "NitroSDK/NSBXX/Animation.h"
-
-#pragma optimization_level 2
+#include "NitroSDK/Graphics3D/Internal.h"
 
 #if defined(jpn)
 #define func_020ca390 func_020cbe5c
-#define data_020f1c78 data_020f1de4
 #endif
 
 extern "C"
@@ -15,10 +10,7 @@ extern "C"
     void func_020ca390(int, void*, unsigned);
 }
 
-// processing callback for M.AT animations
-extern void (*data_020f1c78)(void* data, AnimationData* anim, int arg);
-
-fix32_t SampleScalarFromMATTrack(NSBXXAnimationMAT* mat, unsigned int metadata, unsigned int offset, unsigned int frame)
+static fix32_t SampleScalar(Nitro3DMAT* mat, unsigned int metadata, unsigned int offset, unsigned int frame)
 {
     unsigned int lowWeightIdx;
     unsigned int highWeightIdx;
@@ -31,9 +23,7 @@ fix32_t SampleScalarFromMATTrack(NSBXXAnimationMAT* mat, unsigned int metadata, 
 
     unsigned int averageIdx;
     if ((metadata & 0xc0000000) == 0)
-    {
         goto compute_direct;
-    }
 
 {
     unsigned int endFrame = metadata & 0xffff;
@@ -131,7 +121,7 @@ compute_average:
     return (sampleA + sampleB) >> 1;
 }
 
-uint32_t SampleSinCosFromMATTrack(NSBXXAnimationMAT* mat, unsigned int metadata, unsigned int offset, unsigned int frame)
+static uint32_t SampleSinCos(Nitro3DMAT* mat, unsigned int metadata, unsigned int offset, unsigned int frame)
 {
     unsigned int highWeightIdx;
     unsigned int lowWeightIdx;
@@ -140,9 +130,9 @@ uint32_t SampleSinCosFromMATTrack(NSBXXAnimationMAT* mat, unsigned int metadata,
         return offset;
 
     uint32_t* samples = (uint32_t*)((intptr_t)mat + offset);
-    uint16_t* samples16 = (uint16_t*)samples;
+    fix16_t* samples16 = (fix16_t*)samples;
 
-    unsigned int sampleIdx;
+    unsigned long sampleIdx;
 
     if ((metadata & 0xc0000000) == 0)
         goto compute_direct;
@@ -223,105 +213,86 @@ uint32_t SampleSinCosFromMATTrack(NSBXXAnimationMAT* mat, unsigned int metadata,
 compute_direct:
     return samples[frame];
 compute_average:
-    fix32_t avgSine = (((fix16_t*)(samples + sampleIdx))[0] + ((fix16_t*)(samples + sampleIdx))[2]) >> 1;
-    fix32_t avgCosine = (((fix16_t*)(samples + sampleIdx))[1] + ((fix16_t*)(samples + sampleIdx))[3]) >> 1;
+    fix32_t avgSine = (samples16[2 * sampleIdx] + samples16[2 * sampleIdx + 2]) >> 1;
+    fix32_t avgCosine = (samples16[2 * sampleIdx + 1] + samples16[2 * sampleIdx + 3]) >> 1;
 
     return (uint16_t)avgSine | (avgCosine << 16);
 }
 
-void CalculateTextureTransformFromMAT(NSBXXAnimationMAT* mat, unsigned short arg, unsigned int frame, MaterialRenderData* renderData)
+static void CalculateTextureTransform(Nitro3DMAT* mat, unsigned short arg, unsigned int frame, MaterialRenderData* renderData)
 {
-    NSBXXAnimationMAT::Track* track = mat->tracks_.GetEntryByIndex_notVolatile<NSBXXAnimationMAT::Track>(arg);
-    unsigned int renderFlags = renderData->flags_;
+    Nitro3DMAT::Track* track = mat->tracks.GetEntryByIndex<Nitro3DMAT::Track>(arg);
+    unsigned int renderFlags = renderData->flags;
 
-    fix32_t tx = SampleScalarFromMATTrack(mat, track->unk_18, track->unk_1c, frame);
-    fix32_t ty = SampleScalarFromMATTrack(mat, track->unk_20, track->unk_24, frame);
+    fix32_t tx = SampleScalar(mat, track->translateXMetadata, track->translateXOffset, frame);
+    fix32_t ty = SampleScalar(mat, track->translateYMetadata, track->translateYOffset, frame);
 
     if (tx == 0 && ty == 0)
-    {
         renderFlags |= 4;
-    }
     else
     {
-        renderData->translateX_ = tx;
-        renderData->translateY_ = ty;
+        renderData->translateX = tx;
+        renderData->translateY = ty;
         renderFlags &= ~4;
     }
     
 
-    uint32_t cos_sin = SampleSinCosFromMATTrack(mat, track->unk_10, track->unk_14, frame);
+    uint32_t cos_sin = SampleSinCos(mat, track->rotationMetadata, track->rotationOffset, frame);
     if (cos_sin == 0x10000000) // cos = 1 and sin = 0, so no rotation 
-    {
         renderFlags |= 2;
-    }
     else
     {
-        renderData->rotationSine_ = (fix16_t)cos_sin;
-        renderData->rotationCosine_ = (fix16_t)(cos_sin >> 16);
+        renderData->rotationSine = (fix16_t)cos_sin;
+        renderData->rotationCosine = (fix16_t)(cos_sin >> 16);
         renderFlags &= ~2;
     }
 
-    fix32_t sx = SampleScalarFromMATTrack(mat, track->unk_0, track->unk_4, frame);
-    fix32_t sy = SampleScalarFromMATTrack(mat, track->unk_8, track->unk_c, frame);
+    fix32_t sx = SampleScalar(mat, track->scaleXMetadata, track->scaleXOffset, frame);
+    fix32_t sy = SampleScalar(mat, track->scaleYMetadata, track->scaleYOffset, frame);
 
     if (sx == 0x1000 && sy == 0x1000)
-    {
         renderFlags |= 1;
-    }
     else
     {
-        renderData->extensionScaleX_ = sx;
-        renderData->extensionScaleY_ = sy;
+        renderData->extensionScaleX = sx;
+        renderData->extensionScaleY = sy;
         renderFlags &= ~1;
     }
 
-    renderData->flags_ = renderFlags;
+    renderData->flags = renderFlags;
 }
 
-void InitializeModelAnimationFromMAT(AnimationData* anim, void* pvMAT, NSBXXInternalModel* model)
+void Nitro3Di_InitAnimationFromMAT(Nitro3DAnimation* anim, void* pvMAT, Nitro3DModel* model)
 {
-    unsigned int track;
-    NSBXXModelMaterialData* materials;
-    if (model != NULL && model->materialsOffset_ != 0)
-        materials = (NSBXXModelMaterialData*)((intptr_t)model + model->materialsOffset_);
-    else
-        materials = NULL;
-    anim->callback_ = data_020f1c78;
-
-    anim->numEntries_ = model->numMaterials_;
-    func_020ca390(0, &anim->entries_[0], anim->numEntries_ * 2);
-
-    NSBXXAnimationMAT* mat = (NSBXXAnimationMAT*)pvMAT;
     
-    track = 0;
-    if (track < mat->tracks_.numEntries_)
-    {
-        unsigned int bufferOffset = 0;
-        do
-        {   
-            const char* str = mat->tracks_.GetNameByIndexAndOffset(track, bufferOffset);
-            int idx;
+    Nitro3DModelMaterials* materials = model->GetMaterialData();
+    anim->callback = g_pfnNitro3DProcessMAT;
 
-            if (materials == NULL)
-                idx = -1;
-            else
-                idx = NSBXXNameList_SearchIndex(&materials->materialOffsetList_, str);
+    anim->numEntries = model->numMaterials;
+    func_020ca390(0, &anim->entries[0], anim->numEntries * 2);
 
-            if (idx >= 0)
-            {
-                anim->entries_[idx] = track | 0x100;
-            }
-            track++;
-            bufferOffset += 16;
-        } while (track < mat->tracks_.numEntries_);
+    Nitro3DMAT* mat = (Nitro3DMAT*)pvMAT;
+    
+    for (unsigned int track = 0; track < mat->tracks.numEntries; track++)
+    { 
+        const char* str = mat->tracks.GetNameByIndex(track);
+        int idx;
+
+        if (materials == NULL)
+            idx = -1;
+        else
+            idx = Nitro3D_GetNameListIndex(&materials->materialOffsetList, str);
+
+        if (idx >= 0)
+            anim->entries[idx] = track | 0x100;
     }
 }
 
-void MATAnimationProcessingCallback(void* data, AnimationData* anim, int arg)
+void Nitro3Di_ProcessAnimationMAT(void* data, Nitro3DAnimation* anim, int arg)
 {
     MaterialRenderData* renderData = (MaterialRenderData*)data;
-    CalculateTextureTransformFromMAT((NSBXXAnimationMAT*)anim->pRawData_, arg, anim->time_ >> 12, renderData);
+    CalculateTextureTransform((Nitro3DMAT*)anim->pRawData, arg, anim->time >> 12, renderData);
     // set texcoord transform source to 1 (texcoord source)
-    renderData->paramTEXIMAGE_PARAMS_ = (renderData->paramTEXIMAGE_PARAMS_ & ~0xc0000000) | 0x40000000;
-    renderData->flags_ |= 8; // use extension data
+    renderData->paramTEXIMAGE_PARAMS = (renderData->paramTEXIMAGE_PARAMS & ~0xc0000000) | 0x40000000;
+    renderData->flags |= 8; // use extension data
 }

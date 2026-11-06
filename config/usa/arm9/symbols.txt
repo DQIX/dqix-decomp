@@ -1195,7 +1195,7 @@ _ZN8Object3D14AdvanceEffectsEv kind:function(arm,size=0x118) addr:0x02034d20
 _ZN8Object3D17AdvanceAnimationsEv kind:function(arm,size=0x58) addr:0x02034e38
 _ZN8Object3D20AdvanceAnimations_v0Ev kind:function(arm,size=0x2e8) addr:0x02034e90
 _ZN8Object3D20AdvanceAnimations_v1Ev kind:function(arm,size=0x3cc) addr:0x02035178
-_Z27GetAnimationFrameCountFix32P13AnimationData kind:function(arm,size=0x10) addr:0x02035544
+_Z27GetAnimationFrameCountFix32P16Nitro3DAnimation kind:function(arm,size=0x10) addr:0x02035544
 _ZN8Object3D15ApplyAnimationsEPS_ kind:function(arm,size=0x19c) addr:0x02035554
 _ZN8Object3D13ApplyTexturesEv kind:function(arm,size=0x38) addr:0x020356f0
 _Z15CreateRotationXP9Matrix3x3ii kind:function(arm,size=0xc) addr:0x02035728
@@ -1299,7 +1299,7 @@ _ZN8Object3D18UntrackBoneByIndexEi kind:function(arm,size=0x44) addr:0x02037b44
 _ZN8Object3D15UntrackAllBonesEv kind:function(arm,size=0xc) addr:0x02037b88
 _ZN8Object3D20GetTrackedBoneMatrixEi kind:function(arm,size=0x28) addr:0x02037b94
 _ZN8Object3D18EnableBoneTrackingEv kind:function(arm,size=0x3c) addr:0x02037bbc
-_Z29BoneTrackingRenderCommandHookP20RenderCommandHandler kind:function(arm,size=0x88) addr:0x02037bf8
+_Z29BoneTrackingRenderCommandHookP27Nitro3DRenderCommandHandler kind:function(arm,size=0x88) addr:0x02037bf8
 _ZNK8Object3D15GetPointInFrontEi kind:function(arm,size=0x90) addr:0x02037c80
 func_02037d10 kind:function(arm,size=0x78) addr:0x02037d10
 func_02037d88 kind:function(arm,size=0x3b0) addr:0x02037d88
@@ -2014,12 +2014,12 @@ _ZN15LightingManager17InterpolateColorsEiif kind:function(arm,size=0xf4) addr:0x
 _ZN15LightingManager14ComputeFogInfoEPNS_7FogInfoE kind:function(arm,size=0x338) addr:0x02051244
 _ZN15LightingManager10InitializeEv kind:function(arm,size=0x10c) addr:0x0205157c
 _ZN15LightingManager7SetZoneEP6Zone3D kind:function(arm,size=0x8) addr:0x02051688
-_ZN15LightingManager36ModelTransformTintBrightnessContrastEP18NSBXXInternalModel kind:function(arm,size=0x354) addr:0x02051690
+_ZN15LightingManager36ModelTransformTintBrightnessContrastEP12Nitro3DModel kind:function(arm,size=0x354) addr:0x02051690
 _ZN15LightingManager17ProcessZoneChangeEP6Zone3D kind:function(arm,size=0x344) addr:0x020519e4
 _ZN15LightingManager25RecomputeAdvancedLightingEv kind:function(arm,size=0x514) addr:0x02051d28
 _Z23SetVector3fixComponentsP8Vector3iiii kind:function(arm,size=0x8) addr:0x0205223c
 _ZN15LightingManager20SubmitToRenderConfigEv kind:function(arm,size=0xf4) addr:0x02052244
-_ZN15LightingManager24ApplyAmbientColorToModelEP18NSBXXInternalModel kind:function(arm,size=0x18) addr:0x02052338
+_ZN15LightingManager24ApplyAmbientColorToModelEP12Nitro3DModel kind:function(arm,size=0x18) addr:0x02052338
 _ZN15LightingManager27MaybeComputeHorizonPositionEv kind:function(arm,size=0xc0) addr:0x02052350
 _ZN15LightingManager22DrawBackgroundGradientEv kind:function(arm,size=0x474) addr:0x02052410
 _ZN15LightingManager9BeginFadeEst kind:function(arm,size=0x40) addr:0x02052884
@@ -2988,7 +2988,7 @@ _ZNK12TextureArena7RestoreEv kind:function(arm,size=0x1c) addr:0x0207df90
 _ZN12TextureArena4SaveEv kind:function(arm,size=0x1c) addr:0x0207dfac
 _ZN12TextureArena16CreateDescendantEPS_ kind:function(arm,size=0x98) addr:0x0207dfc8
 _ZN11Animation3D17DefaultInitializeEv kind:function(arm,size=0x1c) addr:0x0207e060
-_ZN11Animation3D10SetRawFileEP14NSBXXContainer kind:function(arm,size=0x14) addr:0x0207e07c
+_ZN11Animation3D10SetRawFileEP17Nitro3DFileHeader kind:function(arm,size=0x14) addr:0x0207e07c
 _ZN11Animation3D10CreateDataEP7Model3DP13SafeAllocatorS1_ kind:function(arm,size=0xd8) addr:0x0207e090
 _ZN11Animation3D12AdvanceTimerEi kind:function(arm,size=0xbc) addr:0x0207e168
 _ZN11Animation3D21GetBasicAnimationDataEv kind:function(arm,size=0x8) addr:0x0207e224
@@ -3022,7 +3022,7 @@ _ZN7Model3D23GetBoneMatrixRenderDataEv kind:function(arm,size=0x8) addr:0x0207ec
 _ZN7Model3D37ApplyRenderConfigMaterialDiffuseColorEv kind:function(arm,size=0x20) addr:0x0207ec8c
 _ZN7Model3D23SetMaterialDiffuseColorEj kind:function(arm,size=0x18) addr:0x0207ecac
 _ZN7Model3D7GetTEX0Ev kind:function(arm,size=0x8) addr:0x0207ecc4
-_ZN7Model3D7SetTEX0EP8NSBXXTex kind:function(arm,size=0x8) addr:0x0207eccc
+_ZN7Model3D7SetTEX0EP17Nitro3DTextureSet kind:function(arm,size=0x8) addr:0x0207eccc
 _ZN7Model3D21RestageTexturePaletteEv kind:function(arm,size=0x24) addr:0x0207ecd4
 _ZN7Model3D19RestageTextureImageEv kind:function(arm,size=0x24) addr:0x0207ecf8
 func_0207ed1c kind:function(arm,size=0x2c) addr:0x0207ed1c
@@ -4463,161 +4463,161 @@ func_020b27c8 kind:function(arm,size=0x154) addr:0x020b27c8
 func_020b291c kind:function(arm,size=0xdc) addr:0x020b291c
 func_020b29f8 kind:function(arm,size=0x60) addr:0x020b29f8
 func_020b2a58 kind:function(arm,size=0x14) addr:0x020b2a58
-func_020b2a6c kind:function(arm,size=0x60) addr:0x020b2a6c
-_Z24InitializeModelAnimationP13AnimationDataPvP18NSBXXInternalModelP8NSBXXTex kind:function(arm,size=0xa0) addr:0x020b2acc
-_Z26PopulateModelRenderContextP18ModelRenderContextP18NSBXXInternalModel kind:function(arm,size=0x54) addr:0x020b2b6c
-_Z19AddAnimationsToListPP13AnimationDataS0_ kind:function(arm,size=0xb8) addr:0x020b2bc0
-_Z29PopulateBitfieldFromAnimData0PjP13AnimationData kind:function(arm,size=0x68) addr:0x020b2c78
-_Z33AddAnimationsToModelRenderContextP18ModelRenderContextP13AnimationData kind:function(arm,size=0x80) addr:0x020b2ce0
-_Z23RemoveAnimationFromListPP13AnimationDataS0_ kind:function(arm,size=0x74) addr:0x020b2d60
-_Z37RemoveAnimationFromModelRenderContextP18ModelRenderContextP13AnimationData kind:function(arm,size=0x54) addr:0x020b2dd4
-_Z38SetModelRenderContextRenderCommandHookP18ModelRenderContextPFvP20RenderCommandHandlerEiii kind:function(arm,size=0x14) addr:0x020b2e28
-NSBXX_Tex_GetBlock1Length kind:function(arm,size=0x14) addr:0x020b2e3c
-NSBXX_Tex_GetBlock2Length kind:function(arm,size=0x14) addr:0x020b2e50
-NSBXX_Tex_WriteImageVRAMOffsets kind:function(arm,size=0x14) addr:0x020b2e64
-NSBXX_Tex_LoadImageToVRAM kind:function(arm,size=0xb8) addr:0x020b2e78
-NSBXX_Tex_GetBlock4Length kind:function(arm,size=0x14) addr:0x020b2f30
-NSBXX_Tex_WritePaletteVRAMOffset kind:function(arm,size=0x8) addr:0x020b2f44
-NSBXX_Tex_LoadPaletteToVRAM kind:function(arm,size=0x50) addr:0x020b2f4c
-AttachTextureImageToModelMaterials kind:function(arm,size=0x130) addr:0x020b2f9c
-DetachTextureImageFromModelMaterials kind:function(arm,size=0xb8) addr:0x020b30cc
-NSBXX_AttachTextureImageToModel kind:function(arm,size=0x100) addr:0x020b3184
-NSBXX_DetachTextureImageFromModel kind:function(arm,size=0x8c) addr:0x020b3284
-AttachTexturePaletteToModelMaterials kind:function(arm,size=0xe0) addr:0x020b3310
-NSBXX_AttachTexturePaletteToModel kind:function(arm,size=0x108) addr:0x020b33f0
-NSBXX_DetachTexturePaletteFromModel kind:function(arm,size=0x84) addr:0x020b34f8
-NSBXX_LinkTEX0ToMDL0 kind:function(arm,size=0xb0) addr:0x020b357c
-NSBXX_UnlinkTEX0FromMDL0 kind:function(arm,size=0x94) addr:0x020b362c
-_ZN12RenderConfig5ResetEv kind:function(arm,size=0x154) addr:0x020b36c0
-_ZN12RenderConfig12SubmitToFifoEv kind:function(arm,size=0x3c) addr:0x020b3814
-_ZN12RenderConfig17SetObjectPositionEP8Vector3i kind:function(arm,size=0x30) addr:0x020b3850
-_ZN12RenderConfig14SetObjectScaleEP8Vector3i kind:function(arm,size=0x30) addr:0x020b3880
-_ZN12RenderConfig14SetLightVectorEjsss kind:function(arm,size=0x3c) addr:0x020b38b0
-_ZN12RenderConfig13SetLightColorEjj kind:function(arm,size=0x14) addr:0x020b38ec
-_ZN12RenderConfig23SetDiffuseAmbientColorsEjji kind:function(arm,size=0x24) addr:0x020b3900
-_ZN12RenderConfig20SetPolygonAttributesEjjjjjj kind:function(arm,size=0x2c) addr:0x020b3924
-_ZN12RenderConfig20GetInverseViewMatrixEv kind:function(arm,size=0x44) addr:0x020b3950
-_Z30RecalculateWorldViewAndInversev kind:function(arm,size=0x58) addr:0x020b3994
-_ZN12RenderConfig26GetCombinedWorldViewMatrixEv kind:function(arm,size=0x38) addr:0x020b39ec
-_ZN12RenderConfig33GetInverseCombinedWorldViewMatrixEv kind:function(arm,size=0x38) addr:0x020b3a24
-_ZN12RenderConfig11GetViewportEPiS0_S0_S0_ kind:function(arm,size=0x74) addr:0x020b3a5c
-_Z40ProcessMaterialAnimationsOnBoundMaterialP18MaterialRenderDataP13AnimationDataj kind:function(arm,size=0x6c) addr:0x020b3ad0
-_Z21AccumulateScaleVectorPN20BoneMatrixRenderData5ScaleEPKS0_ii kind:function(arm,size=0x70) addr:0x020b3b3c
-_Z34ProcessJointAnimationsOnBoneMatrixP20BoneMatrixRenderDataP13AnimationDataj kind:function(arm,size=0x3ec) addr:0x020b3bac
-_Z27ProcessVisibilityAnimationsPiP13AnimationDataj kind:function(arm,size=0x88) addr:0x020b3f98
-_Z21ExecuteRenderCommandsP20RenderCommandHandler kind:function(arm,size=0x48) addr:0x020b4020
-_Z25SetUpRenderCommandHandlerP20RenderCommandHandlerP18ModelRenderContext kind:function(arm,size=0x19c) addr:0x020b4068
-_Z28PopulateBitfieldFromAnimDataPjP13AnimationData kind:function(arm,size=0x68) addr:0x020b4204
-_Z25RenderModelFromRenderDataP18ModelRenderContext kind:function(arm,size=0xdc) addr:0x020b426c
-_Z15RenderCommand_0P20RenderCommandHandleri kind:function(arm,size=0x28) addr:0x020b4348
-_Z15RenderCommand_1P20RenderCommandHandleri kind:function(arm,size=0x28) addr:0x020b4370
-_Z15RenderCommand_2P20RenderCommandHandleri kind:function(arm,size=0x17c) addr:0x020b4398
-_Z15RenderCommand_3P20RenderCommandHandleri kind:function(arm,size=0xcc) addr:0x020b4514
-_Z16MaterialBindProcP20RenderCommandHandleriP13NSBXXMaterialj kind:function(arm,size=0x488) addr:0x020b45e0
-_Z15RenderCommand_4P20RenderCommandHandleri kind:function(arm,size=0xb0) addr:0x020b4a68
-_Z12MeshDrawProcP20RenderCommandHandleriP9NSBXXMeshj kind:function(arm,size=0xd4) addr:0x020b4b18
-_Z15RenderCommand_5P20RenderCommandHandleri kind:function(arm,size=0xa0) addr:0x020b4bec
-_Z15RenderCommand_6P20RenderCommandHandleri kind:function(arm,size=0x460) addr:0x020b4c8c
-_Z15RenderCommand_7P20RenderCommandHandleri kind:function(arm,size=0x308) addr:0x020b50ec
-_Z15RenderCommand_8P20RenderCommandHandleri kind:function(arm,size=0x364) addr:0x020b53f4
-_Z15RenderCommand_9P20RenderCommandHandleri kind:function(arm,size=0x75c) addr:0x020b5758
-_Z16RenderCommand_10P20RenderCommandHandleri kind:function(arm,size=0xdc) addr:0x020b5eb4
-_Z16RenderCommand_11P20RenderCommandHandleri kind:function(arm,size=0x70) addr:0x020b5f90
-_Z16RenderCommand_12P20RenderCommandHandleri kind:function(arm,size=0x344) addr:0x020b6000
-_Z16RenderCommand_13P20RenderCommandHandleri kind:function(arm,size=0x3b0) addr:0x020b6344
-_Z22RenderMeshWithMaterialP18NSBXXInternalModeljji kind:function(arm,size=0x2a4) addr:0x020b66f4
-SendQueuedDataToGeometryFifo kind:function(arm,size=0x5c) addr:0x020b6998
-_Z25WaitForFifoProcessingDonev kind:function(arm,size=0x18) addr:0x020b69f4
-_Z28OnGeometryFifoProcessingDonei kind:function(arm,size=0xc) addr:0x020b6a0c
-SendRawDataToGeometryFifo kind:function(arm,size=0xb4) addr:0x020b6a18
-SubmitCommandToGeometryFifo kind:function(arm,size=0xe4) addr:0x020b6acc
-_Z38GetCurrentPositionAndDirectionMatricesP9Matrix4x3P9Matrix3x3 kind:function(arm,size=0x8c) addr:0x020b6bb0
-_Z40GetModelBonePositionAndDirectionMatricesP18ModelRenderContextP9Matrix4x3P9Matrix3x3j kind:function(arm,size=0xac) addr:0x020b6c3c
-_Z17Finish3DRenderingv kind:function(arm,size=0x28) addr:0x020b6ce8
-_Z31ConvertWorldToScreenCoordinatesPK8Vector3iPiS2_ kind:function(arm,size=0x188) addr:0x020b6d10
-NSBXX_Model_AllocateAnimationData kind:function(arm,size=0x24) addr:0x020b6e98
-NSBXX_Model_SetAllMaterialFlags kind:function(arm,size=0xa8) addr:0x020b6ebc
-NSBXX_Model_AdjustPolygonAttrMask kind:function(arm,size=0xa8) addr:0x020b6f64
-NSBXX_Model_SetMaterialDiffuseReflectionColor kind:function(arm,size=0x80) addr:0x020b700c
-NSBXX_Model_SetMaterialAmbientReflectionColor kind:function(arm,size=0x80) addr:0x020b708c
-NSBXX_Model_SetMaterialPolygonID kind:function(arm,size=0x78) addr:0x020b710c
-NSBXX_Model_SetMaterialAlpha kind:function(arm,size=0x78) addr:0x020b7184
-NSBXX_Model_GetMaterialPolygonID kind:function(arm,size=0x70) addr:0x020b71fc
-NSBXX_Model_SetDiffuseReflectionColor kind:function(arm,size=0x40) addr:0x020b726c
-NSBXX_Model_SetAmbientReflectionColor kind:function(arm,size=0x40) addr:0x020b72ac
-NSBXX_Model_SetPolygonID kind:function(arm,size=0x40) addr:0x020b72ec
-NSBXX_Model_SetAlpha kind:function(arm,size=0x40) addr:0x020b732c
-NSBXXNameList_Search kind:function(arm,size=0x1c0) addr:0x020b736c
-NSBXXNameList_SearchIndex kind:function(arm,size=0x168) addr:0x020b752c
-NSBXX_GetFirstSubfile kind:function(arm,size=0x10) addr:0x020b7694
-NSBXX_GetTEXFile kind:function(arm,size=0x40) addr:0x020b76a4
-NSBXX_GetObjectFromFirstSubfile kind:function(arm,size=0x5c) addr:0x020b76e4
-NSBXX_PatternAnimation_GetTextureName kind:function(arm,size=0x2c) addr:0x020b7740
-NSBXX_PatternAnimation_GetPaletteName kind:function(arm,size=0x2c) addr:0x020b776c
-NSBXX_PatternAnimation_GetKeyframe kind:function(arm,size=0x74) addr:0x020b7798
-NSBXX_PatternAnimation_GetTrack kind:function(arm,size=0x34) addr:0x020b780c
-_Z31InitializeModelAnimationFromJACP13AnimationDataPvP18NSBXXInternalModel kind:function(arm,size=0x7c) addr:0x020b7840
-_Z30JACAnimationProcessingCallbackPvP13AnimationDatai kind:function(arm,size=0x3c) addr:0x020b78bc
-_Z24ApplyBindPoseTranslationP20BoneMatrixRenderData kind:function(arm,size=0x98) addr:0x020b78f8
-_Z20ApplyBindPoseScalingP20BoneMatrixRenderData kind:function(arm,size=0x90) addr:0x020b7990
-_Z21ApplyBindPoseRotationP20BoneMatrixRenderData kind:function(arm,size=0x180) addr:0x020b7a20
-_Z36CalculateBoneMatrixRenderDataFromJACP17NSBXXAnimationJACiiP20BoneMatrixRenderData kind:function(arm,size=0x3b4) addr:0x020b7ba0
-_Z38CalculateTranslationAmountFrameAlignedPiiPN17NSBXXAnimationJAC5Track15ChannelNonConstEPS0_ kind:function(arm,size=0x160) addr:0x020b7f54
-_Z32CalculateTranslationAmountSmoothPiiPN17NSBXXAnimationJAC5Track15ChannelNonConstEPS0_ kind:function(arm,size=0x15c) addr:0x020b80b4
-_Z34CalculateScalingAmountFrameAlignedPiiPN17NSBXXAnimationJAC5Track15ChannelNonConstEPS0_ kind:function(arm,size=0x1f4) addr:0x020b8210
-_Z28CalculateScalingAmountSmoothPiiPN17NSBXXAnimationJAC5Track15ChannelNonConstEPS0_ kind:function(arm,size=0x194) addr:0x020b8404
-_Z29CalculateRotationFrameAlignedP9Matrix3x3iPN17NSBXXAnimationJAC5Track15ChannelNonConstEPS1_ kind:function(arm,size=0x418) addr:0x020b8598
-_Z23CalculateRotationSmoothP9Matrix3x3iPN17NSBXXAnimationJAC5Track15ChannelNonConstEPS1_ kind:function(arm,size=0x344) addr:0x020b89b0
-_Z18GetMatrixFromIndexP9Matrix3x3iii kind:function(arm,size=0x16c) addr:0x020b8cf4
-_Z29GetColorFromMaterialAnimationP17NSBXXAnimationMAMjj kind:function(arm,size=0x168) addr:0x020b8e60
-_Z29GetAlphaFromMaterialAnimationP17NSBXXAnimationMAMjj kind:function(arm,size=0xec) addr:0x020b8fc8
-_Z31InitializeModelAnimationFromMAMP13AnimationDataPvP18NSBXXInternalModel kind:function(arm,size=0xd4) addr:0x020b90b4
-_Z30MAMAnimationProcessingCallbackPvP13AnimationDatai kind:function(arm,size=0xf0) addr:0x020b9188
-_Z24SampleScalarFromMATTrackP17NSBXXAnimationMATjjj kind:function(arm,size=0x100) addr:0x020b9278
-_Z24SampleSinCosFromMATTrackP17NSBXXAnimationMATjjj kind:function(arm,size=0x10c) addr:0x020b9378
-_Z32CalculateTextureTransformFromMATP17NSBXXAnimationMATtjP18MaterialRenderData kind:function(arm,size=0x100) addr:0x020b9484
-_Z31InitializeModelAnimationFromMATP13AnimationDataPvP18NSBXXInternalModel kind:function(arm,size=0xd4) addr:0x020b9584
-_Z30MATAnimationProcessingCallbackPvP13AnimationDatai kind:function(arm,size=0x44) addr:0x020b9658
-_Z31InitializeModelAnimationFromMPTP13AnimationDataPvP18NSBXXInternalModel kind:function(arm,size=0xdc) addr:0x020b969c
-_Z27SetMaterialTextureForRenderP8NSBXXTexPKcP18MaterialRenderData kind:function(arm,size=0xd8) addr:0x020b9778
-_Z27SetMaterialPaletteForRenderP8NSBXXTexPKcP18MaterialRenderData kind:function(arm,size=0x68) addr:0x020b9850
-_Z30MPTAnimationProcessingCallbackPvP13AnimationDatai kind:function(arm,size=0x74) addr:0x020b98b8
-_Z31InitializeModelAnimationFromVAVP13AnimationDataPvP18NSBXXInternalModel kind:function(arm,size=0x4c) addr:0x020b992c
-_Z30VAVAnimationProcessingCallbackPvP13AnimationDatai kind:function(arm,size=0x38) addr:0x020b9978
-_Z34BoneMatrixDataSubmissionProc_Type0P20BoneMatrixRenderData kind:function(arm,size=0x7c) addr:0x020b99b0
-_Z36BoneMatrixScaleCalculationProc_Type0P20BoneMatrixRenderDataPN15NSBXXBoneMatrix7ScalingEPhi kind:function(arm,size=0x40) addr:0x020b9a2c
-_Z34BoneMatrixDataSubmissionProc_Type1P20BoneMatrixRenderData kind:function(arm,size=0xc4) addr:0x020b9a6c
-_Z36BoneMatrixScaleCalculationProc_Type1P20BoneMatrixRenderDataPN15NSBXXBoneMatrix7ScalingEPhi kind:function(arm,size=0x150) addr:0x020b9b30
-CreateTextureMatrix_v0_RotateTranslateScale kind:function(arm,size=0x108) addr:0x020b9c80
-CreateTextureMatrix_v0_RotateTranslate kind:function(arm,size=0xd0) addr:0x020b9d88
-CreateTextureMatrix_v0_TranslateScale kind:function(arm,size=0x7c) addr:0x020b9e58
-CreateTextureMatrix_v0_Translate kind:function(arm,size=0x48) addr:0x020b9ed4
-CreateTextureMatrix_v0_RotateScale kind:function(arm,size=0xe0) addr:0x020b9f1c
-CreateTextureMatrix_v0_Rotate kind:function(arm,size=0xb8) addr:0x020b9ffc
-CreateTextureMatrix_v0_Scale kind:function(arm,size=0x44) addr:0x020ba0b4
-CreateTextureMatrix_v0_NoExtensions kind:function(arm,size=0x24) addr:0x020ba0f8
-_Z35MaterialTextureMatrixLoadProc_Type0P18MaterialRenderData kind:function(arm,size=0x148) addr:0x020ba11c
-_Z34BoneMatrixDataSubmissionProc_Type2P20BoneMatrixRenderData kind:function(arm,size=0x12c) addr:0x020ba264
-_Z36BoneMatrixScaleCalculationProc_Type2P20BoneMatrixRenderDataPN15NSBXXBoneMatrix7ScalingEPhi kind:function(arm,size=0x21c) addr:0x020ba390
-_Z35MaterialTextureMatrixLoadProc_Type1P18MaterialRenderData kind:function(arm,size=0x1cc) addr:0x020ba5ac
-CreateTextureMatrix_v2_TranslateRotateScale kind:function(arm,size=0x108) addr:0x020ba778
-CreateTextureMatrix_v2_TranslateRotate kind:function(arm,size=0xe8) addr:0x020ba880
-CreateTextureMatrix_v2_TranslateScale kind:function(arm,size=0x80) addr:0x020ba968
-CreateTextureMatrix_v2_Translate kind:function(arm,size=0x48) addr:0x020ba9e8
-CreateTextureMatrix_v2_RotateScale kind:function(arm,size=0xf8) addr:0x020baa30
-CreateTextureMatrix_v2_Rotate kind:function(arm,size=0xd8) addr:0x020bab28
-CreateTextureMatrix_v2_Scale kind:function(arm,size=0x50) addr:0x020bac00
-CreateTextureMatrix_v2_NoExtensions kind:function(arm,size=0x24) addr:0x020bac50
-_Z35MaterialTextureMatrixLoadProc_Type2P18MaterialRenderData kind:function(arm,size=0x148) addr:0x020bac74
-CreateTextureMatrix_v3_ScaleTranslateRotate kind:function(arm,size=0x154) addr:0x020badbc
-CreateTextureMatrix_v3_TranslateRotate kind:function(arm,size=0xe0) addr:0x020baf10
-CreateTextureMatrix_v3_TranslateScale kind:function(arm,size=0x84) addr:0x020baff0
-CreateTextureMatrix_v3_Translate kind:function(arm,size=0x54) addr:0x020bb074
-CreateTextureMatrix_v3_RotateScale kind:function(arm,size=0xcc) addr:0x020bb0c8
-CreateTextureMatrix_v3_Rotate kind:function(arm,size=0xa4) addr:0x020bb194
-CreateTextureMatrix_v3_Scale kind:function(arm,size=0x40) addr:0x020bb238
-CreateTextureMatrix_v3_NoExtensions kind:function(arm,size=0x24) addr:0x020bb278
-_Z35MaterialTextureMatrixLoadProc_Type3P18MaterialRenderData kind:function(arm,size=0x188) addr:0x020bb29c
+_Z33Nitro3Di_GetRequiredAnimationSizePKvPK12Nitro3DModel kind:function(arm,size=0x60) addr:0x020b2a6c
+_Z27Nitro3Di_InitModelAnimationP16Nitro3DAnimationPvP12Nitro3DModelP17Nitro3DTextureSet kind:function(arm,size=0xa0) addr:0x020b2acc
+_Z29Nitro3D_PopulateRenderContextP20Nitro3DRenderContextP12Nitro3DModel kind:function(arm,size=0x54) addr:0x020b2b6c
+_Z18AddAnimationToListPP16Nitro3DAnimationS0_ kind:function(arm,size=0xb8) addr:0x020b2bc0 local
+_Z28PopulateBitfieldFromAnimDataPjP16Nitro3DAnimation kind:function(arm,size=0x68) addr:0x020b2c78 local
+_Z29Nitro3D_AddAnimationToContextP20Nitro3DRenderContextP16Nitro3DAnimation kind:function(arm,size=0x80) addr:0x020b2ce0
+_Z23RemoveAnimationFromListPP16Nitro3DAnimationS0_ kind:function(arm,size=0x74) addr:0x020b2d60 local
+_Z34Nitro3D_RemoveAnimationFromContextP20Nitro3DRenderContextP16Nitro3DAnimation kind:function(arm,size=0x54) addr:0x020b2dd4
+_Z21Nitro3D_SetRenderHookP20Nitro3DRenderContextPFvP27Nitro3DRenderCommandHandlerEiii kind:function(arm,size=0x14) addr:0x020b2e28
+_Z30Nitro3D_GetTextureBlock1LengthPK17Nitro3DTextureSet kind:function(arm,size=0x14) addr:0x020b2e3c
+_Z30Nitro3D_GetTextureBlock2LengthPK17Nitro3DTextureSet kind:function(arm,size=0x14) addr:0x020b2e50
+_Z36Nitro3D_StoreTextureImageVRAMOffsetsP17Nitro3DTextureSetii kind:function(arm,size=0x14) addr:0x020b2e64
+_Z30Nitro3D_LoadTextureImageToVRAMP17Nitro3DTextureSetb kind:function(arm,size=0xb8) addr:0x020b2e78
+_Z30Nitro3D_GetTextureBlock4LengthPK17Nitro3DTextureSet kind:function(arm,size=0x14) addr:0x020b2f30
+_Z38Nitro3D_StoreTexturePaletteVRAMOffsetsP17Nitro3DTextureSeti kind:function(arm,size=0x8) addr:0x020b2f44
+_Z32Nitro3D_LoadTexturePaletteToVRAMP17Nitro3DTextureSetb kind:function(arm,size=0x50) addr:0x020b2f4c
+_Z34AttachTextureImageToModelMaterialsP21Nitro3DModelMaterialsPNS_4PairEP17Nitro3DTextureSetPNS3_9ImageDataE kind:function(arm,size=0x130) addr:0x020b2f9c local
+_Z36DetachTextureImageFromModelMaterialsP21Nitro3DModelMaterialsPNS_4PairE kind:function(arm,size=0xb8) addr:0x020b30cc local
+_Z26Nitro3D_AttachTextureImageP12Nitro3DModelP17Nitro3DTextureSet kind:function(arm,size=0x100) addr:0x020b3184
+_Z26Nitro3D_DetachTextureImageP12Nitro3DModel kind:function(arm,size=0x8c) addr:0x020b3284
+_Z36AttachTexturePaletteToModelMaterialsP21Nitro3DModelMaterialsPNS_4PairEP17Nitro3DTextureSetPNS3_11PaletteDataE kind:function(arm,size=0xe0) addr:0x020b3310 local
+_Z28Nitro3D_AttachTexturePaletteP12Nitro3DModelP17Nitro3DTextureSet kind:function(arm,size=0x108) addr:0x020b33f0
+_Z28Nitro3D_DetachTexturePaletteP12Nitro3DModel kind:function(arm,size=0x84) addr:0x020b34f8
+_Z28Nitro3D_LinkTexturesToModelsP15Nitro3DModelSetP17Nitro3DTextureSet kind:function(arm,size=0xb0) addr:0x020b357c
+_Z32Nitro3D_UnlinkTexturesFromModelsP15Nitro3DModelSet kind:function(arm,size=0x94) addr:0x020b362c
+_ZN19Nitro3DRenderConfig5ResetEv kind:function(arm,size=0x154) addr:0x020b36c0
+_ZN19Nitro3DRenderConfig12SubmitToFifoEv kind:function(arm,size=0x3c) addr:0x020b3814
+_ZN19Nitro3DRenderConfig17SetObjectPositionEP8Vector3i kind:function(arm,size=0x30) addr:0x020b3850
+_ZN19Nitro3DRenderConfig14SetObjectScaleEP8Vector3i kind:function(arm,size=0x30) addr:0x020b3880
+_ZN19Nitro3DRenderConfig14SetLightVectorEjsss kind:function(arm,size=0x3c) addr:0x020b38b0
+_ZN19Nitro3DRenderConfig13SetLightColorEjj kind:function(arm,size=0x14) addr:0x020b38ec
+_ZN19Nitro3DRenderConfig23SetDiffuseAmbientColorsEjji kind:function(arm,size=0x24) addr:0x020b3900
+_ZN19Nitro3DRenderConfig20SetPolygonAttributesEjjjjjj kind:function(arm,size=0x2c) addr:0x020b3924
+_ZN19Nitro3DRenderConfig20GetInverseViewMatrixEv kind:function(arm,size=0x44) addr:0x020b3950
+_Z30RecalculateWorldViewAndInversev kind:function(arm,size=0x58) addr:0x020b3994 local
+_ZN19Nitro3DRenderConfig26GetCombinedWorldViewMatrixEv kind:function(arm,size=0x38) addr:0x020b39ec
+_ZN19Nitro3DRenderConfig33GetInverseCombinedWorldViewMatrixEv kind:function(arm,size=0x38) addr:0x020b3a24
+_ZN19Nitro3DRenderConfig11GetViewportEPiS0_S0_S0_ kind:function(arm,size=0x74) addr:0x020b3a5c
+_Z41Nitro3Di_DefaultProcessMaterialAnimationsP18MaterialRenderDataP16Nitro3DAnimationj kind:function(arm,size=0x6c) addr:0x020b3ad0
+_Z21AccumulateScaleVectorPN20BoneMatrixRenderData5ScaleEPKS0_ii kind:function(arm,size=0x70) addr:0x020b3b3c local
+_Z38Nitro3Di_DefaultProcessJointAnimationsP20BoneMatrixRenderDataP16Nitro3DAnimationj kind:function(arm,size=0x3ec) addr:0x020b3bac
+_Z43Nitro3Di_DefaultProcessVisibilityAnimationsPiP16Nitro3DAnimationj kind:function(arm,size=0x88) addr:0x020b3f98
+_Z21ExecuteRenderCommandsP27Nitro3DRenderCommandHandler kind:function(arm,size=0x48) addr:0x020b4020 local
+_Z25SetUpRenderCommandHandlerP27Nitro3DRenderCommandHandlerP20Nitro3DRenderContext kind:function(arm,size=0x19c) addr:0x020b4068 local
+_Z28PopulateBitfieldFromAnimDataPjP16Nitro3DAnimation kind:function(arm,size=0x68) addr:0x020b4204 local
+_Z14Nitro3D_RenderP20Nitro3DRenderContext kind:function(arm,size=0xdc) addr:0x020b426c
+_Z15RenderCommand_0P27Nitro3DRenderCommandHandleri kind:function(arm,size=0x28) addr:0x020b4348 local
+_Z15RenderCommand_1P27Nitro3DRenderCommandHandleri kind:function(arm,size=0x28) addr:0x020b4370 local
+_Z15RenderCommand_2P27Nitro3DRenderCommandHandleri kind:function(arm,size=0x17c) addr:0x020b4398 local
+_Z15RenderCommand_3P27Nitro3DRenderCommandHandleri kind:function(arm,size=0xcc) addr:0x020b4514 local
+_Z16MaterialBindProcP27Nitro3DRenderCommandHandleriP15Nitro3DMaterialj kind:function(arm,size=0x488) addr:0x020b45e0 local
+_Z15RenderCommand_4P27Nitro3DRenderCommandHandleri kind:function(arm,size=0xb0) addr:0x020b4a68 local
+_Z12MeshDrawProcP27Nitro3DRenderCommandHandleriP11Nitro3DMeshj kind:function(arm,size=0xd4) addr:0x020b4b18 local
+_Z15RenderCommand_5P27Nitro3DRenderCommandHandleri kind:function(arm,size=0xa0) addr:0x020b4bec local
+_Z15RenderCommand_6P27Nitro3DRenderCommandHandleri kind:function(arm,size=0x460) addr:0x020b4c8c local
+_Z15RenderCommand_7P27Nitro3DRenderCommandHandleri kind:function(arm,size=0x308) addr:0x020b50ec local
+_Z15RenderCommand_8P27Nitro3DRenderCommandHandleri kind:function(arm,size=0x364) addr:0x020b53f4 local
+_Z15RenderCommand_9P27Nitro3DRenderCommandHandleri kind:function(arm,size=0x75c) addr:0x020b5758 local
+_Z16RenderCommand_10P27Nitro3DRenderCommandHandleri kind:function(arm,size=0xdc) addr:0x020b5eb4 local
+_Z16RenderCommand_11P27Nitro3DRenderCommandHandleri kind:function(arm,size=0x70) addr:0x020b5f90 local
+_Z16RenderCommand_12P27Nitro3DRenderCommandHandleri kind:function(arm,size=0x344) addr:0x020b6000 local
+_Z16RenderCommand_13P27Nitro3DRenderCommandHandleri kind:function(arm,size=0x3b0) addr:0x020b6344 local
+_Z30Nitro3D_RenderMeshWithMaterialP12Nitro3DModeljji kind:function(arm,size=0x2a4) addr:0x020b66f4
+_Z22Nitro3D_FlushFifoQueuev kind:function(arm,size=0x5c) addr:0x020b6998
+_Z25WaitForFifoProcessingDonev kind:function(arm,size=0x18) addr:0x020b69f4 local
+_Z28OnGeometryFifoProcessingDonei kind:function(arm,size=0xc) addr:0x020b6a0c local
+_Z26Nitro3Di_SendRawDataToFifoPKjj kind:function(arm,size=0xb4) addr:0x020b6a18
+_Z24Nitro3Di_SendFifoCommandiPKjj kind:function(arm,size=0xe4) addr:0x020b6acc
+_Z32Nitro3D_GetCurrentPosDirMatricesP9Matrix4x3P9Matrix3x3 kind:function(arm,size=0x8c) addr:0x020b6bb0
+_Z29Nitro3D_GetBonePosDirMatricesP20Nitro3DRenderContextP9Matrix4x3P9Matrix3x3j kind:function(arm,size=0xac) addr:0x020b6c3c
+_Z20Nitro3D_FinishRenderv kind:function(arm,size=0x28) addr:0x020b6ce8
+_Z21Nitro3D_WorldToScreenPK8Vector3iPiS2_ kind:function(arm,size=0x188) addr:0x020b6d10
+_Z30Nitro3D_AllocateModelAnimationP14AllocatorUnionPKvP12Nitro3DModel kind:function(arm,size=0x24) addr:0x020b6e98
+_Z35Nitro3D_ConfigureModelMaterialFlagsP12Nitro3DModelij kind:function(arm,size=0xa8) addr:0x020b6ebc
+_Z37Nitro3D_ConfigureModelPolygonAttrMaskP12Nitro3DModelij kind:function(arm,size=0xa8) addr:0x020b6f64
+_Z29SetSingleMaterialDiffuseColorP12Nitro3DModelji kind:function(arm,size=0x80) addr:0x020b700c local
+_Z39SetSingleMaterialAmbientReflectionColorP12Nitro3DModelji kind:function(arm,size=0x80) addr:0x020b708c local
+_Z26SetSingleMaterialPolygonIDP12Nitro3DModelji kind:function(arm,size=0x78) addr:0x020b710c local
+_Z22SetSingleMaterialAlphaP12Nitro3DModelji kind:function(arm,size=0x78) addr:0x020b7184 local
+_Z33Nitro3D_GetModelMaterialPolygonIDP12Nitro3DModelj kind:function(arm,size=0x70) addr:0x020b71fc
+_Z28Nitro3D_SetModelDiffuseColorP12Nitro3DModeli kind:function(arm,size=0x40) addr:0x020b726c
+_Z28Nitro3D_SetModelAmbientColorP12Nitro3DModeli kind:function(arm,size=0x40) addr:0x020b72ac
+_Z25Nitro3D_SetModelPolygonIDP12Nitro3DModeli kind:function(arm,size=0x40) addr:0x020b72ec
+_Z21Nitro3D_SetModelAlphaP12Nitro3DModeli kind:function(arm,size=0x40) addr:0x020b732c
+_Z24Nitro3D_GetNameListEntryPK15Nitro3DNameListPKc kind:function(arm,size=0x1c0) addr:0x020b736c
+_Z24Nitro3D_GetNameListIndexPK15Nitro3DNameListPKc kind:function(arm,size=0x168) addr:0x020b752c
+_Z23Nitro3D_GetFirstSubfileP17Nitro3DFileHeader kind:function(arm,size=0x10) addr:0x020b7694
+_Z27Nitro3D_GetTexturesFromFileP17Nitro3DFileHeader kind:function(arm,size=0x40) addr:0x020b76a4
+_Z29Nitro3D_GetInnerObjectByIndexP17Nitro3DFileHeaderj kind:function(arm,size=0x5c) addr:0x020b76e4
+_Z39Nitro3Di_GetPatternAnimationTextureNameP10Nitro3DMPTj kind:function(arm,size=0x2c) addr:0x020b7740
+_Z39Nitro3Di_GetPatternAnimationPaletteNameP10Nitro3DMPTj kind:function(arm,size=0x2c) addr:0x020b776c
+_Z36Nitro3Di_GetPatternAnimationKeyframeP10Nitro3DMPTtt kind:function(arm,size=0x74) addr:0x020b7798
+_Z33Nitro3Di_GetPatternAnimationTrackP10Nitro3DMPTj kind:function(arm,size=0x34) addr:0x020b780c
+_Z29Nitro3Di_InitAnimationFromJACP16Nitro3DAnimationPvP12Nitro3DModel kind:function(arm,size=0x7c) addr:0x020b7840
+_Z28Nitro3Di_ProcessAnimationJACPvP16Nitro3DAnimationi kind:function(arm,size=0x3c) addr:0x020b78bc
+_Z24ApplyBindPoseTranslationP20BoneMatrixRenderData kind:function(arm,size=0x98) addr:0x020b78f8 local
+_Z20ApplyBindPoseScalingP20BoneMatrixRenderData kind:function(arm,size=0x90) addr:0x020b7990 local
+_Z21ApplyBindPoseRotationP20BoneMatrixRenderData kind:function(arm,size=0x180) addr:0x020b7a20 local
+_Z29CalculateBoneMatrixRenderDataP10Nitro3DJACiiP20BoneMatrixRenderData kind:function(arm,size=0x3b4) addr:0x020b7ba0 local
+_Z38CalculateTranslationAmountFrameAlignedPiiPN10Nitro3DJAC5Track15ChannelNonConstEPS0_ kind:function(arm,size=0x160) addr:0x020b7f54 local
+_Z32CalculateTranslationAmountSmoothPiiPN10Nitro3DJAC5Track15ChannelNonConstEPS0_ kind:function(arm,size=0x15c) addr:0x020b80b4 local
+_Z34CalculateScalingAmountFrameAlignedPiiPN10Nitro3DJAC5Track15ChannelNonConstEPS0_ kind:function(arm,size=0x1f4) addr:0x020b8210 local
+_Z28CalculateScalingAmountSmoothPiiPN10Nitro3DJAC5Track15ChannelNonConstEPS0_ kind:function(arm,size=0x194) addr:0x020b8404 local
+_Z29CalculateRotationFrameAlignedP9Matrix3x3iPN10Nitro3DJAC5Track15ChannelNonConstEPS1_ kind:function(arm,size=0x418) addr:0x020b8598 local
+_Z23CalculateRotationSmoothP9Matrix3x3iPN10Nitro3DJAC5Track15ChannelNonConstEPS1_ kind:function(arm,size=0x344) addr:0x020b89b0 local
+_Z12LookupMatrixP9Matrix3x3iii kind:function(arm,size=0x16c) addr:0x020b8cf4 local
+_Z14CalculateColorP10Nitro3DMAMjj kind:function(arm,size=0x168) addr:0x020b8e60 local
+_Z14CalculateAlphaP10Nitro3DMAMjj kind:function(arm,size=0xec) addr:0x020b8fc8 local
+_Z29Nitro3Di_InitAnimationFromMAMP16Nitro3DAnimationPvP12Nitro3DModel kind:function(arm,size=0xd4) addr:0x020b90b4
+_Z28Nitro3Di_ProcessAnimationMAMPvP16Nitro3DAnimationi kind:function(arm,size=0xf0) addr:0x020b9188
+_Z12SampleScalarP10Nitro3DMATjjj kind:function(arm,size=0x100) addr:0x020b9278 local
+_Z12SampleSinCosP10Nitro3DMATjjj kind:function(arm,size=0x10c) addr:0x020b9378 local
+_Z25CalculateTextureTransformP10Nitro3DMATtjP18MaterialRenderData kind:function(arm,size=0x100) addr:0x020b9484 local
+_Z29Nitro3Di_InitAnimationFromMATP16Nitro3DAnimationPvP12Nitro3DModel kind:function(arm,size=0xd4) addr:0x020b9584
+_Z28Nitro3Di_ProcessAnimationMATPvP16Nitro3DAnimationi kind:function(arm,size=0x44) addr:0x020b9658
+_Z29Nitro3Di_InitAnimationFromMPTP16Nitro3DAnimationPvP12Nitro3DModel kind:function(arm,size=0xdc) addr:0x020b969c
+_Z18SetMaterialTextureP17Nitro3DTextureSetPKcP18MaterialRenderData kind:function(arm,size=0xd8) addr:0x020b9778 local
+_Z18SetMaterialPaletteP17Nitro3DTextureSetPKcP18MaterialRenderData kind:function(arm,size=0x68) addr:0x020b9850 local
+_Z28Nitro3Di_ProcessAnimationMPTPvP16Nitro3DAnimationi kind:function(arm,size=0x74) addr:0x020b98b8
+_Z29Nitro3Di_InitAnimationFromVAVP16Nitro3DAnimationPvP12Nitro3DModel kind:function(arm,size=0x4c) addr:0x020b992c
+_Z28Nitro3Di_ProcessAnimationVAVPvP16Nitro3DAnimationi kind:function(arm,size=0x38) addr:0x020b9978
+_Z42Nitro3Di_BoneMatrixDataSubmissionProcType0P20BoneMatrixRenderData kind:function(arm,size=0x7c) addr:0x020b99b0
+_Z44Nitro3Di_BoneMatrixScaleCalculationProcType0P20BoneMatrixRenderDataPN17Nitro3DBoneMatrix7ScalingEPhi kind:function(arm,size=0x40) addr:0x020b9a2c
+_Z42Nitro3Di_BoneMatrixDataSubmissionProcType1P20BoneMatrixRenderData kind:function(arm,size=0xc4) addr:0x020b9a6c
+_Z44Nitro3Di_BoneMatrixScaleCalculationProcType1P20BoneMatrixRenderDataPN17Nitro3DBoneMatrix7ScalingEPhi kind:function(arm,size=0x150) addr:0x020b9b30
+_Z43CreateTextureMatrix_v0_RotateTranslateScaleP9Matrix4x4P18MaterialRenderData kind:function(arm,size=0x108) addr:0x020b9c80 local
+_Z38CreateTextureMatrix_v0_RotateTranslateP9Matrix4x4P18MaterialRenderData kind:function(arm,size=0xd0) addr:0x020b9d88 local
+_Z37CreateTextureMatrix_v0_TranslateScaleP9Matrix4x4P18MaterialRenderData kind:function(arm,size=0x7c) addr:0x020b9e58 local
+_Z32CreateTextureMatrix_v0_TranslateP9Matrix4x4P18MaterialRenderData kind:function(arm,size=0x48) addr:0x020b9ed4 local
+_Z34CreateTextureMatrix_v0_RotateScaleP9Matrix4x4P18MaterialRenderData kind:function(arm,size=0xe0) addr:0x020b9f1c local
+_Z29CreateTextureMatrix_v0_RotateP9Matrix4x4P18MaterialRenderData kind:function(arm,size=0xb8) addr:0x020b9ffc local
+_Z28CreateTextureMatrix_v0_ScaleP9Matrix4x4P18MaterialRenderData kind:function(arm,size=0x44) addr:0x020ba0b4 local
+_Z35CreateTextureMatrix_v0_NoExtensionsP9Matrix4x4P18MaterialRenderData kind:function(arm,size=0x24) addr:0x020ba0f8 local
+_Z43Nitro3Di_MaterialTextureMatrixLoadProcType0P18MaterialRenderData kind:function(arm,size=0x148) addr:0x020ba11c
+_Z42Nitro3Di_BoneMatrixDataSubmissionProcType2P20BoneMatrixRenderData kind:function(arm,size=0x12c) addr:0x020ba264
+_Z44Nitro3Di_BoneMatrixScaleCalculationProcType2P20BoneMatrixRenderDataPN17Nitro3DBoneMatrix7ScalingEPhi kind:function(arm,size=0x21c) addr:0x020ba390
+_Z43Nitro3Di_MaterialTextureMatrixLoadProcType1P18MaterialRenderData kind:function(arm,size=0x1cc) addr:0x020ba5ac
+_Z43CreateTextureMatrix_v2_TranslateRotateScaleP9Matrix4x4P18MaterialRenderData kind:function(arm,size=0x108) addr:0x020ba778 local
+_Z38CreateTextureMatrix_v2_TranslateRotateP9Matrix4x4P18MaterialRenderData kind:function(arm,size=0xe8) addr:0x020ba880 local
+_Z37CreateTextureMatrix_v2_TranslateScaleP9Matrix4x4P18MaterialRenderData kind:function(arm,size=0x80) addr:0x020ba968 local
+_Z32CreateTextureMatrix_v2_TranslateP9Matrix4x4P18MaterialRenderData kind:function(arm,size=0x48) addr:0x020ba9e8 local
+_Z34CreateTextureMatrix_v2_RotateScaleP9Matrix4x4P18MaterialRenderData kind:function(arm,size=0xf8) addr:0x020baa30 local
+_Z29CreateTextureMatrix_v2_RotateP9Matrix4x4P18MaterialRenderData kind:function(arm,size=0xd8) addr:0x020bab28 local
+_Z28CreateTextureMatrix_v2_ScaleP9Matrix4x4P18MaterialRenderData kind:function(arm,size=0x50) addr:0x020bac00 local
+_Z35CreateTextureMatrix_v2_NoExtensionsP9Matrix4x4P18MaterialRenderData kind:function(arm,size=0x24) addr:0x020bac50 local
+_Z43Nitro3Di_MaterialTextureMatrixLoadProcType2P18MaterialRenderData kind:function(arm,size=0x148) addr:0x020bac74
+_Z43CreateTextureMatrix_v3_RotateTranslateScaleP9Matrix4x4P18MaterialRenderData kind:function(arm,size=0x154) addr:0x020badbc local
+_Z38CreateTextureMatrix_v3_RotateTranslateP9Matrix4x4P18MaterialRenderData kind:function(arm,size=0xe0) addr:0x020baf10 local
+_Z37CreateTextureMatrix_v3_TranslateScaleP9Matrix4x4P18MaterialRenderData kind:function(arm,size=0x84) addr:0x020baff0 local
+_Z32CreateTextureMatrix_v3_TranslateP9Matrix4x4P18MaterialRenderData kind:function(arm,size=0x54) addr:0x020bb074 local
+_Z34CreateTextureMatrix_v3_RotateScaleP9Matrix4x4P18MaterialRenderData kind:function(arm,size=0xcc) addr:0x020bb0c8 local
+_Z29CreateTextureMatrix_v3_RotateP9Matrix4x4P18MaterialRenderData kind:function(arm,size=0xa4) addr:0x020bb194 local
+_Z28CreateTextureMatrix_v3_ScaleP9Matrix4x4P18MaterialRenderData kind:function(arm,size=0x40) addr:0x020bb238 local
+_Z35CreateTextureMatrix_v3_NoExtensionsP9Matrix4x4P18MaterialRenderData kind:function(arm,size=0x24) addr:0x020bb278 local
+_Z43Nitro3Di_MaterialTextureMatrixLoadProcType3P18MaterialRenderData kind:function(arm,size=0x188) addr:0x020bb29c
 _Z23InvalidTextureVRAMAllocjii kind:function(arm,size=0x8) addr:0x020bb424 local
 _Z22InvalidTextureVRAMFreej kind:function(arm,size=0x8) addr:0x020bb42c local
 _Z23InvalidPaletteVRAMAllocjii kind:function(arm,size=0x8) addr:0x020bb434 local
@@ -5848,8 +5848,8 @@ _Z30UnlockStagedTextureVRAMCopyingv kind:function(arm,size=0x18) addr:0x020dc098
 _Z25AllocateVRAMStagingMemoryj kind:function(arm,size=0x18) addr:0x020dc0b0
 _Z21FreeVRAMStagingMemoryPKv kind:function(arm,size=0x18) addr:0x020dc0c8
 _Z17StageMemoryToVRAM13VRAMSubregionPKvjjbb kind:function(arm,size=0x44) addr:0x020dc0e0
-_Z23StageTexFilePaletteDataPV8NSBXXTexb kind:function(arm,size=0x60) addr:0x020dc124
-_Z21StageTexFileImageDataPV8NSBXXTexb kind:function(arm,size=0x64) addr:0x020dc184
+_Z23StageTexFilePaletteDataPV17Nitro3DTextureSetb kind:function(arm,size=0x60) addr:0x020dc124
+_Z21StageTexFileImageDataPV17Nitro3DTextureSetb kind:function(arm,size=0x64) addr:0x020dc184
 _Z26CancelVRAMStagingOperationi kind:function(arm,size=0x18) addr:0x020dc1e8
 _Z26UpdateVRAMStagingVRAMBanksv kind:function(arm,size=0x14) addr:0x020dc200
 func_020dc214 kind:function(arm,size=0xa8) addr:0x020dc214
@@ -6470,15 +6470,9 @@ data_020e91c8 kind:data(any) addr:0x020e91c8
 data_020e91d4 kind:data(any) addr:0x020e91d4
 data_020e91e0 kind:data(any) addr:0x020e91e0
 data_020e9200 kind:data(any) addr:0x020e9200
-data_020e9240 kind:data(any) addr:0x020e9240
-data_020e9260 kind:data(any) addr:0x020e9260
-data_020e9261 kind:data(any) addr:0x020e9261
-data_020e9262 kind:data(any) addr:0x020e9262
-data_020e9263 kind:data(any) addr:0x020e9263
-data_020e9284 kind:data(any) addr:0x020e9284
-data_020e9285 kind:data(any) addr:0x020e9285
-data_020e9286 kind:data(any) addr:0x020e9286
-data_020e9287 kind:data(any) addr:0x020e9287
+maskLookup$828 kind:data(any) addr:0x020e9240 local
+indexLookup$1130 kind:data(any) addr:0x020e9260 local
+s_pivotIndices kind:data(any) addr:0x020e9284 local
 data_020e92a8 kind:data(any) addr:0x020e92a8
 data_020e9338 kind:data(any) addr:0x020e9338
 data_020e9348 kind:data(any) addr:0x020e9348
@@ -7388,40 +7382,30 @@ data_020f1c08 kind:data(any) addr:0x020f1c08
 data_020f1c20 kind:data(any) addr:0x020f1c20
 data_020f1c38 kind:data(any) addr:0x020f1c38
 data_020f1c51 kind:data(any) addr:0x020f1c51
-data_020f1c6c kind:data(any) addr:0x020f1c6c
-data_020f1c70 kind:data(any) addr:0x020f1c70
-data_020f1c74 kind:data(any) addr:0x020f1c74
-data_020f1c78 kind:data(any) addr:0x020f1c78
-data_020f1c7c kind:data(any) addr:0x020f1c7c
-data_020f1c80 kind:data(any) addr:0x020f1c80
-data_020f1c84 kind:data(any) addr:0x020f1c84
-data_020f1c88 kind:data(any) addr:0x020f1c88
-data_020f1c8c kind:data(any) addr:0x020f1c8c
-data_020f1c90 kind:data(any) addr:0x020f1c90
-data_020f1c94 kind:data(any) addr:0x020f1c94
-data_020f1ce0 kind:data(any) addr:0x020f1ce0
-data_020f1cec kind:data(any) addr:0x020f1cec
-data_020f1cf8 kind:data(any) addr:0x020f1cf8
-data_020f1d08 kind:data(any) addr:0x020f1d08
-data_020f1d0c kind:data(any) addr:0x020f1d0c
-data_020f1d14 kind:data(any) addr:0x020f1d14
-data_020f1d18 kind:data(any) addr:0x020f1d18
-data_020f1d28 kind:data(any) addr:0x020f1d28
-data_020f1d38 kind:data(any) addr:0x020f1d38
-data_020f1d78 kind:data(any) addr:0x020f1d78
-data_020f1d7c kind:data(any) addr:0x020f1d7c
-data_020f1d84 kind:data(any) addr:0x020f1d84
-data_020f1da8 kind:data(any) addr:0x020f1da8
-data_020f1db4 kind:data(any) addr:0x020f1db4
-data_020f1dc0 kind:data(any) addr:0x020f1dc0
-data_020f1dc4 kind:data(any) addr:0x020f1dc4
-data_020f1dcc kind:data(any) addr:0x020f1dcc
-data_020f1df0 kind:data(any) addr:0x020f1df0
-data_020f1dfc kind:data(any) addr:0x020f1dfc
-data_020f1e08 kind:data(any) addr:0x020f1e08
-data_020f1e88 kind:data(any) addr:0x020f1e88
-data_020f1ea8 kind:data(any) addr:0x020f1ea8
-data_020f1ec8 kind:data(any) addr:0x020f1ec8
+s_numAnimationTypes kind:data(any) addr:0x020f1c6c local
+g_pfnNitro3DProcessVAV kind:data(any) addr:0x020f1c70
+g_pfnNitro3DProcessJAC kind:data(any) addr:0x020f1c74
+g_pfnNitro3DProcessMAT kind:data(any) addr:0x020f1c78
+g_pfnNitro3DProcessMPT kind:data(any) addr:0x020f1c7c
+g_pfnNitro3DProcessMAM kind:data(any) addr:0x020f1c80
+g_pfnNitro3DProcessVisibilityAnimations kind:data(any) addr:0x020f1c84
+g_pfnNitro3DProcessJointAnimations kind:data(any) addr:0x020f1c88
+g_pfnNitro3DProcessMaterialAnimations kind:data(any) addr:0x020f1c8c
+s_animationInitLookup kind:data(any) addr:0x020f1c90 local
+g_nitro3DSubmitBoneMatrixProcs kind:data(any) addr:0x020f1ce0
+g_nitro3DPopulateBoneMatrixScalingProcs kind:data(any) addr:0x020f1cec
+g_nitro3DLoadMaterialTextureMatrixProcs kind:data(any) addr:0x020f1cf8
+s_command13TexImageParamsFifo kind:data(any) addr:0x020f1d08 local
+s_command12TexImageParamsFifo kind:data(any) addr:0x020f1d10 local
+s_materialBindProcs kind:data(any) addr:0x020f1d18 local
+s_meshDrawProcs kind:data(any) addr:0x020f1d28 local
+s_command13TextureMatrix kind:data(any) addr:0x020f1d38 local
+s_freeBillboardFifo kind:data(any) addr:0x020f1d78 local
+s_axisBillboardFifo kind:data(any) addr:0x020f1dc0 local
+s_renderCommands kind:data(any) addr:0x020f1e08 local
+matrixCompositionProcs$756 kind:data(any) addr:0x020f1e88 local
+matrixCompositionProcs$1072 kind:data(any) addr:0x020f1ea8 local
+matrixCompositionProcs$1261 kind:data(any) addr:0x020f1ec8 local
 g_pfnAllocTextureImage kind:data(any) addr:0x020f1ee8
 g_pfnFreeTextureImage kind:data(any) addr:0x020f1eec
 g_pfnAllocTexturePalette kind:data(any) addr:0x020f1ef0
@@ -7759,32 +7743,13 @@ data_02109fe0 kind:bss addr:0x02109fe0
 data_02109fe8 kind:bss addr:0x02109fe8
 _ZN13AllocatorTree19initializedTopLevelE kind:bss addr:0x02109ffc local
 data_0210a00c kind:bss addr:0x0210a00c
-data_0210a010 kind:bss addr:0x0210a010
-data_0210a018 kind:bss addr:0x0210a018
-data_0210a05c kind:bss addr:0x0210a05c
-data_0210a090 kind:bss addr:0x0210a090
-data_0210a0b8 kind:bss addr:0x0210a0b8
-data_0210a0cc kind:bss addr:0x0210a0cc
-data_0210a0f0 kind:bss addr:0x0210a0f0
-data_0210a0fc kind:bss addr:0x0210a0fc
-data_0210a110 kind:bss addr:0x0210a110
-data_0210a140 kind:bss addr:0x0210a140
-data_0210a170 kind:bss addr:0x0210a170
-data_0210a250 kind:bss addr:0x0210a250
-data_0210a25c kind:bss addr:0x0210a25c
-data_0210a268 kind:bss addr:0x0210a268
-data_0210a274 kind:bss addr:0x0210a274
-data_0210a278 kind:bss addr:0x0210a278
-data_0210b078 kind:bss addr:0x0210b078
-data_0210b07c kind:bss addr:0x0210b07c
-data_0210b080 kind:bss addr:0x0210b080
-data_0210b084 kind:bss addr:0x0210b084
-data_0210b088 kind:bss addr:0x0210b088
-data_0210b08c kind:bss addr:0x0210b08c
-data_0210b678 kind:bss addr:0x0210b678
-data_0210b6b8 kind:bss addr:0x0210b6b8
-data_0210cf78 kind:bss addr:0x0210cf78
-data_0210cf7c kind:bss addr:0x0210cf7c
+g_nitro3DRenderConfig kind:bss addr:0x0210a010
+g_nitro3DActiveRenderCommandHandler kind:bss addr:0x0210a274
+s_boundMaterialStorage kind:bss addr:0x0210a278 local
+g_nitro3DSkinningEquationBuffer kind:bss addr:0x0210b078
+s_queuedData kind:bss addr:0x0210cf78 local
+s_isFifoProcessing kind:bss addr:0x0210cf7c local
+s_unknown kind:bss addr:0x0210cf80 local
 s_numImageBanks kind:data(byte[0x2]) addr:0x0210cf84 local
 s_paletteData kind:bss addr:0x0210cf88 local
 data_0210cf94 kind:bss addr:0x0210cf94

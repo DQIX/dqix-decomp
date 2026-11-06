@@ -3,8 +3,7 @@
 #include "std_library_functions.h"
 #include "Vector.h"
 #include "Memory/SafeAllocator.h"
-#include "../NitroSDK/NSBXX/RenderCommands.h"
-#include "../NitroSDK/NSBXX/Animation.h"
+#include "../NitroSDK/Graphics3D/Graphics3D.h"
 #include "Animation3D.h"
 
 // sizeof == 0xac
@@ -18,9 +17,9 @@ public:
         TextureStagingMode_Immediate = 2
     };
 
-    ModelRenderContext renderContext_;
-    NSBXXInternalModel* rawInternalModel_;
-    NSBXXTex* rawTEX_;
+    Nitro3DRenderContext renderContext_;
+    Nitro3DModel* rawInternalModel_;
+    Nitro3DTextureSet* rawTEX_;
     void* rawBMD_; // holds the (decompressed) NSBMD file
     unsigned int rawBMDFileSize_;
     // should make these six numbers a struct
@@ -83,7 +82,7 @@ public:
     // Takes the TEX0 file that otherModel is pointing to and applies it
     // to this Model's MDL0
     void ApplyTexturesFromModel(Model3D* otherModel);
-    NSBXXMdl* GetMDL0();
+    Nitro3DModelSet* GetMDL0();
     void RemoveTextures();
 
     // flags & 1 : allocate bone matrix-related data
@@ -110,8 +109,8 @@ public:
     // RenderConfig's diffuse color instead
     void SetMaterialDiffuseColor(unsigned int rgb);
 
-    NSBXXTex* GetTEX0();
-    void SetTEX0(NSBXXTex* tex);
+    Nitro3DTextureSet* GetTEX0();
+    void SetTEX0(Nitro3DTextureSet* tex);
 
     // Presumably you need to call this if you update the TEX
     void RestageTexturePalette();

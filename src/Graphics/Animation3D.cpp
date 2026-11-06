@@ -1,7 +1,7 @@
 #include "Graphics/Animation3D.h"
 #include "Graphics/Model3D.h"
 
-fix32_t GetAnimationFrameCountFix32(AnimationData*);
+fix32_t GetAnimationFrameCountFix32(Nitro3DAnimation*);
 
 #define ANIMATION_FLAG_NOT_LOOPING 0
 
@@ -13,7 +13,7 @@ void Animation3D::DefaultInitialize()
     flags_ = 0;
 }
 
-bool Animation3D::SetRawFile(NSBXXContainer* file)
+bool Animation3D::SetRawFile(Nitro3DFileHeader* file)
 {
     if (file == NULL)
         return false;
@@ -33,8 +33,8 @@ bool Animation3D::CreateData(Model3D *attachedModel, SafeAllocator *alloc, Model
         return false;
 
     Model3D* modelIfValid = (attachedModel->unknown_flags_a8_0_) ? attachedModel : NULL;
-    NSBXXTex* tex0;
-    NSBXXInternalModel* internalModel = attachedModel->rawInternalModel_;
+    Nitro3DTextureSet* tex0;
+    Nitro3DModel* internalModel = attachedModel->rawInternalModel_;
 
     tex0 = attachedModel->GetTEX0();
     if (alternateModel != NULL)
@@ -46,15 +46,15 @@ bool Animation3D::CreateData(Model3D *attachedModel, SafeAllocator *alloc, Model
     if (internalModel == NULL)
         return false;
 
-    void* rawInnerAnim = NSBXX_GetObjectFromFirstSubfile(pRawFile_, 0);
+    void* rawInnerAnim = Nitro3D_GetInnerObjectByIndex(pRawFile_, 0);
     if (rawInnerAnim == NULL)
         return false;
 
-    AnimationData* allocatedData = NSBXX_Model_AllocateAnimationData(&alloc->allocUnion, rawInnerAnim, internalModel);
+    Nitro3DAnimation* allocatedData = Nitro3D_AllocateModelAnimation(&alloc->allocUnion, rawInnerAnim, internalModel);
     if (allocatedData == NULL)
         return false;
 
-    InitializeModelAnimation(allocatedData, rawInnerAnim, internalModel, tex0);
+    Nitro3Di_InitModelAnimation(allocatedData, rawInnerAnim, internalModel, tex0);
     pAnimData_ = allocatedData;
     return true;
 }
@@ -66,29 +66,29 @@ void Animation3D::AdvanceTimer(fix32_t dt)
 
     int64_t prod = (int64_t)dt;
     prod = ((playbackSpeed_ * prod) + 0x800) >> 12;
-    pAnimData_->time_ += (fix32_t)prod;
-    if (GetAnimationFrameCountFix32(pAnimData_) <= pAnimData_->time_)
+    pAnimData_->time += (fix32_t)prod;
+    if (GetAnimationFrameCountFix32(pAnimData_) <= pAnimData_->time)
     {
         if (flags_ & (1 << ANIMATION_FLAG_NOT_LOOPING))
         {
-            pAnimData_->time_ = GetAnimationFrameCountFix32(pAnimData_);
+            pAnimData_->time = GetAnimationFrameCountFix32(pAnimData_);
         }
         else
         {
-            while (GetAnimationFrameCountFix32(pAnimData_) <= pAnimData_->time_)
+            while (GetAnimationFrameCountFix32(pAnimData_) <= pAnimData_->time)
             {
-                pAnimData_->time_ -= GetAnimationFrameCountFix32(pAnimData_);
+                pAnimData_->time -= GetAnimationFrameCountFix32(pAnimData_);
             }
-            if (pAnimData_->time_ < 0)
-                pAnimData_->time_ = 0;
+            if (pAnimData_->time < 0)
+                pAnimData_->time = 0;
         }
     }
 }
 
-AnimationData* Animation3D::GetBasicAnimationData() { return pAnimData_; }
+Nitro3DAnimation* Animation3D::GetBasicAnimationData() { return pAnimData_; }
 
 void Animation3D::SetAnimationTime(fix32_t to)
 {
     if (pAnimData_ != NULL)
-        pAnimData_->time_ = to;
+        pAnimData_->time = to;
 }

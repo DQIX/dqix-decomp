@@ -6,7 +6,7 @@
 #include "NitroSDK/Filesystem/LowNitroHandle.h"
 #include "Filesystem/FileIO.h"
 #include "Resource/GameResources.h"
-#include "NitroSDK/NSBXX/NSBXX.h"
+#include "NitroSDK/Graphics3D/Graphics3D.h"
 
 #if defined(jpn)
 #define func_02011584 func_020112f4

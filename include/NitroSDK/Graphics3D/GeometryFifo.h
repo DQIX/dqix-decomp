@@ -1,8 +1,10 @@
 #pragma once
 
-#include "std_library_functions.h"
 #include "../Matrix.h"
 #include "../Memory/AllocatorUnion.h"
+#include "Common.h"
+#include "Model.h"
+#include "Animation.h"
 
 // Note: the convention seems to be that matrices act on *row vectors*
 // by right multiplication, rather than the more common setting of
@@ -126,25 +128,20 @@ enum GXFifoCommand
 #define COMBINE_GXFIFO_COMMANDS3(a, b, c) ((int)(a) | ((int)(b) << 8) | ((int)(c) << 16))
 #define COMBINE_GXFIFO_COMMANDS4(a, b, c, d) ((int)(a) | ((int)(b) << 8) | ((int)(c) << 16) | ((int)(d) << 24))
 
-extern "C"
-{
-    void SendQueuedDataToGeometryFifo();
+void Nitro3D_FlushFifoQueue();
 
-    void SendRawDataToGeometryFifo(const uint32_t* data, unsigned int numBytes);
-    // In practice you just send the command followed by the params, so this is
-    // often used to submit multiple commands by just passing
-    // (first word, ptr to second word, number total words - 1)
-    void SubmitCommandToGeometryFifo(int command, const uint32_t* params, unsigned int numParams);
-}
+void Nitro3Di_SendRawDataToFifo(const uint32_t* data, unsigned int numBytes);
+// In practice you just send the command followed by the params, so this is
+// often used to submit multiple commands by just passing
+// (first word, ptr to second word, number total words - 1)
+void Nitro3Di_SendFifoCommand(int command, const uint32_t* params, unsigned int numParams);
 
-struct ModelRenderContext;
-struct AnimationData;
-struct NSBXXInternalModel;
+struct Nitro3DRenderContext;
 
 // these don't really fit here but are a bit too random to have their own TU...
 
-void GetCurrentPositionAndDirectionMatrices(Matrix4x3* position, Matrix3x3* direction);
-bool GetModelBonePositionAndDirectionMatrices(ModelRenderContext* context, Matrix4x3* outPos, Matrix3x3* outDir, unsigned int boneIndex);
-void Finish3DRendering();
+void Nitro3D_GetCurrentPosDirMatrices(Matrix4x3* position, Matrix3x3* direction);
+bool Nitro3D_GetBonePosDirMatrices(Nitro3DRenderContext* context, Matrix4x3* outPos, Matrix3x3* outDir, unsigned int boneIndex);
+void Nitro3D_FinishRender();
 // returns 0 if point is visible and -1 if not
-int ConvertWorldToScreenCoordinates(const Vector3fix* world, int* outX, int* outY);
+int Nitro3D_WorldToScreen(const Vector3fix* world, int* outX, int* outY);

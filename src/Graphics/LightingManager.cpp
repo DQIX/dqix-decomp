@@ -1,3 +1,5 @@
+#pragma ipa file
+
 #include "Graphics/LightingManager.h"
 #include "World/Zone3D.h"
 #include "NitroSDK/Memory.h"
@@ -620,14 +622,14 @@ void LightingManager::Initialize()
     unknown_84 = 1;
     fogEnabled_ = true;
 
-    RenderConfig::SetLightVector(0, 0, 0, 0);
-    RenderConfig::SetLightVector(1, 0, 0, 0);
-    RenderConfig::SetLightVector(2, 0, 0, 0);
-    RenderConfig::SetLightVector(3, 0, 0, 0);
-    RenderConfig::SetLightColor(0, 0);
-    RenderConfig::SetLightColor(1, 0);
-    RenderConfig::SetLightColor(2, 0);
-    RenderConfig::SetLightColor(3, 0);
+    Nitro3DRenderConfig::SetLightVector(0, 0, 0, 0);
+    Nitro3DRenderConfig::SetLightVector(1, 0, 0, 0);
+    Nitro3DRenderConfig::SetLightVector(2, 0, 0, 0);
+    Nitro3DRenderConfig::SetLightVector(3, 0, 0, 0);
+    Nitro3DRenderConfig::SetLightColor(0, 0);
+    Nitro3DRenderConfig::SetLightColor(1, 0);
+    Nitro3DRenderConfig::SetLightColor(2, 0);
+    Nitro3DRenderConfig::SetLightColor(3, 0);
 
     lightRGBScale_ = 1 << 12;
     lightRGBScaleInitial_ = 1 << 12;
@@ -638,7 +640,7 @@ void LightingManager::Initialize()
 
 void LightingManager::SetZone(Zone3D *zone) { pZone_ = zone; }
 
-void LightingManager::ModelTransformTintBrightnessContrast(NSBXXInternalModel *model)
+void LightingManager::ModelTransformTintBrightnessContrast(Nitro3DModel *model)
 {
     GameState* gameState = GameState::GetInstance();
     (void)GetGameResources();
@@ -687,7 +689,7 @@ void LightingManager::ModelTransformTintBrightnessContrast(NSBXXInternalModel *m
         }
     }
 
-    NSBXXNameList* meshList = model->GetMeshListSafe();
+    Nitro3DNameList* meshList = model->GetMeshListSafe();
     
     lightingInfo->basic_.FillMissingEntries();
     func_0207ba28(lightingInfo, index, &redMix_2c_, &greenMix_30_, &blueMix_34_);
@@ -699,31 +701,26 @@ void LightingManager::ModelTransformTintBrightnessContrast(NSBXXInternalModel *m
     spriteDiffuseColor_ = lightingInfo->basic_.spriteDiffuseColor[index];
     modelDiffuseColor_ = lightingInfo->basic_.modelDiffuseColor[index];
     edgeColor_ = lightingInfo->basic_.edgeColor[index];
-    RenderConfig::SetDiffuseAmbientColors(modelDiffuseColor_, 0, false);
+    Nitro3DRenderConfig::SetDiffuseAmbientColors(modelDiffuseColor_, 0, false);
     func_ov017_021901ac(GetGameResources());
     tint_4a_ = modelDiffuseColor_;
 
     
-    for (meshIndex = 0; meshIndex < model->numMeshes_; meshIndex++)
+    for (meshIndex = 0; meshIndex < model->numMeshes; meshIndex++)
     {
         unsigned char opcode0;
         unsigned char opcode1;
         unsigned char opcode2;
         unsigned char opcode3;
 
-        NSBXXMesh* mesh;
-        void* pOffset;
-        if (meshList != NULL && (pOffset = meshList->GetEntryv3Safe(meshIndex)))
-            mesh = (NSBXXMesh*)meshList->GetEntryFromPtrOffset(pOffset);
-        else
-            mesh = NULL;
+        Nitro3DMesh* mesh = meshList->GetEntryFromu32Offset<Nitro3DMesh>(meshIndex);
         
-        if (!(mesh->unk_4 & 2))
+        if (!(mesh->flags & 2))
             continue;
 
-        fifoBlob = (unsigned char*)mesh + mesh->gpuCommandsOffset_;
+        fifoBlob = (unsigned char*)mesh + mesh->gpuCommandsOffset;
         readPos = 0;
-        while (readPos < mesh->gpuCommandsLength_)
+        while (readPos < mesh->gpuCommandsLength)
         {
             opcode0 = fifoBlob[readPos];
             opcode1 = fifoBlob[readPos + 1];
@@ -772,7 +769,7 @@ void LightingManager::ProcessZoneChange(Zone3D *newZone)
     {
         info->advanced_.FillMissingEntries();
         info->fogList.FillMissingEntries();
-        RenderConfig::SetDiffuseAmbientColors(modelDiffuseColor_, 0, false);
+        Nitro3DRenderConfig::SetDiffuseAmbientColors(modelDiffuseColor_, 0, false);
         func_ov017_021901ac(GetGameResources());
         tint_4a_ = modelDiffuseColor_;
     }
@@ -823,7 +820,7 @@ void LightingManager::ProcessZoneChange(Zone3D *newZone)
             edgeColor_, edgeColor_, edgeColor_, edgeColor_
         };
         func_020c555c(edgeColors);
-        RenderConfig::SetDiffuseAmbientColors(modelDiffuseColor_, 0, false);
+        Nitro3DRenderConfig::SetDiffuseAmbientColors(modelDiffuseColor_, 0, false);
         func_ov017_021901ac(GetGameResources());
         tint_4a_ = modelDiffuseColor_;
     }
@@ -839,18 +836,18 @@ void LightingManager::ProcessZoneChange(Zone3D *newZone)
             edgeColor_, edgeColor_, edgeColor_, edgeColor_
         };
         func_020c555c(edgeColors);
-        RenderConfig::SetDiffuseAmbientColors(modelDiffuseColor_, 0, false);
+        Nitro3DRenderConfig::SetDiffuseAmbientColors(modelDiffuseColor_, 0, false);
         func_ov017_021901ac(GetGameResources());
         tint_4a_ = modelDiffuseColor_;
     }
-    RenderConfig::SetLightVector(0, 0, 0, 0);
-    RenderConfig::SetLightVector(1, 0, 0, 0);
-    RenderConfig::SetLightVector(2, 0, 0, 0);
-    RenderConfig::SetLightVector(3, 0, 0, 0);
-    RenderConfig::SetLightColor(0, 0);
-    RenderConfig::SetLightColor(1, 0);
-    RenderConfig::SetLightColor(2, 0);
-    RenderConfig::SetLightColor(3, 0);
+    Nitro3DRenderConfig::SetLightVector(0, 0, 0, 0);
+    Nitro3DRenderConfig::SetLightVector(1, 0, 0, 0);
+    Nitro3DRenderConfig::SetLightVector(2, 0, 0, 0);
+    Nitro3DRenderConfig::SetLightVector(3, 0, 0, 0);
+    Nitro3DRenderConfig::SetLightColor(0, 0);
+    Nitro3DRenderConfig::SetLightColor(1, 0);
+    Nitro3DRenderConfig::SetLightColor(2, 0);
+    Nitro3DRenderConfig::SetLightColor(3, 0);
 }
 
 void LightingManager::RecomputeAdvancedLighting()
@@ -962,9 +959,8 @@ void LightingManager::RecomputeAdvancedLighting()
 
 void SetVector3fixComponents(Vector3fix* vec, fix32_t x, fix32_t y, fix32_t z)
 {
-    vec->x = x;
-    vec->y = y;
-    vec->z = z;
+    Vector3fix copy = { x, y, z };
+    *vec = copy;
 }
 
 void LightingManager::SubmitToRenderConfig()
@@ -973,13 +969,13 @@ void LightingManager::SubmitToRenderConfig()
     if (zone == NULL)
         return;
     (void)GetGameResources();
-    RenderConfig::SetDiffuseAmbientColors(modelDiffuseColor_, 0, false);
+    Nitro3DRenderConfig::SetDiffuseAmbientColors(modelDiffuseColor_, 0, false);
     if (zone->lighting_.maybeMode_ == 2)
     {
-        RenderConfig::SetLightVector(0, lightVectors_[0].x, lightVectors_[0].y, lightVectors_[0].z);
-        RenderConfig::SetLightColor(0, lightColors_[0]);
-        RenderConfig::SetLightVector(1, lightVectors_[1].x, lightVectors_[1].y, lightVectors_[1].z);
-        RenderConfig::SetLightColor(1, lightColors_[1]);
+        Nitro3DRenderConfig::SetLightVector(0, lightVectors_[0].x, lightVectors_[0].y, lightVectors_[0].z);
+        Nitro3DRenderConfig::SetLightColor(0, lightColors_[0]);
+        Nitro3DRenderConfig::SetLightVector(1, lightVectors_[1].x, lightVectors_[1].y, lightVectors_[1].z);
+        Nitro3DRenderConfig::SetLightColor(1, lightColors_[1]);
         unsigned short edgeColors[8] = {
             edgeColor_, edgeColor_, edgeColor_, edgeColor_,
             edgeColor_, edgeColor_, edgeColor_, edgeColor_
@@ -988,9 +984,9 @@ void LightingManager::SubmitToRenderConfig()
     }
 }
 
-void LightingManager::ApplyAmbientColorToModel(NSBXXInternalModel* model)
+void LightingManager::ApplyAmbientColorToModel(Nitro3DModel* model)
 {
-    NSBXX_Model_SetAmbientReflectionColor(model, ambientColor_);
+    Nitro3D_SetModelAmbientColor(model, ambientColor_);
 }
 
 void LightingManager::MaybeComputeHorizonPosition()
