@@ -26,27 +26,24 @@
 #define SIGNATURE_NSBMA 0x30414d42 // "BMA0"
 #define SIGNATURE_NSBVA 0x30415642 // "BVA0"
 
-extern "C"
-{
-
 // usa: func_020b736c
 // Gets the entry in a NameList given its string.
 // The string passed should be a 16-byte buffer padded with zeros, a regular
 // null-terminated string is not sufficient.
-void* NSBXXNameList_Search(const Nitro3DNameList* nameList, const char* name);
+void* Nitro3D_GetNameListEntry(const Nitro3DNameList* nameList, const char* name);
 
 // usa: func_020b752c
 // Gets the index of an entry in a NameList given its string.
 // The string passed should be a 16-byte buffer padded with zeros, a regular
 // null-terminated string is not sufficient.
-int NSBXXNameList_SearchIndex(const Nitro3DNameList* nameList, const char* name);
+int Nitro3D_GetNameListIndex(const Nitro3DNameList* nameList, const char* name);
 
 // usa: func_020b7694
 // Returns a pointer to the first file within the file provided.
 // In practice, this mainly seems to be used for getting the MDL
 // out of an NSBMD, though I've also seen a use for getting a TEX
 // out of an NSBTX, so I'm giving it the more generic name for now.
-void* NSBXX_GetFirstSubfile(Nitro3DFileHeader* nsbxx);
+void* Nitro3D_GetFirstSubfile(Nitro3DFileHeader* nsbxx);
 
 // usa: func_020b76a4
 // Returns a pointer to a TEX0 file within the file provided.
@@ -55,7 +52,7 @@ void* NSBXX_GetFirstSubfile(Nitro3DFileHeader* nsbxx);
 //  - is an NSBTX containing only one file.
 // From limited testing the first case is often satisfied
 // by NSBMD files that contain one MDL and one TEX.
-Nitro3DTextureSet* NSBXX_GetTEXFile(Nitro3DFileHeader* nsbxx);
+Nitro3DTextureSet* Nitro3D_GetTexturesFromFile(Nitro3DFileHeader* nsbxx);
 
 // Various subfiles consist of multiple objects (e.g. MDL files
 // comprise multiple models, JNT files contain multiple animations)
@@ -64,14 +61,13 @@ Nitro3DTextureSet* NSBXX_GetTEXFile(Nitro3DFileHeader* nsbxx);
 // uint32_t filesize; 
 // NameListU32 offsetsToObjectWithin;
 // For example, this can be used to extract J.AC animations fron an nsbca file,
-// M.AT animations from an nsbta file etc, or an NSBXXInternalModel from an
+// M.AT animations from an nsbta file etc, or a Nitro3DModel from an
 // nsbmd file
-void* NSBXX_GetObjectFromFirstSubfile(Nitro3DFileHeader* nsbxx, unsigned int idx);
+void* Nitro3D_GetInnerObjectByIndex(Nitro3DFileHeader* nsbxx, unsigned int idx);
 
 // Might have other uses, but for now I've only seen it called on
 // pattern animations.
-const char* NSBXX_PatternAnimation_GetTextureName(Nitro3DMPT* anim, unsigned int idx);
-const char* NSBXX_PatternAnimation_GetPaletteName(Nitro3DMPT* anim, unsigned int idx);
-Nitro3DMPT::Track::Keyframe* NSBXX_PatternAnimation_GetKeyframe(Nitro3DMPT*, uint16_t track, uint16_t frameTime);
-Nitro3DMPT::Track* NSBXX_PatternAnimation_GetTrack(Nitro3DMPT*, unsigned int track);
-}
+const char* Nitro3Di_GetPatternAnimationTextureName(Nitro3DMPT* anim, unsigned int idx);
+const char* Nitro3Di_GetPatternAnimationPaletteName(Nitro3DMPT* anim, unsigned int idx);
+Nitro3DMPT::Track::Keyframe* Nitro3Di_GetPatternAnimationKeyframe(Nitro3DMPT*, uint16_t track, uint16_t frameTime);
+Nitro3DMPT::Track* Nitro3Di_GetPatternAnimationTrack(Nitro3DMPT*, unsigned int track);

@@ -23,7 +23,6 @@ void Nitro3D_ConfigureModelMaterialFlags(Nitro3DModel *model, int value, unsigne
     }
 }
 
-// 020b6f64
 void Nitro3D_ConfigureModelPolygonAttrMask(Nitro3DModel* model, int setBits, unsigned int mask)
 {
     unsigned int numMaterials = model->numMaterials;

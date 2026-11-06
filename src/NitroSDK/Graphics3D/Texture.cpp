@@ -143,7 +143,7 @@ bool Nitro3D_AttachTextureImage(Nitro3DModel* model, Nitro3DTextureSet* tex0)
     {
         const char* textureName = imagePairingsList->GetNameByIndex(i);
         Nitro3DTextureSet::ImageData* texture = (tex0 != NULL) ?
-            (Nitro3DTextureSet::ImageData*)NSBXXNameList_Search(&tex0->textureList, textureName) : NULL;
+            (Nitro3DTextureSet::ImageData*)Nitro3D_GetNameListEntry(&tex0->textureList, textureName) : NULL;
         if (texture != NULL)
         {
             Nitro3DModelMaterials::Pair* pairing = imagePairingsList->GetEntryByIndex<Nitro3DModelMaterials::Pair>(i);
@@ -210,7 +210,7 @@ bool Nitro3D_AttachTexturePalette(Nitro3DModel* model, Nitro3DTextureSet* tex0)
 
         Nitro3DTextureSet::PaletteData* palette;
         if (tex0 != NULL && tex0->paletteListOffset != 0)
-            palette = (Nitro3DTextureSet::PaletteData*)NSBXXNameList_Search((Nitro3DNameList*)((const char*)tex0 + tex0->paletteListOffset), paletteName);
+            palette = (Nitro3DTextureSet::PaletteData*)Nitro3D_GetNameListEntry((Nitro3DNameList*)((const char*)tex0 + tex0->paletteListOffset), paletteName);
         else
             palette = NULL;
 

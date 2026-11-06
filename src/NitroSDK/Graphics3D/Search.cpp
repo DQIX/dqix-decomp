@@ -1,6 +1,6 @@
 #include "NitroSDK/Graphics3D/Graphics3D.h"
 
-extern "C" void* NSBXXNameList_Search(const Nitro3DNameList* nameList, const char* name)
+void* Nitro3D_GetNameListEntry(const Nitro3DNameList* nameList, const char* name)
 {
     const uint32_t* target = (const uint32_t*)name;
     if (name == NULL)
@@ -58,7 +58,7 @@ extern "C" void* NSBXXNameList_Search(const Nitro3DNameList* nameList, const cha
     return NULL;
 }
 
-extern "C" int NSBXXNameList_SearchIndex(const Nitro3DNameList* nameList, const char* name)
+int Nitro3D_GetNameListIndex(const Nitro3DNameList* nameList, const char* name)
 {
     const uint32_t* target = (const uint32_t*)name;
     if (name == NULL)
@@ -110,4 +110,37 @@ extern "C" int NSBXXNameList_SearchIndex(const Nitro3DNameList* nameList, const 
     }
 
     return -1;
+}
+
+
+#define SUBFILE_OFFSETS(nsb) ((uint32_t*)((intptr_t)(nsb) + nsb->headerSize))
+
+void* Nitro3D_GetFirstSubfile(Nitro3DFileHeader* nsbxx)
+{
+    return (char*)nsbxx + SUBFILE_OFFSETS(nsbxx)[0];
+}
+
+Nitro3DTextureSet* Nitro3D_GetTexturesFromFile(Nitro3DFileHeader* nsbxx)
+{
+    const uint32_t* subfiles = SUBFILE_OFFSETS(nsbxx);
+    if (nsbxx->numSubfiles == 1)
+    {
+        if (nsbxx->signature == SIGNATURE_NSBTX)
+            return (Nitro3DTextureSet*)((intptr_t)nsbxx + subfiles[0]);
+
+        return NULL;
+    }
+    return (Nitro3DTextureSet*)((intptr_t)nsbxx + subfiles[1]);
+}
+
+void* Nitro3D_GetInnerObjectByIndex(Nitro3DFileHeader* nsbxx, unsigned int idx)
+{
+    if (nsbxx != NULL)
+    {
+        Nitro3DInnerFileHeader* innerData = (Nitro3DInnerFileHeader*)((intptr_t)nsbxx + SUBFILE_OFFSETS(nsbxx)[0]);
+        uint32_t* pOffset = innerData->nameList.GetEntryByIndex<uint32_t>(idx);
+        if (pOffset != NULL)
+            return (char*)innerData + *pOffset;
+    }
+    return NULL;
 }

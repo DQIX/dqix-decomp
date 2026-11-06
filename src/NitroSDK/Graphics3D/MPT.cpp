@@ -36,7 +36,7 @@ void InitializeModelAnimationFromMPT(Nitro3DAnimation* anim, void* pvMPT, Nitro3
         if (materials == NULL)
             idx = -1;
         else
-            idx = NSBXXNameList_SearchIndex(&materials->materialOffsetList, trackName);
+            idx = Nitro3D_GetNameListIndex(&materials->materialOffsetList, trackName);
 
         if (idx >= 0)
             anim->entries[idx] = track | 0x100;
@@ -45,7 +45,7 @@ void InitializeModelAnimationFromMPT(Nitro3DAnimation* anim, void* pvMPT, Nitro3
 
 void SetMaterialTextureForRender(Nitro3DTextureSet* tex, const char* textureName, MaterialRenderData* renderData)
 {
-    Nitro3DTextureSet::ImageData* image = tex ? (Nitro3DTextureSet::ImageData*)NSBXXNameList_Search(&tex->textureList, textureName) : NULL;
+    Nitro3DTextureSet::ImageData* image = tex ? (Nitro3DTextureSet::ImageData*)Nitro3D_GetNameListEntry(&tex->textureList, textureName) : NULL;
     unsigned int vramOffset;
     if ((image->paramTEXIMAGE_PARAMS & 0x1c000000) != 0x14000000)
         vramOffset = (unsigned short)tex->block1VRAMLoadOffset & ~0xe0000000;
@@ -77,7 +77,7 @@ void SetMaterialPaletteForRender(Nitro3DTextureSet* tex, const char* paletteName
     if (tex != NULL && tex->paletteListOffset != 0)
     {
         Nitro3DNameList* paletteList = (Nitro3DNameList*)((intptr_t)tex + tex->paletteListOffset);
-        palette = (Nitro3DTextureSet::PaletteData*)NSBXXNameList_Search(paletteList, paletteName);
+        palette = (Nitro3DTextureSet::PaletteData*)Nitro3D_GetNameListEntry(paletteList, paletteName);
     }
     else
     {
@@ -102,13 +102,13 @@ void MPTAnimationProcessingCallback(void* data, Nitro3DAnimation* anim, int arg)
 
     Nitro3DMPT* mpt = (Nitro3DMPT*)anim->pRawData;
 
-    Nitro3DMPT::Track::Keyframe* keyframe = NSBXX_PatternAnimation_GetKeyframe(mpt, arg, anim->time >> 12);
-    const char* textureName = NSBXX_PatternAnimation_GetTextureName(mpt, keyframe->textureIdx);
+    Nitro3DMPT::Track::Keyframe* keyframe = Nitro3Di_GetPatternAnimationKeyframe(mpt, arg, anim->time >> 12);
+    const char* textureName = Nitro3Di_GetPatternAnimationTextureName(mpt, keyframe->textureIdx);
     SetMaterialTextureForRender(anim->pTex0, textureName, renderData);
 
     if (keyframe->paletteIdx != 0xff)
     {
-        const char* paletteName = NSBXX_PatternAnimation_GetPaletteName(mpt, keyframe->paletteIdx);
+        const char* paletteName = Nitro3Di_GetPatternAnimationPaletteName(mpt, keyframe->paletteIdx);
         SetMaterialPaletteForRender(anim->pTex0, paletteName, renderData);
     }
 }

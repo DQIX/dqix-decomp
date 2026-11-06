@@ -130,7 +130,7 @@ void Model3D::ProcessRawFile(TextureStagingMode stagingMode)
         block23Succeeded = true;
         block4Succeeded = true;
         
-        tex0 = (Nitro3DTextureSet*)NSBXX_GetTEXFile(data);
+        tex0 = (Nitro3DTextureSet*)Nitro3D_GetTexturesFromFile(data);
         if (tex0 != NULL)
         {
             unsigned int block4Alloc, block2Alloc, block1Alloc;
@@ -184,14 +184,14 @@ void Model3D::ProcessRawFile(TextureStagingMode stagingMode)
         }
         if (data->signature == SIGNATURE_NSBMD)
         {
-            Nitro3DModelSet* mdl0 = (Nitro3DModelSet*)NSBXX_GetFirstSubfile(data);
+            Nitro3DModelSet* mdl0 = (Nitro3DModelSet*)Nitro3D_GetFirstSubfile(data);
             if (tex0 != NULL)
                 Nitro3D_LinkTexturesToModels(mdl0, tex0);
         }
         break;
     }
     }
-    Nitro3DTextureSet* tex = (Nitro3DTextureSet*)NSBXX_GetTEXFile((Nitro3DFileHeader*)rawBMD_);
+    Nitro3DTextureSet* tex = (Nitro3DTextureSet*)Nitro3D_GetTexturesFromFile((Nitro3DFileHeader*)rawBMD_);
     if (tex != NULL)
     {
         if (stagingMode == TextureStagingMode_Immediate)
@@ -208,7 +208,7 @@ void Model3D::ProcessRawFile(TextureStagingMode stagingMode)
         }
     }
 
-    Nitro3DModelSet* mdl0 = (Nitro3DModelSet*)NSBXX_GetFirstSubfile((Nitro3DFileHeader*)rawBMD_);
+    Nitro3DModelSet* mdl0 = (Nitro3DModelSet*)Nitro3D_GetFirstSubfile((Nitro3DFileHeader*)rawBMD_);
     Nitro3DModel* model;
     if (mdl0 != NULL)
     {
@@ -234,7 +234,7 @@ found_a_model:
     rawInternalModel_ = model;
     
     Nitro3D_PopulateRenderContext(&renderContext_, model);
-    rawTEX_ = (Nitro3DTextureSet*)NSBXX_GetTEXFile((Nitro3DFileHeader*)rawBMD_);
+    rawTEX_ = (Nitro3DTextureSet*)Nitro3D_GetTexturesFromFile((Nitro3DFileHeader*)rawBMD_);
     if (((Nitro3DFileHeader*)rawBMD_)->signature == SIGNATURE_NSBMD)
     {
         Nitro3DModel* model = rawInternalModel_;
@@ -361,7 +361,7 @@ int Model3D::GetBoneIndex(const char *boneName)
     char zeroPaddedName[16];
     memset(zeroPaddedName, 0, sizeof(zeroPaddedName));
     strcpy(zeroPaddedName, boneName);
-    return NSBXXNameList_SearchIndex(&rawInternalModel_->boneList, zeroPaddedName);
+    return Nitro3D_GetNameListIndex(&rawInternalModel_->boneList, zeroPaddedName);
 }
 
 void Model3D::ApplyTexturesFromModel(Model3D* otherModel)
@@ -379,7 +379,7 @@ Nitro3DModelSet* Model3D::GetMDL0()
 {
     if (rawBMD_ == NULL)
         return NULL;
-    return (Nitro3DModelSet*)NSBXX_GetFirstSubfile((Nitro3DFileHeader*)rawBMD_);
+    return (Nitro3DModelSet*)Nitro3D_GetFirstSubfile((Nitro3DFileHeader*)rawBMD_);
 }
 
 void Model3D::RemoveTextures()

@@ -291,7 +291,7 @@ void InitializeModelAnimationFromMAT(Nitro3DAnimation* anim, void* pvMAT, Nitro3
         if (materials == NULL)
             idx = -1;
         else
-            idx = NSBXXNameList_SearchIndex(&materials->materialOffsetList, str);
+            idx = Nitro3D_GetNameListIndex(&materials->materialOffsetList, str);
 
         if (idx >= 0)
         {

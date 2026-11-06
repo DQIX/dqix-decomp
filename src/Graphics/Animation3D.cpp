@@ -46,7 +46,7 @@ bool Animation3D::CreateData(Model3D *attachedModel, SafeAllocator *alloc, Model
     if (internalModel == NULL)
         return false;
 
-    void* rawInnerAnim = NSBXX_GetObjectFromFirstSubfile(pRawFile_, 0);
+    void* rawInnerAnim = Nitro3D_GetInnerObjectByIndex(pRawFile_, 0);
     if (rawInnerAnim == NULL)
         return false;
 
