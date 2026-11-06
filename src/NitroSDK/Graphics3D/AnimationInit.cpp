@@ -8,11 +8,11 @@ PFNProcessMaterialAnimations g_pfnNitro3DProcessMaterialAnimations = &Nitro3Di_D
 PFNProcessJointAnimations g_pfnNitro3DProcessJointAnimations = &Nitro3Di_DefaultProcessJointAnimations;
 PFNProcessVisibilityAnimations g_pfnNitro3DProcessVisibilityAnimations = &Nitro3Di_DefaultProcessVisibilityAnimations;
 
-PFNProcessAnimation g_pfnNitro3DProcessMAM = &MAMAnimationProcessingCallback;
-PFNProcessAnimation g_pfnNitro3DProcessMPT = &MPTAnimationProcessingCallback;
-PFNProcessAnimation g_pfnNitro3DProcessMAT = &MATAnimationProcessingCallback;
-PFNProcessAnimation g_pfnNitro3DProcessJAC = &JACAnimationProcessingCallback;
-PFNProcessAnimation g_pfnNitro3DProcessVAV = &VAVAnimationProcessingCallback;
+PFNProcessAnimation g_pfnNitro3DProcessMAM = &Nitro3Di_ProcessAnimationMAM;
+PFNProcessAnimation g_pfnNitro3DProcessMPT = &Nitro3Di_ProcessAnimationMPT;
+PFNProcessAnimation g_pfnNitro3DProcessMAT = &Nitro3Di_ProcessAnimationMAT;
+PFNProcessAnimation g_pfnNitro3DProcessJAC = &Nitro3Di_ProcessAnimationJAC;
+PFNProcessAnimation g_pfnNitro3DProcessVAV = &Nitro3Di_ProcessAnimationVAV;
 
 static unsigned int s_numAnimationTypes = 5;
 
@@ -22,11 +22,11 @@ static struct AnimationTypeDescription
     void (*initializer)(Nitro3DAnimation* anim, void* pvMAT, Nitro3DModel* model);
 } s_animationInitLookup[10] =
 {
-    { 'M', 0, 0x4d41, &InitializeModelAnimationFromMAM },
-    { 'M', 0, 0x5450, &InitializeModelAnimationFromMPT },
-    { 'M', 0, 0x5441, &InitializeModelAnimationFromMAT },
-    { 'V', 0, 0x5641, &InitializeModelAnimationFromVAV },
-    { 'J', 0, 0x4341, &InitializeModelAnimationFromJAC }
+    { 'M', 0, 0x4d41, &Nitro3Di_InitAnimationFromMAM },
+    { 'M', 0, 0x5450, &Nitro3Di_InitAnimationFromMPT },
+    { 'M', 0, 0x5441, &Nitro3Di_InitAnimationFromMAT },
+    { 'V', 0, 0x5641, &Nitro3Di_InitAnimationFromVAV },
+    { 'J', 0, 0x4341, &Nitro3Di_InitAnimationFromJAC }
 };
 
 unsigned int Nitro3Di_GetRequiredAnimationSize(const void* animData, const Nitro3DModel* model)

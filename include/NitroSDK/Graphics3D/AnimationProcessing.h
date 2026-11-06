@@ -20,17 +20,17 @@ extern PFNProcessMaterialAnimations g_pfnNitro3DProcessMaterialAnimations;
 extern PFNProcessJointAnimations g_pfnNitro3DProcessJointAnimations;
 extern PFNProcessVisibilityAnimations g_pfnNitro3DProcessVisibilityAnimations;
 
-void InitializeModelAnimationFromJAC(Nitro3DAnimation* anim, void* pvJAC, Nitro3DModel* model);
-void InitializeModelAnimationFromMAM(Nitro3DAnimation* anim, void* pvMAM, Nitro3DModel* model);
-void InitializeModelAnimationFromMAT(Nitro3DAnimation* anim, void* pvMAT, Nitro3DModel* model);
-void InitializeModelAnimationFromMPT(Nitro3DAnimation* anim, void* pvMPT, Nitro3DModel* model);
-void InitializeModelAnimationFromVAV(Nitro3DAnimation* anim, void* pvVAV, Nitro3DModel* model);
+void Nitro3Di_InitAnimationFromJAC(Nitro3DAnimation* anim, void* pvJAC, Nitro3DModel* model);
+void Nitro3Di_InitAnimationFromMAM(Nitro3DAnimation* anim, void* pvMAM, Nitro3DModel* model);
+void Nitro3Di_InitAnimationFromMAT(Nitro3DAnimation* anim, void* pvMAT, Nitro3DModel* model);
+void Nitro3Di_InitAnimationFromMPT(Nitro3DAnimation* anim, void* pvMPT, Nitro3DModel* model);
+void Nitro3Di_InitAnimationFromVAV(Nitro3DAnimation* anim, void* pvVAV, Nitro3DModel* model);
 
-void JACAnimationProcessingCallback(void* data, Nitro3DAnimation* anim, int arg);
-void MAMAnimationProcessingCallback(void* data, Nitro3DAnimation* anim, int arg);
-void MATAnimationProcessingCallback(void* data, Nitro3DAnimation* anim, int arg);
-void MPTAnimationProcessingCallback(void* data, Nitro3DAnimation* anim, int arg);
-void VAVAnimationProcessingCallback(void* data, Nitro3DAnimation* anim, int arg);
+void Nitro3Di_ProcessAnimationJAC(void* data, Nitro3DAnimation* anim, int arg);
+void Nitro3Di_ProcessAnimationMAM(void* data, Nitro3DAnimation* anim, int arg);
+void Nitro3Di_ProcessAnimationMAT(void* data, Nitro3DAnimation* anim, int arg);
+void Nitro3Di_ProcessAnimationMPT(void* data, Nitro3DAnimation* anim, int arg);
+void Nitro3Di_ProcessAnimationVAV(void* data, Nitro3DAnimation* anim, int arg);
 
 bool Nitro3Di_DefaultProcessMaterialAnimations(MaterialRenderData* material, Nitro3DAnimation* anim, unsigned int matIdx);
 bool Nitro3Di_DefaultProcessJointAnimations(BoneMatrixRenderData* bone, Nitro3DAnimation* anim, unsigned int boneIdx);

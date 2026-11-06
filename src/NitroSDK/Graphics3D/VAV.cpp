@@ -2,23 +2,16 @@
 #include "NitroSDK/Graphics3D/AnimationProcessing.h"
 #include "NitroSDK/Graphics3D/RenderCommands_Common.h"
 
-void InitializeModelAnimationFromVAV(Nitro3DAnimation* anim, void* pvVAV, Nitro3DModel* model)
+void Nitro3Di_InitAnimationFromVAV(Nitro3DAnimation* anim, void* pvVAV, Nitro3DModel* model)
 {
-    unsigned int index = 0;
     anim->callback = g_pfnNitro3DProcessVAV;
     anim->numEntries = model->numBoneMatrices;
     anim->pRawData = pvVAV;
-    if (index < anim->numEntries)
-    {
-        do
-        {
-            anim->entries[index] = index | 0x100;
-            index++;
-        } while (index < anim->numEntries);
-    }
+    for (unsigned int index = 0; index < anim->numEntries; index++)
+        anim->entries[index] = index | 0x100;
 }
 
-void VAVAnimationProcessingCallback(void* data, Nitro3DAnimation* anim, int arg)
+void Nitro3Di_ProcessAnimationVAV(void* data, Nitro3DAnimation* anim, int arg)
 {
     int* outVis = (int*)data;
     Nitro3DVAV* vav = (Nitro3DVAV*)anim->pRawData;

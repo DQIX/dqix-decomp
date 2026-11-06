@@ -12,7 +12,7 @@ extern "C"
     void func_020ca390(int, void*, unsigned);
 }
 
-unsigned short GetColorFromMaterialAnimation(Nitro3DMAM* mam, unsigned int trackEntry, unsigned int frame)
+static unsigned short CalculateColor(Nitro3DMAM* mam, unsigned int trackEntry, unsigned int frame)
 {
     if (trackEntry & 0x20000000)
         return (unsigned short)trackEntry;
@@ -29,9 +29,7 @@ unsigned short GetColorFromMaterialAnimation(Nitro3DMAM* mam, unsigned int track
         if (frame & 1)
         {
             if (frame > frameCount)
-            {
                 return *(samples + (frameCount >> 1) + 1);
-            }
             lookupIndex = frame >> 1;
         }
         else
@@ -45,9 +43,7 @@ unsigned short GetColorFromMaterialAnimation(Nitro3DMAM* mam, unsigned int track
         if (mod4 != 0)
         {
             if (frame > frameCount)
-            {
                 return *(samples + (frameCount >> 2) + mod4);
-            }
 
             if (frame & 1) // split by 1/4 and 3/4
             {
@@ -89,11 +85,12 @@ unsigned short GetColorFromMaterialAnimation(Nitro3DMAM* mam, unsigned int track
 
     unsigned int a = *(samples + lookupIndex);
     unsigned int b = *(samples + lookupIndex + 1);
+    // separate red+blue from green to prevent bit-shifts spilling into other colors
     return (((a & 0x7c1f) + (b & 0x7c1f)) >> 1) & 0x7c1f |
         (((a & 0x3e0) + (b & 0x3e0)) >> 1) & 0x3e0;
 }
 
-unsigned short GetAlphaFromMaterialAnimation(Nitro3DMAM* mam, unsigned int trackEntry, unsigned int frame)
+static unsigned short CalculateAlpha(Nitro3DMAM* mam, unsigned int trackEntry, unsigned int frame)
 {
     if (trackEntry & 0x20000000)
         return (unsigned short)trackEntry;
@@ -155,7 +152,7 @@ unsigned short GetAlphaFromMaterialAnimation(Nitro3DMAM* mam, unsigned int track
     }
 }
 
-void InitializeModelAnimationFromMAM(Nitro3DAnimation* anim, void* pvMAM, Nitro3DModel* model)
+void Nitro3Di_InitAnimationFromMAM(Nitro3DAnimation* anim, void* pvMAM, Nitro3DModel* model)
 {   
     
     Nitro3DModelMaterials* materials = model->GetMaterialData();
@@ -180,23 +177,23 @@ void InitializeModelAnimationFromMAM(Nitro3DAnimation* anim, void* pvMAM, Nitro3
     }
 }
 
-void MAMAnimationProcessingCallback(void* data, Nitro3DAnimation* anim, int arg)
+void Nitro3Di_ProcessAnimationMAM(void* data, Nitro3DAnimation* anim, int arg)
 {
     MaterialRenderData* renderData = (MaterialRenderData*)data;
     Nitro3DMAM* mam = (Nitro3DMAM*)anim->pRawData;
     unsigned int frame = anim->time >> 12;
     Nitro3DMAM::Track* track = mam->tracks.GetEntryByIndex<Nitro3DMAM::Track>((unsigned short)arg);
 
-    unsigned int diffuseCol = GetColorFromMaterialAnimation(mam, track->diffuse, frame);
-    unsigned int ambientCol = GetColorFromMaterialAnimation(mam, track->ambient, frame);
+    unsigned int diffuseCol = CalculateColor(mam, track->diffuse, frame);
+    unsigned int ambientCol = CalculateColor(mam, track->ambient, frame);
 
     renderData->paramDIF_AMB = (diffuseCol) | (ambientCol << 16) | (((renderData->paramDIF_AMB & 0x8000) ? 1 : 0) << 15);
 
-    unsigned int specEmission = GetColorFromMaterialAnimation(mam, track->emission, frame);
-    unsigned int specReflection = GetColorFromMaterialAnimation(mam, track->reflection, frame);
+    unsigned int specEmission = CalculateColor(mam, track->emission, frame);
+    unsigned int specReflection = CalculateColor(mam, track->reflection, frame);
 
     renderData->paramSPE_EMI = (specReflection) | (specEmission << 16) | (((renderData->paramSPE_EMI & 0x8000) ? 1 : 0) << 15);
 
-    unsigned int alpha = GetAlphaFromMaterialAnimation(mam, track->alpha, frame);
+    unsigned int alpha = CalculateAlpha(mam, track->alpha, frame);
     renderData->paramPOLYGON_ATTR = (renderData->paramPOLYGON_ATTR & ~0x1f0000) | (alpha << 16);
 }
