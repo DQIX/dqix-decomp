@@ -88,7 +88,7 @@ struct Nitro3DRenderContext
     MaterialRenderData* materialRenderDataArray;
     // packed array of bools, where the k'th entry is given by the
     // (k & 0x1f)'th bit of array[k >> 5]. The index refers to a material
-    // (matching the NSBXXInternalModel's MaterialList) or bone matrix (not 
+    // (matching the Nitro3DModel's MaterialList) or bone matrix (not 
     // sure about visibility animations), and pfnProcess...Animations will
     // only run for a particular object if its bit is set here.
     unsigned int animatedMaterials[2];
@@ -148,7 +148,7 @@ struct Nitro3DRenderCommandHandler
 // cleared before calling every hook, if then set by the hook the subsequent
 // code will not execute
 #define RCH_FLAG_6 6
-// relates to material/bone matrix render data in the NSBXXInternalModel somehow
+// relates to material/bone matrix render data in the Nitro3DModel somehow
 #define RCH_FLAG_7 7
 // if set, most commands have their main operations skipped, but
 // callbacks/hooks all happen as normal

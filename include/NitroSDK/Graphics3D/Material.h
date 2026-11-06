@@ -70,11 +70,11 @@ struct Nitro3DMaterial
 
 struct Nitro3DModelMaterials
 {
-    // offset to a NameList of MaterialPairing structs
+    // offset to a NameList of Nitro3DModelMaterials::Pair structs
     uint16_t texturePairingsOffset;
-    // offset to a NameList of MaterialPairing structs
+    // offset to a NameList of Nitro3DModelMaterials::Pair structs
     uint16_t palettePairingsOffset;
-    // entries are uint32_t's giving offsets to NSBXXMaterial structs
+    // entries are uint32_t's giving offsets to Nitro3DMaterial structs
     Nitro3DNameList materialOffsetList;
 
     inline struct Nitro3DMaterial* GetMaterialByIndex(unsigned int n) const
@@ -93,7 +93,7 @@ struct Nitro3DModelMaterials
     // Texture image pairing or texture palette pairing.
     // No information about the image/palette is stored in this struct, instead
     // you use the name corresponding to this entry in the relevant NameList
-    // pointed to by the offsets in NSBXXModelMaterialData.
+    // pointed to by the offsets above.
     struct Pair
     {
         // offset to an array of uint8_t giving indices of Materials that use this

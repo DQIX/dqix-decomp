@@ -44,7 +44,7 @@ struct Nitro3DModel
     uint32_t fileSize;
     uint32_t renderCommandsOffset;
     uint32_t materialsOffset;
-    uint32_t meshesOffset; // offset to a NameList of NSBXXMesh
+    uint32_t meshesOffset; // offset to a NameList of Nitro3DMesh
     uint32_t inverseBindsOffset;
     char unk_14[1];
     // 0, 1 or 2, determines the behavior of applying scaling

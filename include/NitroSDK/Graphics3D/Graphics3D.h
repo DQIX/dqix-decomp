@@ -16,7 +16,6 @@
 
 // Documentation on the various formats is available here:
 // https://github.com/scurest/nsbmd_docs/blob/master/nsbmd_docs.txt
-// I'm using NSBXX as a generic name for any of these file types
 
 #define SIGNATURE_NSBMD 0x30444d42 // "BMD0"
 #define SIGNATURE_NSBTX 0x30585442 // "BTX0"
