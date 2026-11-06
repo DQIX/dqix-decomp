@@ -226,65 +226,82 @@ src/NitroSDK/Graphics2D/Graphics2D.cpp:
     .rodata start:0x020e9190 end:0x020e91c0
     .text start:0x020afed4 end:0x020b0d90
 
-src/NitroSDK/NSBXX/Animation.cpp:
-    complete
-    .text start:0x020b2adc end:0x020b2e4c
 
-src/NitroSDK/NSBXX/TEX.cpp:
+src/NitroSDK/Graphics3D/AnimationInit.cpp:
+    complete
+    .text start:0x020b2a7c end:0x020b2b7c
+    .data start:0x020f1c6c end:0x020f1ce0
+
+src/NitroSDK/Graphics3D/Animation.cpp:
+    complete
+    .text start:0x020b2b7c end:0x020b2e4c
+
+src/NitroSDK/Graphics3D/Texture.cpp:
     complete
     .text start:0x020b2e4c end:0x020b36d0
 
-src/NitroSDK/NSBXX/RenderConfig.cpp:
+src/NitroSDK/Graphics3D/RenderConfig.cpp:
     complete
     .text start:0x020b36d0 end:0x020b3ae0
+    .bss start:0x0210a010 end:0x0210a274
 
-src/NitroSDK/NSBXX/AnimationProcessing.cpp:
+src/NitroSDK/Graphics3D/AnimationProcessing.cpp:
     complete
     .text start:0x020b3ae0 end:0x020b4030
 
-src/NitroSDK/NSBXX/RenderCommands.cpp:
+src/NitroSDK/Graphics3D/RenderCommandProcLookup.cpp:
+    complete
+    .data start:0x020f1ce0 end:0x020f1d08
+
+src/NitroSDK/Graphics3D/RenderCommands.cpp:
     complete
     .text start:0x020b4030 end:0x020b69a8
+    .rodata start:0x020e9250 end:0x020e9294
+    .data start:0x020f1d08 end:0x020f1e88
+    .bss start:0x0210a274 end:0x0210cf78
 
-src/NitroSDK/NSBXX/GeometryFifo.cpp:
+src/NitroSDK/Graphics3D/GeometryFifo.cpp:
     complete
     .text start:0x020b69a8 end:0x020b6ea8
+    .bss start:0x0210cf78 end:0x0210cf84
 
-src/NitroSDK/NSBXX/NSBXX.cpp:
+src/NitroSDK/Graphics3D/Model.cpp:
     complete
     .text start:0x020b6ea8 end:0x020b737c
 
-src/NitroSDK/NSBXX/NameList.cpp:
+src/NitroSDK/Graphics3D/Search.cpp:
     complete
-    .text start:0x020b737c end:0x020b76a4
+    .text start:0x020b737c end:0x020b7750
 
-src/NitroSDK/NSBXX/PatternAnimation.cpp:
+src/NitroSDK/Graphics3D/PatternAnimation.cpp:
     complete
-    .text start:0x020b76a4 end:0x020b7850
+    .text start:0x020b7750 end:0x020b7850
 
-src/NitroSDK/NSBXX/JAC.cpp:
+src/NitroSDK/Graphics3D/JAC.cpp:
     complete
     .text start:0x020b7850 end:0x020b8e70
+    .rodata start:0x020e9294 end:0x020e92b8
 
-src/NitroSDK/NSBXX/MAM.cpp:
+src/NitroSDK/Graphics3D/MAM.cpp:
     complete
     .text start:0x020b8e70 end:0x020b9288
 
-src/NitroSDK/NSBXX/MAT.cpp:
+src/NitroSDK/Graphics3D/MAT.cpp:
     complete
     .text start:0x020b9288 end:0x020b96ac
 
-src/NitroSDK/NSBXX/MPT.cpp:
+src/NitroSDK/Graphics3D/MPT.cpp:
     complete
     .text start:0x020b96ac end:0x020b993c
 
-src/NitroSDK/NSBXX/VAV.cpp:
+src/NitroSDK/Graphics3D/VAV.cpp:
     complete
     .text start:0x020b993c end:0x020b99c0
 
-src/NitroSDK/NSBXX/RenderCommandProcs.cpp:
+src/NitroSDK/Graphics3D/RenderCommandProcs.cpp:
     complete
     .text start:0x020b99c0 end:0x020bb434
+    .data start:0x020f1e88 end:0x020f1ee8
 
 src/NitroSDK/VRAMAllocationBase.cpp:
     complete
