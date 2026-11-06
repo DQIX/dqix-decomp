@@ -64,10 +64,3 @@ Nitro3DTextureSet* Nitro3D_GetTexturesFromFile(Nitro3DFileHeader* nsbxx);
 // M.AT animations from an nsbta file etc, or a Nitro3DModel from an
 // nsbmd file
 void* Nitro3D_GetInnerObjectByIndex(Nitro3DFileHeader* nsbxx, unsigned int idx);
-
-// Might have other uses, but for now I've only seen it called on
-// pattern animations.
-const char* Nitro3Di_GetPatternAnimationTextureName(Nitro3DMPT* anim, unsigned int idx);
-const char* Nitro3Di_GetPatternAnimationPaletteName(Nitro3DMPT* anim, unsigned int idx);
-Nitro3DMPT::Track::Keyframe* Nitro3Di_GetPatternAnimationKeyframe(Nitro3DMPT*, uint16_t track, uint16_t frameTime);
-Nitro3DMPT::Track* Nitro3Di_GetPatternAnimationTrack(Nitro3DMPT*, unsigned int track);

@@ -1,6 +1,4 @@
-#include "NitroSDK/Graphics3D/Graphics3D.h"
-#include "NitroSDK/Graphics3D/AnimationProcessing.h"
-#include "NitroSDK/Graphics3D/RenderCommands_Common.h"
+#include "NitroSDK/Graphics3D/Internal.h"
 
 #if defined(jpn)
 #define func_020ca390 func_020cbe5c

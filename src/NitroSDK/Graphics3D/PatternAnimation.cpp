@@ -1,5 +1,4 @@
-#include "NitroSDK/Graphics3D/Graphics3D.h"
-#include <asmhacks.h>
+#include "NitroSDK/Graphics3D/Internal.h"
 
 const char* Nitro3Di_GetPatternAnimationTextureName(Nitro3DMPT* anim, unsigned int idx)
 {

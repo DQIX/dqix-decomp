@@ -65,8 +65,6 @@ void Nitro3D_RemoveAnimationFromContext(Nitro3DRenderContext* context, Nitro3DAn
 // really doesn't fit here...
 void Nitro3D_SetRenderHook(Nitro3DRenderContext* context, RenderCommandHook hook, int unknown, int commandID, int stage);
 
-// Defined in AnimationProcessing.cpp 
-
 bool Nitro3Di_DefaultProcessMaterialAnimations(MaterialRenderData* material, Nitro3DAnimation* anim, unsigned int matIdx);
 bool Nitro3Di_DefaultProcessJointAnimations(BoneMatrixRenderData* bone, Nitro3DAnimation* anim, unsigned int boneIdx);
 bool Nitro3Di_ProcessVisibilityAnimations(int* output, Nitro3DAnimation* anim, unsigned int boneIdx);

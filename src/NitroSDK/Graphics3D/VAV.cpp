@@ -1,6 +1,4 @@
-#include "NitroSDK/Graphics3D/Graphics3D.h"
-#include "NitroSDK/Graphics3D/AnimationProcessing.h"
-#include "NitroSDK/Graphics3D/RenderCommands_Common.h"
+#include "NitroSDK/Graphics3D/Internal.h"
 
 void Nitro3Di_InitAnimationFromVAV(Nitro3DAnimation* anim, void* pvVAV, Nitro3DModel* model)
 {

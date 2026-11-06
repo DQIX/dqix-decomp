@@ -7392,9 +7392,9 @@ g_pfnNitro3DProcessVisibilityAnimations kind:data(any) addr:0x020f1c84
 g_pfnNitro3DProcessJointAnimations kind:data(any) addr:0x020f1c88
 g_pfnNitro3DProcessMaterialAnimations kind:data(any) addr:0x020f1c8c
 s_animationInitLookup kind:data(any) addr:0x020f1c90 local
-g_nitro2DSubmitBoneMatrixProcs kind:data(any) addr:0x020f1ce0
-g_nitro2DPopulateBoneMatrixScalingProcs kind:data(any) addr:0x020f1cec
-g_nitro2DLoadMaterialTextureMatrixProcs kind:data(any) addr:0x020f1cf8
+g_nitro3DSubmitBoneMatrixProcs kind:data(any) addr:0x020f1ce0
+g_nitro3DPopulateBoneMatrixScalingProcs kind:data(any) addr:0x020f1cec
+g_nitro3DLoadMaterialTextureMatrixProcs kind:data(any) addr:0x020f1cf8
 s_command13TexImageParamsFifo kind:data(any) addr:0x020f1d08 local
 s_command12TexImageParamsFifo kind:data(any) addr:0x020f1d10 local
 s_materialBindProcs kind:data(any) addr:0x020f1d18 local

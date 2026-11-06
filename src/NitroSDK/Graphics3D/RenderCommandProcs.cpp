@@ -1,5 +1,4 @@
-#include "NitroSDK/Graphics3D/RenderCommands.h"
-#include "NitroSDK/Graphics3D/RenderCommands_Common.h"
+#include "NitroSDK/Graphics3D/Internal.h"
 
 // Texture matrix generation procedures:
 // In all instances, we build a texture matrix of the form 

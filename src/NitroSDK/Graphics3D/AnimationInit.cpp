@@ -1,5 +1,4 @@
-#include "NitroSDK/Graphics3D/Graphics3D.h"
-#include "NitroSDK/Graphics3D/AnimationProcessing.h"
+#include "NitroSDK/Graphics3D/Internal.h"
 
 // We seriously have a translation unit for a single function, because the data
 // is laid out in such a ridiculous way that this is the most sensible way to match it
