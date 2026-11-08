@@ -435,3 +435,8 @@ src/Resource/StringList.cpp:
     complete
     .text start:0x020dfbd4 end:0x020e063c
     .data start:0x020f2b6c end:0x020f2b78
+
+src/Resource/GameStrings.cpp:
+    complete
+    .text start:0x020e5058 end:0x020e51fc
+    .data start:0x020f2dd4 end:0x020f2e20

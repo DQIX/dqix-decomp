@@ -6136,12 +6136,12 @@ func_020e4c74 kind:function(arm,size=0x74) addr:0x020e4c74
 func_020e4ce8 kind:function(arm,size=0x150) addr:0x020e4ce8
 func_020e4e38 kind:function(arm,size=0xe0) addr:0x020e4e38
 func_020e4f18 kind:function(arm,size=0x140) addr:0x020e4f18
-func_020e5058 kind:function(arm,size=0x3c) addr:0x020e5058
-func_020e5094 kind:function(arm,size=0x58) addr:0x020e5094
-func_020e50ec kind:function(arm,size=0x28) addr:0x020e50ec
-func_020e5114 kind:function(arm,size=0xb8) addr:0x020e5114
-func_020e51cc kind:function(arm,size=0x18) addr:0x020e51cc
-func_020e51e4 kind:function(arm,size=0x18) addr:0x020e51e4
+_Z21InitializeGameStringsv kind:function(arm,size=0x3c) addr:0x020e5058
+_Z18DestroyGameStringsv kind:function(arm,size=0x58) addr:0x020e5094
+_Z23ReserveGameStringMemoryPvj kind:function(arm,size=0x28) addr:0x020e50ec
+_Z15LoadGameStringsv kind:function(arm,size=0xb8) addr:0x020e5114
+_Z13GetGameString11eGameString kind:function(arm,size=0x18) addr:0x020e51cc
+_Z18GetArticleTemplatei kind:function(arm,size=0x18) addr:0x020e51e4
 func_020e51fc kind:function(arm,size=0x8) addr:0x020e51fc
 func_020e5204 kind:function(arm,size=0x38) addr:0x020e5204
 func_020e523c kind:function(arm,size=0x30) addr:0x020e523c
@@ -7549,10 +7549,7 @@ data_020f2d2c kind:data(any) addr:0x020f2d2c
 data_020f2dc8 kind:data(any) addr:0x020f2dc8
 data_020f2dcb kind:data(any) addr:0x020f2dcb
 data_020f2dcf kind:data(any) addr:0x020f2dcf
-data_020f2dd4 kind:data(any) addr:0x020f2dd4
-data_020f2de9 kind:data(any) addr:0x020f2de9
-data_020f2dfa kind:data(any) addr:0x020f2dfa
-data_020f2e0e kind:data(any) addr:0x020f2e0e
+@stringBase0 kind:data(byte[0x4a]) addr:0x020f2dd4 local
 data_020f2e20 kind:data(any) addr:0x020f2e20
 data_020f2e25 kind:data(any) addr:0x020f2e25
 data_020f2e2c kind:data(any) addr:0x020f2e2c
@@ -7905,5 +7902,4 @@ data_02153637 kind:bss addr:0x02153637
 data_02153660 kind:bss addr:0x02153660
 data_02153680 kind:bss addr:0x02153680
 data_02153694 kind:bss addr:0x02153694
-data_021536ac kind:bss addr:0x021536ac
 data_021536c4 kind:bss addr:0x021536c4
