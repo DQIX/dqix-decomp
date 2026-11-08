@@ -8,9 +8,6 @@
 #if defined(jpn)
 #define func_02072aa8 func_02073c38
 #define func_020da150 func_020dbb58
-
-#define data_020f2b6c data_020f2cc4 
-#define data_020f2b71 data_020f2cc9
 #endif
 
 extern "C"
@@ -19,9 +16,6 @@ extern "C"
     // allocate & copy string
     char* func_020da150(SafeAllocator*, const char*);
 }
-
-extern char data_020f2b6c[]; // ".bin"
-extern char data_020f2b71[]; // ".nat"
 
 #if defined(jpn)
 void* GetNAT(const char* natFilename, unsigned int* outLength, short unused);
