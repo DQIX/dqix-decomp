@@ -1,3 +1,4 @@
+#pragma ipa file
 #include "Resource/GameStrings.h"
 #include "Memory/SafeAllocator.h"
 #include "Filesystem/BackgroundLoader.h"
@@ -9,8 +10,8 @@ extern "C"
 }
 extern AllocatorUnion data_02114e20;
 
-extern SafeAllocator data_02153680;
 extern StringList data_02153694[2];
+extern SafeAllocator data_02153680;
 
 void InitializeGameStrings()
 {

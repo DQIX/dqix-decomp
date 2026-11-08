@@ -14,6 +14,8 @@ public:
     SignedAllocatorHeader* pSignedAlloc;
     AllocatorUnion allocUnion;
 
+    SafeAllocator() { ResetAllocatorPointer(); }
+
     // total number of currently existent SafeAllocator instances
     static unsigned int GetLiveCount();
 
