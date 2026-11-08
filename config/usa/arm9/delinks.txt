@@ -430,3 +430,7 @@ src/Graphics/VRAMStaging.cpp:
     complete
     .bss start:0x0214e5e4 end:0x02153628
     .text start:0x020dc07c end:0x020dc214
+
+src/Resource/StringList.cpp:
+    complete
+    .text start:0x020dfbd4 end:0x020e063c

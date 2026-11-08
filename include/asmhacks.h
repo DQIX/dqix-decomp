@@ -41,3 +41,13 @@
 // or you can compare against a call to this function (provided it
 // actually gets inlined) 
 inline unsigned int UNSIGNED_ZERO() { return 0; }
+
+// Probably a remnant of asserts or similar. Prevents variables from being
+// optimized out if e.g. they're only ever written to and never used - you
+// can e.g. write its value to some member variable if (ALWAYS_FALSE()).
+// can also prevent inlining a function within its TU
+inline bool ALWAYS_FALSE()
+{
+    int x = 0;
+    return x;
+}
