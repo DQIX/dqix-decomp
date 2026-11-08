@@ -7522,8 +7522,7 @@ data_020f2b1c kind:data(any) addr:0x020f2b1c
 data_020f2b32 kind:data(any) addr:0x020f2b32
 data_020f2b4b kind:data(any) addr:0x020f2b4b
 data_020f2b68 kind:data(any) addr:0x020f2b68
-data_020f2b6c kind:data(any) addr:0x020f2b6c
-data_020f2b71 kind:data(any) addr:0x020f2b71
+@stringBase0 kind:data(byte[0xa]) addr:0x020f2b6c local
 data_020f2b78 kind:data(any) addr:0x020f2b78
 data_020f2b90 kind:data(any) addr:0x020f2b90
 data_020f2ba2 kind:data(any) addr:0x020f2ba2

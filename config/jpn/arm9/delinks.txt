@@ -434,3 +434,4 @@ src/Graphics/VRAMStaging.cpp:
 src/Resource/StringList.cpp:
     complete
     .text start:0x020e17a8 end:0x020e2284
+    .data start:0x020f2cc4 end:0x020f2cd0

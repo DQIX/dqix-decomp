@@ -25877,7 +25877,7 @@ from:0x020e2254 kind:arm_call to:0x02003c04 module:main
 from:0x020e2260 kind:arm_call to:0x02004158 module:main
 from:0x020e2270 kind:arm_call to:0x02003e44 module:main
 from:0x020e227c kind:load to:0x020f2cc4 module:main
-from:0x020e2280 kind:load to:0x020f2cc9 module:main
+from:0x020e2280 kind:load to:0x020f2cc4 add:0x5 module:main
 from:0x020e2294 kind:arm_call to:0x0202f308 module:main
 from:0x020e22ac kind:arm_call to:0x02022624 module:main
 from:0x020e22c0 kind:arm_call to:0x0202f864 module:main

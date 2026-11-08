@@ -16,6 +16,7 @@
 extern "C"
 {
     void func_02072aa8(void*, void*, int);
+    // allocate & copy string
     char* func_020da150(SafeAllocator*, const char*);
 }
 
@@ -522,8 +523,8 @@ bool CopyAndReplaceFilename(char* dst, const char* src, short number)
         return false;
     
     sprintf(dst, src, number);
-    char* extension = strstr(dst, data_020f2b6c);
+    char* extension = strstr(dst, ".bin");
     if (extension != NULL)
-        strcpy(extension, data_020f2b71);
+        strcpy(extension, ".nat");
     return true;
 }
