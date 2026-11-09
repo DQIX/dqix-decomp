@@ -226,7 +226,6 @@ src/NitroSDK/Graphics2D/Graphics2D.cpp:
     .rodata start:0x020e9190 end:0x020e91c0
     .text start:0x020afed4 end:0x020b0d90
 
-
 src/NitroSDK/Graphics3D/AnimationInit.cpp:
     complete
     .text start:0x020b2a7c end:0x020b2b7c
@@ -431,3 +430,13 @@ src/Graphics/VRAMStaging.cpp:
     complete
     .bss start:0x0214e5e4 end:0x02153628
     .text start:0x020dc08c end:0x020dc224
+
+src/Resource/StringList.cpp:
+    complete
+    .text start:0x020dfbe4 end:0x020e064c
+    .data start:0x020f2b6c end:0x020f2b78
+
+src/Resource/GameStrings.cpp:
+    complete
+    .text start:0x020e5068 end:0x020e520c
+    .data start:0x020f2dd4 end:0x020f2e20

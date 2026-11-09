@@ -167,7 +167,6 @@ void LootableContainerManager::LoadZoneContainers(const void *treasureArchive,
 
     char allocationBuffer[0x400];
     SafeAllocator tempAlloc;
-    tempAlloc.ResetAllocatorPointer(); // constructor almost certainly
     tempAlloc.CreateTypeA(allocationBuffer, sizeof(allocationBuffer));
 
     LootDistribution rng;
