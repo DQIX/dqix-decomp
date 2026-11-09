@@ -25,12 +25,12 @@ void* GetNAT(const char* natFilename, unsigned int* outLength, short unused, con
 bool CopyAndReplaceFilename(char* dst, const char* src, short unused);
 #endif
 
-int StringList::IndexPredicate(const TableEntry* entry)
+static int IndexPredicate(const StringList::TableEntry* entry)
 {
     return entry->index;
 }
 
-int ConvertOffsetsToPointers(StringList::NATData* nat, StringList::TableEntry* entry)
+static int ConvertOffsetsToPointers(StringList::NATData* nat, StringList::TableEntry* entry)
 {
     entry->string = nat->FixStringPointer(entry->string, NULL);
     return true;

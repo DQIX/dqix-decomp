@@ -1,4 +1,6 @@
 #pragma ipa file
+#if !defined(jpn)
+
 #include "Resource/GameStrings.h"
 #include "Memory/SafeAllocator.h"
 #include "Filesystem/BackgroundLoader.h"
@@ -71,3 +73,5 @@ const char* GetArticleTemplate(int id)
 {
     return data_02153694[1].GetString(id);
 }
+
+#endif

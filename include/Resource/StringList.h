@@ -63,12 +63,9 @@ public:
     short targetIndex_c_;
     short unknown_e_;
     int taskID_10_;
-    SafeAllocator* allocator_14_;
-    
+    SafeAllocator* allocator_14_;    
 
 public:
-    static int IndexPredicate(const TableEntry*);
-
     StringList();
 
     void Reset();
