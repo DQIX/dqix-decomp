@@ -37,6 +37,15 @@ Run the script to configure Ninja (Do this any time a file is added or removed)
 python tools/configure.py <usa|jpn|eur>
 ```
 
+#### macOS (Apple Silicon)
+The default wibo download is a Linux binary, so on macOS download `wibo-macos` from the [wibo releases](https://github.com/decompals/wibo/releases) (it runs under Rosetta 2), make it executable, and pass its absolute path to `configure.py`:
+```shell
+curl -L -o wibo-macos https://github.com/decompals/wibo/releases/download/1.2.0/wibo-macos
+chmod +x wibo-macos
+python tools/configure.py usa -w "$PWD/wibo-macos"
+```
+Apple's `gcc` (clang) works for generating decomp.me contexts. Note that the pinned Linux wibo carries an x87 precision fix (decompals/wibo#137) that is not in a release yet, so float-heavy code that matches in CI could, in rare cases, fail to match locally on macOS.
+
 If using ghidra, be sure to create a successful build using ninja (see: [Building the Project](#-building-the-project)) at least once before loading the game's config.yaml with ghidra. (For more information see See [Decompiling.md](Decompiling.md))
 
 Lastly, if you want the final ROM to be perfectly byte accurate you need to dump the ARM7 BIOS from your DS and place them in the root folder, under the name arm7_bios.bin

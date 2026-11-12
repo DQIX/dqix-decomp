@@ -53,7 +53,7 @@ with tempfile.NamedTemporaryFile(delete=False, suffix=suffix) as tmp_file:
     try:
         ctx: str = subprocess.check_output([
             'gcc',
-            '-E', '-P', '-fworking-directory', '-undef', '-dD',
+            '-E', '-P', '-undef', '-dD',
             *CXX_FLAGS,
             tmp_file.name
         ], cwd=root_dir, encoding=args.encoding)
