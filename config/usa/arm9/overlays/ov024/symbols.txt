@@ -62,7 +62,7 @@ func_ov024_021da328 kind:function(arm,size=0xdc) addr:0x021da328
 func_ov024_021da404 kind:function(arm,size=0x78) addr:0x021da404
 func_ov024_021da47c kind:function(arm,size=0xd4) addr:0x021da47c
 func_ov024_021da550 kind:function(arm,size=0xc) addr:0x021da550
-func_ov024_021da55c kind:function(arm,size=0xe8) addr:0x021da55c
+DispatchDamageHandler kind:function(arm,size=0xe8) addr:0x021da55c
 func_ov024_021da644 kind:function(arm,size=0x2c) addr:0x021da644
 func_ov024_021da670 kind:function(arm,size=0x328) addr:0x021da670
 func_ov024_021da998 kind:function(arm,size=0x18) addr:0x021da998
@@ -86,7 +86,7 @@ func_ov024_021dc93c kind:function(arm,size=0x594) addr:0x021dc93c
 func_ov024_021dced0 kind:function(arm,size=0x140) addr:0x021dced0
 func_ov024_021dd010 kind:function(arm,size=0x18) addr:0x021dd010
 func_ov024_021dd028 kind:function(arm,size=0x238) addr:0x021dd028
-func_ov024_021dd260 kind:function(arm,size=0x18) addr:0x021dd260
+IsAtMaxTension kind:function(arm,size=0x18) addr:0x021dd260
 func_ov024_021dd278 kind:function(arm,size=0x2bc) addr:0x021dd278
 func_ov024_021dd534 kind:function(arm,size=0x1bc) addr:0x021dd534
 func_ov024_021dd6f0 kind:function(arm,size=0x138) addr:0x021dd6f0
@@ -173,11 +173,11 @@ func_ov024_021e4604 kind:function(arm,size=0x1d8) addr:0x021e4604
 func_ov024_021e47dc kind:function(arm,size=0x18) addr:0x021e47dc
 func_ov024_021e47f4 kind:function(arm,size=0x11c) addr:0x021e47f4
 func_ov024_021e4910 kind:function(arm,size=0x204) addr:0x021e4910
-func_ov024_021e4b14 kind:function(arm,size=0xf0) addr:0x021e4b14
+DispatchRiderEffect kind:function(arm,size=0xf0) addr:0x021e4b14
 func_ov024_021e4c04 kind:function(arm,size=0x968) addr:0x021e4c04
 func_ov024_021e556c kind:function(arm,size=0x154) addr:0x021e556c
 func_ov024_021e56c0 kind:function(arm,size=0x100) addr:0x021e56c0
-func_ov024_021e57c0 kind:function(arm,size=0x20) addr:0x021e57c0
+SetGuardLevel kind:function(arm,size=0x20) addr:0x021e57c0
 func_ov024_021e57e0 kind:function(arm,size=0x1a8) addr:0x021e57e0
 func_ov024_021e5988 kind:function(arm,size=0x170) addr:0x021e5988
 func_ov024_021e5af8 kind:function(arm,size=0xec) addr:0x021e5af8
@@ -192,7 +192,7 @@ func_ov024_021e6798 kind:function(arm,size=0x18) addr:0x021e6798
 func_ov024_021e67b0 kind:function(arm,size=0x18) addr:0x021e67b0
 func_ov024_021e67c8 kind:function(arm,size=0x180) addr:0x021e67c8
 func_ov024_021e6948 kind:function(arm,size=0x148) addr:0x021e6948
-func_ov024_021e6a90 kind:function(arm,size=0x1118) addr:0x021e6a90
+CalculateFinalDamage kind:function(arm,size=0x1118) addr:0x021e6a90
 func_ov024_021e7ba8 kind:function(arm,size=0x18) addr:0x021e7ba8
 _Z19GetAttackBaseDamagePiiiS_S_ kind:function(arm,size=0x524) addr:0x021e7bc0
 func_ov024_021e80e4 kind:function(arm,size=0xb0c) addr:0x021e80e4
@@ -236,7 +236,7 @@ func_ov024_021eb47c kind:function(arm,size=0x34) addr:0x021eb47c
 func_ov024_021eb4b0 kind:function(arm,size=0x34) addr:0x021eb4b0
 func_ov024_021eb4e4 kind:function(arm,size=0x2c) addr:0x021eb4e4
 func_ov024_021eb510 kind:function(arm,size=0xc0) addr:0x021eb510
-func_ov024_021eb5d0 kind:function(arm,size=0x22c0) addr:0x021eb5d0
+ResolveAction kind:function(arm,size=0x22c0) addr:0x021eb5d0
 func_ov024_021ed890 kind:function(arm,size=0x30) addr:0x021ed890
 func_ov024_021ed8c0 kind:function(arm,size=0x11c) addr:0x021ed8c0
 func_ov024_021ed9dc kind:function(arm,size=0x84) addr:0x021ed9dc
@@ -584,7 +584,7 @@ data_ov024_021fe738 kind:data(any) addr:0x021fe738
 data_ov024_021fe748 kind:data(any) addr:0x021fe748
 data_ov024_021fe758 kind:data(any) addr:0x021fe758
 data_ov024_021fe768 kind:data(any) addr:0x021fe768
-data_ov024_021fe778 kind:data(any) addr:0x021fe778
+comboMultipliers kind:data(any) addr:0x021fe778
 data_ov024_021fe788 kind:data(any) addr:0x021fe788
 data_ov024_021fe798 kind:data(any) addr:0x021fe798
 data_ov024_021fe7aa kind:data(any) addr:0x021fe7aa
@@ -598,7 +598,7 @@ data_ov024_021fe822 kind:data(any) addr:0x021fe822
 data_ov024_021fe840 kind:data(any) addr:0x021fe840
 data_ov024_021fe842 kind:data(any) addr:0x021fe842
 data_ov024_021fe860 kind:data(any) addr:0x021fe860
-data_ov024_021fe8b6 kind:data(any) addr:0x021fe8b6
+skillAmountScaling kind:data(any) addr:0x021fe8b6
 data_ov024_021fe8f0 kind:data(any) addr:0x021fe8f0
 data_ov024_021fe910 kind:data(any) addr:0x021fe910 ambiguous
 data_ov024_021fe930 kind:data(any) addr:0x021fe930
@@ -746,13 +746,13 @@ data_ov024_021ff0d8 kind:data(any) addr:0x021ff0d8
 data_ov024_021ff12c kind:data(any) addr:0x021ff12c
 data_ov024_021ff17c kind:data(any) addr:0x021ff17c ambiguous
 data_ov024_021ff180 kind:data(any) addr:0x021ff180
-data_ov024_021ff1e0 kind:data(any) addr:0x021ff1e0
+damageHandlers kind:data(any) addr:0x021ff1e0
 data_ov024_021ff280 kind:data(any) addr:0x021ff280 ambiguous
 data_ov024_021ff384 kind:data(any) addr:0x021ff384 ambiguous
-data_ov024_021ff3f8 kind:data(any) addr:0x021ff3f8
-data_ov024_021ff450 kind:data(any) addr:0x021ff450
+actionSubEffectHandlers kind:data(any) addr:0x021ff3f8
+riderEffectHandlers kind:data(any) addr:0x021ff450
 data_ov024_021ff4b0 kind:data(any) addr:0x021ff4b0 ambiguous
-data_ov024_021ff508 kind:data(any) addr:0x021ff508
+actionKindHandlers kind:data(any) addr:0x021ff508
 data_ov024_021ff5b4 kind:data(any) addr:0x021ff5b4 ambiguous
 data_ov024_021ff6b8 kind:data(any) addr:0x021ff6b8 ambiguous
 data_ov024_021ff790 kind:data(any) addr:0x021ff790
