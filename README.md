@@ -44,7 +44,10 @@ curl -L -o wibo-macos https://github.com/decompals/wibo/releases/download/1.2.0/
 chmod +x wibo-macos
 python tools/configure.py usa -w "$PWD/wibo-macos"
 ```
-Apple's `gcc` (clang) works for generating decomp.me contexts. Note that the pinned Linux wibo carries an x87 precision fix (decompals/wibo#137) that is not in a release yet, so float-heavy code that matches in CI could, in rare cases, fail to match locally on macOS.
+Apple's `gcc` (clang) works for generating decomp.me contexts.
+
+> [!Warning]
+> wibo 1.2.0 predates the x87 precision fix (decompals/wibo#137) that the pinned Linux wibo carries. Without it, code using `double` compiles differently: for example the MSL printf formatter at `0x02003418` comes out 4 bytes short, shifting everything after it. Until a wibo release includes the fix, use the `macos-release` artifact from a successful [wibo CI run on `main`](https://github.com/decompals/wibo/actions/workflows/ci.yml?query=branch%3Amain) (`gh run download <run-id> -R decompals/wibo -n macos-release`).
 
 If using ghidra, be sure to create a successful build using ninja (see: [Building the Project](#-building-the-project)) at least once before loading the game's config.yaml with ghidra. (For more information see See [Decompiling.md](Decompiling.md))
 
