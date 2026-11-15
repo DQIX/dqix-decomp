@@ -7322,7 +7322,7 @@ data_020f24a4 kind:data(any) addr:0x020f24a4
 data_020f24b8 kind:data(any) addr:0x020f24b8
 data_020f24d0 kind:data(any) addr:0x020f24d0
 data_020f2974 kind:data(any) addr:0x020f2974
-data_020f297c kind:data(any) addr:0x020f297c
+s_gpcImplInfo kind:data(any) addr:0x020f297c local
 g_gpcVersion kind:data(byte[0x13]) addr:0x020f2990
 _ZN21VersionedGPCSignatureILi0EE5bytesE kind:data(any) addr:0x020f29a4
 _ZN21VersionedGPCSignatureILi1EE5bytesE kind:data(any) addr:0x020f29ac

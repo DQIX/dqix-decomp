@@ -9,11 +9,6 @@
 #define func_02075090 func_0207621c
 #define func_020d84f8 func_020d9e5c
 #define func_020d8524 func_020d9e88
-
-#define data_020f27c0 data_020f297c
-#define data_020f27e8 data_020f29a4
-#define data_020f27f0 data_020f29ac
-#define data_020f27f8 data_020f29b4
 #endif
 
 extern "C"
@@ -39,9 +34,9 @@ struct GPCImplementationData
     GPCSignature gpc0Signature;
     GPCSignature gpc1Signature;
     GPCSignature gpc2Signature;
-} extern data_020f27c0 =
+} static s_gpcImplInfo =
 {
-    .pRevisionNumberString = data_020f27c0.pRevisionString + 11,
+    .pRevisionNumberString = s_gpcImplInfo.pRevisionString + 11,
     .pRevisionString = g_gpcVersion,
     .gpc0Signature = VersionedGPCSignature<0>(),
     .gpc1Signature = VersionedGPCSignature<1>(),
@@ -117,7 +112,7 @@ bool GetGPCInnerFileByCRC(void** pOutPtr,
 {
     *pOutPtr = NULL;
     *pOutNumber = 0;
-    if (gpc == NULL || gpc->header.signature != data_020f27c0.gpc1Signature.value)
+    if (gpc == NULL || gpc->header.signature != s_gpcImplInfo.gpc1Signature.value)
         return false;
 
     GPCFile::FileEntry* entry = gpc->GetFileByCRC(crc);
@@ -170,7 +165,7 @@ bool LoadAndDecompressGPCHeaderAndInnerFileInfo(GPCFile** ppGPC, ExtendedNitroVM
 
     GPCFile::Header header;
     func_020d84f8(&header, sizeof(GPCFile::Header));
-    unsigned int desiredSignature = data_020f27c0.gpc2Signature.value;
+    unsigned int desiredSignature = s_gpcImplInfo.gpc2Signature.value;
     header.signature = desiredSignature;
     if (!machine->Read(&header, sizeof(GPCFile::Header)))
         goto end;
