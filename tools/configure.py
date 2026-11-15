@@ -65,6 +65,7 @@ LD_FLAGS = " ".join([
     "-m Entry",             # Set entry function
     "-map closure,unused",  # Generate map file
     "-msgstyle gcc",        # Use GCC-like messages (some IDEs will make file names clickable)
+    "-sym on",              # Emit debug info (for use with melonDS)
     "-dead",                # Don't allow dead code
     active_function_name    # fix issue with overlay 30 being excluded by the previous command
 ])
