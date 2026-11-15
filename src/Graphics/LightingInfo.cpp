@@ -1,10 +1,10 @@
 #include "Graphics/LightingInfo.h"
 #include "Resource/Script.h"
 
+static float s_eveningLength = 30.0f;
 static float s_nightLength = 180.0f;
 static float s_morningLength = 30.0f;
 static float s_dayLength = 180.0f;
-static float s_eveningLength = 30.0f;
 
 #define DECLARE_SUM_ARRAY(name, a, b, c, d) static float name[5] = { (name[4] = a + (b + (d + c)), \
     (name[2] = name[3] + d), \

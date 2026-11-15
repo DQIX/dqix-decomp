@@ -1,5 +1,3 @@
-#pragma ipa file
-
 #include "Graphics/OBJSpriteSet.h"
 #include "Resource/PAC.h"
 #include <asmhacks.h>

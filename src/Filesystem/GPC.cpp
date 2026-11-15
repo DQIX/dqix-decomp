@@ -1,5 +1,3 @@
-#pragma ipa file
-
 #include "Filesystem/GPC.h"
 #include "Filesystem/GPCImplementationDetails.h"
 #include <globaldefs.h>

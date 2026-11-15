@@ -1,4 +1,3 @@
-#pragma ipa file
 #include "Resource/StringList.h"
 #include "Filesystem/BackgroundLoader.h"
 #include "Filesystem/FileIO.h"

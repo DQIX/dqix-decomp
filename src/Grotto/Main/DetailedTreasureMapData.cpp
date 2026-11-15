@@ -435,6 +435,8 @@ void DetailedTreasureMapData::LegacyBossMapData::WriteMapLevelString()
     const char* lvlPrefix = GetGameString(GameString_Lv);
     sprintf(mapLevelString_, data_020f1ac4, lvlPrefix, level_);
 #elif defined(jpn)
+    if (ALWAYS_FALSE())
+        return;
     sprintf(mapLevelString_, data_020f1c27, level_);
 #endif
 }

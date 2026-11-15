@@ -29,8 +29,8 @@ def mwccarm_url(tag: str) -> str:
     return 'http://decomp.aetias.com/files/mwccarm.zip'
 
 def wibo_url(tag: str) -> str:
-    if tag.startswith('sha256:'):
-        return f'https://ghcr.io/v2/decompals/wibo/blobs/{tag}'
+    if tag == 'temp':
+        return 'https://github.com/DQIX/wibo/releases/download/temp-version/wibo-x86_64'
     return f'https://github.com/decompals/wibo/releases/download/{tag}/wibo'
 
 def objdiff_url(tag: str) -> str:

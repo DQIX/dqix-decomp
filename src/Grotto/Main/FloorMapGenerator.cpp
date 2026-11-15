@@ -999,7 +999,7 @@ ARM int FloorMapGenerator::RandRange(int minimum, int maximum) const
 {
     if (minimum == maximum)
         return minimum;
-    
-    return minimum + (rand() % (maximum - minimum + 1));
-}
 
+    int range = maximum - minimum + 1;
+    return minimum + (rand() % range);
+}
