@@ -1,4 +1,3 @@
-#pragma ipa file
 #if !defined(jpn)
 
 #include "Resource/GameStrings.h"

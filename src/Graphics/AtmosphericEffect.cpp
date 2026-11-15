@@ -27,10 +27,11 @@
     (s_sums[1] = s_sums[2] + c), \
     /* s_sums[0] = */ s_sums[1] + b) }
 
+static float s_dataFloatD = 180.0f;
 static float s_dataFloatA = 30.0f;
 static float s_dataFloatB = 180.0f;
 static float s_dataFloatC = 30.0f;
-static float s_dataFloatD = 180.0f;
+
 DECLARE_SUM_ARRAY(s_dataFloatA, s_dataFloatD, s_dataFloatC, s_dataFloatB);
 
 struct EffectScriptData

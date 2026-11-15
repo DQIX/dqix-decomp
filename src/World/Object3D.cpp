@@ -1966,7 +1966,9 @@ bool Object3D::IsChild() const
 
 bool Object3D::IsParent() const
 {
-    return pNextChild_ != NULL && pPrevChild_ == NULL;
+    if (pNextChild_ != NULL && pPrevChild_ == NULL)
+        return true;
+    return false;
 }
 
 int Object3D::GetFlag(int mask) const { return flags_ & mask; }

@@ -6,6 +6,7 @@
 #include "Resource/ResourceMutex.h"
 #include "std_library_functions.h"
 #include <globaldefs.h>
+#include <asmhacks.h>
 
 #if defined(jpn)
 #define data_020ee694 data_020ee7a0
@@ -251,6 +252,8 @@ void* VRAMStagingManager::AllocateInStagingSpace(unsigned int length)
 
 void VRAMStagingManager::StagingSpaceAllocation::SetFlagBitValue(int bit, bool value)
 {
+    if (ALWAYS_FALSE())
+        return;
     unsigned short mask = 1 << bit;
     if (value)
         flags_ |= mask;

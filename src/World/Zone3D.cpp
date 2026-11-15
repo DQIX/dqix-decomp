@@ -198,3 +198,9 @@ void Zone3D::SwitchZone(unsigned short newID)
 
     mapListLoadHandle_ = loader->QueueLoadFile(data_020ef0f0, NULL);
 }
+
+// fake function, optimized out by linker but stops operator= being inlined above
+void force_emission_of_vector3_copy_assignment_operator(Vector3fix* a)
+{
+    *a = *a;
+}

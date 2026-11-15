@@ -25,14 +25,14 @@ args = parser.parse_args()
 # Config
 GAME = "dqix"
 DSD_VERSION = 'v0.10.2'
-WIBO_VERSION = 'sha256:bab06c516326680535fe1d35594a1b4640ea9da4663affd874d5cbe76463d42f' # master 355e082: decompals/wibo#137 (53-bit x87) is in no release yet
+WIBO_VERSION = 'temp'
 LINK_WIBO_VERSION = '0.6.16' # mwldarm runs ~15x slower under wibo master and needs no x87 fix
 OBJDIFF_VERSION = 'v3.8.1'
 
 DEFAULT_MWCC_VERSION = "2.0/sp2p2"
 SDK_MWCC_VERSION = "2.0/sp1p2"
 
-DEFAULT_OPT_LEVEL = "-O2"
+GAME_OPT_LEVEL_AND_SETTINGS = "-O2 -ipa file"
 SDK_OPT_LEVEL = "-O4,p"
 
 DECOMP_ME_COMPILER = "mwcc_30_137"
@@ -40,7 +40,6 @@ CC_FLAGS = " ".join([
     ## Optimization level removed here, as it needs to be specified per file
     "-enum int",            # Use int-sized enums
     "-char signed",         # Char type is signed
-    "-str noreuse",         # Equivalent strings are different objects
     "-proc arm946e",        # Target processor
     "-gccext,on",           # Enable GCC extensions
     "-fp soft",             # Compute float operations in software
@@ -66,6 +65,7 @@ LD_FLAGS = " ".join([
     "-m Entry",             # Set entry function
     "-map closure,unused",  # Generate map file
     "-msgstyle gcc",        # Use GCC-like messages (some IDEs will make file names clickable)
+    "-sym on",              # Emit debug info (for use with melonDS)
     "-dead",                # Don't allow dead code
     active_function_name    # fix issue with overlay 30 being excluded by the previous command
 ])
@@ -489,7 +489,7 @@ def is_source_file_sdk(src: Path):
 def get_opt_level(src: Path):
     if is_source_file_sdk(src):
         return SDK_OPT_LEVEL
-    return DEFAULT_OPT_LEVEL
+    return GAME_OPT_LEVEL_AND_SETTINGS
 
 def get_compiler_version(src: Path):
     version = DEFAULT_MWCC_VERSION

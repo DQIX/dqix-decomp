@@ -1,5 +1,3 @@
-#pragma ipa file
-
 #include "Graphics/LightingManager.h"
 #include "World/Zone3D.h"
 #include "NitroSDK/Memory.h"
