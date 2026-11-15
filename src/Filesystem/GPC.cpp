@@ -1,4 +1,7 @@
+#pragma ipa file
+
 #include "Filesystem/GPC.h"
+#include "Filesystem/GPCImplementationDetails.h"
 #include <globaldefs.h>
 #include <asmhacks.h>
 
@@ -33,17 +36,17 @@ struct GPCImplementationData
 {
     const char* pRevisionNumberString; // "17659 $"
     const char* pRevisionString; // "$Revision: 17659 $"
-    unsigned int gpc0Signature;
-    unsigned int gpc1Signature;
-    unsigned int gpc2Signature;
-} extern data_020f27c0;
-
-// GPC0 signature
-extern char data_020f27e8[8];
-// GPC1 signature
-extern char data_020f27f0[8];
-// GPC2 signature
-extern char data_020f27f8[8];
+    GPCSignature gpc0Signature;
+    GPCSignature gpc1Signature;
+    GPCSignature gpc2Signature;
+} extern data_020f27c0 =
+{
+    .pRevisionNumberString = data_020f27c0.pRevisionString + 11,
+    .pRevisionString = g_gpcVersion,
+    .gpc0Signature = VersionedGPCSignature<0>(),
+    .gpc1Signature = VersionedGPCSignature<1>(),
+    .gpc2Signature = VersionedGPCSignature<2>()
+};
 
 // Speculative as this is only used for a file that doesn't exist and I haven't
 // found the call site executing in-game (file is data/effect/ev999993100.chr)
@@ -114,7 +117,7 @@ bool GetGPCInnerFileByCRC(void** pOutPtr,
 {
     *pOutPtr = NULL;
     *pOutNumber = 0;
-    if (gpc == NULL || gpc->header.signature != data_020f27c0.gpc1Signature)
+    if (gpc == NULL || gpc->header.signature != data_020f27c0.gpc1Signature.value)
         return false;
 
     GPCFile::FileEntry* entry = gpc->GetFileByCRC(crc);
@@ -167,7 +170,7 @@ bool LoadAndDecompressGPCHeaderAndInnerFileInfo(GPCFile** ppGPC, ExtendedNitroVM
 
     GPCFile::Header header;
     func_020d84f8(&header, sizeof(GPCFile::Header));
-    unsigned int desiredSignature = data_020f27c0.gpc2Signature;
+    unsigned int desiredSignature = data_020f27c0.gpc2Signature.value;
     header.signature = desiredSignature;
     if (!machine->Read(&header, sizeof(GPCFile::Header)))
         goto end;
@@ -313,36 +316,4 @@ void GPCReadPair::ZeroInitializeMachine()
 bool GPCReadPair::Reset()
 {
     return ResetGPCPair(&pGPCFile, &machine);
-}
-
-void CopyGPCSignature(unsigned int *dst, unsigned int *src)
-{
-    *dst = *src;
-}
-
-unsigned int* SetGPCSignatureGPC0(unsigned int* dst)
-{
-    CopyGPCSignatureFromString(dst, data_020f27e8);
-    return dst;
-}
-
-void CopyGPCSignatureFromString(unsigned int* dst, const char* src)
-{
-    char* dstString = reinterpret_cast<char*>(dst);
-    dstString[0] = src[0];
-    dstString[1] = src[1];
-    dstString[2] = src[2];
-    dstString[3] = src[3];
-}
-
-unsigned int* SetGPCSignatureGPC1(unsigned int* dst)
-{
-    CopyGPCSignatureFromString(dst, data_020f27f0);
-    return dst;
-}
-
-unsigned int* SetGPCSignatureGPC2(unsigned int* dst)
-{
-    CopyGPCSignatureFromString(dst, data_020f27f8);
-    return dst;
 }

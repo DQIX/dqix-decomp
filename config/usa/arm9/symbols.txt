@@ -5746,11 +5746,11 @@ _Z26DecompressFileFromGPCByCRCPKP7GPCFileP15ExtendedNitroVMPvPjjj kind:function(
 _ZN11GPCReadPair14ZeroInitializeEv kind:function(arm,size=0x14) addr:0x020d95f8
 _ZN11GPCReadPair21ZeroInitializeMachineEv kind:function(arm,size=0x10) addr:0x020d960c
 _ZN11GPCReadPair5ResetEv kind:function(arm,size=0x10) addr:0x020d961c
-_Z16CopyGPCSignaturePjS_ kind:function(arm,size=0xc) addr:0x020d962c
-_Z19SetGPCSignatureGPC0Pj kind:function(arm,size=0x1c) addr:0x020d9638
-_Z26CopyGPCSignatureFromStringPjPKc kind:function(arm,size=0x24) addr:0x020d9654
-_Z19SetGPCSignatureGPC1Pj kind:function(arm,size=0x1c) addr:0x020d9678
-_Z19SetGPCSignatureGPC2Pj kind:function(arm,size=0x1c) addr:0x020d9694
+_ZN12GPCSignatureC2ERKS_ kind:function(arm,size=0xc) addr:0x020d962c
+_ZN21VersionedGPCSignatureILi0EEC1Ev kind:function(arm,size=0x1c) addr:0x020d9638
+_ZN12GPCSignatureC2EPKc kind:function(arm,size=0x24) addr:0x020d9654
+_ZN21VersionedGPCSignatureILi1EEC1Ev kind:function(arm,size=0x1c) addr:0x020d9678
+_ZN21VersionedGPCSignatureILi2EEC1Ev kind:function(arm,size=0x1c) addr:0x020d9694
 _Z23InitializeResourceMutexv kind:function(arm,size=0x44) addr:0x020d96b0
 _Z27SetResourceMutexOperationalb kind:function(arm,size=0x18) addr:0x020d96f4
 _Z17LockResourceMutexv kind:function(arm,size=0x40) addr:0x020d970c
@@ -6203,7 +6203,7 @@ __sinit_020e6584 kind:function(arm,size=0x88) addr:0x020e6584
 __sinit_020e660c kind:function(arm,size=0x94) addr:0x020e660c
 __sinit_020e66a0 kind:function(arm,size=0x5c) addr:0x020e66a0
 __sinit_020e66fc kind:function(arm,size=0x14) addr:0x020e66fc
-__sinit_020e6710 kind:function(arm,size=0x6c) addr:0x020e6710
+__sinit_GPC.cpp kind:function(arm,size=0x6c) addr:0x020e6710 local
 __sinit_020e677c kind:function(arm,size=0x14) addr:0x020e677c
 __sinit_020e6790 kind:function(arm,size=0x164) addr:0x020e6790
 __sinit_020e68f4 kind:function(arm,size=0x38) addr:0x020e68f4
@@ -6574,7 +6574,7 @@ data_020eeab0 kind:data(any) addr:0x020eeab0
 .p__sinit_020e660c kind:data(word) addr:0x020eeba4
 .p__sinit_020e66a0 kind:data(word) addr:0x020eeba8
 .p__sinit_020e66fc kind:data(word) addr:0x020eebac
-.p__sinit_020e6710 kind:data(word) addr:0x020eebb0
+.p__sinit_GPC.cpp kind:data(word) addr:0x020eebb0 local
 .p__sinit_020e677c kind:data(word) addr:0x020eebb4
 .p__sinit_020e6790 kind:data(word) addr:0x020eebb8
 .p__sinit_020e68f4 kind:data(word) addr:0x020eebbc
@@ -7449,13 +7449,10 @@ data_020f2371 kind:data(any) addr:0x020f2371
 data_020f2384 kind:data(any) addr:0x020f2384
 data_020f27b8 kind:data(any) addr:0x020f27b8
 data_020f27c0 kind:data(any) addr:0x020f27c0
-data_020f27c8 kind:data(any) addr:0x020f27c8
-data_020f27cc kind:data(any) addr:0x020f27cc
-data_020f27d0 kind:data(any) addr:0x020f27d0
-data_020f27d4 kind:data(any) addr:0x020f27d4
-data_020f27e8 kind:data(any) addr:0x020f27e8
-data_020f27f0 kind:data(any) addr:0x020f27f0
-data_020f27f8 kind:data(any) addr:0x020f27f8
+g_gpcVersion kind:data(byte[0x13]) addr:0x020f27d4
+_ZN21VersionedGPCSignatureILi0EE5bytesE kind:data(any) addr:0x020f27e8
+_ZN21VersionedGPCSignatureILi1EE5bytesE kind:data(any) addr:0x020f27f0
+_ZN21VersionedGPCSignatureILi2EE5bytesE kind:data(any) addr:0x020f27f8
 data_020f2800 kind:data(any) addr:0x020f2800
 data_020f280c kind:data(any) addr:0x020f280c
 data_020f2810 kind:data(any) addr:0x020f2810

@@ -420,6 +420,17 @@ src/Filesystem/ExtendedNitroVM.cpp:
 src/Filesystem/GPC.cpp:
     complete
     .text start:0x020da9d8 end:0x020db0bc
+    .init start:0x020e6ff0 end:0x020e705c
+    .ctor start:0x020eeb30 end:0x020eeb34
+    .data start:0x020f297c end:0x020f2990
+
+src/Filesystem/GPCVersion.cpp:
+    complete
+    .data start:0x020f2990 end:0x020f29a4
+
+src/Filesystem/GPCSignatures.cpp:
+    complete
+    .data start:0x020f29a4 end:0x020f29bc
 
 src/Resource/ResourceMutex.cpp:
     complete
