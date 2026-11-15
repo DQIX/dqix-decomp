@@ -2788,14 +2788,14 @@ func_02074c18 kind:function(arm,size=0x23c) addr:0x02074c18
 func_02074e54 kind:function(arm,size=0x23c) addr:0x02074e54
 func_02075090 kind:function(arm,size=0x8) addr:0x02075090
 _Z18LoadFileIntoMemoryPKcPvPj kind:function(arm,size=0xe4) addr:0x02075098
-_Z25LoadFileIntoNewAllocationPKcR13SafeAllocatorPj kind:function(arm,size=0xcc) addr:0x0207517c
+_Z25LoadFileIntoNewAllocationPKcP13SafeAllocatorPj kind:function(arm,size=0xcc) addr:0x0207517c
 _Z13GetFileInNarcPKvPKcPS0_Pjj kind:function(arm,size=0xfc) addr:0x02075248
 _Z23GetFileInNarcPermissivePKvPKcPS0_Pj kind:function(arm,size=0x1a8) addr:0x02075344
 _Z17MakeCharUpperCasec kind:function(arm,size=0x20) addr:0x020754ec
 _Z26FindFilesInNarcBySubstringPKvPKcPS0_Pjj kind:function(arm,size=0xfc) addr:0x0207550c
-_Z34DecompressLZ77FileIntoScratchSpaceR13SafeAllocatorPKvRj kind:function(arm,size=0x4c) addr:0x02075608
-_Z36DecompressLZ77FileIntoAllocatedSpaceR13SafeAllocatorPKvRj kind:function(arm,size=0x38) addr:0x02075654
-ExtractFileFromGP2 kind:function(arm,size=0x128) addr:0x0207568c
+_Z34DecompressLZ77FileIntoScratchSpaceP13SafeAllocatorPKvPj kind:function(arm,size=0x4c) addr:0x02075608
+_Z36DecompressLZ77FileIntoAllocatedSpaceP13SafeAllocatorPKvPj kind:function(arm,size=0x38) addr:0x02075654
+_Z18ExtractFileFromGP2PKcS0_Pj kind:function(arm,size=0x128) addr:0x0207568c
 _Z24StringReplaceLanguageTagPKcPci kind:function(arm,size=0xec) addr:0x020757b4
 func_020758a0 kind:function(arm,size=0x4) addr:0x020758a0
 func_020758a4 kind:function(arm,size=0x4) addr:0x020758a4
@@ -7878,7 +7878,7 @@ g_keyManager kind:bss addr:0x02114e30
 data_02114e50 kind:bss addr:0x02114e50
 g_touchInput kind:bss addr:0x02114e54
 data_02114ec4 kind:bss addr:0x02114ec4
-data_0211e33c kind:bss addr:0x0211e33c
+g_fileScratchSpace kind:bss addr:0x0211e33c
 data_0212020d kind:bss addr:0x0212020d
 data_0212633c kind:bss addr:0x0212633c
 data_02130f02 kind:bss addr:0x02130f02

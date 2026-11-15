@@ -71,7 +71,7 @@ void* LoadFileIntoMemory(const char* path, void* buffer, unsigned int* outLength
 
     void* alwaysNull = NULL;
     
-    if (buffer >= data_0211e33c && buffer < data_0211e33c + sizeof(data_0211e33c))
+    if (buffer >= g_fileScratchSpace && buffer < g_fileScratchSpace + sizeof(g_fileScratchSpace))
         BackgroundLoader::FreeAllocationsGlobal();
 
     ExtendedNitroVM reader;
@@ -95,7 +95,7 @@ void* LoadFileIntoMemory(const char* path, void* buffer, unsigned int* outLength
     return output;
 }
 
-void* LoadFileIntoNewAllocation(const char* path, SafeAllocator& alloc, unsigned int* outLength)
+void* LoadFileIntoNewAllocation(const char* path, SafeAllocator* alloc, unsigned int* outLength)
 {
 #if defined(usa)
     GameState* gameState = GameState::GetInstance();
@@ -118,7 +118,7 @@ void* LoadFileIntoNewAllocation(const char* path, SafeAllocator& alloc, unsigned
     if (reader.Open(replacedPath, 0))
     {
         unsigned int size = reader.GetFileSize();
-        copyDst = alloc.Allocate(size);
+        copyDst = alloc->Allocate(size);
         if (copyDst != NULL)
         {
             size = reader.Read(copyDst, size);
@@ -294,25 +294,25 @@ unsigned int FindFilesInNarcBySubstring(const void* narcBuffer, const char* subs
     return numFound;
 }
 
-void* DecompressLZ77FileIntoScratchSpace(SafeAllocator& allocator,
-    const void* fileData, unsigned int& outDecompressedSize)
+void* DecompressLZ77FileIntoScratchSpace(SafeAllocator* allocator,
+    const void* fileData, unsigned int* outDecompressedSize)
 {
     // First 4 bytes of fileData are a uint32, whose upper 24 bits
     // store the file size
-    outDecompressedSize = *(const unsigned int*)fileData >> 8;
-    unsigned char* pAllocatorStart = reinterpret_cast<unsigned char*>(allocator.GetSignedAllocator());
-    unsigned int allocBufferSize = allocator.GetSize();
+    *outDecompressedSize = *(const unsigned int*)fileData >> 8;
+    unsigned char* pAllocatorStart = reinterpret_cast<unsigned char*>(allocator->GetSignedAllocator());
+    unsigned int allocBufferSize = allocator->GetSize();
 
-    unsigned char* writeDst = pAllocatorStart + allocBufferSize - outDecompressedSize;
+    unsigned char* writeDst = pAllocatorStart + allocBufferSize - *outDecompressedSize;
     LZ77UnCompReadNormalWrite8bit(fileData, writeDst);
     return writeDst;
 }
 
-void* DecompressLZ77FileIntoAllocatedSpace(SafeAllocator& allocator,
-    const void* fileData, unsigned int& outDecompressedSize)
+void* DecompressLZ77FileIntoAllocatedSpace(SafeAllocator* allocator,
+    const void* fileData, unsigned int* outDecompressedSize)
 {
-    outDecompressedSize = *(const unsigned int*)fileData >> 8;
-    void* writeDst = allocator.Allocate(outDecompressedSize);
+    *outDecompressedSize = *(const unsigned int*)fileData >> 8;
+    void* writeDst = allocator->Allocate(*outDecompressedSize);
     if (!writeDst)
         return NULL;
     LZ77UnCompReadNormalWrite8bit(fileData, writeDst);
@@ -334,7 +334,7 @@ void* ExtractFileFromGP2(const char* gp2Path, const char* innerFilePath, unsigne
 
     unsigned int scratchOffset;
     unsigned int headerLength = 0;
-    unsigned char* scratchSpace = data_0211e33c;
+    unsigned char* scratchSpace = g_fileScratchSpace;
     unsigned int capacity = 0x30000;
 
     if (func_02046708(func_020d6c00(), 0x02000000))

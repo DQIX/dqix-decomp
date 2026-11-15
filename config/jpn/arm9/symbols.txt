@@ -2656,13 +2656,13 @@ func_02075da4 kind:function(arm,size=0x23c) addr:0x02075da4
 func_02075fe0 kind:function(arm,size=0x23c) addr:0x02075fe0
 func_0207621c kind:function(arm,size=0x8) addr:0x0207621c
 _Z18LoadFileIntoMemoryPKcPvPj kind:function(arm,size=0xb8) addr:0x02076224
-_Z25LoadFileIntoNewAllocationPKcR13SafeAllocatorPj kind:function(arm,size=0x9c) addr:0x020762dc
+_Z25LoadFileIntoNewAllocationPKcP13SafeAllocatorPj kind:function(arm,size=0x9c) addr:0x020762dc
 _Z13GetFileInNarcPKvPKcPS0_Pjj kind:function(arm,size=0xfc) addr:0x02076378
 _Z23GetFileInNarcPermissivePKvPKcPS0_Pj kind:function(arm,size=0x1a8) addr:0x02076474
 _Z17MakeCharUpperCasec kind:function(arm,size=0x20) addr:0x0207661c
 _Z26FindFilesInNarcBySubstringPKvPKcPS0_Pjj kind:function(arm,size=0xfc) addr:0x0207663c
-_Z34DecompressLZ77FileIntoScratchSpaceR13SafeAllocatorPKvRj kind:function(arm,size=0x4c) addr:0x02076738
-_Z36DecompressLZ77FileIntoAllocatedSpaceR13SafeAllocatorPKvRj kind:function(arm,size=0x38) addr:0x02076784
+_Z34DecompressLZ77FileIntoScratchSpaceP13SafeAllocatorPKvPj kind:function(arm,size=0x4c) addr:0x02076738
+_Z36DecompressLZ77FileIntoAllocatedSpaceP13SafeAllocatorPKvPj kind:function(arm,size=0x38) addr:0x02076784
 func_020767bc kind:function(arm,size=0x4) addr:0x020767bc
 func_020767c0 kind:function(arm,size=0x4) addr:0x020767c0
 func_020767c4 kind:function(arm,size=0x68) addr:0x020767c4
@@ -7722,7 +7722,7 @@ g_keyManager kind:bss addr:0x02114ad0
 data_02114af0 kind:bss addr:0x02114af0
 data_02114af4 kind:bss addr:0x02114af4
 data_02114b64 kind:bss addr:0x02114b64
-data_0211fb64 kind:bss addr:0x0211fb64
+g_fileScratchSpace kind:bss addr:0x0211fb64
 data_0212020d kind:bss addr:0x0212020d
 data_02127b64 kind:bss addr:0x02127b64
 data_02130f02 kind:bss addr:0x02130f02

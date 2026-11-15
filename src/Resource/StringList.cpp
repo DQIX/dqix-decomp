@@ -472,7 +472,7 @@ char* GetStringFromNAT(char* buffer, const char* natFilename, int idx,
     unsigned int natLength;
 #if defined(jpn)
     GetNAT(natFilename, &natLength, number);
-    char* result = GetStringFromNAT(buffer, data_0211e33c, natLength, idx);
+    char* result = GetStringFromNAT(buffer, g_fileScratchSpace, natLength, idx);
 #else
     void* nat = GetNAT(natFilename, &natLength, number, gp2Filename);
     char* result = GetStringFromNAT(buffer, nat, natLength, idx);
@@ -496,9 +496,9 @@ void* GetNAT(const char* natFilename, unsigned int* outLength, short number
     if (gp2Filename == NULL)
     {
 #endif
-        LoadFileIntoMemory(replacedNatName, data_0211e33c, outLength);
+        LoadFileIntoMemory(replacedNatName, g_fileScratchSpace, outLength);
         if (*outLength != 0)
-            return data_0211e33c;
+            return g_fileScratchSpace;
 #if !defined(jpn)
     }
     else
