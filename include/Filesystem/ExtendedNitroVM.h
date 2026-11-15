@@ -66,8 +66,8 @@ public:
     // decompression procedure runs, the start of the space fills up with the
     // decompressed file and gradually overwrites the compressed version, but
     // bytes are only overwritten after they have been used for everything necessary.
-    unsigned int DecompressWithScratchSpace(Decompressor& decompressor, unsigned int& outDecompressedLength,
-        unsigned int& numBytesToRead, unsigned int& readPosTracker,
+    unsigned int DecompressWithScratchSpace(Decompressor* decompressor, unsigned int* outDecompressedLength,
+        unsigned int* numBytesToRead, unsigned int* readPosTracker,
         void* scratchSpace, unsigned int scratchSpaceCapacity);
 
     // Decompresses bytes from the current file, at the current position,
@@ -78,7 +78,7 @@ public:
     // Returns the number of bytes read, or zero if the procedure failed.
     // (Insufficient space in the output buffer will cause a failure, not a 
     // buffer overrun).
-    unsigned int DecompressBytes(void* output, unsigned int& outDecompressedSize,
+    unsigned int DecompressBytes(void* output, unsigned int* outDecompressedSize,
         unsigned int numBytesToRead, unsigned int outputCapacity);
 };
 

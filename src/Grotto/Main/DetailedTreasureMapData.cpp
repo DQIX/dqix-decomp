@@ -1212,7 +1212,7 @@ void DetailedTreasureMapData::LoadLegacyBossStats(bool compute, const unsigned c
     
     BackgroundLoader::AddLockGlobal();
     unsigned int archiveSize = 0;
-    const unsigned char* usedArchive = data_0211e33c;
+    const unsigned char* usedArchive = g_fileScratchSpace;
     
     if (providedArchive)
         usedArchive = providedArchive;

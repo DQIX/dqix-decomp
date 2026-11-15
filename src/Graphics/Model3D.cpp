@@ -51,7 +51,7 @@ void Model3D::LoadFromFile(const char* path, AllocatorUnion* alloc, TextureStagi
         return;
     BackgroundLoader::AddLockGlobal();
     unsigned int length;
-    void* scratchData = LoadFileIntoMemory(path, &data_0211e33c, &length);
+    void* scratchData = LoadFileIntoMemory(path, &g_fileScratchSpace, &length);
     if (scratchData == NULL)
     {
         unknown_flags_a8_0_ = false;

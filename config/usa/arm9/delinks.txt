@@ -127,7 +127,7 @@ src/Combat/Main/CritRateCalculation.cpp:
 
 src/Filesystem/FileIO.cpp:
     complete
-    .text start:0x02075098 end:0x0207568c
+    .text start:0x02075098 end:0x020758a0
 
 src/Graphics/AtmosphericEffect.cpp:
     complete
@@ -420,6 +420,17 @@ src/Filesystem/ExtendedNitroVM.cpp:
 src/Filesystem/GPC.cpp:
     complete
     .text start:0x020d8fcc end:0x020d96b0
+    .init start:0x020e6710 end:0x020e677c
+    .ctor start:0x020eebb0 end:0x020eebb4
+    .data start:0x020f27c0 end:0x020f27d4
+
+src/Filesystem/GPCVersion.cpp:
+    complete
+    .data start:0x020f27d4 end:0x020f27e8
+
+src/Filesystem/GPCSignatures.cpp:
+    complete
+    .data start:0x020f27e8 end:0x020f2800
 
 src/Resource/ResourceMutex.cpp:
     complete
