@@ -351,64 +351,64 @@ bool ExtendedNitroVM::Abort()
     return wasProcessing;
 }
 
-unsigned int ExtendedNitroVM::DecompressWithScratchSpace(Decompressor& decompressor, 
-    unsigned int& outDecompressedLength, unsigned int& remainingInputBytes,
-    unsigned int& readPosTracker, void *scratchSpace, unsigned int scratchSpaceCapacity)
+unsigned int ExtendedNitroVM::DecompressWithScratchSpace(Decompressor* decompressor, 
+    unsigned int* outDecompressedLength, unsigned int* remainingInputBytes,
+    unsigned int* readPosTracker, void* scratchSpace, unsigned int scratchSpaceCapacity)
 {
     // 'easy case': scratch space is big enough to fit all output data and have
     // 256 bytes left. Presumably the extra 256 is to avoid any trouble with 
     // partial decompression overwriting temporary compressed data? 
-    if (decompressor.remainingOutputBytes + 256 <= scratchSpaceCapacity)
+    if (decompressor->remainingOutputBytes + 256 <= scratchSpaceCapacity)
     {
-        void* loadLocation = (void*)(((int)scratchSpace + scratchSpaceCapacity - remainingInputBytes) & ~3);
-        unsigned int successfulLoadSize = Read(loadLocation, remainingInputBytes);
+        void* loadLocation = (void*)(((intptr_t)scratchSpace + scratchSpaceCapacity - *remainingInputBytes) & ~3);
+        unsigned int successfulLoadSize = Read(loadLocation, *remainingInputBytes);
         if (isBadState)
             return 0;
-        decompressor.ProcessBytes(loadLocation, successfulLoadSize);
-        remainingInputBytes -= successfulLoadSize;
-        readPosTracker += successfulLoadSize;
+        decompressor->ProcessBytes(loadLocation, successfulLoadSize);
+        *remainingInputBytes -= successfulLoadSize;
+        *readPosTracker += successfulLoadSize;
     }
     // this case seems to implicitly assume the scratch space is large enough
     // for the output to fit, just not with 256 bytes to spare. 
     else 
     {
-        if (remainingInputBytes > 256)
+        if (*remainingInputBytes > 256)
         {
-            unsigned int loadSize = (remainingInputBytes - 256 + 3) & ~3;
+            unsigned int loadSize = (*remainingInputBytes - 256 + 3) & ~3;
             void* loadLocation = (void*)(((int)scratchSpace + scratchSpaceCapacity - loadSize) & ~3);
             unsigned int successfulLoadSize = Read(loadLocation, loadSize);
             if (isBadState)
                 return 0;
-            decompressor.ProcessBytes(loadLocation, successfulLoadSize);
-            remainingInputBytes -= successfulLoadSize;
-            readPosTracker += successfulLoadSize;
+            decompressor->ProcessBytes(loadLocation, successfulLoadSize);
+            *remainingInputBytes -= successfulLoadSize;
+            *readPosTracker += successfulLoadSize;
         }
         // if above assumption violated: stack buffer overrun!
-        if (remainingInputBytes != 0)
+        if (*remainingInputBytes != 0)
         {
             char stackScratchSpace[256];
-            unsigned int successfulLoadSize = Read(stackScratchSpace, remainingInputBytes);
+            unsigned int successfulLoadSize = Read(stackScratchSpace, *remainingInputBytes);
             if (isBadState)
                 return 0;
-            decompressor.ProcessBytes(stackScratchSpace, successfulLoadSize);
-            remainingInputBytes -= successfulLoadSize;
-            readPosTracker += successfulLoadSize;
+            decompressor->ProcessBytes(stackScratchSpace, successfulLoadSize);
+            *remainingInputBytes -= successfulLoadSize;
+            *readPosTracker += successfulLoadSize;
         }
     }
-    unsigned int scratchSpaceUsedAmount = (decompressor.probablyDecompressedSize + 4) & ~3;
+    unsigned int scratchSpaceUsedAmount = (decompressor->probablyDecompressedSize + 4) & ~3;
     if (scratchSpaceUsedAmount >= scratchSpaceCapacity)
         scratchSpaceUsedAmount = scratchSpaceCapacity;
-    func_020d84f8((unsigned char*)scratchSpace + decompressor.probablyDecompressedSize, 
-        scratchSpaceUsedAmount - decompressor.probablyDecompressedSize);
+    func_020d84f8((unsigned char*)scratchSpace + decompressor->probablyDecompressedSize, 
+        scratchSpaceUsedAmount - decompressor->probablyDecompressedSize);
     CleanInvalidateCacheRange(scratchSpace, scratchSpaceUsedAmount);
-    outDecompressedLength = decompressor.probablyDecompressedSize;
-    return readPosTracker; 
+    *outDecompressedLength = decompressor->probablyDecompressedSize;
+    return *readPosTracker; 
 }
 
 unsigned int ExtendedNitroVM::DecompressBytes(void* output,
-    unsigned int& outDecompressedSize, unsigned int numBytesToRead, unsigned int outputCapacity)
+    unsigned int* outDecompressedSize, unsigned int numBytesToRead, unsigned int outputCapacity)
 {
-    outDecompressedSize = 0;
+    *outDecompressedSize = 0;
     if (output == NULL)
         return 0;
     if (!IsInReadableState())
@@ -438,6 +438,6 @@ unsigned int ExtendedNitroVM::DecompressBytes(void* output,
     stack_bytesRemaining -= totalReadAmount;
     readPos += totalReadAmount;
     // readPos will be further incremented and the final value returned
-    return DecompressWithScratchSpace(decompressor, outDecompressedSize,
-        stack_bytesRemaining, readPos, output, outputCapacity);
+    return DecompressWithScratchSpace(&decompressor, outDecompressedSize,
+        &stack_bytesRemaining, &readPos, output, outputCapacity);
 }

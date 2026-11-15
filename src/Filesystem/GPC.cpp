@@ -1,7 +1,6 @@
 #include "Filesystem/GPC.h"
 #include <globaldefs.h>
-
-#pragma dont_inline on
+#include <asmhacks.h>
 
 #if defined(jpn)
 #define func_02075090 func_0207621c
@@ -58,6 +57,8 @@ extern "C" bool GetUnknownGP2Data_020d8fcc(void** pOutPtr, unsigned int* pOutNum
 
 void* GPCFile::GetMainDataStart()
 {
+    if (ALWAYS_FALSE())
+        return NULL;
     unsigned int* ptr = (unsigned int*)this;
     return &ptr[header.headerLength];
 }
@@ -128,37 +129,35 @@ void ZeroDestroyGPCPointer(GPCFile** ppGPC)
     *ppGPC = NULL;
 }
 
-bool CheckGPCPairValid_020d917c(GPCFile* const& gpc, ExtendedNitroVM& machine)
+bool CheckGPCPairValid_020d917c(GPCFile* const* gpc, ExtendedNitroVM* machine)
 {
-    if (gpc != NULL && machine.IsInReadableState())
+    if (*gpc != NULL && machine->IsInReadableState())
         return true;
     return false;
 }
 
-bool ResetGPCPair(GPCFile **ppGPC, ExtendedNitroVM &machine)
+bool ResetGPCPair(GPCFile **ppGPC, ExtendedNitroVM *machine)
 {
-    if (machine.IsInReadableState())
-        machine.Close();
+    if (machine->IsInReadableState())
+        machine->Close();
     *ppGPC = NULL;
     return true;
 }
 
-bool LoadAndDecompressGPCHeaderAndInnerFileInfo(GPCFile **ppGPC, ExtendedNitroVM &machine,
-    const char *gpcFilePath, void *outputBuffer, unsigned int &outDecompressedLength,
-    unsigned int outputCapacity, bool rightAlignOutput, bool *pOutReadSuccessful)
+bool LoadAndDecompressGPCHeaderAndInnerFileInfo(GPCFile** ppGPC, ExtendedNitroVM* machine,
+    const char* gpcFilePath, void* outputBuffer, unsigned int* outDecompressedLength,
+    unsigned int outputCapacity, bool rightAlignOutput, bool* pOutReadSuccessful)
 {
-    
-
     if (pOutReadSuccessful != NULL)
         *pOutReadSuccessful = false;
 
     bool success = false;
-    outDecompressedLength = 0;
+    *outDecompressedLength = 0;
 
     ResetGPCPair(ppGPC, machine);
     int unknownPurposeButAlwaysZero = func_02075090(gpcFilePath);
     {
-    if (!machine.Open(gpcFilePath, unknownPurposeButAlwaysZero != 0))
+    if (!machine->Open(gpcFilePath, unknownPurposeButAlwaysZero != 0))
         goto end;
 
     if (pOutReadSuccessful != NULL)
@@ -168,10 +167,10 @@ bool LoadAndDecompressGPCHeaderAndInnerFileInfo(GPCFile **ppGPC, ExtendedNitroVM
     func_020d84f8(&header, sizeof(GPCFile::Header));
     unsigned int desiredSignature = data_020f27c0.gpc2Signature;
     header.signature = desiredSignature;
-    if (!machine.Read(&header, sizeof(GPCFile::Header)))
+    if (!machine->Read(&header, sizeof(GPCFile::Header)))
         goto end;
 
-    if (machine.isBadState != 0 || header.signature != desiredSignature)
+    if (machine->isBadState || header.signature != desiredSignature)
         goto end;
 
     unsigned int totalLength = (header.headerLength + header.decompressedFileInfoLength) * 4;
@@ -180,23 +179,23 @@ bool LoadAndDecompressGPCHeaderAndInnerFileInfo(GPCFile **ppGPC, ExtendedNitroVM
         goto end;
 
     if (rightAlignOutput)
-        outputBuffer = (void*)((((int)outputBuffer + outputCapacity) & ~3) - longerLength);
+        outputBuffer = (void*)((((intptr_t)outputBuffer + outputCapacity) & ~3) - longerLength);
     func_020d8524(outputBuffer, &header, sizeof(GPCFile::Header));
     ((GPCFile::Header*)outputBuffer)->headerLength = 0;
     ((GPCFile::Header*)outputBuffer)->fileInfoLength = 0;
     unsigned int decompressProcOutputLength = 0;
 
-    if (!machine.DecompressBytes((unsigned char*)outputBuffer + sizeof(GPCFile::Header),
-        decompressProcOutputLength,
+    if (!machine->DecompressBytes((unsigned char*)outputBuffer + sizeof(GPCFile::Header),
+        &decompressProcOutputLength,
         header.fileInfoLength * 4 - sizeof(GPCFile::Header),
         longerLength - sizeof(GPCFile::Header)))
         goto end;
     
     GPCFile::Header* outputBufferAsHeader = (GPCFile::Header*)outputBuffer; 
     // goofy way to write sizeof(GPCFile::Header) / 4 == 5
-    outputBufferAsHeader->headerLength = ((unsigned int)(outputBufferAsHeader + 1) - (unsigned int)outputBufferAsHeader) / 4;
+    outputBufferAsHeader->headerLength = ((uintptr_t)(outputBufferAsHeader + 1) - (uintptr_t)outputBufferAsHeader) / 4;
     *ppGPC = (GPCFile*)outputBuffer;
-    outDecompressedLength = longerLength;
+    *outDecompressedLength = longerLength;
     success = true;
     }
 end:
@@ -205,8 +204,8 @@ end:
     return success;
 }
 
-unsigned int GetGPCInnerFileLength(ExtendedNitroVM& machine,
-    const GPCFile::Header& header, const GPCFile::FileEntry* file)
+unsigned int GetGPCInnerFileLength(ExtendedNitroVM* machine,
+    const GPCFile::Header* header, const GPCFile::FileEntry* file)
 {
     unsigned int length;
 
@@ -214,10 +213,10 @@ unsigned int GetGPCInnerFileLength(ExtendedNitroVM& machine,
         length = 0;
     else
     {
-        machine.Seek((header.firstFileOffset + file->offset) * 4);
+        machine->Seek((header->firstFileOffset + file->offset) * 4);
         unsigned int prefixU32 = 0;
-        machine.Read(&prefixU32, 4);
-        if (machine.isBadState == 0 && header.isUncompressed)
+        machine->Read(&prefixU32, 4);
+        if (!machine->isBadState && header->isUncompressed)
             length = file->compressedSizeBytes;
         else
             length = ((CompressionPrefix*)&prefixU32)->GetDecompressedLength();
@@ -226,42 +225,42 @@ unsigned int GetGPCInnerFileLength(ExtendedNitroVM& machine,
     return length;
 }
 
-unsigned int GetGPCInnerFileLengthByName(GPCFile* const& gpc, 
-    ExtendedNitroVM& machine, const char* filename)
+unsigned int GetGPCInnerFileLengthByName(GPCFile* const* gpc, 
+    ExtendedNitroVM* machine, const char* filename)
 {
     unsigned int crc = func_01ff860c(filename);
     return GetGPCInnerFileLengthByCRC(gpc, machine, crc);
 }
 
-unsigned int GetGPCInnerFileLengthByCRC(GPCFile *const &gpc, 
-    ExtendedNitroVM &machine, unsigned int crc)
+unsigned int GetGPCInnerFileLengthByCRC(GPCFile* const* gpc, 
+    ExtendedNitroVM* machine, unsigned int crc)
 {
-    if (gpc == NULL || !machine.IsInReadableState())
+    if ((*gpc) == NULL || !machine->IsInReadableState())
         return 0;
-    const GPCFile::Header& header = gpc->header;
-    GPCFile::FileEntry* entry = gpc->GetFileByCRC(crc);
-    return GetGPCInnerFileLength(machine, header, entry);
+    const GPCFile::Header& header = (*gpc)->header;
+    GPCFile::FileEntry* entry = (*gpc)->GetFileByCRC(crc);
+    return GetGPCInnerFileLength(machine, &header, entry);
 }
 
-bool DecompressFileFromGPC(ExtendedNitroVM &machine, void *outputBuffer,
-    unsigned int &outDecompressedLength, unsigned int outputCapacity,
-    const GPCFile::Header &gpcHeader, const GPCFile::FileEntry *file)
+bool DecompressFileFromGPC(ExtendedNitroVM* machine, void* outputBuffer,
+    unsigned int* outDecompressedLength, unsigned int outputCapacity,
+    const GPCFile::Header* gpcHeader, const GPCFile::FileEntry* file)
 {
     if (file == NULL)
         return false;
 
-    machine.Seek((gpcHeader.firstFileOffset + file->offset) * 4);
-    if (gpcHeader.isUncompressed)
+    machine->Seek((gpcHeader->firstFileOffset + file->offset) * 4);
+    if (gpcHeader->isUncompressed)
     {
         // note: compressedSizeBytes is actually the uncompressed size
         // (because we aren't compressed on this branch!)
         bool success;
         if (outputCapacity >= file->compressedSizeBytes && 
-            machine.Read(outputBuffer, file->compressedSizeBytes) &&
-            machine.isBadState == 0)
+            machine->Read(outputBuffer, file->compressedSizeBytes) &&
+            !machine->isBadState)
         {
             success = true;
-            outDecompressedLength = file->compressedSizeBytes;
+            *outDecompressedLength = file->compressedSizeBytes;
         }
         else
             success = false;
@@ -270,13 +269,13 @@ bool DecompressFileFromGPC(ExtendedNitroVM &machine, void *outputBuffer,
     }
     else
     {
-        return machine.DecompressBytes(outputBuffer, outDecompressedLength, 
+        return machine->DecompressBytes(outputBuffer, outDecompressedLength, 
             file->compressedSizeBytes, outputCapacity);
     }
 }
 
-bool DecompressFileFromGPCByName(GPCFile* const& gpc, ExtendedNitroVM& machine,
-    void* outputBuffer, unsigned int& outDecompressedLength,
+bool DecompressFileFromGPCByName(GPCFile* const* gpc, ExtendedNitroVM* machine,
+    void* outputBuffer, unsigned int* outDecompressedLength,
     unsigned int outputCapacity, const char* filename)
 {
     unsigned int crc = func_01ff860c(filename);
@@ -284,18 +283,18 @@ bool DecompressFileFromGPCByName(GPCFile* const& gpc, ExtendedNitroVM& machine,
         outDecompressedLength, outputCapacity, crc);
 }
 
-bool DecompressFileFromGPCByCRC(GPCFile* const& gpc, ExtendedNitroVM& machine,
-    void* outputBuffer, unsigned int& outDecompressedLength,
+bool DecompressFileFromGPCByCRC(GPCFile* const* gpc, ExtendedNitroVM* machine,
+    void* outputBuffer, unsigned int* outDecompressedLength,
     unsigned int outputCapacity, unsigned int crc)
 {
-    outDecompressedLength = 0;
-    if (gpc == NULL || !machine.IsInReadableState())
+    *outDecompressedLength = 0;
+    if (*gpc == NULL || !machine->IsInReadableState())
         return false;
     
-    const GPCFile::Header& header = gpc->header;
-    GPCFile::FileEntry* entry = gpc->GetFileByCRC(crc);
+    const GPCFile::Header& header = (*gpc)->header;
+    GPCFile::FileEntry* entry = (*gpc)->GetFileByCRC(crc);
     return DecompressFileFromGPC(machine, outputBuffer,
-        outDecompressedLength, outputCapacity, header, entry);
+        outDecompressedLength, outputCapacity, &header, entry);
 }
 
 void GPCReadPair::ZeroInitialize()
@@ -311,7 +310,7 @@ void GPCReadPair::ZeroInitializeMachine()
 
 bool GPCReadPair::Reset()
 {
-    return ResetGPCPair(&pGPCFile, machine);
+    return ResetGPCPair(&pGPCFile, &machine);
 }
 
 void CopyGPCSignature(unsigned int *dst, unsigned int *src)
