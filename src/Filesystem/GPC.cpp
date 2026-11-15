@@ -214,7 +214,7 @@ unsigned int GetGPCInnerFileLength(ExtendedNitroVM* machine,
     else
     {
         machine->Seek((header->firstFileOffset + file->offset) * 4);
-        unsigned int prefixU32 = 0;
+        uint32_t prefixU32 = 0;
         machine->Read(&prefixU32, 4);
         if (!machine->isBadState && header->isUncompressed)
             length = file->compressedSizeBytes;

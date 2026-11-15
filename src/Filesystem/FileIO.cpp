@@ -345,10 +345,10 @@ void* ExtractFileFromGP2(const char* gp2Path, const char* innerFilePath, unsigne
         gp2Path, scratchSpace, &headerLength, capacity, false, NULL))
     {
         scratchOffset = headerLength;
-        unsigned int var8 = 0;
+        unsigned int fileDecompressedSize = 0;
         DecompressFileFromGPCByName(&reader.pGPCFile, &reader.machine, 
-            scratchSpace + scratchOffset, &var8, capacity - scratchOffset, replacedInnerName);
-        *outSize = var8;
+            scratchSpace + scratchOffset, &fileDecompressedSize, capacity - scratchOffset, replacedInnerName);
+        *outSize = fileDecompressedSize;
         return scratchSpace + scratchOffset;
     }
     

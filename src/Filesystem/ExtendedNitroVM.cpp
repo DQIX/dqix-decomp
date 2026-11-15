@@ -375,7 +375,7 @@ unsigned int ExtendedNitroVM::DecompressWithScratchSpace(Decompressor* decompres
         if (*remainingInputBytes > 256)
         {
             unsigned int loadSize = (*remainingInputBytes - 256 + 3) & ~3;
-            void* loadLocation = (void*)(((int)scratchSpace + scratchSpaceCapacity - loadSize) & ~3);
+            void* loadLocation = (void*)(((intptr_t)scratchSpace + scratchSpaceCapacity - loadSize) & ~3);
             unsigned int successfulLoadSize = Read(loadLocation, loadSize);
             if (isBadState)
                 return 0;
