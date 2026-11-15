@@ -35,9 +35,9 @@ public:
     FileEntry* GetFileByCRC(unsigned int crc);
 };
 
-extern "C" bool GetUnknownGP2InnerFileDataByName(void** pOutPtr, 
+bool GetGPCInnerFileByName(void** pOutPtr, 
     unsigned int* pOutNumber, GPCFile* gpc, const char* name);
-extern "C" bool GetUnknownGP2InnerFileDataByCRC(void** pOutPtr, 
+bool GetGPCInnerFileByCRC(void** pOutPtr, 
     unsigned int* pOutNumber, GPCFile* gpc, unsigned int crc);
 
 // These two functions are identical (they write 0 into the pointer.)
@@ -45,7 +45,7 @@ extern "C" bool GetUnknownGP2InnerFileDataByCRC(void** pOutPtr,
 void ZeroInitGPCPointer(GPCFile** ppGPC);
 void ZeroDestroyGPCPointer(GPCFile** ppGPC);
 
-extern "C" bool CheckGPCPairValid_020d917c(GPCFile* const* gpc, ExtendedNitroVM* machine);
+bool IsGPCPairValid(GPCFile* const* gpc, ExtendedNitroVM* machine);
 bool ResetGPCPair(GPCFile** ppGPC, ExtendedNitroVM* machine);
 
 // decompresses the header (0x14 bytes) and the FileEntry array (0x0C bytes

@@ -97,7 +97,7 @@ int Ov33BackgroundLoader::Process()
         }
 
         Task* gpcTask = NULL;
-        if (CheckGPCPairValid_020d917c(&pGPC, &reader_))
+        if (IsGPCPairValid(&pGPC, &reader_))
         {
             for (int j = 0; j < numPendingTasks_; j++)
             {
@@ -119,7 +119,7 @@ int Ov33BackgroundLoader::Process()
         
         if (gpcTask == NULL)
         {
-            if (CheckGPCPairValid_020d917c(&pGPC, &reader_))
+            if (IsGPCPairValid(&pGPC, &reader_))
             {
                 ResetGPCPair(&pGPC, &reader_);
                 currentArchiveCRC = 0;
@@ -228,7 +228,7 @@ int Ov33BackgroundLoader::Process()
             unsigned char* outputBufferLeft = (unsigned char*)scratchSpace_ + rightmostAllocationByte_;
             unsigned int outLength = 0;
             bool outSuccess = false;
-            if (!CheckGPCPairValid_020d917c(&pGPC, &reader_) &&
+            if (!IsGPCPairValid(&pGPC, &reader_) &&
                 !LoadAndDecompressGPCHeaderAndInnerFileInfo(&pGPC, &reader_, fullName, outputBufferLeft,
                     &outLength, outBufferRightMinusLeft, true, &outSuccess))
             {
@@ -312,7 +312,7 @@ int Ov33BackgroundLoader::Process()
             FreeScratchSpace(&inFlightTask.scratchAlloc_);
             if (inFlightTask.status_ == TaskStatus_Complete && inFlightTask.externalAllocator_ != NULL)
                 inFlightTask.externalAllocator_->Free(inFlightTask.pFileData);
-            if (CheckGPCPairValid_020d917c(&pGPC, &reader_))
+            if (IsGPCPairValid(&pGPC, &reader_))
             {
                 ResetGPCPair(&pGPC, &reader_);
                 currentArchiveCRC = 0;
@@ -326,7 +326,7 @@ int Ov33BackgroundLoader::Process()
 
 end:
     UnlockResourceMutex();
-    if (CheckGPCPairValid_020d917c(&pGPC, &reader_))
+    if (IsGPCPairValid(&pGPC, &reader_))
     {
         ResetGPCPair(&pGPC, &reader_);
         scratchRightArenaUsage_ = 0;

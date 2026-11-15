@@ -45,13 +45,15 @@ extern char data_020f27f0[8];
 // GPC2 signature
 extern char data_020f27f8[8];
 
-extern "C" bool GetUnknownGP2Data_020d8fcc(void** pOutPtr, unsigned int* pOutNumber, GPCFile* gpc, const GPCFile::FileEntry* file)
+// Speculative as this is only used for a file that doesn't exist and I haven't
+// found the call site executing in-game (file is data/effect/ev999993100.chr)
+bool GetGPCInnerFile(void** pOutPtr, unsigned int* pOutSize, GPCFile* gpc, const GPCFile::FileEntry* file)
 {
     if (file == NULL)
         return false;
     unsigned int offset = gpc->header.firstFileOffset * 4 + file->offset * 4;
     *pOutPtr = (unsigned char*)gpc + offset;
-    *pOutNumber = file->compressedSizeBytes;
+    *pOutSize = file->compressedSizeBytes;
     return true;
 }
 
@@ -100,14 +102,14 @@ GPCFile::FileEntry* GPCFile::GetFileByCRC(unsigned int crc)
     return &entryList[found];
 }
 
-extern "C" bool GetUnknownGP2InnerFileDataByName(void** pOutPtr,
+bool GetGPCInnerFileByName(void** pOutPtr,
     unsigned int* pOutNumber, GPCFile* gpc, const char* name)
 {
     unsigned int crc = func_01ff860c(name);
-    return GetUnknownGP2InnerFileDataByCRC(pOutPtr, pOutNumber, gpc, crc);
+    return GetGPCInnerFileByCRC(pOutPtr, pOutNumber, gpc, crc);
 }
 
-extern "C" bool GetUnknownGP2InnerFileDataByCRC(void** pOutPtr,
+bool GetGPCInnerFileByCRC(void** pOutPtr,
     unsigned int* pOutNumber, GPCFile* gpc, unsigned int crc)
 {
     *pOutPtr = NULL;
@@ -116,7 +118,7 @@ extern "C" bool GetUnknownGP2InnerFileDataByCRC(void** pOutPtr,
         return false;
 
     GPCFile::FileEntry* entry = gpc->GetFileByCRC(crc);
-    return GetUnknownGP2Data_020d8fcc(pOutPtr, pOutNumber, gpc, entry);
+    return GetGPCInnerFile(pOutPtr, pOutNumber, gpc, entry);
 }
 
 void ZeroInitGPCPointer(GPCFile** ppGPC)
@@ -129,7 +131,7 @@ void ZeroDestroyGPCPointer(GPCFile** ppGPC)
     *ppGPC = NULL;
 }
 
-bool CheckGPCPairValid_020d917c(GPCFile* const* gpc, ExtendedNitroVM* machine)
+bool IsGPCPairValid(GPCFile* const* gpc, ExtendedNitroVM* machine)
 {
     if (*gpc != NULL && machine->IsInReadableState())
         return true;
