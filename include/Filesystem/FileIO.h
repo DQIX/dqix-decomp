@@ -6,7 +6,7 @@
 #define data_0211e33c data_0211fb64
 #endif
 
-extern unsigned char data_0211e33c[0x30000];
+extern unsigned char data_0211e33c[0x30000] __attribute__((aligned(4)));
 
 void* LoadFileIntoMemory(const char* path, void* buffer, unsigned int* outLength);
 void* LoadFileIntoNewAllocation(const char* path, SafeAllocator& alloc, unsigned int* outLength);

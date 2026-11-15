@@ -87,8 +87,20 @@ public:
     bool Reset();
 };
 
-void CopyGPCSignature(unsigned int* dst, const unsigned int* src);
-unsigned int* SetGPCSignatureGPC0(unsigned int* dst);
-void CopyGPCSignatureFromString(unsigned int* dst, const char* src);
-unsigned int* SetGPCSignatureGPC1(unsigned int* dst);
-unsigned int* SetGPCSignatureGPC2(unsigned int* dst);
+// probably the actual class
+class ScopedGPCReader : public GPCReadPair
+{
+public:
+    ScopedGPCReader()
+    {
+        GPCReadPair* pPair = this;
+        ZeroInitGPCPointer(&pPair->pGPCFile);
+        pPair->ZeroInitializeMachine();
+    }
+
+    ~ScopedGPCReader()
+    {
+        Reset();
+        ZeroDestroyGPCPointer(&pGPCFile);
+    }
+};

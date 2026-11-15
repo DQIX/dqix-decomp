@@ -127,7 +127,7 @@ src/Combat/Main/CritRateCalculation.cpp:
 
 src/Filesystem/FileIO.cpp:
     complete
-    .text start:0x02075098 end:0x0207568c
+    .text start:0x02075098 end:0x020758a0
 
 src/Graphics/AtmosphericEffect.cpp:
     complete
