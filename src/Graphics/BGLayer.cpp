@@ -496,7 +496,7 @@ void BGLayer::AllocateIndexBuffer(SafeAllocator* alloc)
     memset(indexBuffer_, 0, bufferLength);
 }
 
-int BGLayer::ProcessGraphicsFile(const void* fileData, SafeAllocator* alloc)
+int BGLayer::ProcessGraphicsFile(const void* fileData, SafeAllocator* alloc, unsigned int)
 {
     if (fileData == NULL)
         return true;
