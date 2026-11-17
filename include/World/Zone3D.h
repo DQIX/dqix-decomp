@@ -131,5 +131,5 @@ public:
     char unk_2821[3];
 public:
     // usa: func_0201383c
-    void SwitchZone(unsigned short newID);
+    void SwitchZone(int newID, int);
 };

@@ -35,7 +35,7 @@ extern "C"
 
     void* func_0208a9b4();
     void func_02094d00(void*);
-    Zone3D_StructPtr_8* func_02099950(void*, unsigned short id);
+    Zone3D_StructPtr_8* func_02099950(void*, int id);
 
     void func_020c9be0(); // abort() or similar
     void func_020de848(void*);
@@ -87,7 +87,7 @@ extern char data_020ef20b[]; // "/data/ani/d_%c%03d.spr"
 extern char data_020ef222[]; // "tsuboware"
 extern char data_020ef22c[]; // "ARC:%s"
 
-void Zone3D::SwitchZone(unsigned short newID)
+void Zone3D::SwitchZone(int newID, int)
 {
     GameState* gameState = GameState::GetInstance();
     BackgroundLoader* loader = BackgroundLoader::GetInstance();
