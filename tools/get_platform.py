@@ -19,11 +19,14 @@ def get_platform() -> Platform | None:
         exe = ".exe"
     elif system == "Linux":
         system = "linux"
+    elif system == "Darwin":
+        system = "macos"
     else:
         print(f"Unknown system '{system}'")
         return None
     match platform.machine().lower():
         case "amd64" | "x86_64": machine = "x86_64"
+        case "arm64" if system == "macos": machine = "arm64"
         case machine:
             print(f"Unknown machine: {machine}")
             return None
