@@ -6268,7 +6268,7 @@ data_020e8fd8 kind:data(any) addr:0x020e8fd8
 data_020e8fec kind:data(any) addr:0x020e8fec
 data_020e901c kind:data(any) addr:0x020e901c
 data_020e9034 kind:data(any) addr:0x020e9034
-treasureMapItemIDs kind:data(any) addr:0x020e914c
+treasureMapItemIDs$951 kind:data(any) addr:0x020e914c local
 data_020e9188 kind:data(any) addr:0x020e9188
 data_020e91a8 kind:data(any) addr:0x020e91a8
 data_020e91b4 kind:data(any) addr:0x020e91b4

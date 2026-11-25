@@ -340,9 +340,6 @@ void DetailedTreasureMapData::RegularMapData::GenerateLocaleRank()
 
 #if defined(usa)
 
-extern const unsigned char data_020e9074[]; // { 4, 13, 11 }
-extern const unsigned char data_020e9077[]; // { 4, 13, 11 }
-
 // USA: func_020a51b0
 void DetailedTreasureMapData::RegularMapData::GenerateNameBuffers()
 {    
@@ -405,8 +402,10 @@ void DetailedTreasureMapData::RegularMapData::GenerateNameBuffers()
     
     for (int i = 0; i < 3; i++)
     {
+        static const unsigned char ptrListIndexLookup[] = { 4, 13, 11 };
+
         int currentNamePart = partOrder[i];
-        int ptrListIndex = data_020e9074[currentNamePart];
+        int ptrListIndex = ptrListIndexLookup[currentNamePart];
         
         readOffset = offsetArray[ptrListIndex];
         
@@ -516,8 +515,10 @@ void DetailedTreasureMapData::RegularMapData::GeneratePopupName()
     
     for (int i = 0; i < 3; i++)
     {
+        static const unsigned char ptrListIndexLookup[] = { 4, 13, 11 };
+
         int currentNamePart = partOrder[i];
-        int ptrListIndex = data_020e9077[currentNamePart];
+        int ptrListIndex = ptrListIndexLookup[currentNamePart];
         
         readOffset = offsetArray[ptrListIndex];
         

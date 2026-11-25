@@ -6445,9 +6445,9 @@ data_020e8ec4 kind:data(any) addr:0x020e8ec4
 data_020e8ed8 kind:data(any) addr:0x020e8ed8
 data_020e8f08 kind:data(any) addr:0x020e8f08
 data_020e8f20 kind:data(any) addr:0x020e8f20
-treasureMapItemIDs kind:data(any) addr:0x020e9038
-data_020e9074 kind:data(any) addr:0x020e9074
-data_020e9077 kind:data(any) addr:0x020e9077
+treasureMapItemIDs$992 kind:data(any) addr:0x020e9038 local
+ptrListIndexLookup$1456 kind:data(byte[0x3]) addr:0x020e9074 local
+ptrListIndexLookup$1581 kind:data(byte[0x3]) addr:0x020e9077 local
 data_020e907c kind:data(any) addr:0x020e907c
 data_020e909c kind:data(any) addr:0x020e909c
 data_020e90a8 kind:data(any) addr:0x020e90a8

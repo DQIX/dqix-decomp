@@ -195,6 +195,7 @@ src/Grotto/Main/LegacyBossMapData.cpp:
 src/Grotto/Main/RegularMapData.cpp:
     complete
     .text start:0x020a4618 end:0x020a57e4
+    .rodata start:0x020e9074 end:0x020e907c
     .data start:0x020f1ad0 end:0x020f1ae4
 
 src/Grotto/Main/TreasureMapFileData.cpp:

@@ -118,31 +118,30 @@ struct MapTypeEntry
     bool isLegacy;
 };
 
-extern const MapTypeEntry treasureMapItemIDs[];
-const MapTypeEntry treasureMapItemIDs[] = {
-    { 1000, 0, false },  // regular map
-    { 1001, 1, true },   // Dragonlord
-    { 1002, 2, true },   // Malroth
-    { 1003, 3, true },   // Baramos
-    { 1004, 4, true },   // Zoma
-    { 1005, 5, true },   // Psaro (comes before Estark here)
-    { 1006, 6, true },   // Estark
-    { 1007, 7, true },   // Nimzo
-    { 1008, 8, true },   // Murdaw
-    { 1009, 9, true },   // Mortamor
-    { 1010, 10, true },  // Nokturnus (this time he's not at the end)
-    { 1011, 11, true },  // Orgodemir
-    { 1012, 12, true },  // Dhoulmagus
-    { 1013, 13, true },  // Rhapthorne
-    { 0 }
-};
-
 // USA: func_020a3f54
 // JPN: func_020a5d6c
 bool GetTreasureMapTypeFromItemID(unsigned short itemID, unsigned char* out)
 {
     if (out == NULL)
         return false;
+
+    static const MapTypeEntry treasureMapItemIDs[] = {
+        { 1000, 0, false },  // regular map
+        { 1001, 1, true },   // Dragonlord
+        { 1002, 2, true },   // Malroth
+        { 1003, 3, true },   // Baramos
+        { 1004, 4, true },   // Zoma
+        { 1005, 5, true },   // Psaro (comes before Estark here)
+        { 1006, 6, true },   // Estark
+        { 1007, 7, true },   // Nimzo
+        { 1008, 8, true },   // Murdaw
+        { 1009, 9, true },   // Mortamor
+        { 1010, 10, true },  // Nokturnus (this time he's not at the end)
+        { 1011, 11, true },  // Orgodemir
+        { 1012, 12, true },  // Dhoulmagus
+        { 1013, 13, true },  // Rhapthorne
+        { 0 }
+    };
 
     for (int i = 0; treasureMapItemIDs[i].itemID != 0; i++)
     {
