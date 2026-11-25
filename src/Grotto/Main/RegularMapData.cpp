@@ -629,9 +629,9 @@ void DetailedTreasureMapData::RegularMapData::GenerateNameBuffers()
 
     char nameUndecorated[256];
     RemoveFurigana(nameNoLevel_, nameUndecorated);
-    strcat(nameUndecorated, "\x92\x6e\x90\x7d");
+    strcat(nameUndecorated, "ínê}");
     strcpy(nameNoLevel_, nameUndecorated);
-    sprintf(levelString_, "\xea\x40%d", level_);
+    sprintf(levelString_, JPSTRING_LV "%d", level_);
     sprintf(topScreenName_, "%s<W=3>%s", nameNoLevel_, levelString_);
 }
 
@@ -716,7 +716,7 @@ void DetailedTreasureMapData::RegularMapData::GeneratePopupName()
         }
     }
 
-    sprintf(tempBuffer, "\xea\x40%d", level_);
+    sprintf(tempBuffer, JPSTRING_LV "%d", level_);
     strcat(popupName_, tempBuffer);
 }
 

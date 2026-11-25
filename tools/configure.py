@@ -53,7 +53,8 @@ CC_FLAGS = " ".join([
     "-gccinc",              # Interpret #include "..." and #include <...> equally
     "-nolink",              # Do not link
     "-msgstyle gcc",        # Use GCC-like messages (some IDEs will make file names clickable)
-    "-str pool,reuse"       # Pool and reuse strings within translation units
+    "-str pool,reuse",      # Pool and reuse strings within translation units
+    "-enc sjis"             # shift-JIS encoding for files
 ])
 active_function_name = "-force_active func_ov030_021d8a40"
 if args.version == "jpn":

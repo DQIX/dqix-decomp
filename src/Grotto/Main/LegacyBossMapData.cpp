@@ -94,13 +94,13 @@ void DetailedTreasureMapData::LegacyBossMapData::Populate(
     char bossNameUndecorated[256];
 
     RemoveFurigana(bossName_, bossNameUndecorated);
-    sprintf(mapNameNoLevel_, "%s\x82\xcc\x92\x6e\x90\x7d", bossNameUndecorated);
-    sprintf(bossNameGenitive_, "%s\x82\xcc", bossName_);
-    strcpy(fixedStringChizu_, "[\x92\x6e\x90\x7d/\x82\xbf\x82\xb8]");
+    sprintf(mapNameNoLevel_, "%sÇÃínê}", bossNameUndecorated);
+    sprintf(bossNameGenitive_, "%sÇÃ", bossName_);
+    strcpy(fixedStringChizu_, "[ínê}/ÇøÇ∏]");
     strcpy(mapLevelString_, "");
-    sprintf(mapLevelString_, "\xea\x40%d", level_);
+    sprintf(mapLevelString_, JPSTRING_LV "%d", level_);
     sprintf(topScreenName_, "%s<W=3>%s", mapNameNoLevel_, mapLevelString_);
-    sprintf(popupName_, "%s\xea\x40%d\x82\xcc[\x8a\xd4/\x82\xdc]", bossName_, level_);
+    sprintf(popupName_, "%s" JPSTRING_LV "%dÇÃ[ä‘/Ç‹]", bossName_, level_);
 #endif
 }
 
@@ -112,7 +112,7 @@ void DetailedTreasureMapData::LegacyBossMapData::WriteMapLevelString()
     const char* lvlPrefix = GetGameString(GameString_Lv);
     sprintf(mapLevelString_, "%s%d", lvlPrefix, level_);
 #elif defined(jpn)
-    sprintf(mapLevelString_, "\xea\x40%d", level_);
+    sprintf(mapLevelString_, JPSTRING_LV "%d", level_);
 #endif
 }
 

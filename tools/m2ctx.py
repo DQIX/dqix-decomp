@@ -12,7 +12,7 @@ parser = argparse.ArgumentParser(description="Generates a context for decomp.me"
 parser.add_argument('file', help="Input file to preprocess")
 parser.add_argument('-f', type=str, dest='out_file', required=False, help='Output context file')
 parser.add_argument('-c', action=argparse.BooleanOptionalAction, dest='clipboard', required=False, help='Copy output to clipboard')
-parser.add_argument('-e', type=str, dest='encoding', required=False, default="utf-8", help='Input file encoding')
+parser.add_argument('-e', type=str, dest='encoding', required=False, default="shift-jis", help='Input file encoding')
 parser.add_argument('-v', action=argparse.BooleanOptionalAction, dest='verbose', required=False, help='Verbose error output')
 args = parser.parse_args()
 
@@ -35,7 +35,7 @@ INCLUDE_REGEX = r'^\s*#\s*include\s*([<"][\S ]+[>"])\s*$'
 # Finds all line comments and multiline comments
 COMMENT_REGEX = r'\/\/.*$|\/\*(?:.|\r|\n)+?\*\/'
 
-with open(args.file, 'r') as f:
+with open(args.file, 'r', encoding=args.encoding) as f:
     contents = f.read()
 contents = re.sub(COMMENT_REGEX, '', contents, count=0, flags=re.MULTILINE)
 includes = re.findall(INCLUDE_REGEX, contents, flags=re.MULTILINE)
