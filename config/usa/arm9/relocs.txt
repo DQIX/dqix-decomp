@@ -19301,12 +19301,12 @@ from:0x020a44d4 kind:arm_call to:0x02003ce8 module:main
 from:0x020a44e8 kind:arm_call to:0x02003ce8 module:main
 from:0x020a44fc kind:arm_call to:0x02003ce8 module:main
 from:0x020a4508 kind:load to:0x020f1ac0 module:main
-from:0x020a450c kind:load to:0x020f1ac3 module:main
-from:0x020a4514 kind:load to:0x020f1ac4 module:main
-from:0x020a4518 kind:load to:0x020f1ac9 module:main
+from:0x020a450c kind:load to:0x020f1ac0 add:0x3 module:main
+from:0x020a4514 kind:load to:0x020f1ac0 add:0x4 module:main
+from:0x020a4518 kind:load to:0x020f1ac0 add:0x9 module:main
 from:0x020a4528 kind:arm_call to:0x020e51cc module:main
 from:0x020a453c kind:arm_call to:0x02003ce8 module:main
-from:0x020a4548 kind:load to:0x020f1ac4 module:main
+from:0x020a4548 kind:load to:0x020f1ac0 add:0x4 module:main
 from:0x020a4624 kind:arm_call to:0x0200f398 module:main
 from:0x020a4628 kind:arm_call to:0x02011644 module:main
 from:0x020a4654 kind:arm_call to:0x0218b5b0 module:overlay(17)
@@ -19524,7 +19524,7 @@ from:0x020a54a0 kind:arm_call to:0x02003ce8 module:main
 from:0x020a54b4 kind:arm_call to:0x02003ce8 module:main
 from:0x020a54c0 kind:load to:0x020e9074 module:main
 from:0x020a54c8 kind:load to:0x020f1ad0 module:main
-from:0x020a54cc kind:load to:0x020f1ad5 module:main
+from:0x020a54cc kind:load to:0x020f1ad0 add:0x5 module:main
 from:0x020a5500 kind:arm_call to:0x0200f398 module:main
 from:0x020a5504 kind:arm_call to:0x02011644 module:main
 from:0x020a5528 kind:arm_call to:0x0200f398 module:main
@@ -19561,7 +19561,7 @@ from:0x020a57ac kind:arm_call to:0x020e51cc module:main
 from:0x020a57c0 kind:arm_call to:0x02003ce8 module:main
 from:0x020a57cc kind:arm_call to:0x02004040 module:main
 from:0x020a57d8 kind:load to:0x020e9077 module:main
-from:0x020a57e0 kind:load to:0x020f1adb module:main
+from:0x020a57e0 kind:load to:0x020f1ad0 add:0xb module:main
 from:0x020a5814 kind:arm_call to:0x0202f7c8 module:main
 from:0x020a583c kind:arm_call to:0x02075098 module:main
 from:0x020a5848 kind:arm_call to:0x0202f7e8 module:main
@@ -19593,7 +19593,7 @@ from:0x020a5ad8 kind:arm_call to:0x020ca650 module:main
 from:0x020a5af0 kind:arm_call to:0x020ca650 module:main
 from:0x020a5b10 kind:load to:0x0211e33c module:main
 from:0x020a5b14 kind:load to:0x020f1ae4 module:main
-from:0x020a5b18 kind:load to:0x020f1af8 module:main
+from:0x020a5b18 kind:load to:0x020f1ae4 add:0x14 module:main
 from:0x020a5b28 kind:arm_call to:0x0200f398 module:main
 from:0x020a5b2c kind:arm_call to:0x02011644 module:main
 from:0x020a5b38 kind:arm_call to:0x0218b5b0 module:overlay(17)

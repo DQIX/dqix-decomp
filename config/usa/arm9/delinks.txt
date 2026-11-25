@@ -185,11 +185,27 @@ src/Grotto/Main/TreasureMapDataStructs.cpp:
 src/Grotto/Main/DetailedTreasureMapData.cpp:
     complete
     .rodata start:0x020e9038 end:0x020e9074
-    .text start:0x020a3ee4 end:0x020a5cb8
+    .text start:0x020a3ee4 end:0x020a425c
+
+src/Grotto/Main/LegacyBossMapData.cpp:
+    complete
+    .text start:0x020a425c end:0x020a4618
+    .data start:0x020f1ac0 end:0x020f1ad0
+
+src/Grotto/Main/RegularMapData.cpp:
+    complete
+    .text start:0x020a4618 end:0x020a57e4
+    .data start:0x020f1ad0 end:0x020f1ae4
+
+src/Grotto/Main/TreasureMapFileData.cpp:
+    complete
+    .text start:0x020a57e4 end:0x020a5cb8
+    .data start:0x020f1ae4 end:0x020f1b04
 
 src/Grotto/Main/TreasureMapMetadata.cpp:
     complete
     .text start:0x020a5cb8 end:0x020a6084
+
 
 src/NitroSDK/Memory/SignedAllocator.cpp:
     complete

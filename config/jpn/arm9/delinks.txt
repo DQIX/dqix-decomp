@@ -184,8 +184,23 @@ src/Grotto/Main/TreasureMapDataStructs.cpp:
 
 src/Grotto/Main/DetailedTreasureMapData.cpp:
     complete
+    .text start:0x020a5c20 end:0x020a6050
     .rodata start:0x020e914c end:0x020e9188
-    .text start:0x020a5c20 end:0x020a7a5c
+
+src/Grotto/Main/LegacyBossMapData.cpp:
+    complete
+    .text start:0x020a6050 end:0x020a63b0
+    .data start:0x020f1c0c end:0x020f1c48
+
+src/Grotto/Main/RegularMapData.cpp:
+    complete
+    .text start:0x020a63b0 end:0x020a7588
+    .data start:0x020f1c48 end:0x020f1c5c
+
+src/Grotto/Main/TreasureMapFileData.cpp:
+    complete
+    .text start:0x020a7588 end:0x020a7a5c
+    .data start:0x020f1c5c end:0x020f1c7c
 
 src/Grotto/Main/TreasureMapMetadata.cpp:
 	complete
