@@ -17,5 +17,6 @@ build.ninja
 .ninja_lock
 /wibo
 /wibo-link
+/wibo-macos
 ninja.exe
 .clang-format
