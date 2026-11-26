@@ -1,6 +1,6 @@
 #pragma once
 
-// all of this is usa/eur only
+// most of this is for the international versions only to cover multiple languages
 #if !defined(jpn)
 
 #include "StringList.h"
@@ -100,5 +100,9 @@ bool LoadGameStrings();
 
 const char* GetGameString(eGameString id);
 const char* GetArticleTemplate(int id);
+
+#else // jpn version, some 16-bit codes correspond to special characters instead of shift-jis
+
+#define JPSTRING_LV "\xea\x40"
 
 #endif
