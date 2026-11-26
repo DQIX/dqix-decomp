@@ -3,7 +3,6 @@
 #include "Filesystem/FileIO.h"
 #include "NitroSDK/Memory.h"
 #include "GameState/GameState.h"
-#include <asmhacks.h>
 
 #define BINARY_READ_AND_ADVANCE(buffer, offset, dst, len) \
     (VectorizedInvertedMemcpy((buffer) + (offset), (dst), (len)), offset += (len))
@@ -50,18 +49,8 @@ void DetailedTreasureMapData::LoadLegacyBossStats(bool compute, const unsigned c
 
     BackgroundLoader::RemoveLockGlobal();
 
-    const unsigned char* copyOfInnerFilePtr;
-    unsigned int loadlevel = legacy_.level_;
-    // I would very much like to see this horrible hack removed, but it does the trick
-    // and without it, the compiler optimises out the constant 0x18. This way it gets
-    // kept in a register until the end.
-    unsigned int stride;
-    __asm("mov stride, 0x18");
-    copyOfInnerFilePtr = innerFileData; // forces innerFileData to get loaded into a register here
-    __asm("sub loadlevel, loadlevel, 1");
-    DECLARE_ASM_NOP();
-    
-    unsigned int offset = stride * loadlevel;
+    unsigned int stride = 0x18;
+    unsigned int offset = stride * (legacy_.level_ - 1);
     
     BINARY_READ_AND_ADVANCE(innerFileData, offset, &legacy_.stats_.maxHP, 4);
     BINARY_READ_AND_ADVANCE(innerFileData, offset, &legacy_.stats_.maxMP, 4);
