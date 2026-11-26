@@ -25,6 +25,12 @@ extern "C"
 
 #ifdef jpn
 
+static inline CBool IsNextCharacterTwoBytes(int nextCh)
+{
+    unsigned char byte = nextCh;
+    return (byte >= 0x81 && byte <= 0x9f) || (byte >= 0xe0 && byte <= 0xfc); 
+}
+
 // JPN: func_020a5c20
 void RemoveFurigana(const char* src, char* dst)
 {  
@@ -61,22 +67,8 @@ void RemoveFurigana(const char* src, char* dst)
         
         if (mode <= 1)
         {
-            unsigned char castChar = inChar;
-            bool twoBytes;
-            if ((castChar >= 0x81 && castChar <= 0x9F) || (castChar >= 0xE0 && castChar <= 0xFC))
-                twoBytes = true;
-            else
-                twoBytes = false;
-
-            if (twoBytes)
-            {
-                // totally normal code, nothing to see here
-                // (we need it to force some register placements)
-                int srcIndexPlusOne = srcIndex + 1;
-                dst[dstIndex] = src[srcIndexPlusOne - 1];
-                srcIndex++; // note srcIndex = srcIndexPlusOne doesn't work
-                dstIndex++;
-            }
+            if (IsNextCharacterTwoBytes(inChar))
+                dst[dstIndex++] = src[srcIndex++];
 
             dst[dstIndex] = src[srcIndex];
             dstIndex++;

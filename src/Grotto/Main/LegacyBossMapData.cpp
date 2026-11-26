@@ -124,7 +124,7 @@ bool DetailedTreasureMapData::LegacyBossMapData::CanUseLevelUpMove(unsigned shor
     {
         LegacyBossStats::LevelUpMove* move = &stats_.levelUpMoves[i];
         if (move->moveID == id)
-            return move->level <= this->level_;
+            return move->level <= level_;
     }
 
     // If not a level up move, treat as having it by default

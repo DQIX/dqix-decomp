@@ -46,7 +46,7 @@ void DetailedTreasureMapData::RegularMapData::GenerateUnknownData()
         // all zero
         TMAPLANGDATA_READ(readOffset, &chance, 1);
 
-        if (rand() % 100 < (int)chance)
+        if (rand() % 100 < chance)
         {
             unknown_66_ = value;
             unknown_4f_ = index;
@@ -80,7 +80,7 @@ void DetailedTreasureMapData::RegularMapData::GenerateEnviron()
 
         if (rngValue < readChance + percentile)
         {
-            this->environ_ = readEnviron;
+            environ_ = readEnviron;
             return;
         }
 
